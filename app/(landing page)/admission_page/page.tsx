@@ -4,8 +4,6 @@ import Image from "next/image";
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
@@ -126,7 +124,7 @@ const AdmissionPage = () => {
                         <CardContent className="text-start font-light font-oswald text-3xl flex flex-col gap-4">
                         {activeStep === 1 && (
                             <ol className="list-disc pl-6 flex flex-col gap-5">
-                            <li>Click "Apply Now" button</li>
+                            <li>Click &quot;Apply Now&quot; button</li>
                             <li>Fill out basic personal information (Name, contact details, previous school, grade level, etc.)</li>
                             <li>Indicate any special condhitions (honor student, transferee, scholarship applicant, etc.)</li>
                             </ol>
