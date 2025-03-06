@@ -87,6 +87,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col items-center justify-center gap-4">
+                <a href="/enrollment">
                 <Button
                 variant="mButton"
                 className="h-[65px] w-[250px] rounded-2xl ">
@@ -94,6 +95,7 @@ export default function Home() {
                     ENROLL NOW!!
                   </p>
                 </Button>
+                </a>
 
                 <Button
                 variant="sButton"
@@ -230,6 +232,7 @@ export default function Home() {
           </div>
         
          {/* THIRD PART */}
+         <a href="/enrollment">
           <Button
             variant="mButton"
             className="h-[65px] w-[250px] rounded-2xl ">
@@ -237,6 +240,7 @@ export default function Home() {
                 ENROLL NOW!
               </p>
           </Button>
+          </a>
         </div>
       </div>
        {/* end of fourth section */}

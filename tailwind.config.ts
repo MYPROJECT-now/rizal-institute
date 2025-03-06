@@ -17,7 +17,11 @@ export default {
   			merriweather: [
   				'Merriweather',
   				'serif'
-  			]
+  			],
+			Alfa: [
+				'Alfa Slab One',
+				'serif'
+			]
   		},
   		colors: {
   			background: 'hsl(var(--background))',

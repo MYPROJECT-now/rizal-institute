@@ -18,13 +18,14 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-white font-bold font-merriweather text-xl underline-offset-4 hover:underline",
 
         //custome buton
         mButton:
           "bg-lGreen text-white hover:bg-green-500 border-b-[7px] active:border-0 border-b-dGreen font-oswald",
         sButton:
           "bg-white text-lGreen hover:bg-gray/90 border-b-[7px] active:border-0 border-b-slGreen font-oswald",
+        
       },
       size: {
         default: "h-9 px-4 py-2",
