@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
+import { StatusModal } from "@/components/modals/status_modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+    <StatusModal />
     <html lang="en">
       <head>
         <link rel="icon" href="/logo.png" sizes="any" />
@@ -38,6 +41,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
     </ClerkProvider>

@@ -10,9 +10,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { useStatusModal } from "@/store/status_modal";
+import { StatusModal } from "@/components/modals/status_modal";
 
 
 export default function Home() {
+  <StatusModal />
+  const { open } = useStatusModal();
   return (
     <div className="w-full h-min-screen">
 
@@ -99,6 +103,7 @@ export default function Home() {
 
                 <Button
                 variant="sButton"
+                onClick={open}
                 className="h-[55px] w-[210px] rounded-xl ">
                   <p className="font-oswald font-bold text-xl">
                     TRACK APPLICATION

@@ -29,6 +29,10 @@ const Header = () => {
                 router.push("/admin");
             } else if (user?.publicMetadata?.role === 'student') {
                 router.push("/student");
+            } else if (user?.publicMetadata?.role === 'cashier') {
+                router.push("/cashier");
+            } else if (user?.publicMetadata?.role === 'registrar') {
+                router.push("/registrar");
             } else {
                 router.push("/");
             }
@@ -81,6 +85,7 @@ const Header = () => {
                             afterSignOutUrl="/"
                         />
                     </SignedIn>
+                    
                     
                     <SignedOut>
                         <SignInButton

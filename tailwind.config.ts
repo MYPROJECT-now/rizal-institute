@@ -26,6 +26,7 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			Green: 'var(--Green)',
   			lGreen: 'var(--lGreen)',
   			dGreen: 'var(--dGreen)',
   			d2Green: 'var(--d2Green)',
@@ -34,6 +35,10 @@ export default {
   			yellow: 'var(--yellow)',
   			g1: 'var(--g1)',
   			g2: 'var(--g2)',
+			page: 'var(--page)',
+
+
+			
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

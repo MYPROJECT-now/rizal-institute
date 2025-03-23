@@ -9,7 +9,7 @@ type Props = {
     className?: string;
 };
 
-export const Sidebar_admin = ({ className }: Props) => {
+export const Sidebar_registrar = ({ className }: Props) => {
     return (
         <div
             className={cn(
@@ -32,16 +32,27 @@ export const Sidebar_admin = ({ className }: Props) => {
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
                         label="Dashboard" 
-                        href="/admin"
+                        href="/registrar"
                         iconSrc="/dashboard.png" 
                     />
 
                     <SidebarItem 
                         label="Students" 
-                        href="/admin/account"
+                        href="/registrar/students"
                         iconSrc="/student_logo.png" 
                     />
 
+                    <SidebarItem 
+                        label="Enrollees" 
+                        href="/registrar/enrollees"
+                        iconSrc="/enrollment.png" 
+                    />
+
+                    <SidebarItem 
+                        label="Admin Settings" 
+                        href="/admin/settings"
+                        iconSrc="/settings.png" 
+                    />
 
                     <SignOutButton>
                         <Button
