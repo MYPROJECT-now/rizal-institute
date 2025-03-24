@@ -1,4 +1,5 @@
-import { Sidebar_registrar } from "@/components/sidebar/sidebar_registrar";
+import { Sidebar_cashier } from "@/components/sidebar/sidebar_cashier";
+
 
 type props  = {
     children: React.ReactNode;
@@ -7,7 +8,7 @@ type props  = {
 const RegistrarLayout = ({children}: props) => {
     return (
         <div className="min-h-screen w-full flex flex-row bg-lGreen">
-            <Sidebar_registrar />
+            <Sidebar_cashier />
             {children}
         </div>
     );

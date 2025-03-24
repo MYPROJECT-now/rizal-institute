@@ -9,7 +9,7 @@ type Props = {
     className?: string;
 };
 
-export const Sidebar_registrar = ({ className }: Props) => {
+export const Sidebar_cashier = ({ className }: Props) => {
     return (
         <div
             className={cn(

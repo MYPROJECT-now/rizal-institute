@@ -9,7 +9,7 @@ const Dashboard = () => {
         <AdminClientComponent>
         <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-gray-300">
             <Admin_header />
-            <div className="w-full h-[550px] flex bg-white   mt-10 rounded-lg ">
+            <div className="w-full h-[550px] flex flex-col bg-white   mt-10 rounded-lg ">
                 <div className="flex flex-col">
                     <p>
                         Quick Stats

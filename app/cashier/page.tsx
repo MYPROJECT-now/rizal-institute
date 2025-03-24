@@ -1,16 +1,17 @@
-import Registrar_header from "@/components/header/header_registrar";
+
 import { Top_analytics } from "@/components/dashboard/registrar/analytics/top_analyitcs";
 import { EnrollmentTable } from "@/components/dashboard/registrar/table/table";
 import { Ppgl } from "@/components/dashboard/registrar/graphs/ppgl";
 import { Enrollment } from "@/components/dashboard/registrar/graphs/enrollment";
-import RegistrarClientComponent from "@/components/validation/registrar_validate";
+import CashierClientComponent from "@/components/validation/cashier_validate";
+import Cashier_header from "@/components/header/header_cashier";
 
 
 const Dashboard = () => {
     return (
-     
+        <CashierClientComponent>    
         <div className="w-full max-h-[680px] overflow-auto mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
-            <Registrar_header />
+            <Cashier_header />
             <div className="w-full h-[550px] flex flex-col gap-10 mt-10 rounded-lg ">
                <div className="flex flex-col">
                 <p>
@@ -37,6 +38,7 @@ const Dashboard = () => {
                </div>
             </div>
         </div>
+    </CashierClientComponent>
     );
 };
 
