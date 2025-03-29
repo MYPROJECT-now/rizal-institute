@@ -1,9 +1,9 @@
 import Registrar_header from "@/components/header/header_registrar";
 import { Top_analytics } from "@/components/dashboard/registrar/analytics/top_analyitcs";
-import { EnrollmentTable } from "@/components/dashboard/registrar/table/table";
 import { Ppgl } from "@/components/dashboard/registrar/graphs/ppgl";
 import { Enrollment } from "@/components/dashboard/registrar/graphs/enrollment";
 import RegistrarClientComponent from "@/components/validation/registrar_validate";
+import { RecentEnrolleesTable } from "@/components/dashboard/registrar/table/tablePage2";
 
 
 const Dashboard = () => {
@@ -33,7 +33,7 @@ const Dashboard = () => {
                     <p>
                         Recent Enrollee
                     </p>
-                    <EnrollmentTable />
+                    <RecentEnrolleesTable />
                </div>
             </div>
         </div>

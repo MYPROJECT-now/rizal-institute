@@ -4,8 +4,9 @@ import { db } from "../db/drizzle";
 import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 
+
 export const addTodo = async (
-    //students table
+    // students table
     lrn: string, 
     studentsLastName:string, 
     studentsFirstName: string, 
@@ -61,57 +62,59 @@ export const addTodo = async (
     }
 
 
-    //adding data to the database if all the validation passes
-    await db.insert(studentsInformationTable).values({
-        lrn: lrn,
-        studentsLastName: studentsLastName,
-        studentsFirstName: studentsFirstName,
-        studentsMiddleName: studentsMiddleName,
-        studentsSuffix: studentsSuffix,
+   // Insert all data **in parallel** using Promise.all()
+   await Promise.all([
+    db.insert(studentsInformationTable).values({
+        lrn,
+        studentsLastName,
+        studentsFirstName,
+        studentsMiddleName,
+        studentsSuffix,
         dateOfBirth: dateOfBirth.toISOString().split('T')[0],
-        age: age,
-        gender: gender,
-        civilStatus: civilStatus,
-        nationality: nationality,
-        religion: religion
-    });
+        age,
+        gender,
+        civilStatus,
+        nationality,
+        religion
+    }),
 
-    await db.insert(guardianAndParentsTable).values({
-        guardiansLastName: guardiansLastName,
-        guardiansFirstName: guardiansFirstName,
-        guardiansMiddleName: guardiansMiddleName,
-        guardiansSuffix: guardiansSuffix,
-        fullAddress: fullAddress,
-        mobileNumber: mobileNumber,
-        email: email
-    });
+    db.insert(guardianAndParentsTable).values({
+        guardiansLastName,
+        guardiansFirstName,
+        guardiansMiddleName,
+        guardiansSuffix,
+        fullAddress,
+        mobileNumber,
+        email
+    }),
 
-    await db.insert(educationalBackgroundTable).values({
-        admissionStatus: admissionStatus,
-        prevSchool: prevSchool,
-        schoolAddress: schoolAddress,
-        schoolType: schoolType,
-        gradeLevel: gradeLevel,
-        schoolYear: schoolYear
-    });
+    db.insert(educationalBackgroundTable).values({
+        admissionStatus,
+        prevSchool,
+        schoolAddress,
+        schoolType,
+        gradeLevel,
+        schoolYear
+    }),
 
-    await db.insert(documentsTable).values({
-        birthCert: birthCert,
-        reportCard: reportCard,
-        goodMoral: goodMoral,
-        idPic: idPic,
-        studentExitForm: studentExitForm
-    });
+    db.insert(documentsTable).values({
+        birthCert,
+        reportCard,
+        goodMoral,
+        idPic,
+        studentExitForm
+    }),
 
-    await db.insert(paymentReceiptTable).values({
-       receipt: receipt,
-       mop: mop
-    });
+    db.insert(paymentReceiptTable).values({
+        receipt,
+        mop
+    })
+]);
 
-
-    revalidatePath("/")
-    revalidatePath("/enrollment")
-  };
+// Revalidate paths after all inserts are completed
+revalidatePath("/");
+revalidatePath("/enrollment");
+};
 
 
   export const getStatusByTrackingId = async (trackingId: string) => {
@@ -128,3 +131,23 @@ export const addTodo = async (
     }
   };
   
+
+  export const getRecentEnrollee = async () => {
+    const recentEnrollees = await db.select({
+      lrn: studentsInformationTable.lrn,
+      lastName: studentsInformationTable.studentsLastName,
+      firstName: studentsInformationTable.studentsFirstName,
+      middleName: studentsInformationTable.studentsMiddleName,
+      gradeLevel: educationalBackgroundTable.gradeLevel,
+      applicationStatus: applicationStatusTable.applicationStatus,
+      dateOfApplication: applicationStatusTable.dateOfApplication,
+    })
+    .from(studentsInformationTable)
+    .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
+    .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
+    
+  
+    console.log("Fetched Enrollees:", recentEnrollees);
+    
+    return recentEnrollees ;
+  };

@@ -1,6 +1,5 @@
 
 import { Top_analytics } from "@/components/dashboard/registrar/analytics/top_analyitcs";
-import { EnrollmentTable } from "@/components/dashboard/registrar/table/table";
 import { Ppgl } from "@/components/dashboard/registrar/graphs/ppgl";
 import { Enrollment } from "@/components/dashboard/registrar/graphs/enrollment";
 import CashierClientComponent from "@/components/validation/cashier_validate";
@@ -34,7 +33,7 @@ const Dashboard = () => {
                     <p>
                         Recent Enrollee
                     </p>
-                    <EnrollmentTable />
+             
                </div>
             </div>
         </div>

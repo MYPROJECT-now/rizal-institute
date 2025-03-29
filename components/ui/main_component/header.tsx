@@ -1,15 +1,9 @@
 // module header so it can be used in multiple pages
 "use client";
-import { ClerkLoading, 
-    ClerkLoaded,
-    SignedIn,
-    SignedOut,
-    UserButton,
-    SignInButton,
+import { 
     useUser,
 
 } from "@clerk/nextjs";
-import { Loader } from "lucide-react";
 
 
 import Image from "next/image";
@@ -73,30 +67,11 @@ const Header = () => {
                 </a>
 
                 <div>
-                    <ClerkLoading>
-                        <Loader
-                        className="h-5 w-5 text-gray-400 animate-spin"
-                        />
-                    </ClerkLoading>
-                    
-                    <ClerkLoaded>
-                    <SignedIn>
-                        <UserButton
-                            afterSignOutUrl="/"
-                        />
-                    </SignedIn>
-                    
-                    
-                    <SignedOut>
-                        <SignInButton
-                            mode="modal">
-                                <button className="w-20 h-10"> 
-                                    LogIn
-                                </button>
-                        </SignInButton>
-                    </SignedOut>
-                                            
-                    </ClerkLoaded>
+                    <a href="/portal2">
+                    <button>
+                        portal
+                    </button>
+                    </a>
                 </div>
                 
                 </div>

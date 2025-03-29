@@ -1,5 +1,5 @@
 import { Top_analytics } from "@/components/dashboard/registrar/analytics/top_analyitcs";
-import { EnrollmentTable } from "@/components/dashboard/registrar/table/table";
+
 import Admin_header from "@/components/header/header_admin";
 import AdminClientComponent from "@/components/validation/admin_validate";
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
                     <p>
                     Recent Enrollee
                     </p>
-                    <EnrollmentTable />
+                  
                     </div>
                 </div>
         </div>

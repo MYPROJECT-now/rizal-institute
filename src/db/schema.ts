@@ -57,6 +57,7 @@ export const applicationStatusTable = pgTable("applicationStatusTable", {
   id: serial('id').primaryKey(),
   trackingId: varchar('trackingId', { length:100 }).notNull(),
   applicationStatus: varchar('applicationStatus', { length:100 }).notNull(),
+  dateOfApplication: date('dateOfApplication').notNull(),
 })
 
 
