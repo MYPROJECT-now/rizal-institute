@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Button } from "../button";
 
 const Header = () => {
 
@@ -35,7 +36,7 @@ const Header = () => {
 
 
     return (
-        <div className="bg-lGreen text-white font-bold font-merriweather text-3xl h-[90px] w-max-full flex flex-row justify-between px-[70px] items-center">    
+        <div className="bg-dGreen text-white font-bold font-merriweather text-3xl h-[90px] w-max-full flex flex-row justify-between px-[70px] items-center fixed w-full shadow-md p-4 z-50">    
             <a href="\">
                 <div className="flex flex-row items-center gap-4">
                     <Image 
@@ -44,26 +45,27 @@ const Header = () => {
                         width={60}
                         height={60}
                         />
-                    <p>
-                        Rizal Institute 
+                    <p className ="leading-none">
+                        Rizal Institute <br></br>
+                        <small className ="text-base leading-none">Canlubang Foundation Inc.</small>
                     </p>
                 </div>
             </a>
             <div className="flex flex-row items-center gap-[100px] pr-10">
                 <a href="\">
-                    <p>
+                    <Button variant="hButton">
                         HOME
-                    </p>
+                    </Button>
                 </a>
                 <a href="\about_page">
-                    <p>
+                    <Button variant ="hButton">
                         ABOUT
-                    </p>
+                    </Button>
                 </a>
                 <a href="\admission_page">
-                    <p>
+                    <Button variant="hButton">
                         ADMISSION
-                    </p>
+                    </Button>
                 </a>
 
                 <div>
