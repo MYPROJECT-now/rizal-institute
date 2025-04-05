@@ -49,8 +49,9 @@ async function sendEmail(to:string, trackingId: string) {
     const { email } = await request.json();
     const trackingId = generateRandomTrackingId();
     const applicationStatus = 'Pending'; // or some other default status
+    const reservationpaymentStatus = 'Pending';
 
-    await db.insert(applicationStatusTable).values({ trackingId, applicationStatus, dateOfApplication: new Date().toISOString().slice(0, 10) });
+    await db.insert(applicationStatusTable).values({ trackingId, applicationStatus, reservationpaymentStatus, dateOfApplication: new Date().toISOString().slice(0, 10) });
         // Send the email with the password
     await sendEmail(email, trackingId);
     return NextResponse.json({ trackingId });

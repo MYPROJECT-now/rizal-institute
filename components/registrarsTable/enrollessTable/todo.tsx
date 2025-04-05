@@ -7,9 +7,10 @@ import { StatusModal } from "@/components/modals/remarks/remark_modal";
 
 interface Props {
   student: studentType;
+  onAccept: (id: number) => void;
 }
 
-const Student: FC<Props> = ({ student }) => {
+const Student: FC<Props> = ({ student, onAccept  }) => {
   const { open } = useRemarksModal();
 
   return (
@@ -22,7 +23,9 @@ const Student: FC<Props> = ({ student }) => {
       </td>
       <td className="px-4 py-2 space-x-2">
         <button
-          className={`bg-blue-500 text-white px-3 py-1 rounded ${student.applicationStatus !== "Pending" ? "bg-blue-300" : ""}`}
+          onClick={() => onAccept(student.id)}
+          className={`px-3 py-1 rounded text-white transition 
+            ${student.applicationStatus === "Pending" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
           disabled={student.applicationStatus !== "Pending"}
         >
           Accept
@@ -32,7 +35,8 @@ const Student: FC<Props> = ({ student }) => {
         <StatusModal />
         <button
           onClick={() => open(student.id)}
-          className={`bg-red-500 text-white px-3 py-1 rounded ${student.applicationStatus !== "Pending" ? "bg-red-300" : ""}`}
+          className={`px-3 py-1 rounded text-white transition 
+            ${student.applicationStatus === "Pending" ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"}`}
           disabled={student.applicationStatus !== "Pending"}
         >
           Decline

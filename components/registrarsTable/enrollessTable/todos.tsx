@@ -2,14 +2,25 @@
 import { FC, useState } from "react";
 import { studentType } from "@/src/type/AllEnrolleeType";
 import Student from "./todo";
+import { acceptStudentsApplication } from "@/src/actions/serverActions";
 
 interface Props {
   students: studentType[];
 }
 
 const Students: FC<Props> = ({ students }) => {
-  const [studentList] = useState<studentType[]>(students);
+  const [studentList, setStudentList] = useState<studentType[]>(students);
 
+  const handleAccept = async (id: number) => {
+    await acceptStudentsApplication(id, "Reserved");
+
+    // Update UI locally after status change
+    setStudentList((prev) =>
+      prev.map((student) =>
+        student.id === id ? { ...student, applicationStatus: "Reserved" } : student
+      )
+    );
+  };
 
 
   return (
@@ -30,6 +41,7 @@ const Students: FC<Props> = ({ students }) => {
           <Student 
             key={student.lrn} 
             student={student} 
+            onAccept={handleAccept}
           />
         ))}
       </tbody>

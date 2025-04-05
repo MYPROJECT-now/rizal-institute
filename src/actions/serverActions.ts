@@ -1,5 +1,5 @@
 "use server"
-import { eq, or } from "drizzle-orm";
+import { eq} from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable  } from "../db/schema";
 import { revalidatePath } from "next/cache";
@@ -167,7 +167,6 @@ revalidatePath("/enrollment");
     .from(studentsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
     .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
-    .where(or(eq(applicationStatusTable.applicationStatus, 'Pending'), eq(applicationStatusTable.applicationStatus, 'Declined')))
     
   
     console.log("Fetched Enrollees:", allEnrollees);
@@ -185,6 +184,16 @@ revalidatePath("/enrollment");
     revalidatePath("/");
   };
 
+  export const acceptStudentsApplication = async (id: number, applicationStatus: string) => {
+    await db
+    .update(applicationStatusTable)
+    .set({
+      applicationStatus: applicationStatus,
+    })
+    .where(eq(applicationStatusTable.id, id));
+    revalidatePath("/");
+  };
+    
   // reapplication
   export const getStudentDataByTrackingId = async (trackingId: string) => {
     try {
