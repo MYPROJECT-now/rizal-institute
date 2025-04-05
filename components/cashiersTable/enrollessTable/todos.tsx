@@ -1,23 +1,23 @@
 "use client";
 import { FC, useState } from "react";
-import { studentType_registrar } from "@/src/type/AllEnrolleeType_registrar";
+import { studentType_cashier } from "@/src/type/AllEnrolleeType_cashier";  
 import Student from "./todo";
-import { acceptStudentsApplication } from "@/src/actions/serverActions";
+import { acceptStudentsReservationPayment } from "@/src/actions/serverActions";
 
 interface Props {
-  students: studentType_registrar [];
+  students: studentType_cashier[];
 }
 
 const Students: FC<Props> = ({ students }) => {
-  const [studentList, setStudentList] = useState<studentType_registrar []>(students);
+  const [studentList, setStudentList] = useState<studentType_cashier[]>(students);
 
   const handleAccept = async (id: number) => {
-    await acceptStudentsApplication(id, "Reserved");
+    await acceptStudentsReservationPayment(id, "Reserved");
 
     // Update UI locally after status change
     setStudentList((prev) =>
       prev.map((student) =>
-        student.id === id ? { ...student, applicationStatus: "Reserved" } : student
+        student.id === id ? { ...student, acceptStudentsReservationPayment: "Reserved" } : student
       )
     );
   };

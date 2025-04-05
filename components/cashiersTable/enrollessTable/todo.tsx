@@ -1,12 +1,12 @@
 "use client";
 
 import { FC } from "react";
-import { studentType_registrar  } from "@/src/type/AllEnrolleeType_registrar";
+import { studentType_cashier } from "@/src/type/AllEnrolleeType_cashier";
 import { useRemarksModal } from "@/src/store/remarks_modal";
-import { StatusModal } from "@/components/modals/remarks_registrar/remark_modal";
+import { StatusModal } from "@/components/modals/remarks_cashier/remark_modal";
 
 interface Props {
-  student: studentType_registrar ;
+  student: studentType_cashier;
   onAccept: (id: number) => void;
 }
 
@@ -25,8 +25,8 @@ const Student: FC<Props> = ({ student, onAccept  }) => {
         <button
           onClick={() => onAccept(student.id)}
           className={`px-3 py-1 rounded text-white transition 
-            ${student.applicationStatus === "Pending" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
-          disabled={student.applicationStatus !== "Pending"}
+            ${student.reservationPaymentStatus === "Pending" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
+          disabled={student.reservationPaymentStatus !== "Pending"}
         >
           Accept
         </button>
@@ -36,13 +36,13 @@ const Student: FC<Props> = ({ student, onAccept  }) => {
         <button
           onClick={() => open(student.id)}
           className={`px-3 py-1 rounded text-white transition 
-            ${student.applicationStatus === "Pending" ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"}`}
-          disabled={student.applicationStatus !== "Pending"}
+            ${student.reservationPaymentStatus === "Pending" ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"}`}
+          disabled={student.reservationPaymentStatus !== "Pending"}
         >
           Decline
         </button>
       </td>
-      <td className="px-4 py-2 text-green-700 font-semibold">{student.applicationStatus}</td>
+      <td className="px-4 py-2 text-green-700 font-semibold">{student.reservationPaymentStatus}</td>
     </tr>
   );
 };

@@ -154,7 +154,7 @@ revalidatePath("/enrollment");
   };
 
 
-  export const getAllEnrollees = async () => {
+  export const getAllEnrollees_registrar = async () => {
     const allEnrollees = await db.select({
       id: studentsInformationTable.id,
       lrn: studentsInformationTable.lrn,
@@ -163,6 +163,27 @@ revalidatePath("/enrollment");
       middleName: studentsInformationTable.studentsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
       applicationStatus: applicationStatusTable.applicationStatus
+    })
+    .from(studentsInformationTable)
+    .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
+    .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
+    
+  
+    console.log("Fetched Enrollees:", allEnrollees);
+    
+    return allEnrollees ;
+  };
+
+  
+  export const getAllEnrollees_cashier = async () => {
+    const allEnrollees = await db.select({
+      id: studentsInformationTable.id,
+      lrn: studentsInformationTable.lrn,
+      lastName: studentsInformationTable.studentsLastName,
+      firstName: studentsInformationTable.studentsFirstName,
+      middleName: studentsInformationTable.studentsMiddleName,
+      gradeLevel: educationalBackgroundTable.gradeLevel,
+      reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus
     })
     .from(studentsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
@@ -189,6 +210,16 @@ revalidatePath("/enrollment");
     .update(applicationStatusTable)
     .set({
       applicationStatus: applicationStatus,
+    })
+    .where(eq(applicationStatusTable.id, id));
+    revalidatePath("/");
+  };
+
+  export const acceptStudentsReservationPayment= async (id: number, reservationPaymentStatus: string) => {
+    await db
+    .update(applicationStatusTable)
+    .set({
+      reservationPaymentStatus: reservationPaymentStatus,
     })
     .where(eq(applicationStatusTable.id, id));
     revalidatePath("/");

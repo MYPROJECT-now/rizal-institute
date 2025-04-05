@@ -1,10 +1,10 @@
-export type studentType = {
+export type studentType_cashier = {
     id: number;
     lrn: string;
     firstName: string;
     lastName: string;
     middleName: string;
     gradeLevel: string | null;
-    applicationStatus: string | null;
+    reservationPaymentStatus: string | null;
   };
   
