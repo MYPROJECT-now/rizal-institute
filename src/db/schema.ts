@@ -28,6 +28,19 @@ export const guardianAndParentsTable = pgTable("guardianAndParentsTable", {
   email: varchar('email', { length:100 }).notNull(),
 })
 
+// export const StudentCurrentStatus = pgTable("studentCurrentStatus", {
+//   id: serial("id").primaryKey(),
+//   studentGradeLevel: varchar('studentGradeLevel', { length:100 }).notNull(),
+//   advancementStatus: varchar('advancementStatus', { length:100 }).notNull(),
+//   currentSchoolYear: varchar('currentSchoolYear', { length:100 }).notNull().default('2025-2026'),
+// })
+
+// schoolyear
+
+
+
+
+// enrolless table below
 export const educationalBackgroundTable = pgTable("educationalBackgroundTable" , {
   id: serial("id").primaryKey(),
   admissionStatus: varchar('admissionStatus', { length:100 }),
@@ -86,10 +99,3 @@ export const studentsInformationRelations = relations(studentsInformationTable, 
 }));
 
 
-//relations
-// export const clerkUserRelations = relations(clerkUserTable, ({ one }) => ({
-//   pwd: one(pwdTable, {
-//     fields: [clerkUserTable.pwdNo],
-//     references: [pwdTable.pwdNo],
-//   }),
-// }));

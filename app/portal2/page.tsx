@@ -6,14 +6,36 @@ import {
         SignedOut,
         UserButton,
         SignInButton,
+        useUser
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import { useResetModal } from "@/store/reset_pass";
+import { useResetModal } from "@/src/store/reset_pass";
 import { ResetPass } from "@/components/modals/reset_password/reset_pass";
-   
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 
 export default function Home() {
+  const { user, isSignedIn, isLoaded } = useUser(); 
+  const router = useRouter();
+  
+  useEffect(() => {
+      // Check if the user is signed in and user data is loaded
+      if (isSignedIn && isLoaded) {
+          // Assuming you have 'role' stored in publicMetadata of the user
+          if (user?.publicMetadata?.role === 'admin') {
+              router.push("/admin");
+          } else if (user?.publicMetadata?.role === 'student') {
+              router.push("/student");
+          } else if (user?.publicMetadata?.role === 'cashier') {
+              router.push("/cashier");
+          } else if (user?.publicMetadata?.role === 'registrar') {
+              router.push("/registrar");
+          } else {
+              router.push("/");
+          }
+      }
+  }, [isSignedIn, isLoaded, user, router]);
 
   const { open } = useResetModal();
 

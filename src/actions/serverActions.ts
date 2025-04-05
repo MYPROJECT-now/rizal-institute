@@ -1,8 +1,9 @@
 "use server"
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable  } from "../db/schema";
 import { revalidatePath } from "next/cache";
+import { StudentUpdateData } from "../type/re_applicationType";
 
 
 export const addTodo = async (
@@ -151,3 +152,213 @@ revalidatePath("/enrollment");
     
     return recentEnrollees ;
   };
+
+
+  export const getAllEnrollees = async () => {
+    const allEnrollees = await db.select({
+      id: studentsInformationTable.id,
+      lrn: studentsInformationTable.lrn,
+      lastName: studentsInformationTable.studentsLastName,
+      firstName: studentsInformationTable.studentsFirstName,
+      middleName: studentsInformationTable.studentsMiddleName,
+      gradeLevel: educationalBackgroundTable.gradeLevel,
+      applicationStatus: applicationStatusTable.applicationStatus
+    })
+    .from(studentsInformationTable)
+    .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
+    .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
+    .where(or(eq(applicationStatusTable.applicationStatus, 'Pending'), eq(applicationStatusTable.applicationStatus, 'Declined')))
+    
+  
+    console.log("Fetched Enrollees:", allEnrollees);
+    
+    return allEnrollees ;
+  };
+
+  export const updateStudentStatus = async (id: number, applicationStatus: string) => {
+    await db
+      .update(applicationStatusTable)
+      .set({
+        applicationStatus: applicationStatus,
+      })
+      .where(eq(applicationStatusTable.id, id));
+    revalidatePath("/");
+  };
+
+  // reapplication
+  export const getStudentDataByTrackingId = async (trackingId: string) => {
+    try {
+        const student = await db
+            .select({
+              id: studentsInformationTable.id,
+              lrn: studentsInformationTable.lrn,
+              studentsFirstName: studentsInformationTable.studentsFirstName,
+              studentsMiddleName: studentsInformationTable.studentsMiddleName,
+              studentsLastName: studentsInformationTable.studentsLastName,
+              studentsSuffix: studentsInformationTable.studentsSuffix,
+              dateOfBirth: studentsInformationTable.dateOfBirth,
+              age: studentsInformationTable.age,
+              gender: studentsInformationTable.gender,
+              civilStatus: studentsInformationTable.civilStatus,
+              nationality: studentsInformationTable.nationality,
+              religion: studentsInformationTable.religion,
+
+              guardiansLastName: guardianAndParentsTable.guardiansLastName,
+              guardiansFirstName: guardianAndParentsTable.guardiansFirstName,
+              guardiansMiddleName: guardianAndParentsTable.guardiansMiddleName,
+              guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
+              fullAddress: guardianAndParentsTable.fullAddress,
+              mobileNumber: guardianAndParentsTable.mobileNumber,
+              email: guardianAndParentsTable.email,
+
+              admissionStatus: educationalBackgroundTable.admissionStatus,
+              prevSchool: educationalBackgroundTable.prevSchool,
+              schoolAddress: educationalBackgroundTable.schoolAddress,
+              schoolType: educationalBackgroundTable.schoolType,
+              gradeLevel: educationalBackgroundTable.gradeLevel,
+              schoolYear: educationalBackgroundTable.schoolYear,
+
+              birthCert: documentsTable.birthCert,
+              reportCard: documentsTable.reportCard,
+              goodMoral: documentsTable.goodMoral,
+              idPic: documentsTable.idPic,
+              studentExitForm: documentsTable.studentExitForm
+
+           })
+            .from(studentsInformationTable)
+            .innerJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
+            .innerJoin(guardianAndParentsTable, eq(studentsInformationTable.id, guardianAndParentsTable.id))
+            .innerJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
+            .innerJoin(documentsTable, eq(studentsInformationTable.id, documentsTable.id))
+            .where(eq(applicationStatusTable.trackingId, trackingId))
+            .limit(1);
+
+        if (student.length === 0) {
+            throw new Error("No student data found.");
+        }
+
+        return student[0];
+    } catch (error) {
+        console.error("Error fetching student data:", error);
+        throw error;
+    }
+};
+
+
+
+
+
+export const updateStudentData = async (lrn: string, updatedData: StudentUpdateData) => {
+  try {
+    // Extract student and guardian data separately
+    const {
+      studentsFirstName,
+      studentsMiddleName,
+      studentsLastName,
+      studentsSuffix,
+      dateOfBirth,
+      age,
+      gender,
+      civilStatus,
+      nationality,
+      religion,
+
+      guardiansFirstName,
+      guardiansMiddleName,
+      guardiansLastName,
+      guardiansSuffix,
+      fullAddress,
+      mobileNumber,
+      email,
+
+      admissionStatus,
+      prevSchool,
+      schoolAddress,
+      schoolType,
+      gradeLevel,
+      schoolYear,
+
+      birthCert,
+      reportCard,
+      goodMoral,
+      idPic,
+      studentExitForm
+
+
+      
+
+
+    } = updatedData;
+
+    // Update studentsInformationTable
+    const updatedStudent = await db
+      .update(studentsInformationTable)
+      .set({
+        studentsFirstName,
+        studentsMiddleName,
+        studentsLastName,
+        studentsSuffix,
+        dateOfBirth,
+        age,
+        gender,
+        civilStatus,
+        nationality,
+        religion,
+      })
+      .where(eq(studentsInformationTable.lrn, lrn))
+      .returning();
+
+    const updatedGuardian = await db
+      .update(guardianAndParentsTable)
+      .set({
+        guardiansFirstName,
+        guardiansMiddleName,
+        guardiansLastName,
+        guardiansSuffix,
+        fullAddress,
+        mobileNumber,
+        email,
+      })
+      .where(eq(guardianAndParentsTable.id, updatedStudent[0]?.id))
+      .returning();
+
+    const updatedEducationalBackground = await db
+      .update(educationalBackgroundTable)
+      .set({
+        admissionStatus,
+        prevSchool,
+        schoolAddress,
+        schoolType,
+        gradeLevel,
+        schoolYear,
+      })
+      .where(eq(educationalBackgroundTable.id, updatedStudent[0]?.id))
+      .returning();
+
+    const updatedDocument = await db
+      .update(documentsTable)
+      .set({
+        birthCert,
+        reportCard,
+        goodMoral,
+        idPic,
+        studentExitForm
+      })
+      .where(eq(documentsTable.id, updatedStudent[0]?.id))
+      .returning();
+
+
+
+        //educational Background table
+
+    return {
+      student: updatedStudent[0],
+      guardian: updatedGuardian[0],
+      educationalBackground: updatedEducationalBackground[0],
+      document: updatedDocument[0]
+    };
+  } catch (error) {
+    console.error("Error updating student data:", error);
+    throw new Error("Failed to update student and guardian data.");
+  }
+};

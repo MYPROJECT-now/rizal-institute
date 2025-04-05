@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogTitle,
   } from "@/components/ui/dialog"
-import { useResetModal } from '@/store/reset_pass'
+import { useResetModal } from '@/src/store/reset_pass'
 
   
   
