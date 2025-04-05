@@ -70,8 +70,13 @@ const Header = () => {
 
                 <div>
                     <a href="/portal2">
-                    <button>
-                        portal
+                    <button className="text-base ">
+                        <Image 
+                        src="portal.svg"
+                        alt ="portal"
+                        height ={35}
+                        width ={35}
+                        />
                     </button>
                     </a>
                 </div>
