@@ -1,4 +1,5 @@
-import Image from "next/image";
+
+import { Profile_student } from "../profile/profile_student";
 
 const Admin_student = () => {
 
@@ -24,13 +25,14 @@ const Admin_student = () => {
                 <p className="font-Alfa text-lGreen text-2xl">
                     STUDENT
                 </p>
-                <Image
+                {/* <Image
                 src="/profile.png"
                 alt="profile"
                 width={100}
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
-                />
+                /> */}
+                  <Profile_student />
             </div>
         </div>
     );

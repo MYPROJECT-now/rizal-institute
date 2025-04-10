@@ -458,6 +458,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
         
             const data = await response.json();
             return data.secure_url; // Returns the image URL from Cloudinary
+    
         };
         
         const uploadBirthCert = birthCert ? await uploadImage(birthCert, 'documents') : "";

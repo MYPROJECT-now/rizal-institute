@@ -6,5 +6,6 @@ export type studentType_registrar = {
     middleName: string;
     gradeLevel: string | null;
     applicationStatus: string | null;
+    reservationPaymentStatus: string | null;
   };
   

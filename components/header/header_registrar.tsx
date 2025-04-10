@@ -1,5 +1,5 @@
-import Image from "next/image";
 
+import { Profile_registrar } from "../profile/profile_registrar";
 const Registrar_header = () => {
 
     const currentDate = new Date().toLocaleDateString('en-US', {
@@ -24,13 +24,14 @@ const Registrar_header = () => {
                 <p className="font-Alfa text-lGreen text-2xl">
                     REGISTRAR
                 </p>
-                <Image
+                {/* <Image
                 src="/profile.png"
                 alt="profile"
                 width={100}
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
-                />
+                /> */}
+                <Profile_registrar />
             </div>
         </div>
     );

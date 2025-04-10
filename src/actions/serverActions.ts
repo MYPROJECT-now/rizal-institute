@@ -1,7 +1,7 @@
 "use server"
-import { eq} from "drizzle-orm";
+import { eq, and, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable  } from "../db/schema";
+import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable, reservationStatusTable  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { StudentUpdateData } from "../type/re_applicationType";
 
@@ -162,7 +162,8 @@ revalidatePath("/enrollment");
       firstName: studentsInformationTable.studentsFirstName,
       middleName: studentsInformationTable.studentsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
-      applicationStatus: applicationStatusTable.applicationStatus
+      applicationStatus: applicationStatusTable.applicationStatus,
+      reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus, 
     })
     .from(studentsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
@@ -183,9 +184,11 @@ revalidatePath("/enrollment");
       firstName: studentsInformationTable.studentsFirstName,
       middleName: studentsInformationTable.studentsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
-      reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus
+      reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
+      applicationStatus: applicationStatusTable.applicationStatus
     })
     .from(studentsInformationTable)
+    .where(or(eq(applicationStatusTable.applicationStatus, "Pending"), eq(applicationStatusTable.applicationStatus, "Declined"), eq(applicationStatusTable.applicationStatus, "Ongoing")))
     .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
     .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
     
@@ -194,6 +197,30 @@ revalidatePath("/enrollment");
     
     return allEnrollees ;
   };
+
+  export const getAllReservedSlot_cashier = async () => {
+    const allEnrollees = await db.select({
+      id: studentsInformationTable.id,
+      lrn: studentsInformationTable.lrn,
+      lastName: studentsInformationTable.studentsLastName,
+      firstName: studentsInformationTable.studentsFirstName,
+      middleName: studentsInformationTable.studentsMiddleName,
+      gradeLevel: educationalBackgroundTable.gradeLevel,
+      admissionStatus: reservationStatusTable.admissionStatus
+    })
+    .from(studentsInformationTable)
+    .where(and(eq(applicationStatusTable.applicationStatus, "Reserved"), eq(applicationStatusTable.reservationPaymentStatus, "Reserved")))
+    .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
+    .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
+    .leftJoin(reservationStatusTable, eq(studentsInformationTable.id, reservationStatusTable.id))
+    
+  
+    console.log("Fetched Enrollees:", allEnrollees);
+    
+    return allEnrollees ;
+  };
+
+
 
   export const updateStudentStatus = async (id: number, applicationStatus: string) => {
     await db
@@ -205,23 +232,101 @@ revalidatePath("/enrollment");
     revalidatePath("/");
   };
 
-  export const acceptStudentsApplication = async (id: number, applicationStatus: string) => {
-    await db
-    .update(applicationStatusTable)
-    .set({
-      applicationStatus: applicationStatus,
-    })
-    .where(eq(applicationStatusTable.id, id));
+  // export const acceptStudentsApplication = async (id: number, applicationStatus: string) => {
+  //   await db
+  //   .update(applicationStatusTable)
+  //   .set({
+  //     applicationStatus: applicationStatus,
+  //   })
+  //   .where(eq(applicationStatusTable.id, id));
+  //   revalidatePath("/");
+  // };
+
+  // export const acceptStudentsReservationPayment= async (id: number, reservationPaymentStatus: string) => {
+  //   await db
+  //   .update(applicationStatusTable)
+  //   .set({
+  //     reservationPaymentStatus: reservationPaymentStatus,
+  //   })
+  //   .where(eq(applicationStatusTable.id, id));
+  //   revalidatePath("/");
+  // };
+
+
+  export const acceptStudentsApplication = async (id: number) => {
+    const student = await db
+      .select()
+      .from(applicationStatusTable)
+      .where(eq(applicationStatusTable.id, id))
+      .then((res) => res[0]);
+  
+    const reservationStatus = student?.reservationPaymentStatus;
+    
+    if (reservationStatus === "Ongoing") {
+      // Both statuses will be updated to Reserved if reservationStatus is Ongoing
+      await db
+        .update(applicationStatusTable)
+        .set({
+          applicationStatus: "Reserved",
+          reservationPaymentStatus: "Reserved",
+        })
+        .where(eq(applicationStatusTable.id, id));
+    } else {
+      // Only applicationStatus will be updated to Ongoing if reservationStatus is Pending
+      await db
+        .update(applicationStatusTable)
+        .set({
+          applicationStatus: "Ongoing",
+        })
+        .where(eq(applicationStatusTable.id, id));
+    }
+  
     revalidatePath("/");
   };
+  
 
-  export const acceptStudentsReservationPayment= async (id: number, reservationPaymentStatus: string) => {
+
+export const acceptStudentsReservationPayment = async (id: number) => {
+  const student = await db
+    .select()
+    .from(applicationStatusTable)
+    .where(eq(applicationStatusTable.id, id))
+    .then((res) => res[0]);
+
+  const applicationStatus = student?.applicationStatus;
+
+  if (applicationStatus === "Ongoing") {
+    // Both statuses will be updated to Reserved if applicationStatus is Ongoing
     await db
-    .update(applicationStatusTable)
+      .update(applicationStatusTable)
+      .set({
+        reservationPaymentStatus: "Reserved",
+        applicationStatus: "Reserved",
+      })
+      .where(eq(applicationStatusTable.id, id));
+  } else {
+    // Only reservationPaymentStatus will be updated to Ongoing if applicationStatus is Pending
+    await db
+      .update(applicationStatusTable)
+      .set({
+        reservationPaymentStatus: "Ongoing",
+      })
+      .where(eq(applicationStatusTable.id, id));
+  }
+
+  revalidatePath("/");
+};
+
+
+
+
+  export const acceptStudentsInititialPayment= async (id: number, admissionStatus: string) => {
+    await db
+    .update(reservationStatusTable)
     .set({
-      reservationPaymentStatus: reservationPaymentStatus,
+      admissionStatus: admissionStatus,
     })
-    .where(eq(applicationStatusTable.id, id));
+    .where(eq(reservationStatusTable.id, id));
     revalidatePath("/");
   };
     

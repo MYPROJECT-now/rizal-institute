@@ -6,5 +6,6 @@ export type studentType_cashier = {
     middleName: string;
     gradeLevel: string | null;
     reservationPaymentStatus: string | null;
+    applicationStatus: string | null
   };
   

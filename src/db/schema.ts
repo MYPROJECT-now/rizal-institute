@@ -1,6 +1,6 @@
 
 import { relations } from "drizzle-orm";
-import { integer, pgTable, serial, varchar, date } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg-core";
 
 export const studentsInformationTable = pgTable("studentsInformationTable", {
   id: serial("id").primaryKey(),
@@ -75,6 +75,21 @@ export const applicationStatusTable = pgTable("applicationStatusTable", {
 })
 
 
+export const reservationStatusTable = pgTable("reservedSlotTable", {
+  id: serial('id').primaryKey(),
+  admissionStatus: varchar('admissionStatus', { length:100 }).notNull(),
+  soaStatus: boolean('soaStatus').default(false).notNull(),
+})
+
+export const initialPaymentTable = pgTable("initialPaymentTable", {
+  id: serial('id').primaryKey(),
+  qoute: integer('qoute').notNull(),
+  mop: varchar('mop', { length:100 }).notNull(),
+  paymentType: varchar('paymentType', { length:100 }).notNull(),
+  paymentAmount: integer('paymentAmount').notNull(),
+})
+
+
 //relation
 export const studentsInformationRelations = relations(studentsInformationTable, ({ one }) => ({
   guardian: one(guardianAndParentsTable, {
@@ -97,6 +112,15 @@ export const studentsInformationRelations = relations(studentsInformationTable, 
     fields: [studentsInformationTable.id],
     references: [applicationStatusTable.id],
   }),
+  reservation: one(reservationStatusTable, {
+    fields: [studentsInformationTable.id],
+    references: [reservationStatusTable.id],
+  }),
+  initialPayment: one(initialPaymentTable, {
+    fields: [studentsInformationTable.id],
+    references: [initialPaymentTable.id],
+  }),
+
 }));
 
 

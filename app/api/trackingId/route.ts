@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
-import { applicationStatusTable } from '@/src/db/schema';
+import { applicationStatusTable, reservationStatusTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 
 
@@ -50,8 +50,10 @@ async function sendEmail(to:string, trackingId: string) {
     const trackingId = generateRandomTrackingId();
     const applicationStatus = 'Pending'; // or some other default status
     const reservationPaymentStatus = 'Pending';
+    const admissionStatus = 'Pending';
 
     await db.insert(applicationStatusTable).values({ trackingId, applicationStatus, reservationPaymentStatus, dateOfApplication: new Date().toISOString().slice(0, 10) });
+    await db.insert(reservationStatusTable).values({ admissionStatus, soaStatus: false });
         // Send the email with the password
     await sendEmail(email, trackingId);
     return NextResponse.json({ trackingId });
