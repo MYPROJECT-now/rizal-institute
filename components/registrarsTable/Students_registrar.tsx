@@ -1,3 +1,5 @@
+import { Button } from "../ui/button";
+
 export const StudentsTable = () => {
     const students = [
         {
@@ -24,12 +26,32 @@ export const StudentsTable = () => {
 
     return (
         <div className="flex flex-col">
-            <div className="h-[80px] w-full bg-lGreen">
-                STUDENT MANAGEMENT
-            </div>
-
-            <div>
-                filter
+            <div className="flex flex-row items-center my-5 ml-10 gap-5">
+                <p className="font-bold text-xl text-dGreen font-merriweather">
+                    Filter By:
+                </p>
+                <input 
+                    type="text"
+                    placeholder="Name"
+                    className="border border-gray-600 p-2 rounded" 
+                />
+                <input 
+                    type="text"
+                    placeholder="LRN"
+                    className="border border-gray-600 p-2 rounded" 
+                />
+                <select name="Grade Level"  className="border border-gray-600 p-2 rounded w-[200px]">
+                    <option value=""> Grade 7</option>
+                    <option value=""> Grade 8</option>
+                    <option value=""> Grade 9</option>
+                    <option value=""> Grade 10</option>
+                </select>
+                <Button
+                    variant="mButton"
+                    className=" text-white px-7 py-4 rounded-lg"
+                >
+                    Clear Filter
+                </Button>
             </div>
 
             <div className="mx-10">

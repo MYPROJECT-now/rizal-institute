@@ -83,10 +83,16 @@ export const reservationStatusTable = pgTable("reservedSlotTable", {
 
 export const initialPaymentTable = pgTable("initialPaymentTable", {
   id: serial('id').primaryKey(),
-  qoute: integer('qoute').notNull(),
   mop: varchar('mop', { length:100 }).notNull(),
   paymentType: varchar('paymentType', { length:100 }).notNull(),
   paymentAmount: integer('paymentAmount').notNull(),
+})
+
+export const tuitionFeeTable = pgTable("tuitionFeeTable", {
+  id: serial('id').primaryKey(),
+  tuitionFee: integer('tuitionFee').notNull(),
+  soa: varchar('soa', { length:100 }).notNull(),
+  siNumber: varchar('siNumber', { length:100 }).notNull(),
 })
 
 
@@ -120,6 +126,10 @@ export const studentsInformationRelations = relations(studentsInformationTable, 
     fields: [studentsInformationTable.id],
     references: [initialPaymentTable.id],
   }),
+  tuition: one(tuitionFeeTable, {
+    fields: [studentsInformationTable.id],
+    references: [tuitionFeeTable.id],
+  })
 
 }));
 

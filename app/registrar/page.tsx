@@ -13,16 +13,17 @@ const Dashboard = () => {
             <Registrar_header />
             <div className="w-full h-[550px] flex flex-col gap-10 mt-10 rounded-lg ">
                <div className="flex flex-col">
-                <p>
-                    Quick Stats
-                </p>
+                    <p className="text-2xl font-bold text-dGreen mb-2">
+                        Quick Stats
+                    </p>
                 <Top_analytics />
                </div>
 
                <div className="flex flex-col">
-                    <p>
+                    <p className="text-2xl font-bold text-dGreen mb-2">
                         Population Insight
                     </p>
+
                     <div className="flex flex-row gap-10">
                     <Ppgl />
                     <Enrollment />
@@ -30,7 +31,7 @@ const Dashboard = () => {
                </div>
 
                <div className="flex flex-col">
-                    <p>
+                    <p className="text-2xl font-bold text-dGreen mb-2">
                         Recent Enrollee
                     </p>
                     <RecentEnrolleesTable />

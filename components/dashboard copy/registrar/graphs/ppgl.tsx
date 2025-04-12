@@ -29,12 +29,12 @@ const chartData = [
   } satisfies ChartConfig
   
 
-export const Enrollment = () => {
+export const Ppgl = () => {
     return (
         <div>
         <Card className="w-[300px]">
             <CardHeader>
-                <CardTitle className="text-center">Enrollment Trend</CardTitle>
+                <CardTitle className="text-center">Payment Collected Per Grade Level</CardTitle>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig} style={{ width: 250, height: 200 }}>

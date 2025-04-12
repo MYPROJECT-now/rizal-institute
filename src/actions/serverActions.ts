@@ -1,7 +1,7 @@
 "use server"
 import { eq, and, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable, reservationStatusTable  } from "../db/schema";
+import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable, reservationStatusTable, tuitionFeeTable  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { StudentUpdateData } from "../type/re_applicationType";
 
@@ -505,5 +505,36 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
   } catch (error) {
     console.error("Error updating student data:", error);
     throw new Error("Failed to update student and guardian data.");
+  }
+};
+
+
+
+
+
+
+
+export const addTuition = async (
+  lrn: string,
+  tuitionFee: number,
+   soa: string, 
+  siNumber: string
+) => {
+  try {
+     // First, find the student by lrn
+     const student = await db
+     .select()
+     .from(studentsInformationTable)
+     .where(eq(studentsInformationTable.lrn, lrn))
+     .limit(1);
+
+   // If student not found, handle this scenario
+   if (!student || student.length === 0) {
+     throw new Error("Student not found");
+   }
+
+    await db.insert(tuitionFeeTable).values({ tuitionFee, soa, siNumber });
+  } catch (error) {
+    console.error("Error adding tuition:", error);
   }
 };
