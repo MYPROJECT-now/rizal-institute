@@ -54,7 +54,7 @@ const Students: FC<Props> = ({ students }) => {
 
 
   return (
-    <main className="mx-auto max-w-8xl w-full min-h-screen p-8 text-center">
+    <main className="mx-auto max-w-8xl w-full  p-8 text-center">
     <table className="w-full border-collapse border border-gray-300">
       <thead>
         <tr className="bg-green-600 text-white">

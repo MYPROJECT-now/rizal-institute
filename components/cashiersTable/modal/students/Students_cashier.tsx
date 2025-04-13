@@ -1,32 +1,37 @@
 "use client";
 
-import { useRegGradesModal } from "@/src/store/registrar/grades";
-import { Button } from "../ui/button";
-import { Reg_Grades } from "./modal/grades/grades";
+import { Button } from "@/components/ui/button";
 
-export const GradeTable = () => {
+export const StudentsTableCashier = () => {
     const students = [
         {
             lrn: "123546547958",
             fullName: "Tamad, Juan A.",
             gradeLevel: "Grade 7",
-            status: "Fail",
+            totalFees: 10000,
+            amountPaid: 6000,
+            balance: 4000,
+            status: "Partial",
         },
         {
-            lrn: "123546547958",
-            fullName: "Tamad, Juan A.",
-            gradeLevel: "Grade 7",
-            status: "Passed",
+            lrn: "987654321012",
+            fullName: "Masipag, Maria B.",
+            gradeLevel: "Grade 8",
+            totalFees: 12000,
+            amountPaid: 12000,
+            balance: 0,
+            status: "Paid",
         },
         {
-            lrn: "123546547958",
-            fullName: "Tamad, Juan A.",
-            gradeLevel: "Grade 7",
-            status: "Passed",
+            lrn: "192837465091",
+            fullName: "Magaling, Jose C.",
+            gradeLevel: "Grade 9",
+            totalFees: 11000,
+            amountPaid: 5000,
+            balance: 6000,
+            status: "Partial",
         },
     ];
-
-    const { open } = useRegGradesModal();
 
     return (
         <div className="flex flex-col">
@@ -56,13 +61,6 @@ export const GradeTable = () => {
                 >
                     Clear Filter
                 </Button>
-
-                <Button
-                    variant="mButton"
-                    className="text-white px-7 py-4 rounded-lg"
-                >
-                    ADD GRADE
-                </Button>
             </div>
 
             <div className="mx-10">
@@ -70,10 +68,13 @@ export const GradeTable = () => {
                     <thead>
                         <tr className="bg-green-600 text-white">
                             <th className="border border-green-600 p-2">LRN</th>
-                            <th className="border border-green-600 p-2">Name</th>
-                            <th className="border border-green-600 p-2">Grade</th>
-                            <th className="border border-green-600 p-2">View Grades</th>
+                            <th className="border border-green-600 p-2">Full Name</th>
+                            <th className="border border-green-600 p-2">Grade Level</th>
+                            <th className="border border-green-600 p-2">Total Fees</th>
+                            <th className="border border-green-600 p-2">Amount Paid</th>
+                            <th className="border border-green-600 p-2">Balance</th>
                             <th className="border border-green-600 p-2">Status</th>
+                            <th className="border border-green-600 p-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,16 +83,14 @@ export const GradeTable = () => {
                                 <td className="border border-green-600 p-2">{student.lrn}</td>
                                 <td className="border border-green-600 p-2">{student.fullName}</td>
                                 <td className="border border-green-600 p-2">{student.gradeLevel}</td>
-                                <td className="border border-green-600 p-2">
-                                    <Reg_Grades />
-                                    <button 
-                                    className="bg-green-500 text-white px-4 py-1 rounded"
-                                    onClick={open}
-                                    >
-                                        View
-                                    </button>
-                                </td>
+                                <td className="border border-green-600 p-2">₱{student.totalFees.toLocaleString()}</td>
+                                <td className="border border-green-600 p-2">₱{student.amountPaid.toLocaleString()}</td>
+                                <td className="border border-green-600 p-2">₱{student.balance.toLocaleString()}</td>
                                 <td className="border border-green-600 p-2">{student.status}</td>
+                                <td className="border border-green-600 p-2">
+                                    <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</button>
+                                    <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

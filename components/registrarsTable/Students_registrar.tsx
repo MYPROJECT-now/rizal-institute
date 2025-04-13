@@ -1,4 +1,8 @@
+"use client";
+
+import { useRegStudentsModal } from "@/src/store/registrar/students";
 import { Button } from "../ui/button";
+import { Reg_Students } from "./modal/registrar/students";
 
 export const StudentsTable = () => {
     const students = [
@@ -23,6 +27,7 @@ export const StudentsTable = () => {
         },
       ];
 
+      const { open } = useRegStudentsModal();
 
     return (
         <div className="flex flex-col">
@@ -55,6 +60,7 @@ export const StudentsTable = () => {
             </div>
 
             <div className="mx-10">
+                <Reg_Students />
                 <table className="w-full border-collapse border border-green-600 text-center">
                     <thead>
                     <tr className="bg-green-600 text-white">
@@ -73,7 +79,12 @@ export const StudentsTable = () => {
                         <td className="border border-green-600 p-2">{student.fullName}</td>
                         <td className="border border-green-600 p-2">{student.gradeLevel}</td>
                         <td className="border border-green-600 p-2">
-                            <button className="bg-green-500 text-white px-4 py-1 rounded">View</button>
+                            <button 
+                                className="bg-green-500 text-white px-4 py-1 rounded"
+                                onClick={open}
+                            >
+                                View
+                            </button>
                         </td>
                         <td className="border border-green-600 p-2">
                             <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</button>

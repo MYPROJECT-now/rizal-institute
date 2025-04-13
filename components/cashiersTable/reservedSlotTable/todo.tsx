@@ -4,6 +4,8 @@ import { FC } from "react";
 import { reservedSlotType } from "@/src/type/reservedSlotType";
 import { useRemarksModal } from "@/src/store/remarks_modal";
 import { StatusModal } from "@/components/modals/remarks_cashier/remark_modal";
+import { useCashierReservedModal } from "@/src/store/cashier/reserved";
+import { Cashier_UpfrontPaymentReview } from "../modal/reserved/Enrollees_cashier";
 
 
 interface Props {
@@ -13,13 +15,22 @@ interface Props {
 
 const Student: FC<Props> = ({ student, onAccept  }) => {
   const { open } = useRemarksModal();
+  const { open: openEnrollees } = useCashierReservedModal();
   
   return (
     <tr className="border-b text-center">
       <td className="px-1 py-2">{student.lrn}</td>
       <td className="px-4 py-2">{student.lastName} {student.firstName} {student.middleName}</td>
       <td className="px-2 py-2">{student.gradeLevel}</td>
-      <td className="px-4 py-2"> <button>details</button></td>
+      <td className="px-4 py-2"> 
+        <Cashier_UpfrontPaymentReview />
+        <button 
+        className="bg-green-500 text-white px-3 py-1 rounded"
+        onClick={openEnrollees}
+        >
+          details
+        </button>
+      </td>
        <td className="px-4 py-2 space-x-2">
               <button
                 onClick={() => onAccept(student.id)}

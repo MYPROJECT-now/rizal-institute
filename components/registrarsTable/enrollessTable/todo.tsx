@@ -4,6 +4,8 @@ import { FC } from "react";
 import { studentType_registrar  } from "@/src/type/AllEnrolleeType_registrar";
 import { useRemarksModal } from "@/src/store/remarks_modal";
 import { StatusModal } from "@/components/modals/remarks_registrar/remark_modal";
+import { useRegEnrolleesModal } from "@/src/store/registrar/enrollees";
+import { Reg_Enrollees } from "../modal/enrollees/enrollees";
 
 interface Props {
   student: studentType_registrar ;
@@ -12,6 +14,7 @@ interface Props {
 
 const Student: FC<Props> = ({ student, onAccept  }) => {
   const { open } = useRemarksModal();
+   const { open: openEnrollees } = useRegEnrolleesModal();
 
   return (
     <tr className="border-b">
@@ -19,7 +22,12 @@ const Student: FC<Props> = ({ student, onAccept  }) => {
       <td className="px-4 py-2">{student.lastName} {student.firstName} {student.middleName}</td>
       <td className="px-4 py-2">{student.gradeLevel}</td>
       <td className="px-4 py-2">
-        <button className="bg-green-500 text-white px-3 py-1 rounded">View</button>
+        <Reg_Enrollees />
+        <button 
+          className="bg-green-500 text-white px-3 py-1 rounded"
+          onClick={openEnrollees}>
+            View
+          </button>
       </td>
       <td className="px-4 py-2 space-x-2">
         <button

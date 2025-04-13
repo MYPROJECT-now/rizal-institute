@@ -1,13 +1,22 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
+import { SidebarItemAdmin } from "./sidebar_item_admin";
+import { useFiscalYearModal } from "@/src/store/admin/fiscal_year";
+import { Fiscal_Year } from "../admin/modal/fiscalYear/fiscal_Year";
+import { useEnrollmentModal } from "@/src/store/admin/enrollment";
+import { EnrollmentManagement } from "../admin/modal/enrollment_management/enrollment";
 
 type Props = {
     className?: string;
 };
 
 export const Sidebar_admin = ({ className }: Props) => {
+    const { open } = useFiscalYearModal();
+    const {open: openEnrollment} = useEnrollmentModal();
     return (
         <div
             className={cn(
@@ -37,25 +46,28 @@ export const Sidebar_admin = ({ className }: Props) => {
                     <SidebarItem 
                         label="Account" 
                         href="/admin/account"
-                        iconSrc="/dashboard.png" 
+                        iconSrc="/account.png" 
                     />     
 
                     <SidebarItem 
                         label="Users" 
                         href="/admin/Users"
-                        iconSrc="/dashboard.png" 
+                        iconSrc="/users.png" 
                     />   
 
-                    <SidebarItem 
+                    <Fiscal_Year />
+                    <SidebarItemAdmin 
                         label="Fiscal Year" 
-                        href="/admin/Users"
-                        iconSrc="/dashboard.png" 
+                        iconSrc="/calendar.png" 
+                        onClick={open}
                     />     
 
-                    <SidebarItem 
+                    <EnrollmentManagement />
+                    <SidebarItemAdmin 
                         label="Enrollment" 
-                        href="/admin/Users"
-                        iconSrc="/dashboard.png" 
+                        iconSrc="/book.png" 
+                        onClick={openEnrollment}
+                        
                     />     
                 </div>
 
