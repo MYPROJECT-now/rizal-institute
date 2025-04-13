@@ -13,6 +13,7 @@ import { useResetModal } from "@/src/store/reset_pass";
 import { ResetPass } from "@/components/modals/reset_password/reset_pass";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -47,14 +48,14 @@ export default function Home() {
           <div className="bg-white/25 border-2 border-white p-10 rounded-2xl shadow-lg w-96 text-center">
             <div className="mb-6 flex flex-row relative">
               <div className="absolute top-[-20px] left-[-20px]  z-10 flex flex-row gap-2 items-center">
-                <a href="/">
+                <Link href="/">
                   <Image 
                   src="/back.png"
                   width={40}
                   height={40} 
                   alt="back"
                   />
-                </a>
+                </Link>
 
               </div>
               <Image 
