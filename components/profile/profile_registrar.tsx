@@ -49,9 +49,10 @@ export const Profile_registrar = () => {
                     </button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                <SignOutButton>
+                <SignOutButton
+                    redirectUrl="/portal2">
                     <button>
-                        LOGOUT
+                            LOGOUT
                     </button>
                 </SignOutButton>
                 </DropdownMenuItem>

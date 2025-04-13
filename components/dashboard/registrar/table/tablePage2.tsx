@@ -34,7 +34,7 @@ export const RecentEnrolleesTable = () => {
 
   return (
     <div className="overflow-x-auto mb-10">
-      <table className="min-w-full border-collapse border border-gray-300">
+      <table className="min-w-full border-collapse border border-gray-300 text-center">
         <thead>
           <tr className="bg-gray-200">
             <th className="border p-2">LRN</th>

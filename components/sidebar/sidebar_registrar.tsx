@@ -46,6 +46,13 @@ export const Sidebar_registrar = ({ className }: Props) => {
                         iconSrc="/enrollment.png" 
                     />
 
+                    <SidebarItem 
+                        label="Grades" 
+                        href="/registrar/grades"
+                        iconSrc="/grades.png" 
+                    />
+                    
+
 
 
             

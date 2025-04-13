@@ -49,7 +49,9 @@ export const Profile_cashier = () => {
                     </button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                <SignOutButton>
+                <SignOutButton
+                    redirectUrl="/portal2"
+                >
                     <button>
                         LOGOUT
                     </button>

@@ -32,14 +32,33 @@ export const Sidebar_admin = ({ className }: Props) => {
                         label="Dashboard" 
                         href="/admin"
                         iconSrc="/dashboard.png" 
-                    />
+                    />     
 
+                    <SidebarItem 
+                        label="Account" 
+                        href="/admin/account"
+                        iconSrc="/dashboard.png" 
+                    />     
 
+                    <SidebarItem 
+                        label="Users" 
+                        href="/admin/Users"
+                        iconSrc="/dashboard.png" 
+                    />   
 
+                    <SidebarItem 
+                        label="Fiscal Year" 
+                        href="/admin/Users"
+                        iconSrc="/dashboard.png" 
+                    />     
 
-
-            
+                    <SidebarItem 
+                        label="Enrollment" 
+                        href="/admin/Users"
+                        iconSrc="/dashboard.png" 
+                    />     
                 </div>
+
             </div>
                 
         </div>
