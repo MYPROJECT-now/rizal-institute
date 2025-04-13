@@ -9,7 +9,7 @@ const RegistrarsEnrolleesTable = () => {
             <Cashier_header /> 
             <div className="w-full h-[550px] bg-white self-center  mt-10 rounded-lg ">
                 <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
-                    Enrollee MANAGEMENT
+                    ENROLLEE MANAGEMENT
                 </div>
                 <div className="flex flex-row items-center mt-5 ml-10 gap-5">
                                 <p className="font-bold text-xl text-dGreen font-merriweather">
