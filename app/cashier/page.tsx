@@ -22,7 +22,7 @@ const Dashboard = () => {
 
                <div className="flex flex-col">
                     <p className="text-2xl font-bold text-dGreen mb-2">
-                        Population Insight
+                        Financial Insight
                     </p>
                     <div className="flex flex-row gap-10">
                     <Ppgl />
