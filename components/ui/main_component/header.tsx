@@ -1,38 +1,11 @@
 // module header so it can be used in multiple pages
 "use client";
-import { 
-    useUser,
-
-} from "@clerk/nextjs";
-
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "../button";
-
 const Header = () => {
 
-    const { user, isSignedIn, isLoaded } = useUser(); 
-    const router = useRouter();
-    
-    useEffect(() => {
-        // Check if the user is signed in and user data is loaded
-        if (isSignedIn && isLoaded) {
-            // Assuming you have 'role' stored in publicMetadata of the user
-            if (user?.publicMetadata?.role === 'admin') {
-                router.push("/admin");
-            } else if (user?.publicMetadata?.role === 'student') {
-                router.push("/student");
-            } else if (user?.publicMetadata?.role === 'cashier') {
-                router.push("/cashier");
-            } else if (user?.publicMetadata?.role === 'registrar') {
-                router.push("/registrar");
-            } else {
-                router.push("/");
-            }
-        }
-    }, [isSignedIn, isLoaded, user, router]);
 
 
     return (
@@ -70,13 +43,8 @@ const Header = () => {
 
                 <div>
                     <a href="/portal2">
-                    <button className="text-base ">
-                        <Image 
-                        src="portal.svg"
-                        alt ="portal"
-                        height ={35}
-                        width ={35}
-                        />
+                    <button>
+                        portal
                     </button>
                     </a>
                 </div>

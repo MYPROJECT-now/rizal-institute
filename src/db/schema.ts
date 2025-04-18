@@ -1,6 +1,6 @@
 
 import { relations } from "drizzle-orm";
-import { integer, pgTable, serial, varchar, date } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg-core";
 
 export const studentsInformationTable = pgTable("studentsInformationTable", {
   id: serial("id").primaryKey(),
@@ -28,6 +28,19 @@ export const guardianAndParentsTable = pgTable("guardianAndParentsTable", {
   email: varchar('email', { length:100 }).notNull(),
 })
 
+// export const StudentCurrentStatus = pgTable("studentCurrentStatus", {
+//   id: serial("id").primaryKey(),
+//   studentGradeLevel: varchar('studentGradeLevel', { length:100 }).notNull(),
+//   advancementStatus: varchar('advancementStatus', { length:100 }).notNull(),
+//   currentSchoolYear: varchar('currentSchoolYear', { length:100 }).notNull().default('2025-2026'),
+// })
+
+// schoolyear
+
+
+
+
+// enrolless table below
 export const educationalBackgroundTable = pgTable("educationalBackgroundTable" , {
   id: serial("id").primaryKey(),
   admissionStatus: varchar('admissionStatus', { length:100 }),
@@ -57,7 +70,29 @@ export const applicationStatusTable = pgTable("applicationStatusTable", {
   id: serial('id').primaryKey(),
   trackingId: varchar('trackingId', { length:100 }).notNull(),
   applicationStatus: varchar('applicationStatus', { length:100 }).notNull(),
+  reservationPaymentStatus: varchar('reservationStatus', { length:100 }).notNull(),
   dateOfApplication: date('dateOfApplication').notNull(),
+})
+
+
+export const reservationStatusTable = pgTable("reservedSlotTable", {
+  id: serial('id').primaryKey(),
+  admissionStatus: varchar('admissionStatus', { length:100 }).notNull(),
+  soaStatus: boolean('soaStatus').default(false).notNull(),
+})
+
+export const initialPaymentTable = pgTable("initialPaymentTable", {
+  id: serial('id').primaryKey(),
+  mop: varchar('mop', { length:100 }).notNull(),
+  paymentType: varchar('paymentType', { length:100 }).notNull(),
+  paymentAmount: integer('paymentAmount').notNull(),
+})
+
+export const tuitionFeeTable = pgTable("tuitionFeeTable", {
+  id: serial('id').primaryKey(),
+  tuitionFee: integer('tuitionFee').notNull(),
+  soa: varchar('soa', { length:100 }).notNull(),
+  siNumber: varchar('siNumber', { length:100 }).notNull(),
 })
 
 
@@ -83,13 +118,19 @@ export const studentsInformationRelations = relations(studentsInformationTable, 
     fields: [studentsInformationTable.id],
     references: [applicationStatusTable.id],
   }),
+  reservation: one(reservationStatusTable, {
+    fields: [studentsInformationTable.id],
+    references: [reservationStatusTable.id],
+  }),
+  initialPayment: one(initialPaymentTable, {
+    fields: [studentsInformationTable.id],
+    references: [initialPaymentTable.id],
+  }),
+  tuition: one(tuitionFeeTable, {
+    fields: [studentsInformationTable.id],
+    references: [tuitionFeeTable.id],
+  })
+
 }));
 
 
-//relations
-// export const clerkUserRelations = relations(clerkUserTable, ({ one }) => ({
-//   pwd: one(pwdTable, {
-//     fields: [clerkUserTable.pwdNo],
-//     references: [pwdTable.pwdNo],
-//   }),
-// }));

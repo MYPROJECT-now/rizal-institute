@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
-import { useStatusModal } from "@/store/status_modal";
+import { useStatusModal } from "@/src/store/status_modal";
 import { StatusModal } from "@/components/modals/status_modal";
 
 

@@ -23,7 +23,7 @@ const chartData = [
   ]
   const chartConfig = {
     desktop: {
-      label: "Mob",
+      label: "Value",
       color: "hsl(var(--chart-1))",
     },
   } satisfies ChartConfig
@@ -32,12 +32,12 @@ const chartData = [
 export const Ppgl = () => {
     return (
         <div>
-        <Card className="w-[300px]">
+        <Card className="w-[550px]">
             <CardHeader>
                 <CardTitle className="text-center">Population Per Grade Level</CardTitle>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig} style={{ width: 250, height: 200 }}>
+                <ChartContainer config={chartConfig} style={{ width: 500, height: 200 }}>
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis

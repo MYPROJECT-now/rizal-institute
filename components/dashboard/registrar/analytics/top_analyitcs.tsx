@@ -5,10 +5,10 @@ export const Top_analytics = () => {
         <div className="flex flex-row gap-9">
             <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
-                    <p>
+                    <p className="font-bold text-[16px]">
                         Total Students
                     </p>
-                    <p>
+                    <p className="font-bold text-sm">
                         65
                     </p>
                 </div>
@@ -24,16 +24,16 @@ export const Top_analytics = () => {
 
             <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
-                    <p>
-                        Total Students
+                    <p className="font-bold text-lg">
+                        Total Boys
                     </p>
-                    <p>
+                    <p className="font-bold text-sm">
                         65
                     </p>
                 </div>
                 <div>
                     <Image
-                        src="/cup.png"
+                        src="/boys.png"
                         alt="cup"
                         width={40}
                         height={40}
@@ -43,16 +43,16 @@ export const Top_analytics = () => {
 
             <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
-                    <p>
-                        Total Students
+                    <p className="font-bold text-lg">
+                        Total Girls
                     </p>
-                    <p>
+                    <p className="font-bold text-sm">
                         65
                     </p>
                 </div>
                 <div>
                     <Image
-                        src="/cup.png"
+                        src="/girls.png"
                         alt="cup"
                         width={40}
                         height={40}
@@ -62,16 +62,16 @@ export const Top_analytics = () => {
 
             <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
-                    <p>
-                        Total Students
+                    <p className="font-bold text-lg">
+                       Enrollees
                     </p>
-                    <p>
+                    <p className="font-bold text-sm">
                         65
                     </p>
                 </div>
                 <div>
                     <Image
-                        src="/cup.png"
+                        src="/clipboard.png"
                         alt="cup"
                         width={40}
                         height={40}
@@ -81,16 +81,16 @@ export const Top_analytics = () => {
 
             <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
-                    <p>
-                        Total Students
+                    <p className="font-bold text-[16px]">
+                        Reserved Slot
                     </p>
-                    <p>
+                    <p className="font-bold text-sm">
                         65
                     </p>
                 </div>
                 <div>
                     <Image
-                        src="/cup.png"
+                        src="/slot.png"
                         alt="cup"
                         width={40}
                         height={40}

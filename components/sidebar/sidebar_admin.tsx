@@ -1,15 +1,22 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
-import { SignOutButton} from "@clerk/nextjs";
-import { Button } from "../ui/button";
+import { SidebarItemAdmin } from "./sidebar_item_admin";
+import { useFiscalYearModal } from "@/src/store/admin/fiscal_year";
+import { Fiscal_Year } from "../admin/modal/fiscalYear/fiscal_Year";
+import { useEnrollmentModal } from "@/src/store/admin/enrollment";
+import { EnrollmentManagement } from "../admin/modal/enrollment_management/enrollment";
 
 type Props = {
     className?: string;
 };
 
 export const Sidebar_admin = ({ className }: Props) => {
+    const { open } = useFiscalYearModal();
+    const {open: openEnrollment} = useEnrollmentModal();
     return (
         <div
             className={cn(
@@ -34,27 +41,36 @@ export const Sidebar_admin = ({ className }: Props) => {
                         label="Dashboard" 
                         href="/admin"
                         iconSrc="/dashboard.png" 
-                    />
+                    />     
 
                     <SidebarItem 
-                        label="Students" 
+                        label="Account" 
                         href="/admin/account"
-                        iconSrc="/student_logo.png" 
-                    />
+                        iconSrc="/account.png" 
+                    />     
 
+                    <SidebarItem 
+                        label="Users" 
+                        href="/admin/Users"
+                        iconSrc="/users.png" 
+                    />   
 
-                    <SignOutButton>
-                        <Button
-                        variant="link"
-                        size="sm">
-                        Logout
-                        </Button>
-                    </SignOutButton>
+                    <Fiscal_Year />
+                    <SidebarItemAdmin 
+                        label="Fiscal Year" 
+                        iconSrc="/calendar.png" 
+                        onClick={open}
+                    />     
 
-
-
-            
+                    <EnrollmentManagement />
+                    <SidebarItemAdmin 
+                        label="Enrollment" 
+                        iconSrc="/book.png" 
+                        onClick={openEnrollment}
+                        
+                    />     
                 </div>
+
             </div>
                 
         </div>

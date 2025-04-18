@@ -1,7 +1,17 @@
-import Image from "next/image";
+// "use client";
+
+import { Profile_cashier } from "../profile/profile_cashier";
+// import { useUser } from "@clerk/nextjs";
+// import { useEffect } from "react";
 
 const Cashier_header = () => {
+    // const { user } = useUser();
 
+    // useEffect(() => {
+    //     if (user) {
+    //         console.log("User:", user);
+    //     }
+    // }, [user]);
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
         year: 'numeric',   // Full year (e.g., 2024)
@@ -24,13 +34,14 @@ const Cashier_header = () => {
                 <p className="font-Alfa text-lGreen text-2xl">
                     CASHIER
                 </p>
-                <Image
+                {/* <Image
                 src="/profile.png"
                 alt="profile"
                 width={100}
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
-                />
+                /> */}
+                <Profile_cashier />
             </div>
         </div>
     );

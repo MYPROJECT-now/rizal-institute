@@ -2,8 +2,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
-import { SignOutButton} from "@clerk/nextjs";
-import { Button } from "../ui/button";
 
 type Props = {
     className?: string;
@@ -49,18 +47,10 @@ export const Sidebar_cashier = ({ className }: Props) => {
                     />
 
                     <SidebarItem 
-                        label="Admin Settings" 
-                        href="/admin/settings"
-                        iconSrc="/settings.png" 
+                        label="Reserved Slot" 
+                        href="/cashier/reserved"
+                        iconSrc="/reserved.png" 
                     />
-
-                    <SignOutButton>
-                        <Button
-                        variant="link"
-                        size="sm">
-                        Logout
-                        </Button>
-                    </SignOutButton>
 
 
 

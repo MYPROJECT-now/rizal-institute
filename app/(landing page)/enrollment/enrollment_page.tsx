@@ -458,6 +458,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
         
             const data = await response.json();
             return data.secure_url; // Returns the image URL from Cloudinary
+    
         };
         
         const uploadBirthCert = birthCert ? await uploadImage(birthCert, 'documents') : "";
@@ -876,10 +877,10 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             value={gradeLevel} 
                             >
                             <option className="text-gray-300" value="">Grade</option>
-                            <option className="text-black" value="Grade6">Grade 6</option>
                             <option className="text-black" value="Grade7">Grade 7</option>
                             <option className="text-black" value="Grade8">Grade 8</option>
                             <option className="text-black" value="Grade9">Grade 9</option>
+                            <option className="text-black" value="Grade9">Grade 10</option>
                         </select>
                         <select
                             className={`bg-gray-300/50 h-[36px] w-[200px] rounded-lg font-sans ${
