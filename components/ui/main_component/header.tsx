@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "../button";
+
 const Header = () => {
 
 
@@ -44,7 +45,7 @@ const Header = () => {
                 <div>
                     <a href="/portal2">
                     <button>
-                        portal
+                         <img src="portal.svg" className="h-10 w-10"/>
                     </button>
                     </a>
                 </div>
