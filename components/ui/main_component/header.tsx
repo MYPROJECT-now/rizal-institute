@@ -1,8 +1,7 @@
 // module header so it can be used in multiple pages
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
 import { Button } from "../button";
 
 const Header = () => {
