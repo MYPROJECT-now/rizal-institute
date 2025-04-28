@@ -25,6 +25,9 @@ const buttonVariants = cva(
           "bg-lGreen text-white hover:bg-green-500 border-b-[7px] active:border-0 border-b-dGreen font-oswald",
         sButton:
           "bg-white text-lGreen hover:bg-gray/90 border-b-[7px] active:border-0 border-b-slGreen font-oswald",
+        hButton:
+        "text-3xl font-bold hover:bg-green-700"
+        
         
       },
       size: {

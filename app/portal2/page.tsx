@@ -66,7 +66,6 @@ export default function Home() {
                 className="mx-auto"
               />
             </div>
-            <h2 className="text-4xl font-bold text-white mb-2">Welcome Back!!</h2>
             <h2 className="text-2xl font-bold text-white mb-6">Welcome to Rizal Institute</h2>
             <div className="flex justify-center mb-4">
               <SignedIn>
