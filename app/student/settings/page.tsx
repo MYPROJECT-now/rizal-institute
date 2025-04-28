@@ -1,10 +1,10 @@
 "use client";
-import Registrar_header from "@/components/header/header_registrar";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/changePassword";
 import StudentClientComponent from "@/components/validation/student_validate";
+import Admin_student from "@/components/header/header_student";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -49,7 +49,7 @@ const RegistrarsEnrolleesTable = () => {
   return (
     <StudentClientComponent>
       <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page ">
-        <Registrar_header />
+        <Admin_student />
         <div className="w-full h-[550px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
           <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
               PASSWORD MANAGEMENT
