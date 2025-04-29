@@ -1,4 +1,12 @@
-export const EnrolleesTable = () => {
+"use client";
+
+import { useRegStudentsModal } from "@/src/store/registrar/students";
+import { Button } from "../../ui/button";
+import { Reg_Students } from "../enrollees/modal/students";
+import { Reg_AddStudent } from "./modal/addStudent";
+import { useRegAddStudentModal } from "@/src/store/registrar/add_student";
+
+export const StudentsTable = () => {
     const students = [
         {
           lrn: "123546547958",
@@ -21,18 +29,49 @@ export const EnrolleesTable = () => {
         },
       ];
 
+      const { open } = useRegStudentsModal();
+      const { open: openAddStudent } = useRegAddStudentModal();
 
     return (
         <div className="flex flex-col">
-            <div className="h-[80px] w-full bg-lGreen">
-                ENROLLMENT MANAGEMENT
-            </div>
-
-            <div>
-                filter
+            <div className="flex flex-row items-center my-5 ml-10 gap-5">
+                <p className="font-bold text-xl text-dGreen font-merriweather">
+                    Filter By:
+                </p>
+                <input 
+                    type="text"
+                    placeholder="Name"
+                    className="border border-gray-600 p-2 rounded" 
+                />
+                <input 
+                    type="text"
+                    placeholder="LRN"
+                    className="border border-gray-600 p-2 rounded" 
+                />
+                <select name="Grade Level"  className="border border-gray-600 p-2 rounded w-[200px]">
+                    <option value=""> Grade 7</option>
+                    <option value=""> Grade 8</option>
+                    <option value=""> Grade 9</option>
+                    <option value=""> Grade 10</option>
+                </select>
+                <Button
+                    variant="mButton"
+                    className=" text-white px-7 py-4 rounded-lg"
+                >
+                    Clear Filter
+                </Button>
+                <Reg_AddStudent />
+                <Button
+                    onClick={() => openAddStudent()}
+                    variant="mButton"
+                    className=" text-white px-7 py-4 rounded-lg"
+                >
+                    Add Student
+                </Button>
             </div>
 
             <div className="mx-10">
+                <Reg_Students />
                 <table className="w-full border-collapse border border-green-600 text-center">
                     <thead>
                     <tr className="bg-green-600 text-white">
@@ -51,7 +90,12 @@ export const EnrolleesTable = () => {
                         <td className="border border-green-600 p-2">{student.fullName}</td>
                         <td className="border border-green-600 p-2">{student.gradeLevel}</td>
                         <td className="border border-green-600 p-2">
-                            <button className="bg-green-500 text-white px-4 py-1 rounded">View</button>
+                            <button 
+                                className="bg-green-500 text-white px-4 py-1 rounded"
+                                onClick={open}
+                            >
+                                View
+                            </button>
                         </td>
                         <td className="border border-green-600 p-2">
                             <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</button>

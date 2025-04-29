@@ -7,7 +7,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { useStatusModal } from "@/src/store/status_modal";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useState } from "react";
 import { getStatusByTrackingId } from "@/src/actions/serverActions";
 import { useRouter } from "next/navigation";

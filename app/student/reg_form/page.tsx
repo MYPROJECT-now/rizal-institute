@@ -1,5 +1,5 @@
 
-import { Registration_Form } from "@/components/admin/reg form/reg_form";
+import { Registration_Form } from "@/components/students/reg form/reg_form";
 import Admin_student from "@/components/header/header_student";
 import StudentClientComponent from "@/components/validation/student_validate";
 

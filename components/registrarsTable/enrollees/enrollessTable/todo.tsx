@@ -3,9 +3,9 @@
 import { FC } from "react";
 import { studentType_registrar  } from "@/src/type/AllEnrolleeType_registrar";
 import { useRemarksModal } from "@/src/store/remarks_modal";
-import { StatusModal } from "@/components/modals/remarks_registrar/remark_modal";
+import { StatusModal } from "@/components/registrarsTable/remarks_registrar/remark_modal";
 import { useRegEnrolleesModal } from "@/src/store/registrar/enrollees";
-import { Reg_Enrollees } from "../modal/enrollees/enrollees";
+import { Reg_Enrollees } from "../enrollees_modal/enrollees";
 
 interface Props {
   student: studentType_registrar ;

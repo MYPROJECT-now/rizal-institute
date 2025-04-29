@@ -1,9 +1,9 @@
 import Registrar_header from "@/components/header/header_registrar";
-import { Top_analytics } from "@/components/dashboard/registrar/analytics/top_analyitcs";
-import { Ppgl } from "@/components/dashboard/registrar/graphs/ppgl";
-import { Enrollment } from "@/components/dashboard/registrar/graphs/enrollment";
+import { Top_analytics } from "@/components/registrarsTable/dashboard/analytics/top_analyitcs";
+import { Ppgl } from "@/components/registrarsTable/dashboard/graphs/ppgl";
+import { Enrollment } from "@/components/registrarsTable/dashboard/graphs/enrollment";
 import RegistrarClientComponent from "@/components/validation/registrar_validate";
-import { RecentEnrolleesTable } from "@/components/dashboard/registrar/table/tablePage2";
+import { RecentEnrolleesTable } from "@/components/registrarsTable/dashboard/table/tablePage2";
 
 
 const Dashboard = () => {

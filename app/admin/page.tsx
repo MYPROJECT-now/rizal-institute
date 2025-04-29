@@ -1,5 +1,6 @@
-import { Top_analytics } from "@/components/dashboard copy 2/registrar/analytics/top_analyitcs";
-import { RecentLoginLogsTable } from "@/components/dashboard copy 2/registrar/table/tablePage2";
+
+import { Top_analytics } from "@/components/admin/dashboard/analytics/top_analyitcs";
+import { RecentLoginLogsTable } from "@/components/admin/dashboard/table/tablePage2";
 
 import Admin_header from "@/components/header/header_admin";
 import AdminClientComponent from "@/components/validation/admin_validate";

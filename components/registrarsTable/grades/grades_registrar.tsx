@@ -1,8 +1,8 @@
 "use client";
 
 import { useRegGradesModal } from "@/src/store/registrar/grades";
-import { Button } from "../ui/button";
-import { Reg_Grades } from "./modal/grades/grades";
+import { Button } from "../../ui/button";
+import { Reg_Grades } from "./modal/grades";
 
 export const GradeTable = () => {
     const students = [

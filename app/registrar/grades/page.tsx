@@ -1,5 +1,5 @@
 import Registrar_header  from "@/components/header/header_registrar";
-import { GradeTable } from "@/components/registrarsTable/grades_registrar";
+import { GradeTable } from "@/components/registrarsTable/grades/grades_registrar";
 import RegistrarClientComponent from "@/components/validation/registrar_validate";
 const RegistrarsStudentsTable = () => {
     return (

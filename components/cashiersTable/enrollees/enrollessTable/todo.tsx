@@ -3,9 +3,9 @@
 import { FC } from "react";
 import { studentType_cashier } from "@/src/type/AllEnrolleeType_cashier";
 import { useRemarksModal } from "@/src/store/remarks_modal";
-import { StatusModal } from "@/components/modals/remarks_cashier/remark_modal";
+import { StatusModal } from "@/components/cashiersTable/remarks_cashier/remark_modal";
 import { useCashierEnrolleesModal } from "@/src/store/cashier/enrollees";
-import { Cashier_ReservationReview } from "../modal/enrollees/Enrollees_cashier";
+import { Cashier_ReservationReview } from "../enrollees_view/Enrollees_cashier";
 
 interface Props {
   student: studentType_cashier;

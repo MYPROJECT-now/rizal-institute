@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { useStatusModal } from "@/src/store/status_modal";
-import { StatusModal } from "@/components/modals/status_modal";
+import { StatusModal } from "@/components/landing_page_portal/status_modal/status_modal";
 
 
 export default function Home() {

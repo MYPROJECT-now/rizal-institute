@@ -35,13 +35,7 @@ const Announcement = () => {
                         >
                             Clear Filter
                         </Button>
-                    
-                        <Button
-                            variant="mButton"
-                            className="text-white px-7 py-4 rounded-lg"
-                        >
-                            ADD GRADE
-                        </Button>           
+                       
                     </div>
                     <UsersTable />
                 </div>

@@ -10,7 +10,7 @@ import {
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useResetModal } from "@/src/store/reset_pass";
-import { ResetPass } from "@/components/modals/reset_password/reset_pass";
+import { ResetPass } from "@/components/landing_page_portal/reset_pass/reset_pass";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";

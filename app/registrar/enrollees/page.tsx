@@ -1,5 +1,5 @@
 import Registrar_header  from "@/components/header/header_registrar";
-import { EnrolleePAge } from "@/components/registrarsTable/enrollessTable/enrolleePage";
+import { EnrolleePAge } from "@/components/registrarsTable/enrollees/enrollessTable/enrolleePage";
 import { Button } from "@/components/ui/button";
 import RegistrarClientComponent from "@/components/validation/registrar_validate";
 const RegistrarsEnrolleesTable = () => {
