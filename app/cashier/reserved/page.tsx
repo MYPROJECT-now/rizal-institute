@@ -1,4 +1,4 @@
-import { ReservedSlotPage } from "@/components/cashiersTable/reservedSlotTable/reservedSlotPage";
+import { ReservedSlotPage } from "@/components/cashiersTable/reservedSlot/reservedSlotTable/reservedSlotPage";
 import Cashier_header from "@/components/header/header_cashier";
 import { Button } from "@/components/ui/button";
 import CashierClientComponent from "@/components/validation/cashier_validate";
@@ -38,7 +38,7 @@ const RegistrarsEnrolleesTable = () => {
                                     Clear Filter
                                 </Button>
                             </div>
-                < ReservedSlotPage />
+                  <ReservedSlotPage />
             </div>
         </div>
         </CashierClientComponent>

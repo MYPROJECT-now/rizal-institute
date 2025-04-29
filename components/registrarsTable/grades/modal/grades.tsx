@@ -16,13 +16,13 @@ export const Reg_Grades = () => {
       <DialogContent className="w-[800px] max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-            Student Grade Records (Grade 6 - 10)
+            Student Grade Records (Grade 7 - 10)
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 px-2 py-4 text-sm text-gray-700">
           {/* Grade Level Sections */}
-          {[6, 7, 8, 9, 10].map((grade) => (
+          {[7, 8, 9, 10].map((grade) => (
             <section
               key={grade}
               className="bg-white p-4 rounded-lg shadow-sm border"

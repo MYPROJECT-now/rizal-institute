@@ -1,10 +1,9 @@
-
-import { Top_analytics } from "@/components/dashboard copy/registrar/analytics/top_analyitcs";
-import { Ppgl } from "@/components/dashboard copy/registrar/graphs/ppgl";
-import { Enrollment } from "@/components/dashboard copy/registrar/graphs/enrollment";
 import CashierClientComponent from "@/components/validation/cashier_validate";
 import Cashier_header from "@/components/header/header_cashier";
-import { RecentTransactionsTable } from "@/components/dashboard copy/registrar/table/tablePage2";
+import { Top_analytics } from "@/components/cashiersTable/dashboard/analytics/top_analyitcs";
+import { Ppgl } from "@/components/cashiersTable/dashboard/graphs/ppgl";
+import { Enrollment } from "@/components/cashiersTable/dashboard/graphs/enrollment";
+import { RecentTransactionsTable } from "@/components/cashiersTable/dashboard/table/tablePage2";
 
 
 const Dashboard = () => {

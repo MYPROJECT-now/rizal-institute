@@ -1,4 +1,4 @@
-import { EnrolleePAge } from "@/components/cashiersTable/enrollessTable/enrolleePage";
+import { EnrolleePAge } from "@/components/cashiersTable/enrollees/enrollessTable/enrolleePage";
 import Cashier_header from "@/components/header/header_cashier";
 import { Button } from "@/components/ui/button";
 import CashierClientComponent from "@/components/validation/cashier_validate";

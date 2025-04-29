@@ -3,9 +3,9 @@
 import { FC } from "react";
 import { reservedSlotType } from "@/src/type/reservedSlotType";
 import { useRemarksModal } from "@/src/store/remarks_modal";
-import { StatusModal } from "@/components/modals/remarks_cashier/remark_modal";
+import { StatusModal } from "@/components/cashiersTable/remarks_cashier/remark_modal";
 import { useCashierReservedModal } from "@/src/store/cashier/reserved";
-import { Cashier_UpfrontPaymentReview } from "../modal/reserved/Enrollees_cashier";
+import { Cashier_UpfrontPaymentReview } from "../reservedSlot_modal/resercedSlot_cashier";
 
 
 interface Props {

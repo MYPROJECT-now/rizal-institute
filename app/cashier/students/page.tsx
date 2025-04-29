@@ -1,4 +1,4 @@
-import { StudentsTableCashier } from "@/components/cashiersTable/modal/students/Students_cashier";
+import { StudentsTableCashier } from "@/components/cashiersTable/students/Students_cashier";
 import Cashier_header from "@/components/header/header_cashier";
 import CashierClientComponent from "@/components/validation/cashier_validate";
 const RegistrarsStudentsTable = () => {

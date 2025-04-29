@@ -124,9 +124,9 @@ const AdmissionPage = () => {
                         <CardContent className="text-start font-light font-oswald text-3xl flex flex-col gap-4">
                         {activeStep === 1 && (
                             <ol className="list-disc pl-6 flex flex-col gap-5">
-                            <li>Click &quot;Apply Now&quot; button</li>
+                            <li>Click &quot;Enroll Now&quot; button</li>
                             <li>Fill out basic personal information (Name, contact details, previous school, grade level, etc.)</li>
-                            <li>Indicate any special condhitions (honor student, transferee, scholarship applicant, etc.)</li>
+                            <li>Ensure that all inforamtion are correct</li>
                             </ol>
                             )}
 
@@ -139,8 +139,9 @@ const AdmissionPage = () => {
                                 <li>Birth Certificate</li>
                                 <li>Report Card (Form 138)</li>
                                 <li>Good Moral Certificate</li>
+                                <li>CAPRISAA Student Exit Clearance Form (if from private school)</li>
                                 </ol>
-                                <p>
+                                <p className="mt-8">
                                 Reminder: Originals must be submitted in person.
                                 </p>
                             </div>
@@ -161,7 +162,7 @@ const AdmissionPage = () => {
                         
                         {activeStep === 4 && (
                             <ol className="list-disc pl-6 flex flex-col gap-5">
-                            <li>The admin will verify the application of the enrolly </li>
+                            <li>Registrar and Cashier will verify the application and payment  of the enrollee </li>
                             <li>An email verification will be sent once the application was verified</li>
                             <li>Applicants can track their application status by entering their tracking ID in the button in the home page</li>
                             </ol>
@@ -169,7 +170,9 @@ const AdmissionPage = () => {
 
                         {activeStep === 5&& (
                             <ol className="list-disc pl-6 flex flex-col gap-5">
-                            <li>pagisipan pa</li>
+                            <li>In order to be officially enrolled. </li>
+                            <li>An applicant must pay in either full or downpayment.</li>
+                            <li>Applicants can track their application status by entering their tracking ID in the button in the home page</li>
                             </ol>
                             )}
                         </CardContent>
