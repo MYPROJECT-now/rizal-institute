@@ -327,25 +327,25 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
     //validation for section 1
 
      // validate students lastname
-     if ( studentsLastName !== "" && !/^[a-zA-Z]+$/.test(studentsLastName) || studentsLastName.length < 2 || studentsLastName.length > 50 ) {
-        toast.error("Invalid students Lastname format. Please enter a valid Lastname.");
+     if (!/^[a-zA-Z\s'-]+$/.test(studentsLastName) ||  studentsLastName.length < 2 ||  studentsLastName.length > 50
+      ) {
+        toast.error("Invalid student's last name. Please enter a valid last name (2-50 characters).");
         return;
-    }
-
+      }
     // validate students firstname
-    if (!/^[a-zA-Z]+$/.test(studentsFirstName) || studentsFirstName.length < 2 || studentsFirstName.length > 50) {
+    if (!/^[a-zA-Z\s'-]+$/.test(studentsFirstName) || studentsFirstName.length < 2 || studentsFirstName.length > 50) {
         toast.error("Invalid students Firstname format. Please enter a valid Firstname.");
         return;
     }
 
     // validate students middlename
-    if (!/^[a-zA-Z]+$/.test(studentsMiddleName) || studentsMiddleName.length < 2 || studentsMiddleName.length > 50) {
+    if (!/^[a-zA-Z\s'-]+$/.test(studentsMiddleName) || studentsMiddleName.length < 2 || studentsMiddleName.length > 50) {
         toast.error("Invalid students Middlename format. Please enter a valid Middlename.");
         return;
     }
 
     // validate students suffix
-    if (studentsSuffix && (!/^[a-zA-Z]+$/.test(studentsSuffix) || studentsSuffix.length < 1 || studentsSuffix.length > 10)) {
+    if (studentsSuffix && (!/^[a-zA-Z\s'-]+$/.test(studentsSuffix) || studentsSuffix.length < 1 || studentsSuffix.length > 10)) {
         toast.error("Invalid students Suffix format. Please enter a valid Suffix.");
         return;
     }
@@ -364,30 +364,30 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
 
     //validation for section 2
      // validate students guardians lastname
-     if (!/^[a-zA-Z]+$/.test(guardiansLastName) || guardiansLastName.length < 2 || guardiansLastName.length > 50 ) {
+     if (!/^[a-zA-Z\s'-]+$/.test(guardiansLastName) || guardiansLastName.length < 2 || guardiansLastName.length > 50 ) {
         toast.error("Invalid parent/guardians Lastname format. Please enter a valid Lastname.");
         return;
     }
 
     // validate guardians firstname
-    if (!/^[a-zA-Z]+$/.test(guardiansFirstName) || guardiansFirstName.length < 2 || guardiansFirstName.length > 50) {
+    if (!/^[a-zA-Z\s'-]+$/.test(guardiansFirstName) || guardiansFirstName.length < 2 || guardiansFirstName.length > 50) {
         toast.error("Invalid parent/guardians Firstname format. Please enter a valid Firstname.");
         return;
     }
 
     // validate guardians middlename
-    if (!/^[a-zA-Z]+$/.test(guardiansMiddleName) || guardiansMiddleName.length < 2 || guardiansMiddleName.length > 50) {
+    if (!/^[a-zA-Z\s'-]+$/.test(guardiansMiddleName) || guardiansMiddleName.length < 2 || guardiansMiddleName.length > 50) {
         toast.error("Invalid parent/guardians Middlename format. Please enter a valid Middlename.");
         return;
     }
 
     // validate guardians suffix
-    if (guardiansSuffix && (!/^[a-zA-Z]+$/.test(guardiansSuffix) || guardiansSuffix.length < 1 || guardiansSuffix.length > 10)) {
+    if (guardiansSuffix && (!/^[a-zA-Z\s'-]+$/.test(guardiansSuffix) || guardiansSuffix.length < 1 || guardiansSuffix.length > 10)) {
         toast.error("Invalid parent/guardians Suffix format. Please enter a valid Suffix.");
         return;
     }
 
-    if (fullAddress.length > 10) {
+    if (fullAddress.length < 5 || fullAddress.length > 200) {
         toast.error("Invalid address format. Please enter a valid address.");
         return;
     }
@@ -406,15 +406,15 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
 
     //validation for section 3
 
-    if (prevSchool.length > 16) {
+    if (prevSchool.length < 5 || fullAddress.length > 200) {
         toast.error("Please enter a valid school name.");
         return;
     }
 
-    if (schoolAddress.length > 10) {
-        toast.error("Invalid address format. Please enter a valid address.");
-        return;
-    }
+    // if (schoolAddress.length > 10) {
+    //     toast.error("Invalid address format. Please enter a valid address.");
+    //     return;
+    // }
     // validate LRN
     const isLRNValid =  /^\d{12}$/;
     if (!isLRNValid.test(lrn)) {
