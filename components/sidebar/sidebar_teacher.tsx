@@ -7,7 +7,7 @@ type Props = {
     className?: string;
 };
 
-export const Sidebar_student = ({ className }: Props) => {
+export const Sidebar_teacher = ({ className }: Props) => {
     return (
         <div
             className={cn(
@@ -17,7 +17,7 @@ export const Sidebar_student = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/student">
+                <Link href="/teacher">
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -29,24 +29,10 @@ export const Sidebar_student = ({ className }: Props) => {
 
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
-                        label="Dashboard" 
-                        href="/student"
-                        iconSrc="/dashboard.png" 
+                        label="Grades" 
+                        href="/teacher"
+                        iconSrc="/grades.png" 
                     />
-
-                    <SidebarItem 
-                        label="Registration" 
-                        href="/student/reg_form"
-                        iconSrc="/student_logo.png" 
-                    />
-
-                    <SidebarItem 
-                        label="Payments" 
-                        href="/student/payments"
-                        iconSrc="/payment.png" 
-                    />
-
-
 
             
                 </div>

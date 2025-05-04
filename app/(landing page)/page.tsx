@@ -111,12 +111,19 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-
-
-       
-
       </div>
        {/* end first section */}
+      
+       <div className="w-full">
+        <Image
+          src="/enrol.svg" 
+          alt="Enrollment Banner"
+          width={1920}
+          height={500} 
+          className="w-full h-auto"
+          priority
+        />
+      </div>
 
       {/* second section */}
       <div className="w-full h-[210px] bg-sl2Green flex flex-col justify-center text-center gap-3">

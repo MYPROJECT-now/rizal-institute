@@ -32,6 +32,8 @@ export default function Home() {
               router.push("/cashier");
           } else if (user?.publicMetadata?.role === 'registrar') {
               router.push("/registrar");
+          } else if (user?.publicMetadata?.role === 'teacher') {
+            router.push("/teacher");
           } else {
               router.push("/");
           }

@@ -12,7 +12,7 @@ export const Registration_Form = () => {
     <p><strong>Date Enrolled:</strong> April 13, 2025</p>
   </div>
 
-  <div className="mt-6">
+  <div className="mt-[100px]">
     <p>This is to certify that the above-named student is officially enrolled at</p>
     <p className="font-semibold">Rizal Institute - Junior High School Department</p>
   </div>

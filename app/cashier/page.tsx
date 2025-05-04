@@ -9,9 +9,9 @@ import { RecentTransactionsTable } from "@/components/cashiersTable/dashboard/ta
 const Dashboard = () => {
     return (
         <CashierClientComponent>    
-        <div className="w-full max-h-[680px] overflow-auto mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
+        <div className="w-full max-h-[750px] overflow-auto mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Cashier_header />
-            <div className="w-full h-[550px] flex flex-col gap-10 mt-10 rounded-lg ">
+            <div className="w-full h-[620px] flex flex-col gap-10 mt-10 rounded-lg ">
                <div className="flex flex-col">
                 <p className="text-2xl font-bold text-dGreen mb-2">
                     Quick Stats

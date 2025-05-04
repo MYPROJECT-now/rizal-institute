@@ -17,7 +17,7 @@ export const Sidebar_registrar = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/admin/dashboard_admin">
+                <Link href="/registrar">
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -41,7 +41,7 @@ export const Sidebar_registrar = ({ className }: Props) => {
                     />
 
                     <SidebarItem 
-                        label="Enrollees" 
+                        label="Applicants" 
                         href="/registrar/enrollees"
                         iconSrc="/enrollment.png" 
                     />

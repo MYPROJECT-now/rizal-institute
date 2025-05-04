@@ -40,8 +40,6 @@ export const Cashier_UpfrontPaymentReview = () => {
               <p><strong>Original Tuition:</strong> ₱35,000.00</p>
               <p><strong>Amount Paid:</strong> ₱35,000.00</p>
               <p><strong>Payment Method:</strong> GCash</p>
-              <p><strong>Reference Number:</strong> 52314665</p>
-              <p><strong>Status:</strong> <span className="text-yellow-600 font-semibold">Pending</span></p>
             </div>
           </section>
 

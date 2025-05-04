@@ -1199,7 +1199,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                                 </div>
                                 <div>
                                     <Image
-                                        src="/image2.png"
+                                        src="/bank.svg"
                                         alt="receipt"
                                         width={300}
                                         height={200}

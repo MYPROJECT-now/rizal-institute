@@ -16,7 +16,7 @@ const FillDatabase = async () => {
       guardiansSuffix: null,
       fullAddress: "123 Main St, Quezon City",
       mobileNumber: "09171234567",
-      email: "maria.santos@example.com",
+      email: "iedivinagracia@ccc.edu.ph",
     },
     {
       guardiansLastName: "Reyes",
@@ -150,9 +150,11 @@ const main = async () => {
     console.log("Seeding the database");
 
     // Clear existing data
-    // await db.delete(schema.studentsInformationTable);
-    // await db.delete(schema.guardianAndParentsTable);
-    // await db.delete(schema.educationalBackgroundTable);
+    await db.delete(schema.studentsInformationTable);
+    await db.delete(schema.guardianAndParentsTable);
+    await db.delete(schema.educationalBackgroundTable);
+    await db.delete(schema.applicationStatusTable);
+    await db.delete(schema.reservationStatusTable);
 
     // Fill database
     await FillDatabase();

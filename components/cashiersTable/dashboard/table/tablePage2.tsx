@@ -8,7 +8,6 @@ export const RecentTransactionsTable = () => {
       amountPaid: 5000,
       balanceDue: 2500,
       datePaid: "2025-04-10",
-      paymentStatus: "Partial",
     },
     {
       studentName: "Maria Santos",
@@ -16,7 +15,6 @@ export const RecentTransactionsTable = () => {
       amountPaid: 7500,
       balanceDue: 0,
       datePaid: "2025-04-08",
-      paymentStatus: "Paid",
     },
     {
       studentName: "Jose Rizal",
@@ -24,7 +22,6 @@ export const RecentTransactionsTable = () => {
       amountPaid: 3000,
       balanceDue: 3000,
       datePaid: "2025-04-05",
-      paymentStatus: "Unpaid",
     },
   ];
 
@@ -38,7 +35,6 @@ export const RecentTransactionsTable = () => {
             <th className="border p-2">Amount Paid</th>
             <th className="border p-2">Balance Due</th>
             <th className="border p-2">Date Paid</th>
-            <th className="border p-2">Payment Status</th>
           </tr>
         </thead>
         <tbody>
@@ -49,7 +45,6 @@ export const RecentTransactionsTable = () => {
               <td className="border p-2">₱{item.amountPaid.toLocaleString()}</td>
               <td className="border p-2">₱{item.balanceDue.toLocaleString()}</td>
               <td className="border p-2">{item.datePaid}</td>
-              <td className="border p-2">{item.paymentStatus}</td>
             </tr>
           ))}
         </tbody>

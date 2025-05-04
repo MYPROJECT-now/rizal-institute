@@ -1,5 +1,5 @@
 "use server"
-import { eq, and, or} from "drizzle-orm";
+import { eq, and, or, desc} from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { documentsTable, educationalBackgroundTable, guardianAndParentsTable, studentsInformationTable, paymentReceiptTable, applicationStatusTable, reservationStatusTable, tuitionFeeTable  } from "../db/schema";
 import { revalidatePath } from "next/cache";
@@ -146,6 +146,8 @@ revalidatePath("/enrollment");
     .from(studentsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(studentsInformationTable.id, educationalBackgroundTable.id))
     .leftJoin(applicationStatusTable, eq(studentsInformationTable.id, applicationStatusTable.id))
+    .orderBy(desc(applicationStatusTable.dateOfApplication))
+    .limit(5);
     
   
     console.log("Fetched Enrollees:", recentEnrollees);

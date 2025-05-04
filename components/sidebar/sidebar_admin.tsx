@@ -26,7 +26,7 @@ export const Sidebar_admin = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/admin/dashboard_admin">
+                <Link href="/admin">
                     <Image 
                         src="/school.png" 
                         width={130}
