@@ -56,6 +56,13 @@ export const GradeTable = () => {
                 >
                     Clear Filter
                 </Button>
+
+                <Button
+                    variant="mButton"
+                    className="text-white px-7 py-4 rounded-lg"
+                >
+                    ADD GRADE
+                </Button>
             </div>
 
             <div className="mx-10">

@@ -12,7 +12,7 @@ export const Registration_Form = () => {
     <p><strong>Date Enrolled:</strong> April 13, 2025</p>
   </div>
 
-  <div className="mt-[100px]">
+  <div className="mt-[70px]">
     <p>This is to certify that the above-named student is officially enrolled at</p>
     <p className="font-semibold">Rizal Institute - Junior High School Department</p>
   </div>
@@ -29,7 +29,7 @@ export const Registration_Form = () => {
   </div>
 
   <button
-    className="mt-10 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+    className="mt-2 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
   >
     Print Registration Form
   </button>

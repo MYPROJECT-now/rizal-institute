@@ -37,21 +37,11 @@ export const AdminAuditTrailsTable = () => {
       timestamp: "2025-04-12 01:45 PM",
       action: "Accepted student application",
     },
-    {
-      role: "Cashier",
-      timestamp: "2025-04-12 02:30 PM",
-      action: "Accepted reservation fee",
-    },
-    {
-      role: "Teacher",
-      timestamp: "2025-04-12 03:15 PM",
-      action: "Uploaded grade",
-    },
   ];
 
   return (
-    <div className="overflow-x-auto mb-10">
-      <table className="min-w-full border-collapse border border-gray-300 text-center">
+    <div className="  mb-10">
+      <table className="min-w-full  border-collapse border border-gray-300 text-center">
         <thead>
           <tr className="bg-gray-200">
             <th className="border p-2">Role</th>
