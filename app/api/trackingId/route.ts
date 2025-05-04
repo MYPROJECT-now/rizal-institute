@@ -6,7 +6,7 @@ import nodemailer from 'nodemailer';
 
 // Random tracking ID generator
 function generateRandomTrackingId(length = 12) {
-    const charset = "ABCDEFGHJKMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz0123456789";
+    const charset = "0123456789";
     return Array.from({ length }, () => charset[Math.floor(Math.random() * charset.length)]).join('');
   }
 

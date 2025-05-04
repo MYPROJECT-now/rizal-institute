@@ -18,7 +18,12 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-white font-bold font-merriweather text-xl underline-offset-4 hover:underline",
+        // link: "text-white text-xl font-bold font-merriweather w-full hover:bg-white/10 rounded-md border-l-4 border-transparent hover:border-white px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:translate-x-1",
+        link: "text-white text-xl font-bold font-merriweather w-full px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:text-slate-100 relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white/60 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300",
+
+
+
+
 
         //custome buton
         mButton:
@@ -26,7 +31,12 @@ const buttonVariants = cva(
         sButton:
           "bg-white text-lGreen hover:bg-gray/90 border-b-[7px] active:border-0 border-b-slGreen font-oswald",
         hButton:
-        "text-3xl font-bold hover:bg-green-700"
+          "text-3xl font-bold text-white hover:text-slate-100 transition-colors duration-200 hover:underline-offset-4 relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-white after:transition-all after:duration-300"
+        
+        
+        
+        
+        
         
         
       },

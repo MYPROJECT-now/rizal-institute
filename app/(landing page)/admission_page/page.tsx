@@ -56,7 +56,7 @@ const AdmissionPage = () => {
 
                 <div>
                 <Image
-                    src="/admission.png"
+                    src="/admission.svg"
                     alt="student"
                     width={800}
                     height={800}

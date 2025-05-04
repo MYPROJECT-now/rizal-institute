@@ -7,7 +7,7 @@ const RegistrarsEnrolleesTable = () => {
     <CashierClientComponent>
         <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Cashier_header /> 
-            <div className="w-full h-[550px] bg-white self-center  mt-10 rounded-lg ">
+            <div className="w-full h-[540px] bg-white self-center  mt-10 rounded-lg ">
                 <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
                    Reserved Slot
                 </div>
@@ -36,6 +36,12 @@ const RegistrarsEnrolleesTable = () => {
                                     className=" text-white px-7 py-4 rounded-lg"
                                 >
                                     Clear Filter
+                                </Button>
+                                <Button
+                                    variant="mButton"
+                                    className=" text-white px-7 py-4 rounded-lg"
+                                >
+                                    Upload SOA
                                 </Button>
                             </div>
                   <ReservedSlotPage />

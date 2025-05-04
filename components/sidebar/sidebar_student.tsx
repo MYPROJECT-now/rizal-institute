@@ -17,7 +17,7 @@ export const Sidebar_student = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/admin/dashboard_admin">
+                <Link href="/student">
                     <Image 
                         src="/school.png" 
                         width={130}
