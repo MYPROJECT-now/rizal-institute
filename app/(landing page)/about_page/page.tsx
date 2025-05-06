@@ -100,14 +100,14 @@ const AboutPage = () => {
                         </p>
                     </div>
                     <p className="font-light font-merriweather text-xl">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                        <br />Blanditiis veritatis beatae iusto voluptate in quos aliquid, 
-                        <br />natus enim modi! Consequuntur expedita veritatis architecto 
-                        <br />officiis suscipit aspernatur? Officiis maiores voluptatem qui.
-                        <br />Blanditiis veritatis beatae iusto voluptate in quos aliquid, 
-                        <br />natus enim modi! Consequuntur expedita veritatis architecto 
-                        <br />officiis suscipit aspernatur? Officiis maiores voluptatem qui.
-                        
+                        Rizal Institute is a premier educational institution 
+                        <br />that offers quality education to students of all ages. 
+                        <br />We provide a safe and supportive learning environment 
+                        <br />that fosters the intellectual, emotional, and social 
+                        <br />development of our students. Our faculty and staff are 
+                        <br />dedicated professionals who are passionate about teaching 
+                        <br />and learning. We are located in a safe and convenient 
+                        <br />location, with easy access to public transportation.
                     </p>
                 </div>
 
@@ -123,7 +123,7 @@ const AboutPage = () => {
 
             <div className="py-16 px-8 bg-white">
                 <h2 className="text-center font-bold font-merriweather text-4xl text-d2Green mb-12">
-                    RIZAL INSTITUTE MISSION AND VISSION
+                    RIZAL INSTITUTE MISSION AND VISION
                 </h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">

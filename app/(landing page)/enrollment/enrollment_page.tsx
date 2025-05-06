@@ -308,9 +308,9 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
 
     //validation of empty documents
     if  (
-        !birthCert
+        !reportCard
     ){
-        toast.error("Please upload atleast the birth certificate.");
+        toast.error("Please upload atleast the report card.");
         return;
     }
 
@@ -877,10 +877,10 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             value={gradeLevel} 
                             >
                             <option className="text-gray-300" value="">Grade</option>
-                            <option className="text-black" value="Grade7">Grade 7</option>
-                            <option className="text-black" value="Grade8">Grade 8</option>
-                            <option className="text-black" value="Grade9">Grade 9</option>
-                            <option className="text-black" value="Grade9">Grade 10</option>
+                            <option className="text-black" value="Grade7">Grade 6</option>
+                            <option className="text-black" value="Grade8">Grade 7</option>
+                            <option className="text-black" value="Grade9">Grade 8</option>
+                            <option className="text-black" value="Grade10">Grade 9</option>
                         </select>
                         <select
                             className={`bg-gray-300/50 h-[36px] w-[200px] rounded-lg font-sans ${
@@ -923,6 +923,8 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             accept="image/*"
                             />
                         </div>
+                        <div>
+                            <p className="text-red-500">*Required</p>
                         <div className="flex flex-row gap-10">
                             <label htmlFor="document" className="font-medium font-oswald text-xl text-lGreen  w-[190px]"> REPORT CARD</label>
                             <input 
@@ -933,6 +935,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             onChange={handleReportCardChange}
                             accept="image/*"
                             />
+                        </div>
                         </div>
 
                         <div>

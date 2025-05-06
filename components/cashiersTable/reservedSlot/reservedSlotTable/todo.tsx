@@ -31,6 +31,7 @@ const Student: FC<Props> = ({ student, onAccept  }) => {
           details
         </button>
       </td>
+      <td className="px-2 py-2">High Honor</td>
        <td className="px-4 py-2 space-x-2">
               <button
                 onClick={() => onAccept(student.id)}

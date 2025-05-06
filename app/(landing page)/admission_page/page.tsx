@@ -197,27 +197,27 @@ const AdmissionPage = () => {
                 <p className="font-bold text-4xl ">FREQUENTLY ASKED QUESTIONS</p>
                 <Accordion type="single" collapsible className="text-3xl" >
                 <AccordionItem value="item-1" className="w-[1200px]  text-lg px-10 rounded-lg">
-                    <AccordionTrigger className="text-lg">Is it accessible?</AccordionTrigger>
+                    <AccordionTrigger className="text-lg">What are the requirements in enrolling?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    Yes. It adheres to the WAI-ARIA design pattern.
+                    Please provide basic information, the most important document is the report card, and a reservation fee of PHP 500.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2" className="w-[1200px]  text-lg px-10 rounded-lg">
-                    <AccordionTrigger className="text-lg">Is it accessible?</AccordionTrigger>
+                    <AccordionTrigger className="text-lg">How much is the downpayment?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    Yes. It adheres to the WAI-ARIA design pattern.
+                    The downpayment is P500.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3" className="w-[1200px]  text-lg px-10 rounded-lg">
-                    <AccordionTrigger className="text-lg">Is it accessible?</AccordionTrigger>
+                    <AccordionTrigger className="text-lg">Can I pay in full?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    Yes. It adheres to the WAI-ARIA design pattern.
+                    Yes. You can pay in full.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4" className="w-[1200px]  text-lg px-10 rounded-lg">
-                    <AccordionTrigger className="text-lg">Is it accessible?</AccordionTrigger>
+                    <AccordionTrigger className="text-lg">How do I track my application?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    Yes. It adheres to the WAI-ARIA design pattern.
+                    You can track your application by entering your tracking ID in the button in the home page.
                     </AccordionContent>
                 </AccordionItem>
 
