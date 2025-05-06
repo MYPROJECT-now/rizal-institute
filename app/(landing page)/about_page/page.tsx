@@ -123,7 +123,7 @@ const AboutPage = () => {
 
             <div className="py-16 px-8 bg-white">
                 <h2 className="text-center font-bold font-merriweather text-4xl text-d2Green mb-12">
-                    RIZAL INSTITUTE MISSION AND VISSION
+                    RIZAL INSTITUTE MISSION AND VISION
                 </h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">

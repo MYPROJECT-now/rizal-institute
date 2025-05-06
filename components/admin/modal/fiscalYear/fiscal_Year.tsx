@@ -17,14 +17,14 @@ export const Fiscal_Year = () => {
       <DialogContent className="w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-           Manage Fiscal Year
+           Manage School Year
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 px-4 py-6 text-sm text-gray-700">
           {/* Current Fiscal Year Info */}
           <section className="bg-gray-100 p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-2">📅 Current Fiscal Year</h3>
+            <h3 className="text-lg font-semibold mb-2">📅 Current School Year</h3>
             <p><strong>Year:</strong> 2024 - 2025</p>
             <p><strong>Start Date:</strong> July 1, 2024</p>
             <p><strong>End Date:</strong> June 30, 2025</p>
@@ -32,10 +32,10 @@ export const Fiscal_Year = () => {
 
           {/* Update Form */}
           <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-4">✏️ Update Fiscal Year</h3>
+            <h3 className="text-lg font-semibold mb-4">✏️ Update School Year</h3>
             <div className="space-y-4">
               <div className="flex flex-col">
-                <label htmlFor="fiscal-year" className="mb-1 font-medium">Fiscal Year</label>
+                <label htmlFor="fiscal-year" className="mb-1 font-medium">School Year</label>
                 <input
                   id="fiscal-year"
                   type="text"
