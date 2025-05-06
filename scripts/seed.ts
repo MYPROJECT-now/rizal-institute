@@ -45,15 +45,6 @@ const FillDatabase = async () => {
       mobileNumber: "09172233445",
       email: "juan.martinez@example.com",
     },
-    {
-      guardiansLastName: "Torres",
-      guardiansFirstName: "Maria",
-      guardiansMiddleName: "Dela Cruz", 
-      guardiansSuffix: null,
-      fullAddress: "123 Main St, Quezon City",
-      mobileNumber: "09171234567",
-      email: "iedivinagracia@ccc.edu.ph",
-    }
 
   ]);
 
@@ -91,14 +82,7 @@ const FillDatabase = async () => {
       gradeLevel: "Grade 10",
       schoolYear: "2023-2024",
     },
-    {
-      admissionStatus: "Transferee",
-      prevSchool: "De La Salle University",
-      schoolAddress: "Taft Avenue, Manila",
-      schoolType: "Private",
-      gradeLevel: "Grade 11",
-      schoolYear: "2023-2024",
-    }
+
   ]);
 
   // Insert multiple students
@@ -155,19 +139,6 @@ const FillDatabase = async () => {
       nationality: "Filipino",
       religion: "Catholic",
     },
-    {
-      lrn: "987654321004",
-      studentsLastName: "Torres",
-      studentsFirstName: "Juan",
-      studentsMiddleName: "Santos",
-      studentsSuffix: null,
-      dateOfBirth: new Date("2010-05-22").toISOString().slice(0, 10),
-      age: 14,
-      gender: "Male",
-      civilStatus: "Single",
-      nationality: "Filipino",
-      religion: "Catholic",
-    }
   ]);
 
   await db.insert(schema.applicationStatusTable).values([
@@ -195,12 +166,6 @@ const FillDatabase = async () => {
       reservationPaymentStatus: "Pending",
       dateOfApplication: new Date("2024-04-01").toISOString().slice(0, 10),
     },
-    {
-      trackingId: "546546546546",
-      applicationStatus: "Pending",
-      reservationPaymentStatus: "Pending",
-      dateOfApplication: new Date("2024-04-01").toISOString().slice(0, 10),
-    }
   ]);
 
   await db.insert(schema.reservationStatusTable).values([
@@ -216,9 +181,6 @@ const FillDatabase = async () => {
     {
       admissionStatus: "Pending",
     },
-    {
-      admissionStatus: "Pending",
-    }
   ]);
 
 

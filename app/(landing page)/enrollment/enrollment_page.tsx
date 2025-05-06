@@ -315,12 +315,12 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
     }
 
      //validation for payment receipts
-     if  (
-        !receipt
-    ){
-        toast.error("Please upload a receipt of payment.");
-        return;
-    }
+    //  if  (
+    //     !receipt
+    // ){
+    //     toast.error("Please upload a receipt of payment.");
+    //     return;
+    // }
 
 
        
@@ -582,9 +582,11 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
             {/* first section */}
             <div className="flex flex-col py-10 gap-10">
                 <p className="font-bold font-merriweather text-4xl text-center text-lGreen">High School Admission Application</p>
-                <div className="h-[80px] w-[250px] rounded-lg bg-slGreen">
-                    <p className="font-extralight font-oswald text-lg text-center text-red-500 p-2">
-                    *Please ensure all fields are correctly filled before submitting
+                <div className="w-[600px] border-2 border-d2Green rounded-lg p-3">
+                    <p className="text-red-500 font-bold">Important Reminder:</p>
+                    <p className="text-red-500">
+                        *Please note that all hard copies of documents must be submitted in person. 
+                        *Additionally, ensure all online fields are complete and accurate before submitting.
                     </p>
                 </div>
               
@@ -952,6 +954,8 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             />
                         </div>
 
+                       
+
                         </div>
                     </div>
 
@@ -1248,6 +1252,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                 </div>
             </div>
 
+               
 
             <div className="w-full flex justify-center mt-10"> 
             <Button
