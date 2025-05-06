@@ -126,19 +126,19 @@ export default function Home() {
       </div>
 
       {/* second section */}
-      <div className="w-full h-[210px] bg-sl2Green flex flex-col justify-center text-center gap-3">
-        <p className="font-bold font-merriweather text-d2Green text-4xl text-center">
+      <div className="w-full h-[210px] bg-sl2Green flex flex-col justify-center items-center gap-3">
+        <p className="font-bold font-merriweather text-d2Green text-4xl">
         WHY CHOOSE RIZAL INSTITUTE?
         </p>
-        <div>
-          <p className="font-light font-merriweather text-d2Green text-2xl text-center">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magnam, modi nisi.  
+        <div className="flex flex-col items-center">
+          <p className="font-light font-merriweather text-d2Green text-2xl">
+            Experience the Rizalian advantage. 
           </p>
-          <p className="font-light font-merriweather text-d2Green text-2xl text-center">
-            Accusamus cumque quae exercitationem facilis, eum iste laborum nisi! 
+          <p className="font-light font-merriweather text-d2Green text-2xl">
+            Develop your skills and talents in a nurturing environment. 
           </p>
-          <p className="font-light font-merriweather text-d2Green text-2xl text-center">
-            Neque quibusdam dignissimos delectus nostrum unde eaque provident consequuntur corporis.
+          <p className="font-light font-merriweather text-d2Green text-2xl">
+            Become part of a community that values excellence and compassion.
           </p>
         </div>
       </div>
@@ -237,7 +237,7 @@ export default function Home() {
                className="w-[120px] h-[120px]"
               />
               <p className="font-bold font-sans text-3xl w-[200px]">
-              Prime Location
+              Future Growth
               </p>
             </div>
 

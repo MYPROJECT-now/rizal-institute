@@ -62,7 +62,7 @@ export const Reg_Enrollees = () => {
 
           {/* Section 4: Required Documents Upload */}
           <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-2">📄 Section 4: Required Documents Upload</h3>
+            <h3 className="text-lg font-semibold mb-2">📄 Section 4: Documents Upload</h3>
             <ul className="list-disc list-inside space-y-1">
               <li>✅ PSA Birth Certificate</li>
               <li>✅ REPORT CARD</li>

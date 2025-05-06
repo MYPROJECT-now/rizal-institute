@@ -84,7 +84,7 @@ const enrollmet_Page = () => {
     receipt
     
   );
-    toast.success("Successfully Enrolled!"); // ✅ Show success message only after successful insertion.
+    toast.success("Application was submitted successfully. Check your email for more details"); // ✅ Show success message only after successful insertion.
   } catch (error: unknown) {
     if (error instanceof Error) {
       toast.error(error.message || "Failed to enroll. Please try again.");

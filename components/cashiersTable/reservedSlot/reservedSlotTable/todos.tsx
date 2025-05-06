@@ -34,6 +34,7 @@ const Students: FC<Props> = ({ students }) => {
           <th className="px-4 py-2">Full Name</th>
           <th className="px-4 py-2">Grade Level</th>
           <th className="px-4 py-2">Payment Details</th>
+          <th className="px-4 py-2">Discount Class</th>
           <th className="px-4 py-2">Actions</th>
           <th className="px-4 py-2">Status</th>
         </tr>

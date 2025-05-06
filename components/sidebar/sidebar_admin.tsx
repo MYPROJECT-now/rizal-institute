@@ -57,7 +57,7 @@ export const Sidebar_admin = ({ className }: Props) => {
 
                     <Fiscal_Year />
                     <SidebarItemAdmin 
-                        label="School Year" 
+                        label="Fiscal Year" 
                         iconSrc="/calendar.png" 
                         onClick={open}
                     />     

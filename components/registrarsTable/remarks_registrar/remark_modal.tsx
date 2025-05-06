@@ -48,17 +48,16 @@ export const StatusModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="flex flex-col items-center h-[250px] w-[500px] rounded-t-lg">
+      <DialogContent className="flex flex-col items-center h-[280px] w-[500px] rounded-t-lg">
         <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
           <DialogTitle className="text-center text-white text-2xl">Remarks</DialogTitle>
         </DialogHeader>
-        <div className="w-full p-4">
-          <input
-            type="text"
+        <div className="w-full  p-4">
+          <textarea
             placeholder="Enter remarks"
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
-            className="border px-2 py-1 text-sm w-full"
+            className="border-black px-2 py-1 text-sm w-full h-[100px]"
           />
           <button
             onClick={handleDecline}

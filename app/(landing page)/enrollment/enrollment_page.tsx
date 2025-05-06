@@ -308,19 +308,19 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
 
     //validation of empty documents
     if  (
-        !birthCert
+        !reportCard
     ){
-        toast.error("Please upload atleast the birth certificate.");
+        toast.error("Please upload atleast the report card.");
         return;
     }
 
      //validation for payment receipts
-     if  (
-        !receipt
-    ){
-        toast.error("Please upload a receipt of payment.");
-        return;
-    }
+    //  if  (
+    //     !receipt
+    // ){
+    //     toast.error("Please upload a receipt of payment.");
+    //     return;
+    // }
 
 
        
@@ -582,9 +582,11 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
             {/* first section */}
             <div className="flex flex-col py-10 gap-10">
                 <p className="font-bold font-merriweather text-4xl text-center text-lGreen">High School Admission Application</p>
-                <div className="h-[80px] w-[250px] rounded-lg bg-slGreen">
-                    <p className="font-extralight font-oswald text-lg text-center text-red-500 p-2">
-                    *Please ensure all fields are correctly filled before submitting
+                <div className="w-[600px] border-2 border-d2Green rounded-lg p-3">
+                    <p className="text-red-500 font-bold">Important Reminder:</p>
+                    <p className="text-red-500">
+                        *Please note that all hard copies of documents must be submitted in person. 
+                        *Additionally, ensure all online fields are complete and accurate before submitting.
                     </p>
                 </div>
               
@@ -877,10 +879,10 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             value={gradeLevel} 
                             >
                             <option className="text-gray-300" value="">Grade</option>
-                            <option className="text-black" value="Grade7">Grade 7</option>
-                            <option className="text-black" value="Grade8">Grade 8</option>
-                            <option className="text-black" value="Grade9">Grade 9</option>
-                            <option className="text-black" value="Grade9">Grade 10</option>
+                            <option className="text-black" value="Grade7">Grade 6</option>
+                            <option className="text-black" value="Grade8">Grade 7</option>
+                            <option className="text-black" value="Grade9">Grade 8</option>
+                            <option className="text-black" value="Grade10">Grade 9</option>
                         </select>
                         <select
                             className={`bg-gray-300/50 h-[36px] w-[200px] rounded-lg font-sans ${
@@ -923,6 +925,8 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             accept="image/*"
                             />
                         </div>
+                        <div>
+                            <p className="text-red-500">*Required</p>
                         <div className="flex flex-row gap-10">
                             <label htmlFor="document" className="font-medium font-oswald text-xl text-lGreen  w-[190px]"> REPORT CARD</label>
                             <input 
@@ -933,6 +937,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             onChange={handleReportCardChange}
                             accept="image/*"
                             />
+                        </div>
                         </div>
 
                         <div>
@@ -948,6 +953,8 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                             accept="image/*"
                             />
                         </div>
+
+                       
 
                         </div>
                     </div>
@@ -1245,6 +1252,7 @@ const EnrollmentPage: FC<Props> = ({ enrollmentAdd }) => {
                 </div>
             </div>
 
+               
 
             <div className="w-full flex justify-center mt-10"> 
             <Button
