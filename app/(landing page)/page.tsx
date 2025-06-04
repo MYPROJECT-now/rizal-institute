@@ -91,7 +91,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col items-center justify-center gap-4">
-                <a href="/enrollment">
+                <a href="/new_application">
                 <Button
                 variant="mButton"
                 className="h-[65px] w-[250px] rounded-2xl ">
@@ -244,7 +244,7 @@ export default function Home() {
           </div>
         
          {/* THIRD PART */}
-         <a href="/enrollment">
+         <a href="/new_application">
           <Button
             variant="mButton"
             className="h-[65px] w-[250px] rounded-2xl ">

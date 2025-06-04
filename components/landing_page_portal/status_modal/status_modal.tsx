@@ -9,7 +9,7 @@ import {
 import { useStatusModal } from "@/src/store/status_modal";
 import { Button } from "../../ui/button";
 import { useState } from "react";
-import { getStatusByTrackingId } from "@/src/actions/serverActions";
+// import { getStatusByTrackingId } from "@/src/actions/serverActions";
 import { useRouter } from "next/navigation";
 export const StatusModal = () => {
     const { isOpen, close } = useStatusModal();
@@ -20,7 +20,7 @@ export const StatusModal = () => {
 
     const handleSubmit = async () => {
         try {
-            const status = await getStatusByTrackingId(trackingId);
+            // const status = await getStatusByTrackingId(trackingId);
             setStatusMessage(status);
         } catch {
             setStatusMessage("No application was found.");

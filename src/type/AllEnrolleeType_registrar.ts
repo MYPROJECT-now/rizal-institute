@@ -3,7 +3,7 @@ export type studentType_registrar = {
     lrn: string;
     firstName: string;
     lastName: string;
-    middleName: string;
+    middleName: string | null;
     gradeLevel: string | null;
     applicationStatus: string | null;
     reservationPaymentStatus: string | null;

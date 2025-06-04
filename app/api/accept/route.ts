@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import { applicationStatusTable, guardianAndParentsTable } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 
@@ -16,9 +16,9 @@ const transporter = nodemailer.createTransport({
 // Function to fetch student email from guardianAndParentsTable
 async function getStudentEmail(studentId: number): Promise<string | null> {
   const result = await db
-    .select({ email: guardianAndParentsTable.email })
-    .from(guardianAndParentsTable)
-    .where(eq(guardianAndParentsTable.id, studentId))
+    .select({ email: applicantsInformationTable.email })
+    .from(applicationStatusTable)
+    .where(eq(applicationStatusTable.id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].email : null;

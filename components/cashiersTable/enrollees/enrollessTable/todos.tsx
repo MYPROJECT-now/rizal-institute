@@ -2,7 +2,8 @@
 import { FC, useState } from "react";
 import { studentType_cashier } from "@/src/type/AllEnrolleeType_cashier";  
 import Student from "./todo";
-import { acceptStudentsReservationPayment } from "@/src/actions/serverActions";
+import { acceptStudentsReservationPayment } from "@/src/actions/cashierAction";
+
 
 interface Props {
   students: studentType_cashier[];
@@ -23,7 +24,7 @@ const Students: FC<Props> = ({ students }) => {
   // };
 
   const handleAccept = async (id: number) => {
-    await acceptStudentsReservationPayment(id);
+    await acceptStudentsReservationPayment(id, "Reserved");
 
   // Call the API to send the email if the status is Ongoing
   const response = await fetch('/api/accept', {

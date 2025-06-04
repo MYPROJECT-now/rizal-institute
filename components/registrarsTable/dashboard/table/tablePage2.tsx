@@ -4,13 +4,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getRecentEnrollee } from "@/src/actions/serverActions";
+import { getRecentEnrollee } from '@/src/actions/registrarAction';
 
 interface EnrolleeType {
   lrn: string;
   lastName: string;
   firstName: string;
-  middleName: string;
+  middleName: string | null;
   gradeLevel: string | null;
   applicationStatus: string | null;
   dateOfApplication: string | null;

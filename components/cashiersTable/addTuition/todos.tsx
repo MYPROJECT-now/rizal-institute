@@ -1,14 +1,14 @@
 "use client";
 import AddTodo from "./addTodo";
-import { addTuition } from "@/src/actions/serverActions";
+// import { addTuition } from "@/src/actions/serverActions";
 
 
 
 const addTuitionPage =() => {
 
   // Function to create a new todo item
-  const createTodo = ( lrn:string, tuitionFee: number, soa: string, siNumber: string) => {
-    addTuition( lrn, tuitionFee, soa, siNumber);
+  const createTodo = ( ) => {
+    // addTuition( lrn, tuitionFee, soa, siNumber);
   };
 
 
