@@ -75,20 +75,24 @@ export const StudentsTable = () => {
                     <option value=""> Grade 10</option>
                 </select>
                 </div>
+                
+                <div className="flex flex-wrap gap-3">
                 <Button
                     variant="mButton"
-                    className=" text-white px-7 py-4 rounded-lg gap-4 p-4"
+                    className=" text-white px-2 py-2 rounded-lg "
                 >
                     Clear Filter
                 </Button>
+                
                 <Reg_AddStudent />
                 <Button
                     onClick={() => openAddStudent()}
                     variant="mButton"
-                    className=" text-white px-7 py-4 rounded-lg gap-4 p-4"
+                    className=" text-white px-2 py-2 rounded-lg "
                 >
                     Add Student
                 </Button>
+                </div>
                 
             </div>
 

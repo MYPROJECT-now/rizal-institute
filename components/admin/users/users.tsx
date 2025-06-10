@@ -90,7 +90,7 @@ export const UsersTable = () => {
             </div>
             <Button
                 variant="mButton"
-                className="text-white px-7 py-2 rounded-lg sm:w-36"
+                className="text-white px-2 py-2 rounded-lg"
             >
                 CLEAR FILTER
             </Button>

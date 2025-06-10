@@ -41,7 +41,7 @@ const RegistrarsEnrolleesTable = () => {
                 < EnrolleePAge />
             </div>
         </div>
-        </CashierClientComponent>
+    </CashierClientComponent>
     );
 };
 

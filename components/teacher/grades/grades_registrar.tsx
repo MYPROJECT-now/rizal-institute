@@ -60,44 +60,50 @@ export const GradeTable = () => {
     const { open } = useRegGradesModal();
 
     return (
-        <div className="p-4 rounded-lg flex flex-wrap gap-4 items-center sm:text-sm md:text-base lg:text-lg">
-            <div className="my-5 ml-10 p-4 rounded-lg flex flex-wrap gap-4 items-center">
-                <p className="font-bold text-xl text-dGreen font-merriweather">
+         <div className="w-full max-h-full flex flex-col sm:text-sm md:text-base lg:text-lg"> 
+            {/*Filter Section */}
+                <div className="flex flex-row items-center ml-10 gap-5">
+          
+                <p className="font-bold text-dGreen font-merriweather">
                     Filter By:
                 </p>
-                <input 
+                <div className="grid sm:grid-cols-1 grid-row-3 md:grid-col-2 grid-row-2 lg:grid-cols-1 grid-row-3 gap-5 p-5">
+                <input
                     type="text"
                     placeholder="Name"
-                    className="border border-gray-600 p-2 rounded" 
+                    className="border border-gray-600 p-2 rounded w-full sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60"
                 />
-                <input 
+                <input
                     type="text"
                     placeholder="LRN"
-                    className="border border-gray-600 p-2 rounded" 
+                    className="border border-gray-600 p-2 rounded w-full sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60"
                 />
-                <select name="Grade Level" className="border border-gray-600 p-2 rounded w-[200px]">
+                <select className="border border-gray-600 p-2 rounded w-auto sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60">
                     <option value="">Grade 7</option>
                     <option value="">Grade 8</option>
                     <option value="">Grade 9</option>
                     <option value="">Grade 10</option>
                 </select>
+                </div>
+                <div className="flex flex-warp gap-3 ml-6">
                 <Button
                     variant="mButton"
-                    className="text-white px-7 py-4 rounded-lg"
+                    className="text-white px-2 py-2 rounded-lg "
                 >
-                    Clear Filter
+                    CLEAR FILTER   
                 </Button>
 
                 <Button
                     variant="mButton"
-                    className="text-white px-7 py-4 rounded-lg"
+                    className="text-white px-2 py-2 rounded-lg"
                 >
                     ADD GRADE
                 </Button>
+                </div>
             </div>
 
             <div className="min-w-full overflow-x-auto sm:text-sm md:text-base lg:text-lg">
-                <div className="h-[360px] overflow-y-auto">
+                <div className="h-[350px] overflow-y-auto">
                 <table className="min-w-full border-collapse border border-green-600 text-center table-fixed overflow-auto">
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-green-600 text-white">

@@ -96,7 +96,7 @@ export const GradeTable = () => {
                 </div>
                 <Button
                     variant="mButton"
-                    className="text-white px-7 py-4 rounded-lg "
+                    className="text-white px-2 py-2 rounded-lg "
                 >
                     Clear Filter
                 </Button>
