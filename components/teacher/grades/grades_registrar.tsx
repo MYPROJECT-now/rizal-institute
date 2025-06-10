@@ -24,13 +24,44 @@ export const GradeTable = () => {
             gradeLevel: "Grade 7",
             status: "Passed",
         },
+        {
+            lrn: "123546547958",
+            fullName: "Tamad, Juan A.",
+            gradeLevel: "Grade 7",
+            status: "Passed",
+        },
+        {
+            lrn: "123546547958",
+            fullName: "Tamad, Juan A.",
+            gradeLevel: "Grade 7",
+            status: "Passed",
+        },
+        {
+            lrn: "123546547958",
+            fullName: "Tamad, Juan A.",
+            gradeLevel: "Grade 7",
+            status: "Passed",
+        },
+        {
+            lrn: "123546547958",
+            fullName: "Tamad, Juan A.",
+            gradeLevel: "Grade 7",
+            status: "Passed",
+        },
+        {
+            lrn: "123546547958",
+            fullName: "Tamad, Juan A.",
+            gradeLevel: "Grade 7",
+            status: "Passed",
+        },
+        
     ];
 
     const { open } = useRegGradesModal();
 
     return (
-        <div className="flex flex-col">
-            <div className="flex flex-row items-center my-5 ml-10 gap-5">
+        <div className="p-4 rounded-lg flex flex-wrap gap-4 items-center sm:text-sm md:text-base lg:text-lg">
+            <div className="my-5 ml-10 p-4 rounded-lg flex flex-wrap gap-4 items-center">
                 <p className="font-bold text-xl text-dGreen font-merriweather">
                     Filter By:
                 </p>
@@ -65,9 +96,10 @@ export const GradeTable = () => {
                 </Button>
             </div>
 
-            <div className="mx-10">
-                <table className="w-full border-collapse border border-green-600 text-center">
-                    <thead>
+            <div className="min-w-full overflow-x-auto sm:text-sm md:text-base lg:text-lg">
+                <div className="h-[360px] overflow-y-auto">
+                <table className="min-w-full border-collapse border border-green-600 text-center table-fixed overflow-auto">
+                    <thead className="sticky top-0 z-10">
                         <tr className="bg-green-600 text-white">
                             <th className="border border-green-600 p-2">LRN</th>
                             <th className="border border-green-600 p-2">Name</th>
@@ -96,6 +128,7 @@ export const GradeTable = () => {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     );

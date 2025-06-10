@@ -32,46 +32,78 @@ export const StudentsTableCashier = () => {
             amountPaid: 5000,
             balance: 6000,
             status: "Partial",
+        },{
+            lrn: "192837465091",
+            fullName: "Magaling, Jose C.",
+            gradeLevel: "Grade 9",
+            totalFees: 11000,
+            amountPaid: 5000,
+            balance: 6000,
+            status: "Partial",
+        },
+        {
+            lrn: "192837465091",
+            fullName: "Magaling, Jose C.",
+            gradeLevel: "Grade 9",
+            totalFees: 11000,
+            amountPaid: 5000,
+            balance: 6000,
+            status: "Partial",
+        },
+        {
+            lrn: "192837465091",
+            fullName: "Magaling, Jose C.",
+            gradeLevel: "Grade 9",
+            totalFees: 11000,
+            amountPaid: 5000,
+            balance: 6000,
+            status: "Partial",
         },
     ];
 
     const { open } = useSoaModal();
 
     return (
-        <div className="flex flex-col">
-            {/* Filter Section */}
-            <div className="flex flex-row items-center my-5 ml-10 gap-5">
-                <p className="font-bold text-xl text-dGreen font-merriweather">
+       <div className="w-full max-h-full flex flex-col sm:text-sm md:text-base lg:text-lg"> 
+            {/*Filter Section */}
+                <div className="flex flex-row items-center ml-10 gap-5">
+          
+                <p className="font-bold text-dGreen font-merriweather">
                     Filter By:
                 </p>
+                <div className="grid sm:grid-cols-1 grid-row-3 md:grid-col-2 grid-row-2 lg:grid-cols-1 grid-row-3 gap-5 p-5">
                 <input
                     type="text"
                     placeholder="Name"
-                    className="border border-gray-600 p-2 rounded"
+                    className="border border-gray-600 p-2 rounded w-full sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60"
                 />
                 <input
                     type="text"
                     placeholder="LRN"
-                    className="border border-gray-600 p-2 rounded"
+                    className="border border-gray-600 p-2 rounded w-full sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60"
                 />
-                <select className="border border-gray-600 p-2 rounded w-[200px]">
+                <select className="border border-gray-600 p-2 rounded w-auto sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60">
                     <option value="">Grade 7</option>
                     <option value="">Grade 8</option>
                     <option value="">Grade 9</option>
                     <option value="">Grade 10</option>
                 </select>
+                </div>
                 <Button
                     variant="mButton"
-                    className="text-white px-7 py-4 rounded-lg"
+                    className="text-white px-7 py-2 rounded-lg sm:w-36"
                 >
                     Clear Filter
                 </Button>
+                
+                
             </div>
-
+          {/* HINDI PA TO TAPOS, TABLE AYUSIN MO YAH!// OKS NA YA
             {/* Table Section */}
-            <div className="mx-10">
-                <table className="w-full border-collapse border border-green-600 text-center">
-                    <thead>
+            
+                <div className="h-[350px] overflow-y-auto">
+                <table className="min-w-full border-collapse border border-green-600 text-center overflow-auto table-fixed">
+                    <thead className="sticky top-0 z-10">
                         <tr className="bg-green-600 text-white">
                             <th className="border border-green-600 p-2">LRN</th>
                             <th className="border border-green-600 p-2">Full Name</th>
@@ -91,21 +123,22 @@ export const StudentsTableCashier = () => {
                                 <td className="border border-green-600 p-2">
                                     <SOA />
                                     <button 
-                                        className="bg-green-600 text-white px-3 py-1 rounded"
+                                        className="bg-green-600 text-white px-2 py-1 rounded"
                                         onClick={open}
                                         >
                                             View
                                         </button>
                                 </td>
                                 <td className="border border-green-600 p-2">
-                                    <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</button>
-                                    <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                    <button className="bg-blue-500 text-white px-2 py-1 rounded mr-2 mb-2">Edit</button>
+                                    <button className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
+                </div>
+            
         </div>
     );
 };

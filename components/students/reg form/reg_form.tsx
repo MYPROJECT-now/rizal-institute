@@ -17,7 +17,7 @@ export const Registration_Form = () => {
     <p className="font-semibold">Rizal Institute - Junior High School Department</p>
   </div>
 
-  <div className="mt-10 flex justify-between px-10 text-sm text-gray-600">
+  <div className="mt-10 justify-between px-10 text-sm text-gray-600 sm:grid grid-cols-1 grid-row-2 md:grid-cols-2">
     <div className="text-center">
       _______________________<br />
       Student Signature

@@ -32,12 +32,12 @@ const chartData = [
 export const Enrollment = () => {
     return (
         <div>
-        <Card className="w-[550px]">
+        <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
             <CardHeader>
                 <CardTitle className="text-center">Monthly Collection Trend</CardTitle>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig} style={{ width: 500, height: 200 }}>
+                <ChartContainer config={chartConfig} style={{ }}>
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
