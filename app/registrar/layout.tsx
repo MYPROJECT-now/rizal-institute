@@ -1,4 +1,5 @@
 import { Sidebar_registrar } from "@/components/sidebar/sidebar_registrar";
+import { MobileHeader } from "@/components/sidebar/registrar_mobile_header";
 
 type props  = {
     children: React.ReactNode;
@@ -6,10 +7,17 @@ type props  = {
 
 const RegistrarLayout = ({children}: props) => {
     return (
-        <div className="min-h-screen w-full flex flex-row bg-lGreen">
-            <Sidebar_registrar />
-            {children}
-        </div>
+        <>
+        
+                 <MobileHeader /> 
+                <Sidebar_registrar className="hidden lg:flex" />
+                <main className="lg:pl-[300px] h-full">
+                <div className="min-h-screen w-full flex flex-row bg-lGreen">
+                    
+                    {children}
+                </div>
+                </main>
+                </>
     );
 };
 

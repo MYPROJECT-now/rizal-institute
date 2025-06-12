@@ -11,7 +11,7 @@ export const Sidebar_teacher = ({ className }: Props) => {
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen", 
+                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
                 className
             )}
         >

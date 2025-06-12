@@ -14,14 +14,14 @@ const Dashboard = () => {
             <Admin_header />
             <div className="w-full h-[540px] rounded-lg gap-5">
                 <div className="flex flex-col">
-                    <p className="text-2xl font-bold text-dGreen mb-2 ">
+                    <p className="text-2xl font-bold text-dGreen mb-2 mt-5">
                         Quick Stats
                     </p>    
                     <Top_analytics />
                 </div>
 
                 <div className="flex flex-col">
-                    <p className="text-2xl font-bold text-dGreen">
+                    <p className="text-2xl font-bold text-dGreen mt-5">
                        Audit Trails
                     </p>
                     <div>

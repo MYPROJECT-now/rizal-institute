@@ -5,7 +5,7 @@ import StudentClientComponent from "@/components/validation/student_validate";
 const Dashboard = () => {
     return (
         <StudentClientComponent>
-            <div className="w-full max-h-full mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
+            <div className="w-full max-h-full mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
                 <Admin_student />
                 <div className="w-full h-full bg-white self-center mt-10 rounded-lg shadow-lg overflow-hidden border border-gray-200">
                     <div className="h-full flex flex-col">

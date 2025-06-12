@@ -85,7 +85,7 @@ export const GradeTable = () => {
                     <option value="">Grade 10</option>
                 </select>
                 </div>
-                <div className="flex flex-warp gap-3 ml-6">
+                <div className="flex flex-wrap gap-3 ml-6">
                 <Button
                     variant="mButton"
                     className="text-white px-2 py-2 rounded-lg "

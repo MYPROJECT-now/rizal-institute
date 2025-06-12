@@ -15,17 +15,17 @@ type Props = {
 };
 
 export const Sidebar_admin = ({ className }: Props) => {
-    const { open } = useFiscalYearModal();
+   const { open } = useFiscalYearModal();
     const {open: openEnrollment} = useEnrollmentModal();
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen", 
+                "flex-col h-full lg:w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
                 className
             )}
         >
             
-            <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
+            <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] sm:text-sm md:text-base lg:text-lg">
                 <Link href="/admin">
                     <Image 
                         src="/school.png" 
