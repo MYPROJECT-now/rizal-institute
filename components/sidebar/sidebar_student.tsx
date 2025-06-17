@@ -1,13 +1,17 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
+import { useState } from "react";
 
 type Props = {
     className?: string;
+    onClose?: () => void;
 };
 
-export const Sidebar_student = ({ className }: Props) => {
+export const Sidebar_student = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
@@ -17,7 +21,7 @@ export const Sidebar_student = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/student">
+                <Link href="/student" onClick={onClose}>
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -31,19 +35,22 @@ export const Sidebar_student = ({ className }: Props) => {
                     <SidebarItem 
                         label="Dashboard" 
                         href="/student"
-                        iconSrc="/dashboard.png" 
+                        iconSrc="/dashboard.png"
+                        onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Registration" 
                         href="/student/reg_form"
-                        iconSrc="/student_logo.png" 
+                        iconSrc="/student_logo.png"
+                        onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Payments" 
                         href="/student/payments"
-                        iconSrc="/payment.png" 
+                        iconSrc="/payment.png"
+                        onClick={onClose} 
                     />
 
 

@@ -1,19 +1,27 @@
 import { MobileSidebar } from "./admin_mobile_sidebar"
 import Image from "next/image"
+import Link from "next/link"
+
 export const MobileHeader = () => {
+    
+
     return (
-        <nav className ="lg:hidden px-4 h-[50px] flex items-center border-b fixed top-0 w-full z-50 bg-lGreen">
-            <MobileSidebar />
+        <nav className ="lg:hidden px-4 h-[60px] flex items-center border-b fixed top-0 w-full z-50 bg-lGreen">
+            <MobileSidebar/>
             <div className ="flex flex-row">
+                <Link href="/admin">
                 <Image 
                                         src="/school.png" 
-                                        width={30}
-                                        height={30} 
+                                        width={40}
+                                        height={40} 
                                         alt="PWD Icon"
-                                        className ="ml-5 fixed"
+                                        className ="ml-5 h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto"
                                     />
-                <p className="text-white ml-16 mt-2 md:text-xl text-bold font-merriweather">Rizal Institute Canlubang Foundation Inc.</p>
+                    </Link>
+                <p className="text-white ml-5 mt-2 text-bold font-merriweather">Rizal Institute Canlubang Foundation Inc.</p>
             </div>
         </nav>
     )
 }
+
+// ml-5 fixed min-w-fit

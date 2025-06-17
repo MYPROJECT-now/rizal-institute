@@ -12,7 +12,7 @@ const Admin_student = () => {
       
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] sm:text-sm mt-10 md:text-base lg:text-lg">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-12 sm:text-sm md:text-base lg:text-lg">
             <div className="flex flex-col">
                {/*  <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE

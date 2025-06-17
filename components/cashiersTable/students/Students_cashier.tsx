@@ -64,9 +64,9 @@ export const StudentsTableCashier = () => {
     const { open } = useSoaModal();
 
     return (
-       <div className="w-full max-h-full flex flex-col sm:text-sm md:text-base lg:text-lg"> 
+       <div className="w-full max-h-full flex flex-wrap sm:text-sm md:text-base lg:text-lg"> 
             {/*Filter Section */}
-                <div className="flex flex-row items-center ml-10 gap-5">
+                <div className="flex flex-wrap items-center ml-10 gap-5">
           
                 <p className="font-bold text-dGreen font-merriweather">
                     Filter By:
@@ -101,8 +101,8 @@ export const StudentsTableCashier = () => {
           {/* HINDI PA TO TAPOS, TABLE AYUSIN MO YAH!// OKS NA YA
             {/* Table Section */}
             
-                <div className="h-[350px] overflow-y-auto">
-                <table className="min-w-full border-collapse border border-green-600 text-center overflow-auto table-fixed">
+                <div className="h-[320px] overflow-y-auto sm:text-sm md:text-base lg:text-lg">
+                <table className="w-full border-collapse border border-green-600 text-center overflow-auto table-fixed ">
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-green-600 text-white">
                             <th className="border border-green-600 p-2">LRN</th>

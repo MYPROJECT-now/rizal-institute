@@ -52,7 +52,7 @@ export const StudentsTable = () => {
 
     return (
         <div className="w-full max-h-full flex flex-wrap sm:text-sm md:text-base lg:text-lg">
-            <div className="flex flex-row items-center ml-10 gap-5">
+            <div className="flex flex-wrap items-center ml-10 gap-5 mb-[-2]">
                 <p className="font-bold text-dGreen font-merriweather">
                     Filter By:
                 </p>
@@ -76,7 +76,7 @@ export const StudentsTable = () => {
                 </select>
                 </div>
                 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 my-5">
                 <Button
                     variant="mButton"
                     className=" text-white px-2 py-2 rounded-lg "
@@ -98,7 +98,7 @@ export const StudentsTable = () => {
 
             <div className="min-w-full overflow-y-auto ">
                 <Reg_Students />
-                <div className="h-[350px] overflow-y-auto">
+                <div className="h-[320px] overflow-y-auto">
                 <table className="min-w-full border-collapse border border-green-600 text-center table-fixed overflow-auto">
                     <thead className="sticky top-0 z-10">
                     <tr className="bg-green-600 text-white">

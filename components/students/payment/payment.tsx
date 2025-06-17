@@ -87,8 +87,8 @@ export const PaymentPage = () => {
             {/* Section 3: Transaction History */}
             <div className="text-xl font-bold text-dGreen">Transaction History</div>
             <div className="max-h-[180px] overflow-y-auto">
-            <table className="min-w-full max-h-full table-fixed overflow-auto border-collapse border border-green-600 text-center ">
-                <thead>
+            <table className="min-w-full max-h-full table-fixed overflow-auto border-collapse border border-green-600 text-center">
+                <thead className = "sticky top-0 z-10">
                     <tr className="bg-green-600 text-white">
                         <th className="border border-green-600 p-2">Date</th>
                         <th className="border border-green-600 p-2">Amount</th>

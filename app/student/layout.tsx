@@ -11,7 +11,7 @@ const AdminLayout = ({children}: props) => {
                  <MobileHeader /> 
                 <Sidebar_student className="hidden lg:flex" />
                 <main className="lg:pl-[300px] h-full">
-                <div className="min-h-screen w-full flex flex-row bg-lGreen">
+                <div className="min-h-screen w-full flex flex-row">
                     
                     {children}
                 </div>
