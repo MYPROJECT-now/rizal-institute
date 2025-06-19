@@ -28,100 +28,122 @@ const AdmissionPage = () => {
         <div className="w-full h-full flex flex-col">
 
             {/* first section */}
-            <div className="w-full h-[600px] bg-green-300/30 flex flex-row items-center justify-evenly gap-[1px]">
-                <div className="flex flex-col gap-10 items-center text-d2Green">
+            <div className="w-full h-[600px] bg-green-300/30 flex flex-row items-center justify-evenly gap-[1px] ">
+                <div className="flex flex-col gap-10 items-center text-d2Green lg:flex lg:flex-row">
                     <Image
-                        src="/student.png"
+                        src="/studentboy.png"
                         alt="student"
-                        width={320}
-                        height={320}
+                        width={250}
+                        height={250}
+                        className ="hidden md:block"
                     />
-                    <div className="text-center">
-                        <div className="font-bold font-merriweather text-4xl">
-                            <p>
-                                Welcome
-                            </p>
-                            <p>
-                                Rizalians!!
-                            </p>
-                        </div>
-                        <hr className="border-1 border-solid border-dGreen w-[240px]" />
-                        <div>
-                            <p>
+                     <Image
+                        src="/student2.png"
+                        alt="student"
+                        width={250}
+                        height={250}
+                        className ="hidden lg:block"
+                    />
+                    </div>
+                    <div className="text-center flex flex-col items-center">
+                        <Image
+                        src="/admission.svg"
+                        alt="student"
+                        width={0}
+                        height={0}
+                        className="w-[300px] h-[300px] mx-auto lg:w-[600px] lg:h-[600px] "
+                        />
+                       {/* <div className="font-bold font-merriweather text-2xl lg:text-4xl"> */}
+                            
+                        <p className="text-xs lg:text-base lg:mt-[-100px]">
                             SAVE YOUR SPOT, ENROLL NOW                            
                             </p>
-                        </div>
-                    </div>
+                        
+                      {/*   <hr className="border-1 border-solid border-dGreen w-[300px] lg:w-[600px]" /> */}
+                        
+                            <p className= "font-bold font-merriweather text-2xl lg:text-4xl">
+                                Welcome, Rizalians!
+                            </p>
+                        
+                        
+                    </div> 
                 </div>
+           
 
-                <div>
-                <Image
-                    src="/admission.svg"
-                    alt="student"
-                    width={800}
-                    height={800}
-                    />
-                </div>
-            </div>
              {/* end of first section */}
 
             {/* start of second section */}
-            <div className="w-full h-[600px] flex flex-row items-center justify-center gap-10 ">
 
-                <div className="flex flex-col gap-4">
-                    <Button
-                    onClick={() => setActiveStep(1)}
-                    className={activeStep === 1 ? 
-                    "w-[110px] h-[60px] rounded-2xl bg-lGreen text-white text-2xl hover:bg-green-500/90 border-b-[7px] border-b-dGreen active:border-0  font-bold font-oswald" 
-                    : "w-[110px] h-[60px] rounded-2xl bg-dGreen text-white text-2xl hover:bg-green-700/90 border-b-[7px] border-b-d2Green active:border-0  font-bold font-oswald"}>
-                        Step 1
-                    </Button>
+            <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-10 p-4">
+            <div className="flex flex-row lg:flex-col gap-2 lg:gap-4 flex-wrap justify-center">
+                <Button
+                onClick={() => setActiveStep(1)}
+                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
+                    activeStep === 1
+                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
+                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
+                }`}
+                >
+                Step 1
+                </Button>
 
-                    <Button
-                    onClick={() => setActiveStep(2)}
-                    className={activeStep === 2 ? 
-                   "w-[110px] h-[60px] rounded-2xl bg-lGreen text-white text-2xl hover:bg-green-500/90 border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald" 
-                    : "w-[110px] h-[60px] rounded-2xl bg-dGreen text-white text-2xl hover:bg-green-700/90 border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald"}>
-                        Step 2
-                    </Button>
+                <Button
+                onClick={() => setActiveStep(2)}
+                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
+                    activeStep === 2
+                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
+                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
+                }`}
+                >
+                Step 2
+                </Button>
 
-                    <Button
-                    onClick={() => setActiveStep(3)}
-                    className={activeStep === 3 ? 
-                   "w-[110px] h-[60px] rounded-2xl bg-lGreen text-white text-2xl hover:bg-green-500/90 border-b-[7px] border-b-dGreen active:border-0  font-bold font-oswald" 
-                    : "w-[110px] h-[60px] rounded-2xl bg-dGreen text-white text-2xl hover:bg-green-700/90 border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald"}>
-                        Step 3
-                    </Button>
+                <Button
+                onClick={() => setActiveStep(3)}
+                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
+                    activeStep === 3
+                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
+                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
+                }`}
+                >
+                Step 3
+                </Button>
 
-                    <Button
-                    onClick={() => setActiveStep(4)}
-                    className={activeStep === 4 ? 
-                    "w-[110px] h-[60px] rounded-2xl bg-lGreen text-white text-2xl hover:bg-green-500/90 border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald" 
-                    : "w-[110px] h-[60px] rounded-2xl bg-dGreen text-white text-2xl hover:bg-green-700/90 border-b-[7px] border-b-d2Green active:border-0  font-bold font-oswald"}>
-                        Step 4
-                    </Button>
+                <Button
+                onClick={() => setActiveStep(4)}
+                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
+                    activeStep === 4
+                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
+                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
+                }`}
+                >
+                Step 4
+                </Button>
 
-                    <Button
-                    onClick={() => setActiveStep(5)}
-                    className={activeStep === 5 ? 
-                   "w-[110px] h-[60px] rounded-2xl bg-lGreen text-white text-2xl hover:bg-green-500/90 border-b-[7px] border-b-dGreen  font-bold font-oswald" 
-                    : "w-[110px] h-[60px] rounded-2xl bg-dGreen text-white text-2xl hover:bg-green-700/90 border-b-[7px] border-b-d2Green  font-bold font-oswald"}>
-                        Step 5
-                    </Button>
-                </div>
-                <div>
-                    {/* card */}
-                    <Card className="w-[700px] h-[450px] bg-green-300/30 border-0 flex flex-col px-8 rounded-3xl">
-                        <CardHeader>
-                            <CardTitle className="font-bold font-merriweather text-4xl text-dGreen text-center ">
-                                {activeStep === 1 && ('Application Form  Submission')}
-                                {activeStep === 2 && ('Document Submission')}
-                                {activeStep === 3 && ('Slot Reservation Payment')}
-                                {activeStep === 4 && ('Track Application Status')}
-                                {activeStep === 5 && ('ENROLLMENT PROCEDURE')}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-start font-light font-oswald text-3xl flex flex-col gap-4">
+                <Button
+                onClick={() => setActiveStep(5)}
+                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
+                    activeStep === 5
+                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen font-bold font-oswald'
+                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green font-bold font-oswald'
+                }`}
+                >
+                Step 5
+                </Button>
+            </div>
+            {/* card */}
+            <div>
+                <Card className="w-full max-w-[95vw] lg:w-[700px] h-auto bg-green-300/30 border-0 flex flex-col px-4 lg:px-8 py-4 rounded-3xl">
+                <CardHeader>
+                    <CardTitle className="font-bold font-merriweather text-2xl lg:text-4xl text-dGreen text-center">
+                    {activeStep === 1 && 'Application Form Submission'}
+                    {activeStep === 2 && 'Document Submission'}
+                    {activeStep === 3 && 'Slot Reservation Payment'}
+                    {activeStep === 4 && 'Track Application Status'}
+                    {activeStep === 5 && 'ENROLLMENT PROCEDURE'}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="text-start font-light font-oswald text-xl lg:text-3xl flex flex-col gap-4">
                         {activeStep === 1 && (
                             <ol className="list-disc pl-6 flex flex-col gap-5">
                             <li>Click &quot;Enroll Now&quot; button</li>
@@ -175,17 +197,20 @@ const AdmissionPage = () => {
                             <li>Applicants can track their application status by entering their tracking ID in the button in the home page</li>
                             </ol>
                             )}
-                        </CardContent>
-                    </Card>
-                </div>
+                </CardContent>
+                </Card>
             </div>
+            </div>
+
+
+
             {/* end of second section */}
 
             {/* start of third section  */}
             <div className="h-[200px] w-full bg-dGreen flex flex-col gap-4 items-center justify-center text-center">
                 <p className="font-bold font-merriweather text-4xl text-white">READY TO TAKE A LEAP?</p>
                 <a href="/enrollment">
-                <button className="bg-yellow h-[60px] w-[700px] rounded-md font-bold font-merriweather text-dGreen text-2xl">
+                <button className="bg-yellow h-[60px] w-[150px] rounded-md font-bold font-merriweather text-dGreen text-lg md:w-[640px] md:text-2xl">
                     ENROLL NOW!!
                 </button>
                 </a>
@@ -193,31 +218,31 @@ const AdmissionPage = () => {
             {/* end of third section  */}
 
             {/* start of fourth section  */}
-            <div className="h-[600px] w-full pt-[100px] flex flex-col gap-10 items-center text-center  font-merriweather text-dGreen ">
-                <p className="font-bold text-4xl ">FREQUENTLY ASKED QUESTIONS</p>
-                <Accordion type="single" collapsible className="text-3xl" >
-                <AccordionItem value="item-1" className="w-[1200px]  text-lg px-10 rounded-lg">
+            <div className="h-[500px] w-full pt-[50px] flex flex-col gap-10 items-center text-center  font-merriweather text-dGreen ">
+                <p className="font-bold text-2xl md:text-4xl">FREQUENTLY ASKED QUESTIONS</p>
+                <Accordion type="single" collapsible className="text-base" >
+                <AccordionItem value="item-1" className="w-[400px]  text-sm px-10 rounded-lg lg:w-[640px]">
                     <AccordionTrigger className="text-lg">What are the requirements in enrolling?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    Please provide basic information, the most important document is the report card, and a reservation fee of PHP 500.
+                    <em>Please provide basic information, the most important document is the report card, and a reservation fee of PHP 500.</em>
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-2" className="w-[1200px]  text-lg px-10 rounded-lg">
+                <AccordionItem value="item-2" className="w-[400px]  text-lg px-10 rounded-lg lg:w-[640px]">
                     <AccordionTrigger className="text-lg">How much is the downpayment?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    The downpayment is P500.
+                    <em>The downpayment is P500.</em>
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-3" className="w-[1200px]  text-lg px-10 rounded-lg">
+                <AccordionItem value="item-3" className="w-[400px]  text-lg px-10 rounded-lg lg:w-[640px]">
                     <AccordionTrigger className="text-lg">Can I pay in full?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    Yes. You can pay in full.
+                    <em>Yes. You can pay in full.</em>
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-4" className="w-[1200px]  text-lg px-10 rounded-lg">
+                <AccordionItem value="item-4" className="w-[400px]  text-lg px-10 rounded-lg lg:w-[640px]">
                     <AccordionTrigger className="text-lg">How do I track my application?</AccordionTrigger>
                     <AccordionContent className="text-lg">
-                    You can track your application by entering your tracking ID in the button in the home page.
+                    <em>You can track your application by entering your tracking ID in the button in the home page.</em>
                     </AccordionContent>
                 </AccordionItem>
 

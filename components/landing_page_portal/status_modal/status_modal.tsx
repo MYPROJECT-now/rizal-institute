@@ -35,7 +35,7 @@ export const StatusModal = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={close}>
-            <DialogContent className="flex flex-col items-center h-[250px] w-[500px] rounded-t-lg">
+            <DialogContent className="flex flex-col items-center h-auto w-auto rounded-t-lg text-base lg:text-xl lg:w-[500px] lg:h-[250px]"> {/* w-[500px] h-[250px]*/}
                 <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
                     <DialogTitle className="text-center text-white text-2xl">
                         Track Application
@@ -46,7 +46,7 @@ export const StatusModal = () => {
                     placeholder="Enter Application ID"
                     value={trackingId}
                     onChange={(e) => setTrackingId(e.target.value)}
-                    className="w-[400px] h-[50px] rounded-md border-2 border-dGreen px-3"
+                    className="w-[300px] h-[50px] rounded-md border-2 border-dGreen px-3"   //w-[400px] h-[50px]
                 />
                 <p className="text-center text-red-500 mt-2">{statusMessage}</p>
 
