@@ -2,7 +2,7 @@
 import { FC, useState } from "react";
 import { studentType_registrar } from "@/src/type/AllEnrolleeType_registrar";
 import Student from "./todo";
-import { acceptStudentsApplication } from "@/src/actions/serverActions";
+import { acceptStudentsApplication } from "@/src/actions/registrarAction";
 
 interface Props {
   students: studentType_registrar [];
@@ -23,7 +23,7 @@ const Students: FC<Props> = ({ students }) => {
   // };
 
   const handleAccept = async (id: number) => {
-    await acceptStudentsApplication(id);
+    await acceptStudentsApplication(id, "Reserved");
 
     // Call the API to send the email if the status is Ongoing
     const response = await fetch('/api/accept', {

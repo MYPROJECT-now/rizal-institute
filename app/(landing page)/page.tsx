@@ -90,8 +90,8 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="flex flex-col-reverse items-center justify-center gap-4">
-                <a href="/enrollment">
+              <div className="flex flex-col items-center justify-center gap-4">
+                <a href="/new_application">
                 <Button
                 variant="mButton"
                 className="rounded-xl lg:text-2xl lg:h-[55px] lg:w-[210px]">
@@ -239,7 +239,7 @@ export default function Home() {
           
         
          {/* THIRD PART */}
-         <a href="/enrollment">
+         <a href="/new_application">
           <Button
             variant="mButton"
             className="rounded-xl lg:text-2xl lg:h-[55px] lg:w-[210px]">

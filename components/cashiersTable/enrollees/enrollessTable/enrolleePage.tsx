@@ -1,4 +1,4 @@
-import { getAllEnrollees_cashier } from "@/src/actions/serverActions";
+import { getAllEnrollees_cashier } from "@/src/actions/cashierAction";
 import Students from "./todos";
 
 

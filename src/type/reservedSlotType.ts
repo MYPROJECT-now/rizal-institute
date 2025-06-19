@@ -3,8 +3,8 @@ export type reservedSlotType = {
     lrn: string;
     firstName: string;
     lastName: string;
-    middleName: string;
+    middleName: string | null;
     gradeLevel: string | null;  
-    admissionStatus: string | null;  
+    // admissionStatus: string | null;  
   };
   

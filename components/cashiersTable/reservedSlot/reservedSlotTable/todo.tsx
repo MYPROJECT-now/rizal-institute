@@ -35,9 +35,9 @@ const Student: FC<Props> = ({ student, onAccept  }) => {
        <td className="px-4 py-2 space-x-2">
               <button
                 onClick={() => onAccept(student.id)}
-                className={`px-3 py-1 rounded text-white transition 
-                  ${student.admissionStatus === "Pending" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
-                disabled={student.admissionStatus !== "Pending"}
+                // className={`px-3 py-1 rounded text-white transition 
+                //   ${student.admissionStatus === "Pending" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
+                // disabled={student.admissionStatus !== "Pending"}
               >
                 Accept
               </button>
@@ -46,14 +46,14 @@ const Student: FC<Props> = ({ student, onAccept  }) => {
               <StatusModal />
               <button
                 onClick={() => open(student.id)}
-                className={`px-3 py-1 rounded text-white transition 
-                  ${student.admissionStatus === "Pending" ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"}`}
-                disabled={student.admissionStatus !== "Pending"}
+                // className={`px-3 py-1 rounded text-white transition 
+                //   ${student.admissionStatus === "Pending" ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"}`}
+                // disabled={student.admissionStatus !== "Pending"}
               >
                 Decline
               </button>
             </td>
-      <td className="px-4 py-2">{student.admissionStatus}</td>
+      {/* <td className="px-4 py-2">{student.admissionStatus}</td> */}
     </tr>
   );
 };

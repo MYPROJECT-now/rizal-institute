@@ -1,4 +1,5 @@
-import { getAllEnrollees_registrar } from "@/src/actions/serverActions";
+
+import { getAllEnrollees_registrar } from "@/src/actions/registrarAction";
 import Students from "./todos";
 
 
