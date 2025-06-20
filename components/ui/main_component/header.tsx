@@ -54,8 +54,8 @@ const Header = () => {
                     <a href="/portal2">
                     <button>
                          <Image 
-                         src="portal.svg"
-                         alt="portal logo" 
+                         src="/portal.png"
+                         alt="portal" 
                          width={40}
                          height={40}
                          className="mx-5"
@@ -73,17 +73,17 @@ const Header = () => {
                 {menuOpen && (
                     <div className="absolute top-[90px] left-0 w-full bg-dGreen flex flex-col items-center gap-4 py-4 shadow-lg">
                     <a href="\" onClick={() => setMenuOpen(false)}>
-                        <Button variant="hButton">
+                        <Button variant="hButton" className="text-2xl">
                             HOME
                             </Button>
                     </a>
                     <a href="\about_page" onClick={() => setMenuOpen(false)}>
-                        <Button variant="hButton">
+                        <Button variant="hButton" className="text-2xl">
                             ABOUT
                             </Button>
                     </a>
                     <a href="\admission_page" onClick={() => setMenuOpen(false)}>
-                        <Button variant="hButton">
+                        <Button variant="hButton" className="text-2xl">
                             ADMISSION
                             </Button>
                     </a>

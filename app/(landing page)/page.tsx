@@ -90,7 +90,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="flex flex-col items-center justify-center gap-4">
+              <div className="flex flex-col-reverse items-center justify-center gap-4">
                 <a href="/new_application">
                 <Button
                 variant="mButton"
