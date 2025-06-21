@@ -64,8 +64,7 @@ const Header = () => {
                     </a>
 
                     </div>
-                    <button
-                className="lg:hidden"
+                    <button className="lg:hidden"
                 onClick={() => setMenuOpen((prev) => !prev)}>
                 {menuOpen ? <X size={32} /> : <Menu size={32} />}
                 </button>
