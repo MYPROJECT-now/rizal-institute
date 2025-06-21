@@ -19,13 +19,47 @@ export const PaymentPage = () => {
             siNumber: "0032870",
             remarks: "Bank Transfer",
         },
+         {
+            date: "2024-10-16",
+            amount: 1500,
+            method: "Bank",
+            siNumber: "0032870",
+            remarks: "Bank Transfer",
+        },{
+            date: "2024-10-16",
+            amount: 1500,
+            method: "Bank",
+            siNumber: "0032870",
+            remarks: "Bank Transfer",
+        },
+        {
+            date: "2024-10-16",
+            amount: 1500,
+            method: "Bank",
+            siNumber: "0032870",
+            remarks: "Bank Transfer",
+        },{
+            date: "2024-10-16",
+            amount: 1500,
+            method: "Bank",
+            siNumber: "0032870",
+            remarks: "Bank Transfer",
+        },
+        {
+            date: "2024-10-16",
+            amount: 1500,
+            method: "Bank",
+            siNumber: "0032870",
+            remarks: "Bank Transfer",
+        },
+        
     ];
 
     return (
-        <div className="flex flex-col gap-6 p-6">
+        <div className="flex flex-col gap-6 p-6 max-h-full">
             {/* Section 1: Balance Summary */}
             <div className="text-xl font-bold text-dGreen">Tuition Balance</div>
-            <div className="bg-green-100 p-4 rounded-lg flex items-center justify-between">
+            <div className="bg-green-100 p-4 rounded-lg flex items-center justify-between h-full">
                 <div className="text-lg font-semibold">
                     Outstanding Balance: <span className="text-red-600">₱{outstandingBalance.toLocaleString()}</span>
                 </div>
@@ -35,7 +69,7 @@ export const PaymentPage = () => {
             </div>
 
             {/* Section 2: Fake Filter UI */}
-            <div className="bg-white p-4 rounded-lg flex flex-wrap gap-4 items-center">
+            <div className="bg-white p-4 rounded-lg flex flex-wrap gap-4 items-center h-full">
                 <input type="date" className="border border-gray-400 p-2 rounded" disabled />
                 <input type="date" className="border border-gray-400 p-2 rounded" disabled />
                 <input type="text" placeholder="SI Number" className="border border-gray-400 p-2 rounded" disabled />
@@ -52,8 +86,9 @@ export const PaymentPage = () => {
 
             {/* Section 3: Transaction History */}
             <div className="text-xl font-bold text-dGreen">Transaction History</div>
-            <table className="w-full border-collapse border border-green-600 text-center">
-                <thead>
+            <div className="max-h-[180px] overflow-y-auto">
+            <table className="min-w-full max-h-full table-fixed overflow-auto border-collapse border border-green-600 text-center">
+                <thead className = "sticky top-0 z-10">
                     <tr className="bg-green-600 text-white">
                         <th className="border border-green-600 p-2">Date</th>
                         <th className="border border-green-600 p-2">Amount</th>
@@ -80,6 +115,7 @@ export const PaymentPage = () => {
                     )}
                 </tbody>
             </table>
+            </div>
         </div>
     );
 };

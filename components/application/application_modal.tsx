@@ -28,14 +28,14 @@ export const Application_Modal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[600px] h-[300px] rounded-t-lg">
+      <DialogContent className="w-[300px] h-[300px] lg:w-[600px] lg:h-[300px] rounded-t-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center rounded-t-lg">
           Enrollment Category
           </DialogTitle>
         </DialogHeader>
         <div className="text-center"> 
-          <p className="text-2xl font-bold text-dGreen font-merriweather"> 
+          <p className="text-xl lg:text-2xl font-bold text-dGreen font-merriweather"> 
             Select from the category
           </p>
         </div>

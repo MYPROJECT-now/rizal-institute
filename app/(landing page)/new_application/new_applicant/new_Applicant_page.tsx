@@ -592,27 +592,27 @@ const validatePage = (): boolean => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 1: Personal Information
                     </p>
                 </div>
             ),
             content: (
-                <main className="grid grid-cols-2 gap-5 mx-[20px]">
-                    <section className="flex flex-col h-[55px] justify-center ">
+                <main className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <section className="flex flex-col h-[55px] justify-center">
                         {errors.applicantsLastName === "Required" &&(
                             <p className="text-red-500 text-[12px]">
                                 {errors.applicantsLastName}
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Last Name:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Last Name:</label>
                             <input 
                                 type="text" 
                                 placeholder="Dela Cruz"
                                 onChange={handleApplicantLastName}
                                 value={applicantsLastName}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:-w-[300px] h-[35px]
                                 ${errors.applicantsLastName ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
 
                             />
@@ -626,13 +626,13 @@ const validatePage = (): boolean => {
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">First Name:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">First Name:</label>
                             <input 
                                 type="text" 
                                 placeholder="John"
                                 onChange={handleApplicantFirstName}
                                 value={applicantsFirstName}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.applicantsFirstName ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -640,26 +640,26 @@ const validatePage = (): boolean => {
 
                     <section className="flex flex-col h-[55px] justify-center ">
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Middle Name:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Middle Name:</label>
                             <input 
                                 type="text" 
                                 placeholder="Doe" 
                                 onChange={handleApplicantMiddleName}
                                 value={applicantsMiddleName}
-                                className="rounded-sm px-1 w-[300px] h-[35px] bg-gray-200"
+                                className="rounded-sm px-2 w-full h-[35px] bg-gray-200"
                             />
                         </div>
                     </section>
          
                     <section className="flex flex-col h-[55px] justify-center ">
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Suffix:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Suffix:</label>
                             <input 
                                 type="text" 
                                 placeholder="Jr." 
                                 onChange={handleApplicantSuffix}
                                 value={applicantsSuffix}
-                                className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" />
+                                className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[300px] h-[35px]" />
                         </div>
                     </section>
 
@@ -670,7 +670,7 @@ const validatePage = (): boolean => {
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Birth Date:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-full lg:w-[170px]">Birth Date:</label>
                             <input 
                                 type="date" 
                                 onChange={handleDateOfBirth}
@@ -685,12 +685,12 @@ const validatePage = (): boolean => {
                     
                     <section className="flex flex-col h-[55px] justify-center ">
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Age:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Age:</label>
                             <input 
                                 disabled
                                 type="text" 
                                 value={age}
-                                className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" />
+                                className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[170px] h-[35px]" />
                         </div>
                     </section>
                     <section className="flex flex-col h-[55px] justify-center ">
@@ -700,12 +700,12 @@ const validatePage = (): boolean => {
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Gender:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Gender:</label>
                             <select 
                                 name="Gender"
                                 onChange={handleGender}
                                 value={gender}
-                                className={`rounded-sm px-1 w-[300px] h-[35px] 
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px] 
                                 ${errors.gender ? 'border border-red-600 bg-red-100' : 'bg-gray-200'} 
                                 ${gender === '' ? 'text-gray-500' : 'text-black'}`}>
                                 <option value="" >Select Gender</option>
@@ -723,13 +723,13 @@ const validatePage = (): boolean => {
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Mobile Number:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Mobile Number:</label>
                             <input 
                                 type="text"
                                 placeholder="09XXXXXXXX" 
                                 onChange={handleMobileNumber}
                                 value={mobileNumber}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.mobileNumber ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -742,13 +742,13 @@ const validatePage = (): boolean => {
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">Email address:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[170px]">Email address:</label>
                             <input 
                                 type="text" 
                                 placeholder="l7B4G@example.com" 
                                 onChange={handleEmail}
                                 value={email}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.email ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -760,14 +760,14 @@ const validatePage = (): boolean => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 2: Contact & Guardian Details
                     </p>
                 </div>
             ),
-            content: (
-                <main className="flex flex-col gap-5 mx-[20px]">
-                    <article className="grid grid-cols-2 gap-5 ">
+            content:(
+                <main className="grid grid-cols-1 lg:grid lg:grid-cols-1 gap-10">
+                    <article className="grid grid-cols-1 lg:grid lg:grid-cols-2 gap-10">
                         <section className="flex flex-col h-[55px] justify-center ">    
                             {errors.guardiansLastName === "Required" && (
                                 <p className="text-red-500 text-[12px]">
@@ -776,7 +776,7 @@ const validatePage = (): boolean => {
                             )}
                             <div className="flex flex-row gap-3 items-center">
                                 
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Guardian Last Name:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> Guardian Last Name:</label>
                                 <input 
                                     type="text" 
                                     placeholder="Garcia"
@@ -795,7 +795,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Guardian First Name:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> Guardian First Name:</label>
                                 <input 
                                     type="text" 
                                     placeholder="John" 
@@ -809,7 +809,7 @@ const validatePage = (): boolean => {
 
                         <section className="flex flex-col h-[55px] justify-center ">
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Guardian Middle Name:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> Guardian Middle Name:</label>
                                 <input 
                                     type="text" 
                                     placeholder="Doe"
@@ -822,7 +822,7 @@ const validatePage = (): boolean => {
 
                         <section className="flex flex-col h-[55px] justify-center ">
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Guardian Suffix:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> Guardian Suffix:</label>
                                 <input 
                                     type="text" 
                                     placeholder="Jr."
@@ -840,7 +840,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Contact Number:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> Contact Number:</label>
                                 <input 
                                     type="text" 
                                     placeholder="09123456789" 
@@ -854,7 +854,7 @@ const validatePage = (): boolean => {
 
                         <section className="flex flex-col h-[55px] justify-center ">
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Guardian Email:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> Guardian Email:</label>
                                 <input 
                                     type="text" 
                                     placeholder="sample@gmail.com"
@@ -873,7 +873,7 @@ const validatePage = (): boolean => {
                             </p>
                         )}
                         <div className="flex flex-row gap-3 items-center">  
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">Full Address:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">Full Address:</label>
                             <input 
                                 type="text" 
                                 placeholder="123 Main Street, City, Country"
@@ -891,14 +891,14 @@ const validatePage = (): boolean => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 3: Educational Background
                     </p>
                 </div>
             ),
             content: (
-                <main className="flex flex-col gap-5 mx-[20px]">
-                    <article className="grid grid-cols-2 gap-5 ">
+                <main className="flex flex-col gap-5">
+                    <article className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
                         <section className="flex flex-col gap-3 justify-center h-[55px]">
                             {errors.lrn === "Required" && (
                                 <p className="text-red-500 text-[12px]">
@@ -906,7 +906,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> LRN:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]"> LRN:</label>
                                 <input 
                                     type="text" 
                                     placeholder="123456789102"
@@ -925,7 +925,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}          
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">Grade Level to Enroll:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">Grade Level to Enroll:</label>
                                 <select 
                                     name="Gender"
                                     onChange={handleGradeLevel}
@@ -949,7 +949,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}   
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">School Year Graduated:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">School Year Graduated:</label>
                                 <select
                                     name="schoolYear"
                                     onChange={handleSchoolYear}
@@ -977,7 +977,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}   
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">School Type:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">School Type:</label>
                                 <select 
                                     name="Gender"
                                     onChange={handleSchoolType}
@@ -999,7 +999,7 @@ const validatePage = (): boolean => {
                                 </p>
                             )}              
                             <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">Previous School:</label>
+                                <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">Previous School:</label>
                                 <input 
                                     type="text" 
                                     placeholder="AB Normal Schoool"
@@ -1019,7 +1019,7 @@ const validatePage = (): boolean => {
                             </p>
                         )}   
                         <div className="flex flex-row gap-3 items-center">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">School Address:</label>
+                            <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">School Address:</label>
                             <input 
                                 type="text"
                                 placeholder="123 Street, City, Country"
@@ -1036,58 +1036,58 @@ const validatePage = (): boolean => {
                 {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 4: Documents Submission
                     </p>
                 </div>
             ),
             content: (
-                <main className="grid grid-cols-2 gap-7 mx-[20px]">
+                <main className="grid grid-cols-1 lg:grid-cols-2 gap-7">
                     <section className="flex flex-row gap-3 items-center">
-                        <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">PSA Birth Certificate:</label>
+                        <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">PSA Birth Certificate:</label>
                         <input 
                              type="file" 
                             ref={birthCertRef}
                             onChange={handleBirthCertChange}
                             name="document"  
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px] " 
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " 
                         />
                     </section>
                     <section className="flex flex-row gap-3 items-center">
-                        <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">Good Moral Certificate:</label>
+                        <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">Good Moral Certificate:</label>
                         <input 
                             type="file" 
                             ref={goodMoralRef}
                             name="document"  
                             onChange={handleGoodMoralChange}
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px] " />
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                     </section>
                     <section className="flex flex-row gap-3 items-center">
-                        <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">REPORT CARD:</label>
+                        <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">REPORT CARD:</label>
                         <input 
                             type="file" 
                             ref={reportCardRef}
                             name="document"  
                             onChange={handleReportCardChange}
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px] " />
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                     </section>
                     <section className="flex flex-row gap-3 items-center">
-                        <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">2x2 ID picture:</label>
+                        <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">2x2 ID picture:</label>
                         <input 
                         type="file" 
                         ref={idPicRef}
                         name="document"  
                         onChange={handleIdPIcChange}
-                        className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px] " />
+                        className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                     </section>
                     <section className="flex flex-row gap-3 items-center">
-                        <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]">CACPRISAA Student Exit Clearance:</label>
+                        <label className="font-semibold font-merriweather text-dGreen text-sm lg:text-xl w-[240px]">CACPRISAA Student Exit Clearance:</label>
                         <input 
                             type="file" 
                             name="document"  
                             ref={studentExitFormRef}
                             onChange={handleStudentExitFormChange}
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px] " />
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                     </section>
                 </main>
             ),
@@ -1096,24 +1096,24 @@ const validatePage = (): boolean => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 5: Slot Reservation Fee (₱500)
                     </p>
                 </div>
                 ),
                 content: (
-                    <main className="flex grid-cols-2 gap-7 w-full justify-center">
-                        <div className="w-1/2">
-                        <section className="w-[600px] flex flex-col text-center gap-10">  
-                            <header className="font-bold font-merriweather text-2xl text-lGreen bg-green-400/30  w-full py-3" >
+                    <main className="flex flex-col lg:flex-row gap-7 w-full justify-center">
+                        
+                        <section className="w-full lg:max-w-[600px] flex flex-col items-center text-center gap-10">  
+                            <header className="font-bold font-merriweather text-2xl text-lGreen bg-green-400/30 w-[250px] lg:w-[500px] py-3" >
                                 GCASH PAYMENT
-                            </header>  
+                            </header> 
 
-                            <article  className="flex flex-col gap-7 items-center">
+                            <article  className=" gap-7 items-center">
                                 <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                     STEP 1
                                 </div>
-                                <section className="w-[530px] h-[150px] bg-green-400/30 rounded-md flex flex-col py-5">
+                                <section className="w-[250px] h-[200px] lg:w-[530px] lg:h-[150px] bg-green-400/30 rounded-md  py-5">
                                     <p className="font-bold text-lg text-dGreen ">
                                         Send the 500.00 reservation fee
                                     </p>
@@ -1158,32 +1158,32 @@ const validatePage = (): boolean => {
 
                                 </section>
                             </article >
-                        </section>
 
-                        <section className="flex flex-col gap-7 mt-8 items-center">
-                            <header className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
+                            <article>
+                            <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                 STEP 2
-                            </header>
-                            <article className="w-[530px] h-[530px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
-                               <div className="text-center space-y-2">
-                                    <p className="font-regular text-lg text-d2Green">
+                            </div>
+                           <section className="w-[300px] h-[550px] lg:w-[530px] lg:h-[530px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
+                               
+                                    <p className="font-regular text-base lg:text-lg text-d2Green">
                                         Upload a screenshot of your receipt.
                                     </p>
-                                    <p className="font-regular text-lg text-d2Green">
+                                    <p className="font-regular text-base lg:text-lg text-d2Green">
                                         Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
                                     </p>
-                                </div>
+                                
                                 <figure>
                                     <Image
                                         src="/image.png"
                                         alt="receipt"
                                         width={300}
                                         height={200}
+                                        className="w-[200px] h-[200px] lg:w-[300px] lg:h-[200px]"
                                     />
                                 </figure>
                                 <section>
-                                    <div className="flex flex-row gap-5">
-                                        <label htmlFor="mop" className="font-bold text-lg text-d2Green">Payment Method: </label>
+                                    <div className="flex flex-col lg:flex-row gap-5 items-center">
+                                        <label htmlFor="mop" className="font-bold text-base lg:text-lg text-d2Green">Payment Method: </label>
                                         <div className="flex flex-row gap-3">
                                             <input 
                                                 type="radio" 
@@ -1193,57 +1193,59 @@ const validatePage = (): boolean => {
                                                 onChange={handleMopChange}
                                                 
                                             />
-                                            <label htmlFor="mop" className="font-regular text-lg text-d2Green"> 
+                                            <label htmlFor="mop" className="font-regular text-base lg:text-lg text-d2Green"> 
                                                 Gcash Payment
                                             </label>
                                         </div>                                         
                                     </div>  
 
-                                    <div className="flex flex-row gap-3 items-center justify-center mt-2">
-                                        <label htmlFor="document" className="font-medium font-oswald text-xl text-d2Green "> GCash Receipt:</label>
+                                    <div className="flex flex-col lg:flex-row gap-3 items-center justify-center mt-2">
+                                        <label htmlFor="document" className="font-medium font-oswald text-base lg:text-xl text-d2Green "> GCash Receipt:</label>
                                         <input 
                                         type="file" 
                                         ref={gcashReceiptRef}
                                         name="document"  
-                                        className="px-4 py-1 bg-gray-300/50 h-[36px] w-[250px] rounded-lg"
+                                        className="px-4 py-1 bg-gray-300/50 h-[36px] w-full lg:w-[250px] rounded-lg"
                                         disabled={!isGcashSelected}
                                         onChange={handleReceiptChange}
                                         accept="image/*"
                                         />
                                     </div>
                                 </section>
+                            </section>
                             </article>
                         </section>
-                        </div>
+                         <br />
 
-                        <div className="w-[2px] h-auto bg-dGreen" />
+                      {/*  <div className="w-[2px] h-auto bg-dGreen" />  
+                      <div className="w-1/2"> */}
 
 
-                        <div className="w-1/2">
-                        <section className="w-[600px] flex flex-col text-center gap-10">  
-                            <header className="font-bold font-merriweather text-2xl text-lGreen bg-green-400/30  w-full py-3" >
+                        
+                        <section className="w-full lg:w-[600px] flex flex-col items-center text-center gap-10">  
+                            <header className="font-bold font-merriweather text-2xl text-lGreen bg-green-400/30  w-[250px] lg:w-[500px] py-3" >
                                 BANK TRANSFER
-                            </header>  
+                            </header>
 
-                            <article  className="flex flex-col gap-7 items-center">
+                            <article  className=" gap-7 items-center">
                                 
                                 <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                     STEP 1
                                 </div>
-                                <section className="w-[530px] h-[200px] bg-green-500/30 rounded-md flex flex-col p-2 gap-5">
-                                    <p className="font-bold text-lg text-dGreen ">
+                                <section className="w-[300px] h-[200px] lg:w-[530px] lg:h-[200px] bg-green-500/30 rounded-md flex flex-col p-2 gap-5">
+                                    <p className="font-bold text-base lg:text-lg text-dGreen ">
                                         Send the 500.00 reservation fee
                                     </p>
                                     <div className="flex flex-row text-start justify-center gap-[100px] ">
-                                        <div className="font-bold text-lg text-dGreen  bg-yellow-300">
+                                        <div className="font-bold text-sm lg:text-lg text-dGreen  bg-yellow-300">
                                             <p >Bank Name:</p>
                                             <p >Account Name:</p>
                                             <p>Account Number:</p>
                                         </div>
-                                        <div className="font-semibold text-lg text-dGreen">
+                                        <div className="font-semibold text-sm lg:text-lg text-dGreen">
                                             <p >BDO</p>
                                             <p>John Doe </p>
-                                            <p>1234-5678-9101 </p>
+                                            <p className="text-xs lg:text-lg">1234-5678-9101 </p>
                                         </div>
                                     </div>
                                      <footer className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
@@ -1268,33 +1270,31 @@ const validatePage = (): boolean => {
                                     </footer>
                                 </section>
                             </article >
-
-                        </section>
-
-                        <section className="flex flex-col gap-7 mt-8 items-center">
-                            <header className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
+                            
+                            <article>
+                            <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                 STEP 2
-                            </header>
-                            <article className="w-[530px] h-[570px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
-                               <div className="text-center space-y-2">
-                                    <p className="font-regular text-lg text-d2Green">
+                            </div>
+                            <section className="w-[300px] h-[500px] lg:w-[530px] lg:h-[570px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
+                                    <p className="font-regular text-sm lg:text-lg text-d2Green">
                                         Upload a screenshot of your receipt.
                                     </p>
-                                    <p className="font-regular text-lg text-d2Green">
+                                    <p className="font-regular text-sm lg:text-lg text-d2Green">
                                         Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
                                     </p>
-                                </div>
+                                
                                 <figure>
                                     <Image
                                         src="/bank.svg"
                                         alt="receipt"
                                         width={300}
                                         height={200}
+                                        className="w-[200px] h-[150px] lg:w-[300px] lg:h-[200px]"
                                     />
                                 </figure>
                                 <section>
-                                    <div className="flex flex-row gap-5">
-                                        <label htmlFor="mop" className="font-bold text-lg text-d2Green">Payment Method: </label>
+                                    <div className="flex flex-col lg:flex-row gap-5 items-center">
+                                        <label htmlFor="mop" className="font-bold text-base lg:text-lg text-d2Green">Payment Method: </label>
                                         <div className="flex flex-row gap-3">
                                             <input 
                                                 type="radio" 
@@ -1310,22 +1310,23 @@ const validatePage = (): boolean => {
                                         </div>                                         
                                     </div>  
 
-                                    <div className="flex flex-row gap-3 items-center justify-center mt-2">
-                                        <label htmlFor="document" className="font-medium font-oswald text-xl text-d2Green "> Bank Receipt:</label>
+                                    <div className="flex flex-col lg:flex-row gap-3 items-center justify-center mt-2">
+                                        <label htmlFor="document" className="font-medium font-oswald text-base lg:text-xl text-d2Green"> Bank Receipt:</label>
                                         <input 
                                         type="file" 
                                         ref={bankTransferReceiptRef}
                                         name="document"  
-                                        className="px-4 py-1 bg-gray-300/50 h-[36px] w-[250px] rounded-lg"
+                                        className="px-4 py-1 bg-gray-300/50 h-[36px] w-full lg:w-[250px] rounded-lg"
                                         disabled={!isBankTransferSelected}
                                         onChange={handleReceiptChange}
                                         accept="image/*"
                                         />
                                     </div>
                                 </section>
+                            </section>
                             </article>
                         </section>
-                        </div>
+                        
 
                     </main>
                     
@@ -1376,7 +1377,7 @@ const validatePage = (): boolean => {
                 </section>
 
                 {/* content */}
-                <div className="flex-1 mt-[80px] mx-[70px] flex flex-col gap-3">
+                <div className=" mt-[80px] -mx-0 flex flex-col gap-3">
                      {sections[page].title}
                      <hr className="border-b-2 border-dGreen" />
                     {sections[page].content}

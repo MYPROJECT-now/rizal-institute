@@ -8,12 +8,14 @@ type Props = {
     label: string;
     iconSrc: string;
     href: string;
+    onClick?: () => void;
 };
 
 export const SidebarItem = ({
 label,
 iconSrc,
 href,
+onClick
 }: Props) => {
 
     return(
@@ -22,7 +24,11 @@ href,
         variant="link"
         asChild
         >
-            <Link href={href}>
+            <Link href={href}
+            onClick={() => {
+          onClick?.();
+        }}
+        >
                 <Image 
                     src={iconSrc}    
                     alt={label}

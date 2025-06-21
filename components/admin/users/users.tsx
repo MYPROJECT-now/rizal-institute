@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 
 export const UsersTable = () => {
   const users = [
@@ -20,6 +21,48 @@ export const UsersTable = () => {
       username: "student_user",
       email: "student@example.com",
     },
+    {
+      id: 4,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
+    {
+      id: 5,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
+    {
+      id: 6,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
+    {
+      id: 7,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
+    {
+      id: 8,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
+    {
+      id: 9,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
+    {
+      id: 10,
+      role: "Student",
+      username: "student_user",
+      email: "student@example.com",
+    },
   ];
 
   const handleDelete = (id: number) => {
@@ -28,9 +71,35 @@ export const UsersTable = () => {
   };
 
   return (
-    <div className="overflow-x-auto mb-10 mx-10 mt-10">
-      <table className="min-w-full border-collapse border border-gray-300 text-center">
-        <thead>
+    <div className="w-full max-h-full flex flex-col sm:text-sm md:text-base lg:text-lg">
+        <div className="flex flex-row items-center gap-5">
+            <p className="font-bold  text-dGreen font-merriweather ml-5">
+                Filter By:
+            </p>
+            <div className="grid sm:grid-cols-1 grid-row-3 md:grid-col-2 grid-row-2 lg:grid-cols-1 grid-row-3 gap-5 p-5">
+            <input 
+                type="text"
+                placeholder="Username"
+                className="border border-gray-600 p-2 rounded w-full sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60" 
+            />     
+            <input 
+                type="text"
+                placeholder="Role"
+                className="border border-gray-600 p-2 rounded w-full sm:w-40 md:w-40 lg:w-40 xl:w-50 2xl:w-60" 
+            />    
+            </div>
+            <Button
+                variant="mButton"
+                className="text-white px-2 py-2 rounded-lg"
+            >
+                CLEAR FILTER
+            </Button>
+           </div>
+
+
+    <div className="h-[350px] overflow-y-auto sm:text-sm md:text-base lg:text-lg mt-10">
+      <table className="min-w-full border-collapse border border-gray-600 text-center overflow-auto table-fixed ">
+        <thead className="sticky top-0 z-10">
           <tr className="bg-gray-200">
             <th className="border p-2">Role</th>
             <th className="border p-2">Username</th>
@@ -56,6 +125,7 @@ export const UsersTable = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

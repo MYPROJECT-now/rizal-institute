@@ -6,7 +6,8 @@ import {
         SignedOut,
         UserButton,
         SignInButton,
-        useUser
+        useUser,
+        SignIn
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useResetModal } from "@/src/store/reset_pass";
@@ -70,7 +71,7 @@ export default function Home() {
             </div>
             <h2 className="text-2xl font-bold text-white mb-6">Welcome to Rizal Institute</h2>
             <div className="flex justify-center mb-4">
-              <SignedIn>
+              <SignedIn >
                 <UserButton
                   afterSignOutUrl="/"
                 />
@@ -95,6 +96,5 @@ export default function Home() {
       </div>
     </div>
   </div>
-    
   );
 }
