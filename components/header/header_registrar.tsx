@@ -1,5 +1,5 @@
-import Image from "next/image";
 
+import { Profile_registrar } from "../profile/profile_registrar";
 const Registrar_header = () => {
 
     const currentDate = new Date().toLocaleDateString('en-US', {
@@ -11,12 +11,12 @@ const Registrar_header = () => {
       
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] mt-4">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-12 sm:text-sm md:text-base lg:text-lg">
             <div className="flex flex-col">
-                <p className=" font-Alfa text-lGreen text-2xl">
+               {/* <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE
-                </p>
-                <p className="font-mono text-xs text-green-500">
+                </p> */}
+                <p className="font-oswald text-sm lg:text-lg text-green-500">
                     {currentDate}
                 </p>
             </div>
@@ -24,13 +24,14 @@ const Registrar_header = () => {
                 <p className="font-Alfa text-lGreen text-2xl">
                     REGISTRAR
                 </p>
-                <Image
+                {/* <Image
                 src="/profile.png"
                 alt="profile"
                 width={100}
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
-                />
+                /> */}
+                <Profile_registrar />
             </div>
         </div>
     );

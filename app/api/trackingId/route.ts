@@ -1,12 +1,12 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
-import { applicationStatusTable } from '@/src/db/schema';
+import { applicationStatusTable} from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 
 
 // Random tracking ID generator
 function generateRandomTrackingId(length = 12) {
-    const charset = "ABCDEFGHJKMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz0123456789";
+    const charset = "0123456789";
     return Array.from({ length }, () => charset[Math.floor(Math.random() * charset.length)]).join('');
   }
 
@@ -49,8 +49,9 @@ async function sendEmail(to:string, trackingId: string) {
     const { email } = await request.json();
     const trackingId = generateRandomTrackingId();
     const applicationStatus = 'Pending'; // or some other default status
+    const reservationPaymentStatus = 'Pending';
 
-    await db.insert(applicationStatusTable).values({ trackingId, applicationStatus, dateOfApplication: new Date().toISOString().slice(0, 10) });
+    await db.insert(applicationStatusTable).values({ trackingId, applicationStatus, reservationPaymentStatus, dateOfApplication: new Date().toISOString().slice(0, 10) });
         // Send the email with the password
     await sendEmail(email, trackingId);
     return NextResponse.json({ trackingId });

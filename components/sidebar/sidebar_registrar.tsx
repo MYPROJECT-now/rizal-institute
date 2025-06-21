@@ -1,25 +1,27 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
-import { SignOutButton} from "@clerk/nextjs";
-import { Button } from "../ui/button";
+import { useState } from "react";
 
 type Props = {
     className?: string;
+    onClose?: () => void;
 };
 
-export const Sidebar_registrar = ({ className }: Props) => {
+export const Sidebar_registrar = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen", 
+                "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
                 className
             )}
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/admin/dashboard_admin">
+                <Link href="/registrar" onClick={onClose}>
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -33,34 +35,31 @@ export const Sidebar_registrar = ({ className }: Props) => {
                     <SidebarItem 
                         label="Dashboard" 
                         href="/registrar"
-                        iconSrc="/dashboard.png" 
+                        iconSrc="/dashboard.png"
+                        onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Students" 
                         href="/registrar/students"
-                        iconSrc="/student_logo.png" 
+                        iconSrc="/student_logo.png"
+                        onClick={onClose} 
                     />
 
                     <SidebarItem 
-                        label="Enrollees" 
+                        label="Applicants" 
                         href="/registrar/enrollees"
-                        iconSrc="/enrollment.png" 
+                        iconSrc="/enrollment.png"
+                        onClick={onClose}
                     />
 
                     <SidebarItem 
-                        label="Admin Settings" 
-                        href="/admin/settings"
-                        iconSrc="/settings.png" 
+                        label="Grades" 
+                        href="/registrar/grades"
+                        iconSrc="/grades.png"
+                        onClick={onClose} 
                     />
-
-                    <SignOutButton>
-                        <Button
-                        variant="link"
-                        size="sm">
-                        Logout
-                        </Button>
-                    </SignOutButton>
+                    
 
 
 

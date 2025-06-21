@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { Profile_admin } from "../profile/profile_admin";
+
 
 const Admin_header = () => {
 
@@ -11,26 +12,27 @@ const Admin_header = () => {
       
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] mt-4">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-12 sm:text-sm md:text-base lg:text-lg">
             <div className="flex flex-col">
-                <p className=" font-Alfa text-lGreen text-2xl">
+              {/*  <p className=" font-Alfa text-lGreen text-2xl mt-5">
                     RIZAL INSTITUTE
-                </p>
-                <p className="font-mono text-xs text-green-500">
+                </p> */} 
+                <p className="font-oswald text-sm lg:text-lg text-green-500">
                     {currentDate}
                 </p>
             </div>
-            <div className="flex flex-row items-center gap-6">
+            <div className="flex flex-row items-center gap-6 ">
                 <p className="font-Alfa text-lGreen text-2xl">
                     ADMIN
                 </p>
-                <Image
+                {/* <Image
                 src="/profile.png"
                 alt="profile"
                 width={100}
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
-                />
+                /> */}
+                <Profile_admin />
             </div>
         </div>
     );
