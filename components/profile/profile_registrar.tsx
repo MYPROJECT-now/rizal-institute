@@ -43,7 +43,7 @@ export const Profile_registrar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <button>
-                        <a href="/registrar/settings">
+                        <a href="/ACCOUNTS/registrar/settings">
                             Settings
                         </a>
                     </button>

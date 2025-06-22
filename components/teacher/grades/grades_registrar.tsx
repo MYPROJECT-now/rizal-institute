@@ -1,6 +1,6 @@
 "use client";
 
-import { useRegGradesModal } from "@/src/store/registrar/grades";
+import { useShowGradesModal } from "@/src/store/REGISTRAR/grades";
 import { Button } from "../../ui/button";
 import { Reg_Grades } from "./modal/grades";
 
@@ -26,7 +26,7 @@ export const GradeTable = () => {
         },
     ];
 
-    const { open } = useRegGradesModal();
+    const { open } = useShowGradesModal();
 
     return (
         <div className="flex flex-col">

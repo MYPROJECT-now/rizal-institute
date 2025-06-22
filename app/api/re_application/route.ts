@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     // Update application status and date
     await db.update(applicationStatusTable)
       .set({ 
-        applicationStatus: 'Pending', 
+        applicationFormReviewStatus: 'Pending', 
         dateOfApplication: new Date().toISOString().slice(0, 10) 
       })
       .where(eq(applicationStatusTable.trackingId, localTrackingId));
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     // Send confirmation email
     await sendEmail(email, localTrackingId);
 
-    return NextResponse.json({ trackingId: localTrackingId, applicationStatus: 'Pending' });
+    return NextResponse.json({ trackingId: localTrackingId, applicationFormReviewStatus: 'Pending' });
 
   } catch (error) {
     console.error('Error in re-application:', error);

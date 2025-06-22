@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useFiscalYearModal } from "@/src/store/admin/fiscal_year";
+import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
 
 export const Fiscal_Year = () => {
   const { isOpen, close } = useFiscalYearModal();

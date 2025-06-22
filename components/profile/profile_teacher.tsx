@@ -43,7 +43,7 @@ export const Profile_teacher = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <button>
-                        <a href="/teacher/settings">
+                        <a href="/ACCOUNTS/teacher/settings">
                             Settings
                         </a>
                     </button>

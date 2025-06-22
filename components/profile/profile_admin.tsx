@@ -43,7 +43,7 @@ export const Profile_admin = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <button>
-                        <a href="/admin/settings">
+                        <a href="/ACCOUNTS/admin/settings">
                             Settings
                         </a>
                     </button>

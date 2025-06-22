@@ -17,7 +17,7 @@ export const Sidebar_cashier = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/cashier">
+                <Link href="/ACCOUNTS/cashier">
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -30,25 +30,31 @@ export const Sidebar_cashier = ({ className }: Props) => {
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
                         label="Dashboard" 
-                        href="/cashier"
+                        href="/ACCOUNTS/cashier"
                         iconSrc="/dashboard.png" 
                     />
 
                     <SidebarItem 
                         label="Students" 
-                        href="/cashier/students"
+                        href="/ACCOUNTS/cashier/students"
                         iconSrc="/student_logo.png" 
                     />
 
                     <SidebarItem 
+                        label="Payment Approval" 
+                        href="/ACCOUNTS/cashier/payment_Approval"
+                        iconSrc="/payment_approval.png" 
+                    />
+
+                    <SidebarItem 
                         label="Applicants" 
-                        href="/cashier/enrollees"
+                        href="/ACCOUNTS/cashier/applicants"
                         iconSrc="/enrollment.png" 
                     />
 
                     <SidebarItem 
                         label="Reserved Slot" 
-                        href="/cashier/reserved"
+                        href="/ACCOUNTS/cashier/reserved"
                         iconSrc="/reserved.png" 
                     />
 

@@ -17,7 +17,7 @@ export const Sidebar_registrar = ({ className }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/registrar">
+                <Link href="/ACCOUNTS/registrar">
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -30,25 +30,31 @@ export const Sidebar_registrar = ({ className }: Props) => {
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
                         label="Dashboard" 
-                        href="/registrar"
+                        href="/ACCOUNTS/registrar"
                         iconSrc="/dashboard.png" 
                     />
 
                     <SidebarItem 
                         label="Students" 
-                        href="/registrar/students"
+                        href="/ACCOUNTS/registrar/students"
                         iconSrc="/student_logo.png" 
                     />
 
                     <SidebarItem 
                         label="Applicants" 
-                        href="/registrar/enrollees"
+                        href="/ACCOUNTS/registrar/applicants"
+                        iconSrc="/enrollment.png" 
+                    />
+
+                    <SidebarItem 
+                        label="Reserved" 
+                        href="/ACCOUNTS/registrar/reserved"
                         iconSrc="/enrollment.png" 
                     />
 
                     <SidebarItem 
                         label="Grades" 
-                        href="/registrar/grades"
+                        href="/ACCOUNTS/registrar/grades"
                         iconSrc="/grades.png" 
                     />
                     

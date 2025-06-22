@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useEnrollmentModal } from "@/src/store/admin/enrollment"; 
+import { useEnrollmentModal } from "@/src/store/ADMIN/enrollment"; 
 
 export const EnrollmentManagement = () => {
   const { isOpen, close } = useEnrollmentModal();

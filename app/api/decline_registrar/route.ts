@@ -1,7 +1,7 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable, Registrar_remaks_table } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 
 // Setup email transporter
@@ -29,7 +29,7 @@ async function getTrackingId(studentId: number): Promise<string> {
   const result = await db
     .select({ trackingId: applicationStatusTable.trackingId })
     .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.id, studentId))
+    .where(eq(applicationStatusTable.applicants_id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].trackingId : "N/A";
@@ -84,8 +84,15 @@ export async function POST(request: Request) {
     // Update student's status to "Declined"
     await db
       .update(applicationStatusTable)
-      .set({ applicationStatus: "Declined" })
-      .where(eq(applicationStatusTable.id, studentId));
+      .set({ applicationFormReviewStatus: "Declined" })
+      .where(eq(applicationStatusTable.applicants_id, studentId));
+
+    await db
+      .insert(Registrar_remaks_table)
+      .values({ 
+        applicants_id: studentId, 
+        reg_remarks: remarks, 
+        dateOfRemarks: new Date().toISOString() });
 
     // Send decline email
     await sendDeclineEmail(email, trackingId, remarks);

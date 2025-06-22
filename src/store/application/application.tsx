@@ -13,9 +13,6 @@ export const useApplicationModal = create<Application_ModalState>((set) => ({
 }));
 
 
-// store
-// import { create } from "zustand";
-
 // type Application_ModalState = {
 //   isOpen: boolean;
 //   open: () => void;

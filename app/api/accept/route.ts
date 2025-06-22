@@ -18,7 +18,7 @@ async function getStudentEmail(studentId: number): Promise<string | null> {
   const result = await db
     .select({ email: applicantsInformationTable.email })
     .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.id, studentId))
+    .where(eq(applicationStatusTable.applicants_id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].email : null;
@@ -29,7 +29,7 @@ async function getTrackingId(studentId: number): Promise<string> {
   const result = await db
     .select({ trackingId: applicationStatusTable.trackingId })
     .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.id, studentId))
+    .where(eq(applicationStatusTable.applicants_id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].trackingId : "N/A";
@@ -84,14 +84,14 @@ export async function POST(request: Request) {
     const student = await db
       .select()
       .from(applicationStatusTable)
-      .where(eq(applicationStatusTable.id, studentId))
+      .where(eq(applicationStatusTable.applicants_id, studentId))
       .then((res) => res[0]);
 
-    const applicationStatus = student?.applicationStatus;
+    const applicationFormReviewStatus = student?.applicationFormReviewStatus;
     const reservationPaymentStatus = student?.reservationPaymentStatus;
 
     // Send email only if applicationStatus is "Ongoing"
-    if (applicationStatus === "Reserved" && reservationPaymentStatus === "Reserved") {
+    if (applicationFormReviewStatus === "Reserved" && reservationPaymentStatus === "Reserved") {
       const email = await getStudentEmail(studentId);
       const trackingId = await getTrackingId(studentId);
 

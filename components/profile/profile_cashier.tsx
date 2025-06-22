@@ -43,7 +43,7 @@ export const Profile_cashier = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <button>
-                        <a href="/cashier/settings">
+                        <a href="/ACCOUNTS/cashier/settings">
                             Settings
                         </a>
                     </button>

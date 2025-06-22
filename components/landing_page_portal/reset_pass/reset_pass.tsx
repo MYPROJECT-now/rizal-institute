@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogTitle,
   } from "@/components/ui/dialog"
-import { useResetModal } from '@/src/store/reset_pass'
+import { useResetPasswordModal } from '@/src/store/LANDING_PAGE/landing_page'
 
   
   
@@ -19,7 +19,7 @@ export const ResetPass = () => {
     const [successfulCreation, setSuccessfulCreation] = useState(false)
     const [secondFactor, setSecondFactor] = useState(false)
     const [error, setError] = useState('')
-    const { isOpen, close } = useResetModal();
+    const { isOpen, close } = useResetPasswordModal();
   
     const router = useRouter()
     const { isSignedIn } = useAuth()

@@ -29,7 +29,7 @@ async function getTrackingId(studentId: number): Promise<string> {
   const result = await db
     .select({ trackingId: applicationStatusTable.trackingId })
     .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.id, studentId))
+    .where(eq(applicationStatusTable.applicants_id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].trackingId : "N/A";
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     await db
       .update(applicationStatusTable)
       .set({ reservationPaymentStatus: "Declined" })
-      .where(eq(applicationStatusTable.id, studentId));
+      .where(eq(applicationStatusTable.applicants_id, studentId));
 
     // Send decline email
     await sendDeclineEmail(email, trackingId, remarks);
