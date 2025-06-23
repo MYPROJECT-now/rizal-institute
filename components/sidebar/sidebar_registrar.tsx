@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
-import { useState } from "react";
 
 type Props = {
     className?: string;
@@ -57,17 +56,13 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                         label="Reserved" 
                         href="/ACCOUNTS/registrar/reserved"
                         iconSrc="/enrollment.png" 
-=======
-                        href="/registrar/enrollees"
-                        iconSrc="/enrollment.png"
                         onClick={onClose}
->>>>>>> ef5f7a4d548cc18291632314bac8ce0d1a15c7c7
                     />
 
                     <SidebarItem 
                         label="Grades" 
-                        href="/registrar/grades"
-                        iconSrc="/grades.png"
+                        href="/ACCOUNTS/registrar/grades"
+                        iconSrc="/grades.png" 
                         onClick={onClose} 
                     />
                     

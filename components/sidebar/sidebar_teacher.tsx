@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
-import { useState } from "react";
 
 type Props = {
     className?: string;

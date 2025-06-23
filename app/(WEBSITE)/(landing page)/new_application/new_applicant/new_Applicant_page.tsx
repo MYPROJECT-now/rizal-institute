@@ -1109,8 +1109,8 @@ const validatePage = async (): Promise<boolean> => {
                             onChange={handleBirthCertChange}
                             name="document"  
                             className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " 
-                            name="document"
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
+                            // name="document"
+                            // className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
                         )}
                         
@@ -1146,9 +1146,9 @@ const validatePage = async (): Promise<boolean> => {
                             ref={goodMoralRef}
                             accept="image/*"
                             onChange={handleGoodMoralChange}
-                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " 
                             name="document"
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
+                            // className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
                         )}
                         
@@ -1184,9 +1184,9 @@ const validatePage = async (): Promise<boolean> => {
                             ref={reportCard}
                             accept="image/*"
                             onChange={handleReportCardChange}
-                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " 
                             name="document"
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
+                            // className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
                         )}
 
@@ -1258,9 +1258,9 @@ const validatePage = async (): Promise<boolean> => {
                             ref={studentExitFormRef}
                             accept="image/*"
                             onChange={handleStudentExitFormChange}
-                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " 
                             name="document"
-                            className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
+                            // className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
                         )}
                     </section>
@@ -1336,8 +1336,8 @@ const validatePage = async (): Promise<boolean> => {
                                 </section>
                             </article >
 
-                            <article>
-                            <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
+                          
+                            <header className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                 STEP 2
                             </header>
                             <article className="w-[530px] h-[530px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
@@ -1413,10 +1413,11 @@ const validatePage = async (): Promise<boolean> => {
                                         )}
                                     </div>
                                 </section>
-                            </section>
+                                </div>
                             </article>
                         </section>
                          <br />
+                         </div>
 
                         <div className="w-[2px] h-auto bg-dGreen" />
 
@@ -1472,7 +1473,7 @@ const validatePage = async (): Promise<boolean> => {
                             </article >
                             
                             <article>
-                            <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
+                            <header className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                 STEP 2
                             </header>
                             <article className="w-[530px] h-[570px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
@@ -1483,7 +1484,7 @@ const validatePage = async (): Promise<boolean> => {
                                     <p className="font-regular text-sm lg:text-lg text-d2Green">
                                         Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
                                     </p>
-                                
+                                </div>
                                 <figure>
                                     <Image
                                         src="/bank.svg"
@@ -1548,11 +1549,10 @@ const validatePage = async (): Promise<boolean> => {
                                         )}
                                     </div>
                                 </section>
-                            </section>
+                            </article>
                             </article>
                         </section>
-                        </div>
-
+                    </div>
                     </main>
                     
             ),

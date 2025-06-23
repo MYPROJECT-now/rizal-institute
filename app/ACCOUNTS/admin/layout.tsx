@@ -1,9 +1,7 @@
-<<<<<<< HEAD:app/ACCOUNTS/admin/layout.tsx
+
 import { Sidebar_admin } from "@/components/sidebar/admin/sidebar_admin";
-=======
-import { Sidebar_admin } from "@/components/sidebar/sidebar_admin";
 import { MobileHeader } from "@/components/sidebar/admin_mobile_header";
->>>>>>> ef5f7a4d548cc18291632314bac8ce0d1a15c7c7:app/admin/layout.tsx
+
 
 type props  = {
     children: React.ReactNode;

@@ -7,7 +7,6 @@ import {
         UserButton,
         SignInButton,
         useUser,
-        SignIn
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { ResetPass } from "@/components/landing_page_portal/reset_pass/reset_pass";

@@ -5,9 +5,10 @@ import { Sheet,
     SheetTrigger
  } from "../ui/sheet";  
 
-import { Sidebar_admin } from "./sidebar_admin"; 
+
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { Sidebar_admin } from "./admin/sidebar_admin";
 
 export const MobileSidebar = () => {
     const [open, setOpen] = useState(false);

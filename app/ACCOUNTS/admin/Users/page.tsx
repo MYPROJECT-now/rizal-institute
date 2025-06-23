@@ -1,7 +1,6 @@
 
 import { UsersTable } from "@/components/admin/users/users";
 import Admin_header from "@/components/header/header_admin";
-import { Button } from "@/components/ui/button";
 import AdminClientComponent from "@/components/validation/admin_validate";
 
 
