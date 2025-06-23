@@ -23,33 +23,12 @@ export const RecentTransactionsTable = () => {
       balanceDue: 3000,
       datePaid: "2025-04-05",
     },
-    {
-      studentName: "Jose Rizal",
-      gradeLevel: "Grade 10",
-      amountPaid: 3000,
-      balanceDue: 3000,
-      datePaid: "2025-04-05",
-    },
-    {
-      studentName: "Jose Rizal",
-      gradeLevel: "Grade 10",
-      amountPaid: 3000,
-      balanceDue: 3000,
-      datePaid: "2025-04-05",
-    },
-    {
-      studentName: "Jose Rizal",
-      gradeLevel: "Grade 10",
-      amountPaid: 3000,
-      balanceDue: 3000,
-      datePaid: "2025-04-05",
-    },
   ];
 
   return (
-    <div className="overflow-x-auto mb-10 max-h-[300px] overflow-y-auto">
-      <table className="min-w-full border-collapse border border-gray-300 text-center table-fixed overflow-auto">
-        <thead className="sticky top-0 z-10">
+    <div className="overflow-x-auto mb-10">
+      <table className="min-w-full border-collapse border border-gray-300 text-center">
+        <thead>
           <tr className="bg-gray-200">
             <th className="border p-2">Student Name</th>
             <th className="border p-2">Grade Level</th>

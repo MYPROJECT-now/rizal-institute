@@ -14,13 +14,13 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
+                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 ", 
                 className
             )}
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/student" onClick={onClose}>
+                <Link href="/ACCOUNTS/student" onClick={onClose}>
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -33,21 +33,21 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
                         label="Dashboard" 
-                        href="/student"
+                        href="/ACCOUNTS/student"
                         iconSrc="/dashboard.png"
                         onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Registration" 
-                        href="/student/reg_form"
+                        href="/ACCOUNTS/student/reg_form"
                         iconSrc="/student_logo.png"
                         onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Payments" 
-                        href="/student/payments"
+                        href="/ACCOUNTS/student/payments"
                         iconSrc="/payment.png"
                         onClick={onClose} 
                     />

@@ -8,8 +8,7 @@ type props  = {
 const RegistrarLayout = ({children}: props) => {
     return (
         <>
-        
-                 <MobileHeader /> 
+                <MobileHeader /> 
                 <Sidebar_registrar className="hidden lg:flex" />
                 <main className="lg:pl-[300px] h-full">
                 <div className="min-h-screen w-full flex flex-row bg-lGreen">

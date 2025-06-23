@@ -20,7 +20,7 @@ export const Sidebar_teacher = ({ className, onClose }: Props) => {
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/teacher" onClick={onClose}>
+                <Link href="/ACCOUNTS/teacher" onClick={onClose}>
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -33,7 +33,7 @@ export const Sidebar_teacher = ({ className, onClose }: Props) => {
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
                         label="Grades" 
-                        href="/teacher"
+                        href="/ACCOUNTS/teacher"
                         iconSrc="/grades.png"
                         onClick={onClose} 
                     />

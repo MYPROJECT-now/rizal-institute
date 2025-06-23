@@ -10,18 +10,18 @@ import AdminClientComponent from "@/components/validation/admin_validate";
 const Dashboard = () => {
     return (
         <AdminClientComponent>
-        <div className="w-full max-h-full overflow-auto rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+        <div className="w-full max-h-[680px]  mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Admin_header />
-            <div className="w-full h-[540px] rounded-lg gap-5">
+            <div className="w-full h-[540px] flex flex-col   mt-10 rounded-lg gap-10 ">
                 <div className="flex flex-col">
-                    <p className="text-2xl font-bold text-dGreen mb-2 mt-5">
+                    <p className="text-2xl font-bold text-dGreen mb-2">
                         Quick Stats
                     </p>    
                     <Top_analytics />
                 </div>
 
                 <div className="flex flex-col">
-                    <p className="text-2xl font-bold text-dGreen mt-5">
+                    <p className="text-2xl font-bold text-dGreen mb-2">
                        Audit Trails
                     </p>
                     <div>

@@ -37,19 +37,13 @@ export const AdminAuditTrailsTable = () => {
       timestamp: "2025-04-12 01:45 PM",
       action: "Accepted student application",
     },
-    {
-      role: "Registrar",
-      timestamp: "2025-04-12 01:45 PM",
-      action: "Accepted student application",
-    },
   ];
 
-  return ( 
-    //fixed table, scrollable content
-    <div className=" max-h-[350px] overflow-y-auto"> 
-      <table className="min-w-full table-fixed border-collapse border border-gray-500 text-center overflow-auto">
-        <thead className="sticky top-0 z-10">
-          <tr className="bg-green-600">
+  return (
+    <div className="  mb-10">
+      <table className="min-w-full  border-collapse border border-gray-300 text-center">
+        <thead>
+          <tr className="bg-gray-200">
             <th className="border p-2">Role</th>
             <th className="border p-2">Action Taken</th>
             <th className="border p-2">Date of Action</th>

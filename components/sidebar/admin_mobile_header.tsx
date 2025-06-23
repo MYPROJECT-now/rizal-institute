@@ -9,7 +9,7 @@ export const MobileHeader = () => {
         <nav className ="lg:hidden px-4 h-[60px] flex items-center border-b fixed top-0 w-full z-50 bg-lGreen">
             <MobileSidebar/>
             <div className ="flex flex-row">
-                <Link href="/admin">
+                <Link href="/ACCOUNTS/admin">
                 <Image 
                                         src="/school.png" 
                                         width={40}
