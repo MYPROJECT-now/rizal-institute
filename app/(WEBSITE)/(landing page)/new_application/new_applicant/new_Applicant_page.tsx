@@ -624,7 +624,7 @@ const validatePage = async (): Promise<boolean> => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 1: Personal Information
                     </p>
                 </div>
@@ -664,7 +664,7 @@ const validatePage = async (): Promise<boolean> => {
                                 placeholder="John"
                                 onChange={handleApplicantFirstName}
                                 value={applicantsFirstName}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.applicantsFirstName ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -691,7 +691,7 @@ const validatePage = async (): Promise<boolean> => {
                                 placeholder="Jr." 
                                 onChange={handleApplicantSuffix}
                                 value={applicantsSuffix}
-                                className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" />
+                                className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[300px] h-[35px]" />
                         </div>
                     </section>
 
@@ -707,7 +707,7 @@ const validatePage = async (): Promise<boolean> => {
                                 type="date" 
                                 onChange={handleDateOfBirth}
                                 value={dateOfBirth}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-1 w-full lg:w-[300px] h-[35px]
                                 ${errors.dateOfBirth ? 'border border-red-600 bg-red-100' : 'bg-gray-200'} 
                                 ${dateOfBirth === '' ? 'text-gray-500' : 'text-black'}`} 
                             />
@@ -722,7 +722,7 @@ const validatePage = async (): Promise<boolean> => {
                                 disabled
                                 type="text" 
                                 value={age}
-                                className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" />
+                                className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[170px] h-[35px]" />
                         </div>
                     </section>
                     <section className="flex flex-col h-[55px] justify-center ">
@@ -737,7 +737,7 @@ const validatePage = async (): Promise<boolean> => {
                                 name="Gender"
                                 onChange={handleGender}
                                 value={gender}
-                                className={`rounded-sm px-1 w-[300px] h-[35px] 
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px] 
                                 ${errors.gender ? 'border border-red-600 bg-red-100' : 'bg-gray-200'} 
                                 ${gender === '' ? 'text-gray-500' : 'text-black'}`}>
                                 <option value="" >Select Gender</option>
@@ -761,7 +761,7 @@ const validatePage = async (): Promise<boolean> => {
                                 placeholder="09XXXXXXXX" 
                                 onChange={handleMobileNumber}
                                 value={mobileNumber}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.mobileNumber ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -780,7 +780,7 @@ const validatePage = async (): Promise<boolean> => {
                                 placeholder="l7B4G@example.com" 
                                 onChange={handleEmail}
                                 value={email}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.email ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -792,7 +792,7 @@ const validatePage = async (): Promise<boolean> => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 2: Contact & Guardian Details
                     </p>
                 </div>
@@ -806,7 +806,7 @@ const validatePage = async (): Promise<boolean> => {
                                     {errors.guardiansLastName}
                                 </p>
                             )}
-                            <div className="flex flex-row gap-3 items-center">
+                            <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center">
                                 
                                 <label className="font-semibold font-merriweather text-dGreen text-xl w-[240px]"> Guardian Last Name:</label>
                                 <input 
@@ -814,7 +814,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="Garcia"
                                     onChange={handleGuardiansLastName}
                                     value={guardiansLastName}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px]
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                     ${errors.guardiansLastName ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                                 />
                             </div>
@@ -833,7 +833,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="John" 
                                     onChange={handleGuardiansFirstName}
                                     value={guardiansFirstName}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px]
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                     ${errors.guardiansFirstName ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                                 />
                             </div>
@@ -847,7 +847,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="Doe"
                                     onChange={handleGuardiansMiddleName}
                                     value={guardiansMiddleName}
-                                    className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" 
+                                    className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[300px] h-[35px]" 
                                 />
                             </div>
                         </section>
@@ -860,7 +860,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="Jr."
                                     onChange={handleGuardiansSuffix}
                                     value={guardiansSuffix}
-                                    className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" 
+                                    className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[300px] h-[35px]" 
                                 />
                             </div>
                         </section>
@@ -878,7 +878,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="09123456789" 
                                     onChange={handleEmergencyContact}
                                     value={emergencyContact}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px]
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                     ${errors.emergencyContact ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                                 />
                             </div>
@@ -892,7 +892,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="sample@gmail.com"
                                     onChange={handleEmergencyEmail}
                                     value={emergencyEmail}
-                                    className="border bg-gray-200 rounded-sm px-1 w-[300px] h-[35px]" 
+                                    className="border bg-gray-200 rounded-sm px-2 w-full lg:w-[300px] h-[35px]" 
                                 />
                             </div>
                         </section>
@@ -911,7 +911,7 @@ const validatePage = async (): Promise<boolean> => {
                                 placeholder="123 Main Street, City, Country"
                                 onChange={handleFullAddress}
                                 value={fullAddress}
-                                className={`rounded-sm px-1 w-[400px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[400px] h-[35px]
                                 ${errors.fullAddress ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                             />
                         </div>
@@ -923,7 +923,7 @@ const validatePage = async (): Promise<boolean> => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 3: Educational Background
                     </p>
                 </div>
@@ -944,7 +944,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="123456789102"
                                     onChange={handleLrn}
                                     value={lrn}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px]
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                     ${errors.lrn ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`} 
                                 />
                             </div>
@@ -962,7 +962,7 @@ const validatePage = async (): Promise<boolean> => {
                                     name="Gender"
                                     onChange={handleGradeLevel}
                                     value={gradeLevel}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px] 
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px] 
                                     ${errors.gradeLevel ? 'border border-red-600 bg-red-100' : 'bg-gray-200'} 
                                     ${gradeLevel === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Grade</option>
@@ -986,7 +986,7 @@ const validatePage = async (): Promise<boolean> => {
                                     name="schoolYear"
                                     onChange={handleSchoolYear}
                                     value={schoolYear}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px] 
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px] 
                                     ${errors.schoolYear ? 'border border-red-600 bg-red-100' : 'bg-gray-200'} 
                                     ${schoolYear === '' ? 'text-gray-500' : 'text-black'}`}
                                 >
@@ -1014,7 +1014,7 @@ const validatePage = async (): Promise<boolean> => {
                                     name="Gender"
                                     onChange={handleSchoolType}
                                     value={schoolType}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px] 
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px] 
                                     ${errors.schoolType ? 'border border-red-600 bg-red-100' : 'bg-gray-200'} 
                                     ${schoolType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select School Type</option>
@@ -1037,7 +1037,7 @@ const validatePage = async (): Promise<boolean> => {
                                     placeholder="AB Normal Schoool"
                                     onChange= {handleSchoolName} 
                                     value={schoolName}
-                                    className={`rounded-sm px-1 w-[300px] h-[35px]
+                                    className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                     ${errors.schoolName ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`}
                                 />
                             </div>
@@ -1057,7 +1057,7 @@ const validatePage = async (): Promise<boolean> => {
                                 placeholder="123 Street, City, Country"
                                 onChange={handleSchoolAddress}
                                 value={schoolAddress}
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
+                                className={`rounded-sm px-2 w-full lg:w-[300px] h-[35px]
                                 ${errors.schoolAddress ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`}
                             />
                         </div>
@@ -1068,7 +1068,7 @@ const validatePage = async (): Promise<boolean> => {
                 {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 4: Documents Submission
                     </p>
                 </div>
@@ -1107,6 +1107,8 @@ const validatePage = async (): Promise<boolean> => {
                             ref={birthCertRef}
                             accept="image/*"
                             onChange={handleBirthCertChange}
+                            name="document"  
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " 
                             name="document"
                             className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
@@ -1144,6 +1146,7 @@ const validatePage = async (): Promise<boolean> => {
                             ref={goodMoralRef}
                             accept="image/*"
                             onChange={handleGoodMoralChange}
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                             name="document"
                             className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
@@ -1181,6 +1184,7 @@ const validatePage = async (): Promise<boolean> => {
                             ref={reportCard}
                             accept="image/*"
                             onChange={handleReportCardChange}
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                             name="document"
                             className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
@@ -1254,6 +1258,7 @@ const validatePage = async (): Promise<boolean> => {
                             ref={studentExitFormRef}
                             accept="image/*"
                             onChange={handleStudentExitFormChange}
+                            className="border bg-gray-200 rounded-sm p-1 w-full lg:w-[300px] h-[35px] " />
                             name="document"
                             className="border bg-gray-200 rounded-sm p-1 w-[300px] h-[35px]"
                         />
@@ -1266,7 +1271,7 @@ const validatePage = async (): Promise<boolean> => {
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-lg lg:text-2xl text-dGreen font-bold font-merriweather">
                         Section 5: Slot Reservation Fee (₱500)
                     </p>
                 </div>
@@ -1279,9 +1284,9 @@ const validatePage = async (): Promise<boolean> => {
                         <section className="w-[600px] flex flex-col text-center gap-10">  
                             <header className="font-bold font-merriweather text-2xl text-lGreen bg-green-400/30  w-full py-3" >
                                 GCASH PAYMENT
-                            </header>  
+                            </header> 
 
-                            <article  className="flex flex-col gap-7 items-center">
+                            <article  className=" gap-7 items-center">
                                 <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                     STEP 1
                                 </div>
@@ -1290,7 +1295,7 @@ const validatePage = async (): Promise<boolean> => {
                                         Send the 500.00 reservation fee
                                     </p>
                                     <div className="flex flex-row w-full justify-center gap-3">
-                                        <p className="font-bold text-lg text-dGreen ">
+                                        <p className="font-bold text-base lg:text-lg text-dGreen ">
                                             Gcash: 091234567890
                                         </p>
                                         <button
@@ -1307,7 +1312,7 @@ const validatePage = async (): Promise<boolean> => {
                                         </button>
                                     </div>
 
-                                    <footer className="mt-10 font-regular text-md text-dGreen flex flex-row justify-center gap-3">
+                                    <footer className="mt-10 font-regular text-sm lg:text-md text-dGreen flex flex-row justify-center gap-3">
                                         <p>
                                             Click this to download the QR Code
                                         </p>
@@ -1330,10 +1335,9 @@ const validatePage = async (): Promise<boolean> => {
 
                                 </section>
                             </article >
-                        </section>
 
-                        <section className="flex flex-col gap-7 mt-8 items-center">
-                            <header className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
+                            <article>
+                            <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                 STEP 2
                             </header>
                             <article className="w-[530px] h-[530px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
@@ -1344,18 +1348,19 @@ const validatePage = async (): Promise<boolean> => {
                                     <p className="font-regular text-lg text-d2Green">
                                         Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
                                     </p>
-                                </div>
+                                
                                 <figure>
                                     <Image
                                         src="/image.png"
                                         alt="receipt"
                                         width={300}
                                         height={200}
+                                        className="w-[200px] h-[200px] lg:w-[300px] lg:h-[200px]"
                                     />
                                 </figure>
                                 <section>
-                                    <div className="flex flex-row gap-5">
-                                        <label htmlFor="mop" className="font-bold text-lg text-d2Green">Payment Method: </label>
+                                    <div className="flex flex-col lg:flex-row gap-5 items-center">
+                                        <label htmlFor="mop" className="font-bold text-base lg:text-lg text-d2Green">Payment Method: </label>
                                         <div className="flex flex-row gap-3">
                                             <input 
                                                 type="radio" 
@@ -1365,7 +1370,7 @@ const validatePage = async (): Promise<boolean> => {
                                                 onChange={handleMopChange}
                                                 
                                             />
-                                            <label htmlFor="mop" className="font-regular text-lg text-d2Green"> 
+                                            <label htmlFor="mop" className="font-regular text-base lg:text-lg text-d2Green"> 
                                                 Gcash Payment
                                             </label>
                                         </div>                                         
@@ -1408,9 +1413,10 @@ const validatePage = async (): Promise<boolean> => {
                                         )}
                                     </div>
                                 </section>
+                            </section>
                             </article>
                         </section>
-                        </div>
+                         <br />
 
                         <div className="w-[2px] h-auto bg-dGreen" />
 
@@ -1419,9 +1425,9 @@ const validatePage = async (): Promise<boolean> => {
                         <section className="w-[600px] flex flex-col text-center gap-10">  
                             <header className="font-bold font-merriweather text-2xl text-lGreen bg-green-400/30  w-full py-3" >
                                 BANK TRANSFER
-                            </header>  
+                            </header>
 
-                            <article  className="flex flex-col gap-7 items-center">
+                            <article  className=" gap-7 items-center">
                                 
                                 <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                     STEP 1
@@ -1436,13 +1442,13 @@ const validatePage = async (): Promise<boolean> => {
                                             <p >Account Name:</p>
                                             <p>Account Number:</p>
                                         </div>
-                                        <div className="font-semibold text-lg text-dGreen">
+                                        <div className="font-semibold text-sm lg:text-lg text-dGreen">
                                             <p >BDO</p>
                                             <p>John Doe </p>
-                                            <p>1234-5678-9101 </p>
+                                            <p className="text-xs lg:text-lg">1234-5678-9101 </p>
                                         </div>
                                     </div>
-                                     <footer className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
+                                     <footer className="font-regular text-sm lg:text-md text-dGreen flex flex-row justify-center gap-3">
                                         <p>
                                             Click this to download the QR Code
                                         </p>
@@ -1464,11 +1470,9 @@ const validatePage = async (): Promise<boolean> => {
                                     </footer>
                                 </section>
                             </article >
-
-                        </section>
-
-                        <section className="flex flex-col gap-7 mt-8 items-center">
-                            <header className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
+                            
+                            <article>
+                            <div className="bg-yellow h-[45px] w-[125px] rounded-lg items-center justify-center flex font-bold font-oswald text-2xl text-lGreen">
                                 STEP 2
                             </header>
                             <article className="w-[530px] h-[570px] bg-green-400/30  rounded-md flex flex-col items-center gap-10  py-5">
@@ -1476,21 +1480,22 @@ const validatePage = async (): Promise<boolean> => {
                                     <p className="font-regular text-lg text-d2Green">
                                         Upload a screenshot of your receipt.
                                     </p>
-                                    <p className="font-regular text-lg text-d2Green">
+                                    <p className="font-regular text-sm lg:text-lg text-d2Green">
                                         Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
                                     </p>
-                                </div>
+                                
                                 <figure>
                                     <Image
                                         src="/bank.svg"
                                         alt="receipt"
                                         width={300}
                                         height={200}
+                                        className="w-[200px] h-[150px] lg:w-[300px] lg:h-[200px]"
                                     />
                                 </figure>
                                 <section>
-                                    <div className="flex flex-row gap-5">
-                                        <label htmlFor="mop" className="font-bold text-lg text-d2Green">Payment Method: </label>
+                                    <div className="flex flex-col lg:flex-row gap-5 items-center">
+                                        <label htmlFor="mop" className="font-bold text-base lg:text-lg text-d2Green">Payment Method: </label>
                                         <div className="flex flex-row gap-3">
                                             <input 
                                                 type="radio" 
@@ -1543,6 +1548,7 @@ const validatePage = async (): Promise<boolean> => {
                                         )}
                                     </div>
                                 </section>
+                            </section>
                             </article>
                         </section>
                         </div>
@@ -1596,7 +1602,7 @@ const validatePage = async (): Promise<boolean> => {
                 </section>
 
                 {/* content */}
-                <div className="flex-1 mt-[80px] mx-[70px] flex flex-col gap-3">
+                <div className=" mt-[80px] -mx-0 flex flex-col gap-3">
                      {sections[page].title}
                      <hr className="border-b-2 border-dGreen" />
                     {sections[page].content}

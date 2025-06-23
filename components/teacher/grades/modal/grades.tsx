@@ -13,9 +13,9 @@ export const Reg_Grades = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[800px] max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-auto max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+          <DialogTitle className="font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
             Student Grade Records (Grade 7 - 10)
           </DialogTitle>
         </DialogHeader>
@@ -30,7 +30,7 @@ export const Reg_Grades = () => {
               <h3 className="text-lg font-semibold mb-2">
                 🎓 Grade {grade}
               </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-wrap gap-4 lg:grid grid-cols-2">
                 <p><strong>English:</strong> 89</p>
                 <p><strong>Filipino:</strong> 91</p>
                 <p><strong>Mathematics:</strong> 87</p>

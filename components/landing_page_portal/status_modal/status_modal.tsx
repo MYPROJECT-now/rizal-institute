@@ -60,7 +60,7 @@ export const StatusModal = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={close}>
-            <DialogContent className="flex flex-col items-center min-h-[200px] w-[600px] rounded-t-lg">
+<DialogContent className="flex flex-col items-center h-auto w-auto rounded-t-lg text-base lg:text-xl lg:w-[500px] lg:h-[250px]"> {/* w-[500px] h-[250px]*/}
                 <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
                     <DialogTitle className="text-center text-white text-2xl">
                         Track Application

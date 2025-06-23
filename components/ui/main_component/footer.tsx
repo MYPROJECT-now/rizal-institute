@@ -27,7 +27,7 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <div className="bg-dGreen w-full flex flex-row justify-around items-center p-10 text-white">
+    <div className="bg-dGreen w-full  flex flex-col lg:flex lg:flex-row justify-around items-center p-10 text-white">
       {/* Left section: Logo and title */}
       <div className="flex flex-col items-center gap-4">
         <p className="font-bold font-merriweather text-2xl">RIZAL INSTITUTE</p>
@@ -36,6 +36,7 @@ const Footer = () => {
           alt="Rizal Institute Logo"
           width={150}
           height={150}
+          className="hidden md:block"
         />
       </div>
 

@@ -1,23 +1,27 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar_item";
+import { useState } from "react";
 
 type Props = {
     className?: string;
+    onClose?: () => void;
 };
 
-export const Sidebar_registrar = ({ className }: Props) => {
+export const Sidebar_registrar = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen", 
+                "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
                 className
             )}
         >
             
             <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] ">
-                <Link href="/ACCOUNTS/registrar">
+                <Link href="/registrar" onClick={onClose}>
                     <Image 
                         src="/school.png" 
                         width={130}
@@ -30,32 +34,41 @@ export const Sidebar_registrar = ({ className }: Props) => {
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
                         label="Dashboard" 
-                        href="/ACCOUNTS/registrar"
-                        iconSrc="/dashboard.png" 
+                        href="/registrar"
+                        iconSrc="/dashboard.png"
+                        onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Students" 
-                        href="/ACCOUNTS/registrar/students"
-                        iconSrc="/student_logo.png" 
+                        href="/registrar/students"
+                        iconSrc="/student_logo.png"
+                        onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Applicants" 
-                        href="/ACCOUNTS/registrar/applicants"
-                        iconSrc="/enrollment.png" 
+                        href="/registrar/enrollees"
+                        iconSrc="/enrollment.png"
+                        onClick={onClose}
                     />
 
                     <SidebarItem 
                         label="Reserved" 
                         href="/ACCOUNTS/registrar/reserved"
                         iconSrc="/enrollment.png" 
+=======
+                        href="/registrar/enrollees"
+                        iconSrc="/enrollment.png"
+                        onClick={onClose}
+>>>>>>> ef5f7a4d548cc18291632314bac8ce0d1a15c7c7
                     />
 
                     <SidebarItem 
                         label="Grades" 
-                        href="/ACCOUNTS/registrar/grades"
-                        iconSrc="/grades.png" 
+                        href="/registrar/grades"
+                        iconSrc="/grades.png"
+                        onClick={onClose} 
                     />
                     
 
