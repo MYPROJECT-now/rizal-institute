@@ -4,8 +4,8 @@ import Applicants from "./applicantTodos";
 
 
 export const ApplicantsPage = async () => {
-    const applicants = await getAllEnrollees_registrar();
+    const applicant = await getAllEnrollees_registrar();
 
-    return <Applicants applicants={applicants} />
+    return <Applicants applicants={applicant} />
 
 };

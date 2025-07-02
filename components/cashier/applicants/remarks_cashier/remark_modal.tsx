@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 import { useState } from "react";
 import { useDeclineRemarksModal } from "@/src/store/CASHIER/applicants";
+import { Button } from "@/components/ui/button";
 
 export const RemarksModal = () => {
   const { isOpen, close, remarks, setRemarks, studentId } = useDeclineRemarksModal();
@@ -48,7 +49,7 @@ export const RemarksModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="flex flex-col items-center h-[250px] w-[500px] rounded-t-lg">
+      <DialogContent className="flex flex-col items-centerh-[250px] w-[500px] rounded-t-lg">
         <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
           <DialogTitle className="text-center text-white text-2xl">Remarks</DialogTitle>
         </DialogHeader>
@@ -58,15 +59,16 @@ export const RemarksModal = () => {
             placeholder="Enter remarks"
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
-            className="border px-2 py-1 text-sm w-full"
+            className="border px-2 py-1 text-sm w-full focus:ring-2 focus:ring-dGreen focus:border-dGreen outline-none transition"
           />
-          <button
+          <Button
             onClick={handleDecline}
-            className="mt-4 bg-red-500 text-white px-3 py-1 rounded w-full"
+              variant={"rejectButton"}
+            className="mt-4 h-[40px] px-3 py-1 rounded-xl w-full"
             disabled={isDeclining}
           >
             {isDeclining ? "Declining..." : "Decline"}
-          </button>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

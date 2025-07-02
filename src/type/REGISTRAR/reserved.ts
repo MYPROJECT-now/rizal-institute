@@ -5,5 +5,7 @@ export type TableReserved_Type = {
     lastName: string;
     middleName: string | null;
     gradeLevel: string | null;
+    confirmationStatus: string | null;
+    admissionStatus: string | null;
   };
   

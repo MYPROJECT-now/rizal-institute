@@ -5,64 +5,69 @@ import { RemarksModal } from "@/components/cashier/applicants/remarks_cashier/re
 import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier";
 import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
 import { useDeclineRemarksModal, useShowReservationPayementModal } from "@/src/store/CASHIER/applicants";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   applicants: Tableapplicant_Type;
   onAccept: (id: number) => void;
+  className?: string;
 }
 
-const Student: FC<Props> = ({ applicants, onAccept  }) => {
+const Student: FC<Props> = ({ applicants, onAccept, className  }) => {
   const { open } = useDeclineRemarksModal();
   const { open: openEnrollees } = useShowReservationPayementModal();
 
     // Determine the display status based on both fields
     const getDisplayStatus = () => {
-      if (applicants.reservationPaymentStatus === "Pending" && applicants.applicationFormReviewStatus === "Reserved") {
+      if (applicants.reservationPaymentStatus === "Reserved" && applicants.applicationFormReviewStatus === "Pending") {
         return "Ongoing";
       } else if (applicants.applicationFormReviewStatus === "Reserved" && applicants.reservationPaymentStatus === "Reserved") {
         return "Reserved";
       } else {
-        return applicants.applicationFormReviewStatus;
+        return applicants.reservationPaymentStatus;
       }
     };
   
 
   return (
-    <tr className="border-b">
+    <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
       <td className="px-4 py-2">{applicants.lrn}</td>
       <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
       <td className="px-4 py-2">{applicants.gradeLevel}</td>
       <td className="px-4 py-2">
         <Cashier_ReservationReview />
-        <button 
-          className="bg-green-500 text-white px-3 py-1 rounded"
+        <Button 
+          className="w-[65px] h-[35px] rounded-lg"
+          variant={"confirmButton"}
           onClick={() => openEnrollees(applicants.lrn)}
           >
             View
-        </button>
+        </Button>
       </td>
-      <td className="px-4 py-2 space-x-2">
-        <button
+       <td className="px-4 py-2 text-green-700 font-semibold">{getDisplayStatus()}</td>
+      <td className="py-2 space-x-2">
+        <Button
           onClick={() => onAccept(applicants.id)}
-          className={`px-3 py-1 rounded text-white transition 
-            ${applicants.reservationPaymentStatus === "Pending" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
+          className="w-[85px] h-[35px] rounded-lg"
+          variant={"acceptButton"}
           disabled={applicants.reservationPaymentStatus !== "Pending"}
         >
           Accept
-        </button>
+        </Button>
         
         {/* Decline button only opens the modal */}
         <RemarksModal />
-        <button
+        <Button
           onClick={() => open(applicants.id)}
-          className={`px-3 py-1 rounded text-white transition 
-            ${applicants.reservationPaymentStatus === "Pending" ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"}`}
+          variant={"rejectButton"}
+          className="w-[85px] h-[35px] rounded-lg"
           disabled={applicants.reservationPaymentStatus !== "Pending"}
+          
         >
           Decline
-        </button>
+        </Button>
       </td>
-      <td className="px-4 py-2 text-green-700 font-semibold">{getDisplayStatus()}</td>
+     
     </tr>
   );
 };

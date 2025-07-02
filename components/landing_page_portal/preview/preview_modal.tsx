@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { usePreviewImageModal } from "@/src/store/LANDING_PAGE/landing_page";
+import { usePreviewModal } from "@/src/store/preview";
 
 export const PreviewModal = () => {
-  const { isOpen, close, imageUrl } = usePreviewImageModal();
+  const { isOpen, close, imageUrl } = usePreviewModal();
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
@@ -21,7 +21,7 @@ export const PreviewModal = () => {
           {imageUrl ? (
             <img src={imageUrl} alt="Preview"               
             className="w-full h-full object-fill rounded "
- />
+        />
           ) : (
             <p>No image selected.</p>
           )}

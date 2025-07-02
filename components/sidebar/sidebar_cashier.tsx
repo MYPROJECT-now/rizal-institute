@@ -46,6 +46,13 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     />
 
                     <SidebarItem 
+                        label="Payment Approval" 
+                        href="/ACCOUNTS/cashier/payment_Approval"
+                        iconSrc="/reserved.png" 
+                        onClick={onClose}
+                    />
+
+                    <SidebarItem 
                         label="Applicants" 
                         href="/ACCOUNTS/cashier/applicants"
                         iconSrc="/enrollment.png"

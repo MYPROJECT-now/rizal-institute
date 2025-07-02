@@ -18,45 +18,60 @@ export interface ApplicantType {
 export const Cashier_ReservationReview = () => {
   const { isOpen, close, selectedLRN } = useShowReservationPayementModal();
   const [applicant, setApplicant] = useState<ApplicantType | null>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  
 
     useEffect(() => {
-      if (selectedLRN) {
-        getApplicantsPayment(selectedLRN).then((applicants) => setApplicant(applicants[0]))
-      }
-    }, [selectedLRN])
+      const fetchData = async () => {
+        if (!selectedLRN) return;
+        setIsLoading(true);
+        try {
+          const applicants = await getApplicantsPayment(selectedLRN);
+          setApplicant(applicants[0]);
+        } catch (error) {
+          console.error("Error fetching receipt:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    }, [selectedLRN]);
+
     
     
       if (!applicant) return null
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[800px] max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-[600px] min-h-[500px]  bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-            ₱500 Slot Reservation - Payment Review
+          <DialogTitle className="rounded-t-lg text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+           Reservation Fee - Payment Review
           </DialogTitle>
         </DialogHeader>
-
-        <div className="space-y-6 px-2 py-4 text-sm text-gray-700">
-          {/* Receipt */}
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-2">🧾 Uploaded Receipt</h3>
-            <div className="flex justify-center">
-            {applicant?.reservationReceipt && applicant?.reservationReceipt !== "" && (
-                <CldImage
-                  alt="Receipt Screenshot"
-                  src={applicant.reservationReceipt}
-                  width="500" 
-                  height="500"
-                  crop={{
-                    type: 'auto',
-                    source: true
-                  }}
-              />
-              )}
+          <div className="bg-white flex text-center items-center justify-center h-[400px] ">
+           {isLoading ? (
+            <div className="flex justify-center items-center p-8">
+              <div className="text-lg">Loading...</div>
             </div>
-          </section>
+            ) :!applicant?.reservationReceipt ? (
+              <div className="">
+                <p>No receipt uploaded.</p>
+              </div> 
+            ) : (
+              <CldImage
+                alt="Receipt Screenshot"
+                src={applicant.reservationReceipt}
+                width="400" 
+                height="400"
+                crop={{
+                  type: 'auto',
+                  source: true
+                }}
+              />
+            )}
+          </div>
           
-        </div>
       </DialogContent>
     </Dialog>
   );

@@ -80,7 +80,7 @@ export default function Home() {
                   mode="modal"
                   
                 >
-                  <Button variant={"mButton" } size={"lg"} >
+                  <Button variant={"mainButton" } size={"lg"} >
                     Log In to Your Account
                   </Button>
                 </SignInButton>

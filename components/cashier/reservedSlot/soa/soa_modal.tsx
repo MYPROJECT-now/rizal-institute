@@ -8,6 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
+import { toast } from "sonner";
+
+
 
 export const UploadSoaModal = () => {
   const { isOpen, close } = useUploadSoaModal();
@@ -15,8 +18,6 @@ export const UploadSoaModal = () => {
   const [lrn, setLrn] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -25,11 +26,12 @@ export const UploadSoaModal = () => {
   };
 
   const handleSubmit = async () => {
-    setError(null);
-    setSuccess(false);
+    // setError(null);
+    // setSuccess(false);
 
     if (!lrn || !file) {
-      setError("Please provide both LRN and SOA file.");
+      toast.error("Please provide both LRN and SOA file.");
+      console.error("Please provide both LRN and SOA file.");
       return;
     }
 
@@ -40,23 +42,26 @@ export const UploadSoaModal = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch("/api/soa", {
+      const response = await fetch("/api/soa", {
         method: "POST",
         body: formData,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Something went wrong");
-      } else {
-        setSuccess(true);
-        setLrn("");
-        setFile(null);
+      const data = await response.json();
+    
+      if (!response.ok) {
+        throw new Error(data.error  || "Something went wrong."  );
       }
-    } catch (err) {
-      setError("Network error");
-      console.error(err);
+      if (!data.success) {  
+        toast.error(data.error || "Error uploading SOA file.");
+      }
+
+      toast.success("SOA File uploaded successfully.");
+      close();
+
+    } catch (error) {
+      console.error("Error uploading SOA file:", error);
+      toast.error("Error uploading SOA file.");
     } finally {
       setLoading(false);
     }
@@ -64,7 +69,7 @@ export const UploadSoaModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[800px] h-[300px] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-[800px] h-[300px]  bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
             SOA Upload
@@ -94,8 +99,8 @@ export const UploadSoaModal = () => {
             />
           </section>
 
-          {error && <p className="text-red-600">{error}</p>}
-          {success && <p className="text-green-600">Upload successful!</p>}
+          {/* {error && <p className="text-red-600">{error}</p>}
+          {success && <p className="text-green-600">Upload successful!</p>} */}
 
           <button
             className="bg-dGreen text-white px-6 py-2 rounded disabled:opacity-50"

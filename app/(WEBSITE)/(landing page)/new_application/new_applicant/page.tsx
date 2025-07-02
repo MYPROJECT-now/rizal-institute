@@ -27,6 +27,7 @@ const newApplicant = () => {
     fullAddress: string,
     
     gradeLevel: string,
+    studentType: string,
     schoolYear: string,
     schoolType: string,
     prevSchool: string,
@@ -38,9 +39,15 @@ const newApplicant = () => {
     goodMoral: string,
     idPic: string,
     studentExitForm: string,
+    form137: string,
 
     mop: string,
     reservationReceipt: string,
+    reservationAmount: number,
+
+    attainmentUponGraduation: string,
+    consistentGPA: string,
+    hasEnrolledSibling: string,
   ) => {
   try { 
     await addNewApplicant
@@ -66,6 +73,7 @@ const newApplicant = () => {
 
     gradeLevel,
     schoolYear,
+    studentType,
     schoolType,
     prevSchool,
     schoolAddress,
@@ -75,9 +83,15 @@ const newApplicant = () => {
     goodMoral,
     idPic,
     studentExitForm,
+    form137,
 
     mop,
     reservationReceipt,
+    reservationAmount,
+
+    attainmentUponGraduation,
+    consistentGPA,
+    hasEnrolledSibling,
   });
       toast.success("Application was submitted successfully. Check your email for more details"); // ✅ Show success message only after successful insertion.
     } catch (error: unknown) {

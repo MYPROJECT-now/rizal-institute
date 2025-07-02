@@ -1,5 +1,6 @@
 export type VerifyPayment = {
-    monthlyPayment_id: number;
+    monthlyPayment_id: number ;
+    month_id: number | null;
     dateOfPayment: string | null;
     amount: number;
     proofOfPayment: string | null;

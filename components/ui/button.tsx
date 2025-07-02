@@ -21,10 +21,28 @@ const buttonVariants = cva(
         // link: "text-white text-xl font-bold font-merriweather w-full hover:bg-white/10 rounded-md border-l-4 border-transparent hover:border-white px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:translate-x-1",
         link: "text-white text-xl font-bold font-merriweather w-full px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:text-slate-100 relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white/60 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300",
 
+        mainButton:
+          "bg-gradient-to-r from-green-500 to-green-800 text-white hover:bg-green-500 border-b-[7px] active:border-0 border-b-dGreen shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60 font-oswald",
+        subMainButton:
+          "bg-gradient-to-r from-green-500 to-green-800 text-dGreen hover:bg-green-300 border-b-[7px] active:border-0 border-b-green-600 font-oswald shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60",
+        subButton:
+          "bg-gradient-to-r from-white to-green-200 text-dGreen hover:bg-green-500 border-b-[7px] active:border-0 border-b-slGreen font-oswald shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60",
+
+        acceptButton:
+          "bg-gradient-to-b from-blue-500 to-blue-900 text-white transition-all duration-200 active:scale-95 active:shadow-inner disabled:opacity-60 hover:brightness-60",
+        
+        rejectButton:
+          "bg-gradient-to-b from-red-500 to-red-900 text-white transition-all duration-200 active:scale-95 active:shadow-inner disabled:opacity-60 hover:brightness-60",
+
+        confirmButton:
+          "bg-gradient-to-b from-green-500 to-green-800 text-white transition-all duration-200 active:scale-95 active:shadow-inner disabled:opacity-60 hover:brightness-110",
+
+          prevButton:
+          "bg-gradient-to-b from-gray-300 to-gray-500 text-gray-800 transition-all duration-200 active:scale-95 active:shadow-inner hover:brightness-110 disabled:bg-gray-200 disabled:text-gray-900 disabled:opacity-60",
 
 
 
-
+          
         //custome buton
         mButton:
           "bg-lGreen text-white hover:bg-green-500 border-b-[7px] active:border-0 border-b-dGreen font-oswald",
@@ -35,12 +53,8 @@ const buttonVariants = cva(
         CButton:
           "bg-gray-100 text-white hover:bg-green-200 border-[3px] border-green-300 font-oswald text-green-500 py-5 font-bold",
         
-        
-        
-        
-        
-        
-        
+       
+
       },
       size: {
         default: "h-9 px-4 py-2",

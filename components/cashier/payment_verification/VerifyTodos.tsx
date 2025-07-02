@@ -23,7 +23,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     });
 
     // Pagination
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = filteredData.slice(startIndex, endIndex);
@@ -52,7 +52,8 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                 </button>
             </div>
 
-            <table className="w-full border-collapse border border-gray-300">
+          <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
+        <table className="w-full text-sm text-center">
                 <thead>
                     <tr className="bg-green-600 text-white">
                         <th className="px-4 py-2">Amount</th>
@@ -65,15 +66,25 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentData.map((verifyTodo) => (
+                    {currentData.length === 0 ? (
+                        <tr>
+                        <td colSpan={7} className="p-4 text-black">
+                        No recent applicants found.
+                        </td>
+                    </tr>
+                    ) : (
+                    currentData.map((verifyTodo) => (
                         <VerifyTodo 
                             key={verifyTodo.monthlyPayment_id} 
                             VerifyTodo={verifyTodo} 
+                            onAccept={() => {}}
+                            onDecline={() => {}}
                         />
-                    ))}
+                    ))
+                )}
                 </tbody>
             </table>
-
+</div>
             {/* Pagination Controls */}
             <div className="flex justify-center mt-4 gap-4">
                 <button

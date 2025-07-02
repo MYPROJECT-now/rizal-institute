@@ -34,7 +34,7 @@ export const useShowRemarksModal = create<ShowRemarksModalState>((set) => ({
   regDate: null,
   cashierDate: null,
   open: (remarks) => set({ 
-    isOpen: true,
+    isOpen: false,
     regRemarks: remarks.regRemarks,
     cashierRemarks: remarks.cashierRemarks,
     regDate: remarks.regDate,

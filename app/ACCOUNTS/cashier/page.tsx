@@ -3,7 +3,7 @@ import Cashier_header from "@/components/header/header_cashier";
 import { Top_analytics } from "@/components/cashier/dashboard/analytics/top_analyitcs";
 import { Ppgl } from "@/components/cashier/dashboard/graphs/ppgl";
 import { Enrollment } from "@/components/cashier/dashboard/graphs/enrollment";
-import { RecentTransactionsTable } from "@/components/cashier/dashboard/table/tablePage2";
+import { RecentPaymentsTable } from "@/components/cashier/dashboard/table/tablePage2";
 
 
 const Dashboard = () => {
@@ -34,7 +34,7 @@ const Dashboard = () => {
                         Recent Transaction
                     </p>
                     <div>
-                        <RecentTransactionsTable />
+                        <RecentPaymentsTable />
                     </div>
              
                </div>

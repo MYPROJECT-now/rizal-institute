@@ -13,7 +13,7 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <header className="bg-dGreen text-white font-bold font-merriweather text-base lg:text-xl h-[90px] flex items-center justify-between px-6 lg:px-[70px] fixed w-full shadow-md z-50">
+        <header className="bg-gradient-to-t from-d2Green to-lGreen text-white font-bold font-merriweather text-base lg:text-xl h-[90px] flex items-center justify-between px-6 lg:px-[70px] fixed w-full shadow-md z-50">
             <Link href="/"  className="flex items-center gap-4">
 
                 <Image 

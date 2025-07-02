@@ -17,8 +17,8 @@ const transporter = nodemailer.createTransport({
 async function getStudentEmail(studentId: number): Promise<string | null> {
   const result = await db
     .select({ email: applicantsInformationTable.email })
-    .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.applicants_id, studentId))
+    .from(applicantsInformationTable)
+    .where(eq(applicantsInformationTable.applicants_id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].email : null;
@@ -116,7 +116,9 @@ async function sendReservationFeeReminderEmail(email: string, trackingId: string
   return transporter.sendMail(mailOptions);
 }
 
-// API handler for sending reservation confirmation email
+
+
+
 export async function POST(request: Request) {
   try {
     const { studentId } = await request.json();
@@ -125,38 +127,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
     }
 
-    // Fetch student data to check the status
-    const student = await db
-      .select()
-      .from(applicationStatusTable)
-      .where(eq(applicationStatusTable.applicants_id, studentId))
-      .then((res) => res[0]);
+    // Run all necessary DB actions in parallel — one fails, all fail
+    const [email, trackingId, hasReservationFee, updateResult] = await Promise.all([
+      getStudentEmail(studentId),
+      getTrackingId(studentId),
+      checkReservationFee(studentId),
+      db.update(applicationStatusTable)
+        .set({ applicationFormReviewStatus: "Reserved" })
+        .where(eq(applicationStatusTable.applicants_id, studentId)),
+    ]);
 
-    const applicationFormReviewStatus = student?.applicationFormReviewStatus;
-    const reservationPaymentStatus = student?.reservationPaymentStatus;
-
-    // Send email only if applicationStatus is "Reserved"
-    if (applicationFormReviewStatus === "Reserved") {
-      const email = await getStudentEmail(studentId);
-      const trackingId = await getTrackingId(studentId);
-      const hasReservationFee = await checkReservationFee(studentId);
-
-      if (email) {
-        if (hasReservationFee && reservationPaymentStatus === "Reserved") {
-          await sendReservationEmail(email, trackingId);
-          return NextResponse.json({ message: "Reservation confirmation email sent successfully." });
-        } else {
-          await sendReservationFeeReminderEmail(email, trackingId);
-          return NextResponse.json({ message: "Reservation fee reminder email sent successfully." });
-        }
-      } else {
-        return NextResponse.json({ error: "Student email not found" }, { status: 404 });
-      }
-    } else {
-      return NextResponse.json({ message: "Application status is not Reserved, no email sent." });
+    // Check update result
+    if (!email) {
+      return NextResponse.json({ error: "Student email not found" }, { status: 404 });
     }
+
+    if (updateResult.rowCount === 0) {
+      return NextResponse.json({ error: "Failed to update application status." }, { status: 500 });
+    }
+
+    // Now send the appropriate email
+    if (hasReservationFee) {
+      await sendReservationEmail(email, trackingId);
+      return NextResponse.json({ message: "Reservation confirmation email sent successfully." });
+    } else {
+      await sendReservationFeeReminderEmail(email, trackingId);
+      return NextResponse.json({ message: "Reservation fee reminder email sent successfully." });
+    }
+
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Error in reservation flow:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

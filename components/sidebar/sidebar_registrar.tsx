@@ -53,9 +53,9 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                     />
 
                     <SidebarItem 
-                        label="Reserved" 
+                        label="Admission" 
                         href="/ACCOUNTS/registrar/reserved"
-                        iconSrc="/enrollment.png" 
+                        iconSrc="/schoolLogo.png" 
                         onClick={onClose}
                     />
 

@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 import { useState } from "react";
 import { useDeclineRemarksModal } from "@/src/store/REGISTRAR/applicant";
+import { Button } from "@/components/ui/button";
 
 export const StatusModal = () => {
   const { isOpen, close, remarks, setRemarks, studentId } = useDeclineRemarksModal();
@@ -48,8 +49,8 @@ export const StatusModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="flex flex-col items-center h-[280px] w-[500px] rounded-t-lg">
-        <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
+      <DialogContent className="flex flex-col items-center justify-center h-[280px] w-[500px] rounded-t-lg">
+        <DialogHeader className="h-[90px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
           <DialogTitle className="text-center text-white text-2xl">Remarks</DialogTitle>
         </DialogHeader>
         <div className="w-full  p-4">
@@ -57,15 +58,16 @@ export const StatusModal = () => {
             placeholder="Enter remarks"
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
-            className="border-black px-2 py-1 text-sm w-full h-[100px]"
+            className="border-black px-2 py-1 text-sm w-full h-[100px] focus:ring-2 focus:ring-dGreen focus:border-dGreen outline-none transition"
           />
-          <button
+          <Button
             onClick={handleDecline}
-            className="mt-4 bg-red-500 text-white px-3 py-1 rounded w-full"
+            variant={"rejectButton"}
+            className="mt-4 h-[40px] px-3 py-1 rounded-xl w-full"
             disabled={isDeclining}
           >
             {isDeclining ? "Declining..." : "Decline"}
-          </button>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

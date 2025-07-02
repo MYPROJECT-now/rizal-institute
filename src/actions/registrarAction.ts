@@ -13,7 +13,7 @@ import { sql } from "drizzle-orm";
       firstName: applicantsInformationTable.applicantsFirstName,
       middleName: applicantsInformationTable.applicantsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
-      applicationStatus: applicationStatusTable.applicationFormReviewStatus,
+      applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
       dateOfApplication: applicationStatusTable.dateOfApplication,
     })
     .from(applicantsInformationTable)
@@ -40,11 +40,11 @@ import { sql } from "drizzle-orm";
       gradeLevel: educationalBackgroundTable.gradeLevel,
       applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
       reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus, 
+      dateApprovedByRegistrar: applicationStatusTable.dateApprovedByRegistrar,
     })
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
-    .where(or(eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),eq(applicationStatusTable.reservationPaymentStatus, "Pending")))
     
   
     console.log("Fetched Enrollees:", allEnrollees);
@@ -52,15 +52,15 @@ import { sql } from "drizzle-orm";
     return allEnrollees ;
   };
 
-    export const acceptStudentsApplication = async (id: number, applicationStatus: string) => {
-    await db
-    .update(applicationStatusTable)
-    .set({
-      applicationFormReviewStatus: applicationStatus,
-    })
-    .where(eq(applicationStatusTable.application_status_id, id));
-    revalidatePath("/");
-  };
+  //   export const acceptStudentsApplication = async (id: number, applicationStatus: string) => {
+  //   await db
+  //   .update(applicationStatusTable)
+  //   .set({
+  //     applicationFormReviewStatus: applicationStatus,
+  //   })
+  //   .where(eq(applicationStatusTable.application_status_id, id));
+  //   revalidatePath("/");
+  // };
 
       export const acceptStudentsAddmission = async (id: number, admissionStatus: string) => {
     await db
@@ -93,6 +93,7 @@ import { sql } from "drizzle-orm";
       fullAddress: guardianAndParentsTable.fullAddress,
 
       gradeLevel: educationalBackgroundTable.gradeLevel,
+      studentType: educationalBackgroundTable.studentType,
       schoolYear: educationalBackgroundTable.schoolYear,
       schoolType: educationalBackgroundTable.schoolType,
       prevSchool: educationalBackgroundTable.prevSchool,
@@ -128,6 +129,7 @@ import { sql } from "drizzle-orm";
       applicationStatus: applicationStatusTable.applicationFormReviewStatus,
       reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
       admissionStatus: AdmissionStatusTable.admissionStatus,
+      confirmationStatus: AdmissionStatusTable.confirmationStatus,
 
     })
     .from(applicantsInformationTable)
@@ -138,7 +140,6 @@ import { sql } from "drizzle-orm";
       and(
         eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
         eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
-        eq(AdmissionStatusTable.admissionStatus, "Pending")
       )
     )
     

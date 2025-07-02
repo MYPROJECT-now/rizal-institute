@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { approveMonthlyPayment, declineMonthlyPayment, getPendingPayments } from "@/src/actions/cashierAction";
+import {  acceptPayment, declinePayment, getPendingPayments } from "@/src/actions/cashierAction";
 import { Button } from "@/components/ui/button";
 
 interface PendingPayment {
   monthlyPayment_id: number;
+  month_id: number | null;
   student_id: number;
-  month_id: number;
   amount: number;
   status: string;
   dateOfPayment: string | null;
@@ -33,14 +33,14 @@ const PaymentApprovalPage = () => {
 
   const handleApprove = async (payment: PendingPayment) => {
     setActionLoading(payment.monthlyPayment_id);
-    await approveMonthlyPayment(payment.monthlyPayment_id, payment.amount);
+    await acceptPayment(payment.monthlyPayment_id, payment?.month_id || 0, payment.amount);
     await fetchPendingPayments();
     setActionLoading(null);
   };
 
   const handleDecline = async (payment: PendingPayment) => {
     setActionLoading(payment.monthlyPayment_id);
-    await declineMonthlyPayment(payment.monthlyPayment_id);
+    await declinePayment(payment.monthlyPayment_id);
     await fetchPendingPayments();
     setActionLoading(null);
   };

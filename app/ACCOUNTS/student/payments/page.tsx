@@ -1,7 +1,7 @@
 
 import Admin_student from "@/components/header/header_student";
-// import { PaymentPage } from "@/components/students/payment management/payment_management";
 import StudentClientComponent from "@/components/validation/student_validate";
+import { PaymentPage } from "./paymentPage";
 
 
 const Payments = () => {
@@ -14,7 +14,7 @@ const Payments = () => {
                 Payment Management
                 </div>
                 <div>
-                    {/* <PaymentPage /> */}
+                    <PaymentPage />
                 </div>
             </div>
         </div>

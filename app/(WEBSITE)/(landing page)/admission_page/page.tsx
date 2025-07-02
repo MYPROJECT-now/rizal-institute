@@ -78,55 +78,40 @@ const AdmissionPage = () => {
             <div className="flex flex-row lg:flex-col gap-2 lg:gap-4 flex-wrap justify-center">
                 <Button
                 onClick={() => setActiveStep(1)}
-                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
-                    activeStep === 1
-                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
-                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
-                }`}
+                variant={activeStep === 1 ? "mainButton" : "subMainButton"}
+                className= "w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl"
                 >
                 Step 1
                 </Button>
 
                 <Button
                 onClick={() => setActiveStep(2)}
-                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
-                    activeStep === 2
-                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
-                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
-                }`}
+                variant={activeStep === 2 ? "mainButton" : "subMainButton"}
+                className= "w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl"
                 >
                 Step 2
                 </Button>
 
                 <Button
                 onClick={() => setActiveStep(3)}
-                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
-                    activeStep === 3
-                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
-                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
-                }`}
+                variant={activeStep === 3 ? "mainButton" : "subMainButton"}
+                className= "w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl"
                 >
                 Step 3
                 </Button>
 
                 <Button
                 onClick={() => setActiveStep(4)}
-                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
-                    activeStep === 4
-                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen active:border-0 font-bold font-oswald'
-                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green active:border-0 font-bold font-oswald'
-                }`}
+                variant={activeStep === 4 ? "mainButton" : "subMainButton"}
+                className= "w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl"
                 >
                 Step 4
                 </Button>
 
                 <Button
                 onClick={() => setActiveStep(5)}
-                className={`w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl ${
-                    activeStep === 5
-                    ? 'bg-lGreen text-white text-lg lg:text-2xl hover:bg-green-500/90 border-b-[5px] lg:border-b-[7px] border-b-dGreen font-bold font-oswald'
-                    : 'bg-dGreen text-white text-lg lg:text-2xl hover:bg-green-700/90 border-b-[5px] lg:border-b-[7px] border-b-d2Green font-bold font-oswald'
-                }`}
+                variant={activeStep === 5 ? "mainButton" : "subMainButton"}
+                className= "w-[90px] h-[50px] lg:w-[110px] lg:h-[60px] rounded-2xl"
                 >
                 Step 5
                 </Button>

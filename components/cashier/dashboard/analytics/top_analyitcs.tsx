@@ -1,16 +1,21 @@
 import Image from "next/image";
+import {  getPendingApplicantsCount,  getPendingPaymentsCount,  getReservedSlotCount } from "@/src/actions/cashierAction";
 
-export const Top_analytics = () => {
+export const Top_analytics = async () => {
+    const pendingApplicants = await getPendingApplicantsCount();
+    const reservedSlots = await getReservedSlotCount();
+    const pendingPayments = await getPendingPaymentsCount();
+
     return (
         <div className="flex flex-row gap-9">
 
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className="w-[250px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-lg">
-                       Enrollees
+                       Pending Applicants
                     </p>
                     <p className="font-bold text-sm">
-                        65
+                        {pendingApplicants}
                     </p>
                 </div>
                 <div>
@@ -29,7 +34,7 @@ export const Top_analytics = () => {
                         Reserved Slot
                     </p>
                     <p className="font-bold text-sm">
-                        65
+                        {reservedSlots}
                     </p>
                 </div>
                 <div>
@@ -45,10 +50,10 @@ export const Top_analytics = () => {
             <div className="w-[300px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-[16px]">
-                        Total Reserved Fee Collected
+                        Pending Students Payment 
                     </p>
                     <p className="font-bold text-sm">
-                        4000
+                        {pendingPayments}
                     </p>
                 </div>
                 <div>

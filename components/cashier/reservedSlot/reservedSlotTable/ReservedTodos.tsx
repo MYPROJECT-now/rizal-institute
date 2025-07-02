@@ -4,6 +4,7 @@ import { UploadSoaModal } from "../soa/soa_modal";
 import { reservedSlotType } from "@/src/type/CASHIER/RESERVED/reserved";
 import Applicant from "./ReservedTodo";
 import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   applicants: reservedSlotType[];
@@ -20,11 +21,7 @@ const Applicants: FC<Props> = ({ applicants }) => {
     // 🔢 Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 6;
-  const handleAccept = async () => {
-    // await acceptStudentsInititialPayment(id, "Enrolled");
 
-
-  };
 
   const filteredStudents = studentList.filter((student) => {
   const fullName = `${student.firstName} ${student.middleName ?? ""} ${student.lastName}`.toLowerCase();
@@ -39,7 +36,7 @@ const Applicants: FC<Props> = ({ applicants }) => {
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const totalPages =  Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
 
   return (
@@ -52,7 +49,7 @@ const Applicants: FC<Props> = ({ applicants }) => {
     placeholder="Name"
     value={filterName}
     onChange={(e) => setFilterName(e.target.value)}
-    className="border rounded px-3 py-1"
+    className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   />
 
   <input
@@ -60,13 +57,13 @@ const Applicants: FC<Props> = ({ applicants }) => {
     placeholder="LRN"
     value={filterLRN}
     onChange={(e) => setFilterLRN(e.target.value)}
-    className="border rounded px-3 py-1"
+      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   />
 
   <select
     value={filterGrade}
     onChange={(e) => setFilterGrade(e.target.value)}
-    className="border rounded px-3 py-1"
+      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   >
     <option value="">All Grades</option>
     <option value="Grade 7">Grade 7</option>
@@ -76,27 +73,31 @@ const Applicants: FC<Props> = ({ applicants }) => {
     {/* Add other grades as needed */}
   </select>
 
-  <button
+  <Button
     onClick={() => {
       setFilterName("");
       setFilterLRN("");
       setFilterGrade("");
     }}
-    className="bg-green-700 text-white font-bold px-4 py-1 rounded hover:bg-green-800"
+  variant="confirmButton"
+      className="w-[100px] h-[40px] rounded-lg"
+  
   >
     Clear Filter
-  </button>
+  </Button>
 
   <UploadSoaModal />
-  <button
-    onClick={() => open(applicants[0].lrn)}
-    className="bg-green-700 text-white font-bold px-4 py-1 rounded hover:bg-green-800"
+  <Button
+    onClick={ open}
+    variant="confirmButton"
+  
   >
     Add SOA
-  </button>
+  </Button>
 </div>
 
-    <table className="w-full border-collapse border border-gray-300">
+  <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <table className="w-full text-sm text-center">
       <thead>
         <tr className="bg-green-600 text-white">
           <th className="px-4 py-2">LRN</th>
@@ -104,18 +105,29 @@ const Applicants: FC<Props> = ({ applicants }) => {
           <th className="px-4 py-2">Grade Level</th>
           <th className="px-4 py-2">Discount Class</th>
           <th className="px-4 py-2">Status</th>
+          <th className="px-4 py-2">SOA</th>
         </tr>
       </thead>
       <tbody>
-         {currentStudents.map((applicants) => (
+           {currentStudents.length === 0 ? (
+            <tr>
+            <td colSpan={5} className="p-4 text-black">
+              No recent applicants found.
+            </td>
+          </tr>
+        ) : (
+          currentStudents.map((applicants, idx) => (
           <Applicant 
             key={applicants.lrn} 
             applicants={applicants} 
-            onAccept={handleAccept}
+            className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+
           />
-        ))}
+        ))
+      )}
       </tbody>
     </table>
+  </div>
 
      {/* Pagination Controls */}
       <div className="flex justify-center mt-4 gap-4">

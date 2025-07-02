@@ -12,6 +12,7 @@ import {
   AdmissionStatusTable,
   Registrar_remaks_table,
   Cashier_remaks_table,
+  additionalInformationTable,
 } from "../db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
@@ -73,7 +74,11 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
     - Report Card
     - Good Moral Certificate
     - 2x2 ID Picture
+    - form 137
+
+    Additionally, please submit the following documents if from private school:
     - CACPRISAA Student Exit Clearance
+
     `;
   }
 
@@ -117,6 +122,7 @@ export const addNewApplicant = async (formData: {
   fullAddress: string;
 
   gradeLevel: string;
+  studentType: string;
   schoolYear: string;
   schoolType: string;
   prevSchool: string;
@@ -127,9 +133,15 @@ export const addNewApplicant = async (formData: {
   goodMoral: string;
   idPic: string;
   studentExitForm: string;
+  form137: string;
 
   mop: string;
   reservationReceipt: string;
+  reservationAmount: number;
+
+  attainmentUponGraduation: string;
+  consistentGPA: string;
+  hasEnrolledSibling: string;
 }) => {
   const {
     applicantsLastName,
@@ -153,6 +165,7 @@ export const addNewApplicant = async (formData: {
     fullAddress,
 
     gradeLevel,
+    studentType,
     schoolYear,
     schoolType,
     prevSchool,
@@ -163,9 +176,15 @@ export const addNewApplicant = async (formData: {
     goodMoral,
     idPic,
     studentExitForm,
+    form137,
 
     mop,
-    reservationReceipt
+    reservationReceipt,
+    reservationAmount,
+
+    attainmentUponGraduation,
+    consistentGPA,
+    hasEnrolledSibling,
   } = formData;
 
 
@@ -216,6 +235,7 @@ export const addNewApplicant = async (formData: {
         applicants_id: applicantId,
         gradeLevel,
         schoolYear,
+        studentType,
         schoolType,
         prevSchool,
         schoolAddress
@@ -226,12 +246,20 @@ export const addNewApplicant = async (formData: {
         reportCard,
         goodMoral,
         idPic,
-        studentExitForm
+        studentExitForm,
+        form137,
       }),
       db.insert(reservationFeeTable).values({
         applicants_id: applicantId,
         mop,
-        reservationReceipt
+        reservationReceipt,
+        reservationAmount
+      }),
+      db.insert(additionalInformationTable).values({
+        applicants_id: applicantId,
+        AttainmentUponGraduation: attainmentUponGraduation,
+        ConsistentGPA: consistentGPA,
+        HasEnrolledSibling: hasEnrolledSibling
       })
     ]);
 
@@ -247,6 +275,7 @@ export const addNewApplicant = async (formData: {
     await db.insert(AdmissionStatusTable).values({
       applicants_id: applicantId,
       admissionStatus: 'Pending',
+      confirmationStatus: 'Pending',
       dateOfAdmission: new Date().toISOString().slice(0, 10),
     });
 
@@ -283,36 +312,54 @@ export const verifyLrn = async (lrn: string) => {
 
 
 
+    export const getStatusByTrackingId = async (trackingId: string) => {
+      try {
+        const result = await db
+          .select({
+            applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
+            reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
+            regRemarks: Registrar_remaks_table.reg_remarks,
+            cashierRemarks: Cashier_remaks_table.cashier_remarks,
+            regDate: Registrar_remaks_table.dateOfRemarks,
+            cashierDate: Cashier_remaks_table.dateOfRemarks,
+            confirmationStatus: AdmissionStatusTable.confirmationStatus,
+          })
+          .from(applicationStatusTable)
+          .leftJoin(Registrar_remaks_table,eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
+          .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
+          .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
+          .where(eq(applicationStatusTable.trackingId, trackingId))
+          .limit(1);
+
+        if (result.length > 0) {
+          return result[0];
+        } else {
+          return null; // No match found
+        }
+      } catch (error) {
+        console.error("Failed to get status:", error);
+        throw new Error("Failed to fetch application status");
+      }
+    };
+
+export const acceptAdmission = async (trackingId: string) => {
+  const applicant = await db
+    .select({ applicants_id: applicationStatusTable.applicants_id })
+    .from(applicationStatusTable)
+    .where(eq(applicationStatusTable.trackingId, trackingId))
+    .then((res) => res[0]);
 
 
+  const result = await db
+    .update(AdmissionStatusTable)
+    .set({
+      confirmationStatus: 'Confirmed',
+      dateOfConfirmation: new Date().toISOString().split("T")[0],
+    })
+    .where(eq(AdmissionStatusTable.applicants_id, applicant.applicants_id));
 
-
-
-
-
-
-
-  export const getStatusByTrackingId = async (trackingId: string) => {
-    const result = await db
-      .select({
-        applicationStatus: applicationStatusTable.applicationFormReviewStatus,
-        regRemarks: Registrar_remaks_table.reg_remarks,
-        cashierRemarks: Cashier_remaks_table.cashier_remarks,
-        regDate: Registrar_remaks_table.dateOfRemarks,
-        cashierDate: Cashier_remaks_table.dateOfRemarks
-      })
-      .from(applicationStatusTable)
-      .leftJoin(Registrar_remaks_table, eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
-      .leftJoin(Cashier_remaks_table, eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
-      .where(eq(applicationStatusTable.trackingId, trackingId))
-      .limit(1);
-  
-    if (result.length > 0) {
-      return result[0];
-    } else {
-      return { applicationStatus: "No application was found" };
-    }
-  };
+  return {success: result.rowCount > 0,};
+};
 
   // reapplication
   export const getStudentDataByTrackingId = async (trackingId: string) => {

@@ -5,6 +5,7 @@
       lastName: string;
       middleName: string | null;
       gradeLevel: string | null;
+      dateApprovedByRegistrar: string | null;
       applicationFormReviewStatus?: string | null;
       reservationPaymentStatus: string | null;
     };
@@ -39,6 +40,7 @@
     fullAddress: string | null;
 
     prevSchool: string  | null;
+    studentType: string | null;
     gradeLevel: string | null; 
     schoolAddress: string | null;
     schoolType: string | null;

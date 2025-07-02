@@ -19,6 +19,7 @@ export type SOAsStudent = {
   amount?: number | null;
   SINumberDP?: string | null;
   remarksDP?: string | null;
+  downPaymentDate?: string | null;
 
   month?: string | null;
   dateOfPayment?: string | null;

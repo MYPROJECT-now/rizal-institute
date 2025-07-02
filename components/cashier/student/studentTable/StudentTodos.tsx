@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import Student from "./StudentTodo";
 import { all_student_Type } from "@/src/type/CASHIER/STUDENT/student";
+import { Button } from "@/components/ui/button";
 
 
 interface Props {
@@ -35,13 +36,12 @@ const filteredStudents = studentList.filter((student) => {
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
 
   return (
-    <main className="mx-auto max-w-8xl w-full  p-8 text-center">
-
-        <div className="flex flex-wrap items-center gap-4 mb-6">
+  <main className="mx-auto max-w-8xl w-full  p-8 text-center">
+  <div className="flex flex-wrap items-center gap-4 mb-6">
   <label className="text-green-900 font-bold text-lg">Filter By:</label>
 
   <input
@@ -49,7 +49,7 @@ const filteredStudents = studentList.filter((student) => {
     placeholder="Name"
     value={filterName}
     onChange={(e) => setFilterName(e.target.value)}
-    className="border rounded px-3 py-1"
+      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   />
 
   <input
@@ -57,13 +57,13 @@ const filteredStudents = studentList.filter((student) => {
     placeholder="LRN"
     value={filterLRN}
     onChange={(e) => setFilterLRN(e.target.value)}
-    className="border rounded px-3 py-1"
+      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   />
 
   <select
     value={filterGrade}
     onChange={(e) => setFilterGrade(e.target.value)}
-    className="border rounded px-3 py-1"
+      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   >
     <option value="">All Grades</option>
     <option value="Grade 7">Grade 7</option>
@@ -73,39 +73,50 @@ const filteredStudents = studentList.filter((student) => {
     {/* Add other grades as needed */}
   </select>
 
-  <button
+  <Button
     onClick={() => {
       setFilterName("");
       setFilterLRN("");
       setFilterGrade("");
     }}
-    className="bg-green-700 text-white font-bold px-4 py-1 rounded hover:bg-green-800"
+      variant="confirmButton"
+      className="w-[100px] h-[40px] rounded-lg"
   >
     Clear Filter
-  </button>
+  </Button>
 </div>
 
 
-    <table className="w-full border-collapse border border-gray-300">
+  <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <table className="w-full text-sm text-center">
       <thead>
         <tr className="bg-green-600 text-white">
           <th className="px-4 py-2">LRN</th>
           <th className="px-4 py-2">Full Name</th>
           <th className="px-4 py-2">Grade Level</th>
           <th className="px-4 py-2">SOA</th>
-          <th className="px-4 py-2">Actions</th>
         </tr>
       </thead>
       <tbody>
-         {currentStudents.map((student) => (
+          {currentStudents.length === 0 ? (
+            <tr>
+            <td colSpan={4} className="p-4 text-black">
+              No recent applicants found.
+            </td>
+          </tr>
+        ) : (
+         currentStudents.map((student, idx) => (
           <Student 
             key={student.lrn} 
             student={student} 
+            className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+
           />
-        ))}
+        ))
+        )}
       </tbody>
     </table>
-
+  </div>
     {/* Pagination Controls */}
       <div className="flex justify-center mt-4 gap-4">
         <button

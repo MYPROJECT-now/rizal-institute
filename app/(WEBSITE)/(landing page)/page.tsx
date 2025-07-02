@@ -93,7 +93,7 @@ export default function Home() {
               <div className="flex flex-col-reverse items-center justify-center gap-4">
                 <a href="/new_application">
                 <Button
-                variant="mButton"
+                variant="mainButton"
                 className="rounded-xl lg:text-2xl lg:h-[55px] lg:w-[210px]">
                   <p className="font-oswald font-bold">
                     ENROLL NOW
@@ -102,7 +102,7 @@ export default function Home() {
                 </a>
 
                 <Button
-                variant="sButton"
+                variant="subButton"
                 onClick={open}
                 className="rounded-xl sm:h-[100] lg:text-2xl lg:h-[55px] lg:w-[210px] ">
                   <p className="font-oswald font-bold text-xl">
@@ -241,7 +241,7 @@ export default function Home() {
          {/* THIRD PART */}
          <a href="/new_application">
           <Button
-            variant="mButton"
+            variant="mainButton"
             className="rounded-xl lg:text-2xl lg:h-[55px] lg:w-[210px]">
               <p className="font-oswald font-bold ">
                 ENROLL NOW!

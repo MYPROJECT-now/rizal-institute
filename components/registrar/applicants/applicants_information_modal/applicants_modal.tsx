@@ -12,6 +12,7 @@ import { Document_Modal } from "./document_modal/document_modal"
 import { ApplicanInfotType } from "@/src/type/REGISTRAR/applicant"
 import { useShowApplicantInfoModal } from "@/src/store/REGISTRAR/applicant"
 import { useShowDocumentModal } from "@/src/store/REGISTRAR/applicant"
+import { Button } from "@/components/ui/button"
 
 export const Enrollees_info_Modal = () => {
   const { isOpen, close, selectedLRN } = useShowApplicantInfoModal()
@@ -28,26 +29,29 @@ export const Enrollees_info_Modal = () => {
     }
   }, [selectedLRN])
 
-  const showDocument = (src: string | null, title: string) => {
-    if (!src) return
-    setSelectedImage({ src, title })
-    open()
-  }
+const showDocument = (src: string | null, title: string) => {
+  if (!src?.trim()) return
+  setSelectedImage({ src, title })
+  open()
+}
+
+
 
 
   if (!applicant) return null
 
   return (
+      <>
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="w-[800px] max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-            Student Registration Form
+            Student Information
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 px-2 py-4 text-sm text-gray-700">
-          {/* Section 1: Personal Information */}
+
           <section className="bg-white p-4 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold mb-2">📘 Section 1: Personal Information</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -56,26 +60,26 @@ export const Enrollees_info_Modal = () => {
               <p><strong>Age:</strong> {applicant.age} </p>
               <p><strong>Gender:</strong> {applicant.gender} </p>
               <p><strong>Mobile Number:</strong> {applicant.mobileNumber} </p>
-              <p><strong>email:</strong> {applicant.email} </p>
+              <p><strong>Email:</strong> {applicant.email} </p>
             </div>
           </section>
 
-          {/* Section 2: Contact & Guardian Details */}
           <section className="bg-white p-4 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold mb-2">📞 Section 2: Contact & Guardian Details</h3>
             <div className="grid grid-cols-2 gap-4">
               <p><strong>Full Name:</strong> {applicant.guardiansLastName}, {applicant.guardiansFirstName} {applicant.guardiansMiddleName} {applicant.guardiansSuffix}</p>
               <p><strong>Emergency Contact:</strong> {applicant.emergencyContact} </p>
-              <p><strong>email:</strong> {applicant.emergencyEmail} </p>
+              <p><strong>Email:</strong> {applicant.emergencyEmail} </p>
               <p><strong>Full Address:</strong> {applicant.fullAddress} </p>
             </div>
           </section>
 
-          {/* Section 3: Educational Background */}
+
           <section className="bg-white p-4 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold mb-2">🏫 Section 3: Educational Background</h3>
             <div className="grid grid-cols-2 gap-4">
               <p><strong> Grade Level:</strong> {applicant.gradeLevel}</p>
+              <p><strong>Student Type:</strong> {applicant.studentType} </p>
               <p><strong>School Name:</strong> {applicant.prevSchool} </p>
               <p><strong>School Address:</strong> {applicant.schoolAddress} </p>
               <p><strong>School Type:</strong> {applicant.schoolType} </p>
@@ -83,17 +87,63 @@ export const Enrollees_info_Modal = () => {
             </div>
           </section>
 
-          <section>
-              <Document_Modal src={selectedImage.src} title={selectedImage.title} />
-              <button onClick={() => showDocument(applicant.birthCert, "Birth Certificate")} className="text-blue-600 underline">View Birth Certificate</button>
-              <button onClick={() => showDocument(applicant.reportCard, "Report Card")} className="text-blue-600 underline">View Report Card</button>
-              <button onClick={() => showDocument(applicant.goodMoral, "Good Moral Certificate")} className="text-blue-600 underline">View Good Moral</button>
-              <button onClick={() => showDocument(applicant.idPic, "ID Picture")} className="text-blue-600 underline">View ID Picture</button>
-              <button onClick={() => showDocument(applicant.studentExitForm, "Student Exit Form")} className="text-blue-600 underline">View Exit Form</button>
+          
+          <section className="bg-white p-4 rounded-lg shadow-sm border">
+            <h3 className="text-lg font-semibold mb-4">📝 Section 4: Submitted Documents</h3>
+            <Document_Modal src={selectedImage.src} title={selectedImage.title} />
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => showDocument(applicant.birthCert, "Birth Certificate")}
+                variant="confirmButton"
+                className="flex items-center gap-2"
+                disabled={!applicant.birthCert?.trim()}
+              >
+                📄 Birth Certificate
+              </Button>
+
+              <Button
+                onClick={() => showDocument(applicant.reportCard, "Report Card")}
+                variant="confirmButton"
+                className="flex items-center gap-2"
+                disabled={!applicant.reportCard?.trim()}
+              >
+                📃 Report Card
+              </Button>
+
+              <Button
+                onClick={() => showDocument(applicant.goodMoral, "Good Moral Certificate")}
+                variant="confirmButton"
+                className="flex items-center gap-2"
+                disabled={!applicant.goodMoral?.trim()}
+              >
+                📑 Good Moral Certificate
+              </Button>
+
+              <Button
+                onClick={() => showDocument(applicant.idPic, "ID Picture")}
+                variant="confirmButton"
+                className="flex items-center gap-2"
+                disabled={!applicant.idPic?.trim()}
+              >
+                🖼️ ID Picture
+              </Button>
+
+              <Button
+                onClick={() => showDocument(applicant.studentExitForm, "Student Exit Form")}
+                variant="confirmButton"
+                className="flex items-center gap-2"
+                disabled={!applicant.studentExitForm?.trim()}
+              >
+                📝 Student Exit Form
+              </Button>
+            </div>
           </section>
+
 
         </div>
       </DialogContent>
     </Dialog>
+    </>
   )
 }

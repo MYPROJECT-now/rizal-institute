@@ -18,25 +18,34 @@ type DocumentModalProps = {
 export const Document_Modal = ({ src, title }: DocumentModalProps) => {
   const { isOpen, close } = useShowDocumentModal()
 
-  if (!src) return null
+
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[800px] max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-[600px] min-h-[400px]  bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
             {title || "Document"}
           </DialogTitle>
         </DialogHeader>
-        <div className="flex justify-center items-center p-4">
-          <CldImage
-            alt={title || "Document"}
-            src={src}
-            width="400"
-            height="400"
-            crop={{ type: "auto", source: true }}
-          />
-        </div>
+
+     {!src?.trim() ? (
+
+  <p className="text-center text-sm text-gray-500 mt-2">No document uploaded.</p>
+
+) : (
+  <main className="flex justify-center items-center p-4">
+    <CldImage
+      alt={title || "Document"}
+      src={src}
+      width="400"
+      height="400"
+      crop={{ type: "auto", source: true }}
+    />
+  </main>
+)}
+
+        
       </DialogContent>
     </Dialog>
   )

@@ -1,297 +1,192 @@
-// // app/actions/getStudentData.ts
-// "use server";
+// app/actions/getStudentData.ts
+"use server";
 
-// import { auth, clerkClient } from '@clerk/nextjs/server'
-// import { eq } from "drizzle-orm";
-// import { db } from "../db/drizzle";
-// import { ClerkUserTable, applicantsInformationTable, educationalBackgroundTable, applicationStatusTable, StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
-// import { NextResponse } from 'next/server';
-// import { getStudentSOA } from "./cashierAction";
+import { eq } from "drizzle-orm";
+import { db } from "../db/drizzle";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
+import { generateSINumber } from './SI_Number_counter';
+import { getStudentId } from './studentID';
 
-// export async function getStudentData() {
-//   // Use `auth()` to get the user's ID
-//   const { userId } = await auth()
 
-//   // Protect the route by checking if the user is signed in
-//   if (!userId) {
-//     return new NextResponse('Unauthorized', { status: 401 })
-//   }
 
-//   console.log("User ID:", userId);
+export const getInfoForDashboard = async () => {
 
-//   const client = await clerkClient()
+  const applicantId = await getStudentId();
+  if (!applicantId) return null;
 
-//   // Use the Backend SDK's `getUser()` method to get the Backend User object
-//   const user = await client.users.getUser(userId)
+  const studentInfo = await db
+    .select({
+      lrn: StudentInfoTable.lrn,
+      student_id: StudentInfoTable.student_id,
+    })
+    .from(StudentInfoTable)
+    .where(eq(StudentInfoTable.applicants_id, applicantId));
 
-//   const clerkRecord = await db
-//     .select()
-//     .from(ClerkUserTable)
-//     .where(eq(ClerkUserTable.clerkId, userId))
-//     .limit(1);
+  let outstandingBalance = 0;
+  if (studentInfo[0]?.student_id) {
+    const monthDue = await db
+      .select({
+        monthlyDue: MonthsInSoaTable.monthlyDue,
+        amountPaid: MonthsInSoaTable.amountPaid,
+        month: MonthsInSoaTable.month,
+        month_id: MonthsInSoaTable.month_id,
+      })
+      .from(MonthsInSoaTable)
+      .where(
+        eq(MonthsInSoaTable.student_id, studentInfo[0].student_id)
+      );
+    // Get current month name (e.g., 'October')
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    // Find the SOA row for the current month
+    const currentMonthRow = monthDue.find(row =>
+      (row.month || '').toLowerCase().includes(currentMonth.toLowerCase())
+    );
+    const currentMonthId = currentMonthRow?.month_id;
+    if (currentMonthId !== undefined) {
+      // Sum monthlyDue and amountPaid for all months up to and including currentMonthId
+      const dueUpToCurrent = monthDue.filter(row => row.month_id <= currentMonthId);
+      const totalMonthlyDue = dueUpToCurrent.reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
+      const totalAmountPaid = dueUpToCurrent.reduce((sum, row) => sum + (row.amountPaid || 0), 0);
+      outstandingBalance = totalMonthlyDue - totalAmountPaid;
+    }
+  }
 
-//   const applicant = clerkRecord[0];
-//   if (!applicant) return null;
+  return {
+    lrn: studentInfo[0]?.lrn,
+    outstandingBalance,
+  };
+}
 
-//   const applicantId = applicant.applicants_id;
 
-//   const [info] = await db
-//     .select()
-//     .from(applicantsInformationTable)
-//     .where(eq(applicantsInformationTable.applicants_id, applicantId));
 
-//   const [education] = await db
-//     .select()
-//     .from(educationalBackgroundTable)
-//     .where(eq(educationalBackgroundTable.applicants_id, applicantId));
+  export const getPaymentHistory = async () => {
 
-//   const [status] = await db
-//     .select()
-//     .from(applicationStatusTable)
-//     .where(eq(applicationStatusTable.applicants_id, applicantId));
+  const applicantId = await getStudentId();
+  if (!applicantId) return [];
 
-//   // ✅ Log data to terminal
-//   console.log("Student Info:", info);
-//   console.log("Education Info:", education);
-//   console.log("Application Status:", status);
+  const paymentHistory = await db
+    .select({
+      month_id: MonthlyPayementTable.month_id,
+      dateOfPayment: MonthlyPayementTable.dateOfPayment,
+      amount: MonthlyPayementTable.amount,
+      modeOfPayment: MonthlyPayementTable.modeOfPayment,
+      dateOfVerification: MonthlyPayementTable.dateOfVerification,
+      siNumber: MonthlyPayementTable.SInumber,
+      status: MonthlyPayementTable.status,
+    })
+    .from(MonthlyPayementTable)
+    .where(eq(MonthlyPayementTable.student_id, applicantId))
 
-//   // Get outstanding balance using LRN
-//   let outstandingBalance = null;
-//   if (info?.lrn) {
-//     const soa = await getStudentSOA(info.lrn);
-//     // Outstanding balance to date: amount due up to current month
-//     outstandingBalance = soa?.totals?.totalAmountDue ?? null;
-//   }
+  return paymentHistory;
 
-//   return {
-//     studentInfo: info,
-//     education,
-//     status,
-//     outstandingBalance,
-//   };
-// }
+}
 
-// export async function submitStudentPayment(
-//   amount: number,
-//   modeOfPayment: string,
-//   proofOfPayment: string,
-//   monthId: number,
-//   siNumber?: string
-// ) {
-//   try {
-//     // Use `auth()` to get the user's ID
-//     const { userId } = await auth()
 
-//     // Protect the route by checking if the user is signed in
-//     if (!userId) {
-//       return { success: false, error: 'Unauthorized' }
-//     }
 
-//     // Get student information
-//     const clerkRecord = await db
-//       .select()
-//       .from(ClerkUserTable)
-//       .where(eq(ClerkUserTable.clerkId, userId))
-//       .limit(1);
 
-//     const applicant = clerkRecord[0];
-//     if (!applicant) {
-//       return { success: false, error: 'Student not found' }
-//     }
+export const getBalance = async () => {
 
-//     const applicantId = applicant.applicants_id;
+  const studentId = await getStudentId();
+    if (!studentId) return null;
 
-//     const [studentInfo] = await db
-//       .select()
-//       .from(StudentInfoTable)
-//       .where(eq(StudentInfoTable.applicants_id, applicantId));
 
-//     if (!studentInfo) {
-//       return { success: false, error: 'Student information not found' }
-//     }
+    // Get all SOA records for the student
+    const soaRecords = await db
+      .select({
+        month_id: MonthsInSoaTable.month_id,
+        month: MonthsInSoaTable.month,
+        monthlyDue: MonthsInSoaTable.monthlyDue,
+        amountPaid: MonthsInSoaTable.amountPaid,
+      })
+      .from(MonthsInSoaTable)
+      .where(eq(MonthsInSoaTable.student_id, studentId))
+      .orderBy(MonthsInSoaTable.month_id);
 
-//     // Get the month information
-//     const [monthInfo] = await db
-//       .select({
-//         amount: MonthsInSoaTable.monthlyDue,
-//         dateOfPayment: MonthsInSoaTable.dateOfPayment,
-//       })
-//       .from(MonthsInSoaTable)
-//       .where(eq(MonthsInSoaTable.month_id, monthId));
+    if (soaRecords.length === 0) return null;
 
-//     if (!monthInfo) {
-//       return { success: false, error: 'Month information not found' }
-//     }
+    // Get current month name (e.g., 'October')
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    
+    // Find the SOA row for the current month
+    const currentMonthRow = soaRecords.find(row =>
+      (row.month || '').toLowerCase().includes(currentMonth.toLowerCase())
+    );
 
-//     // Calculate total paid amount from existing payments
-//     const existingPayments = await db
-//       .select({
-//         amount: MonthlyPayementTable.amount,
-//       })
-//       .from(MonthlyPayementTable)
-//       .where(eq(MonthlyPayementTable.month_id, monthId));
+    let dueThisMonth = 0;
+    let totalRemainingBalance = 0;
 
-//     const totalPaid = existingPayments.reduce((sum, payment) => sum + payment.amount, 0) + amount;
-//     const isFullyPaid = totalPaid >= monthInfo.amount;
+    if (currentMonthRow) {
+      const currentMonthId = currentMonthRow.month_id;
+      
+      // Calculate due this month: sum of monthlyDue for current month and below, minus sum of amountPaid
+      const dueThisMonthRecords = soaRecords.filter(row => row.month_id <= currentMonthId);
+      const totalMonthlyDue = dueThisMonthRecords.reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
+      const totalAmountPaid = dueThisMonthRecords.reduce((sum, row) => sum + (row.amountPaid || 0), 0);
+      dueThisMonth = totalMonthlyDue - totalAmountPaid;
+    }
 
-//     // Insert payment into MonthlyPayementTable
-//     await db.insert(MonthlyPayementTable).values({
-//       student_id: studentInfo.student_id,
-//       month_id: monthId,
-//       dateOfPayment: new Date().toISOString().split('T')[0], // Convert to YYYY-MM-DD format
-//       amount: amount,
-//       proofOfPayment: proofOfPayment,
-//       modeOfPayment: modeOfPayment,
-//       SInumber: siNumber || null,
-//       status: 'Pending', // Payment status starts as pending
-//     });
+    // Calculate total remaining balance: sum of all monthlyDue minus sum of all amountPaid
+    const totalAllMonthlyDue = soaRecords.reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
+    const totalAllAmountPaid = soaRecords.reduce((sum, row) => sum + (row.amountPaid || 0), 0);
+    totalRemainingBalance = totalAllMonthlyDue - totalAllAmountPaid;
 
-//     // Update the corresponding month in MonthsInSoaTable
-//     // Only mark as fully paid if the total amount is reached
-//     await db
-//       .update(MonthsInSoaTable)
-//       .set({
-//         dateOfPayment: isFullyPaid ? new Date().toISOString().split('T')[0] : null,
-//         SInumber: siNumber || null,
-//       })
-//       .where(eq(MonthsInSoaTable.month_id, monthId));
+    return {
+      dueThisMonth: Math.max(0, dueThisMonth), // Ensure non-negative
+      totalRemainingBalance: Math.max(0, totalRemainingBalance), // Ensure non-negative
+    };
+}
 
-//     return { 
-//       success: true, 
-//       message: isFullyPaid ? 'Payment submitted successfully! Month is now fully paid.' : 'Partial payment submitted successfully!' 
-//     }
-//   } catch (error) {
-//     console.error('Error submitting payment:', error);
-//     return { success: false, error: 'Failed to submit payment' }
-//   }
-// }
 
-// export async function getStudentUnpaidMonths() {
-//   try {
-//     // Use `auth()` to get the user's ID
-//     const { userId } = await auth()
 
-//     // Protect the route by checking if the user is signed in
-//     if (!userId) {
-//       return { success: false, error: 'Unauthorized' }
-//     }
+export const addPayment = async (
+  amount: number,
+  mop: string,
+  POP: string,
+) => {
 
-//     // Get student information
-//     const clerkRecord = await db
-//       .select()
-//       .from(ClerkUserTable)
-//       .where(eq(ClerkUserTable.clerkId, userId))
-//       .limit(1);
 
-//     const applicant = clerkRecord[0];
-//     if (!applicant) {
-//       return { success: false, error: 'Student not found' }
-//     }
+    const studentId = await getStudentId();
+      if (!studentId) return null;
 
-//     const applicantId = applicant.applicants_id;
 
-//     const [studentInfo] = await db
-//       .select()
-//       .from(StudentInfoTable)
-//       .where(eq(StudentInfoTable.applicants_id, applicantId));
+     // Get current month name (e.g., 'October')
+     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+     // Find the month_id for the current month for this student
+     const monthRow = await db
+       .select({ month_id: MonthsInSoaTable.month_id, month: MonthsInSoaTable.month })
+       .from(MonthsInSoaTable)
+       .where(eq(MonthsInSoaTable.student_id, studentId));
 
-//     if (!studentInfo) {
-//       return { success: false, error: 'Student information not found' }
-//     }
+     const currentMonthRow = monthRow.find(row => (row.month || '').toLowerCase().includes(currentMonth.toLowerCase()));
+    //  if (!currentMonthRow) return null; // No SOA for current month
+    if (!currentMonthRow) {
+      console.warn(" No SOA for current month:", currentMonth);
+      return { success: false, error: `No SOA found for ${currentMonth}. Please contact the cashier.` };
+    }
 
-//     // Get all months for the student
-//     const allMonths = await db
-//       .select({
-//         month_id: MonthsInSoaTable.month_id,
-//         month: MonthsInSoaTable.month,
-//         amount: MonthsInSoaTable.monthlyDue,
-//         dateOfPayment: MonthsInSoaTable.dateOfPayment,
-//       })
-//       .from(MonthsInSoaTable)
-//       .where(eq(MonthsInSoaTable.student_id, studentInfo.student_id));
 
-//     // Calculate remaining balance for each month
-//     const monthsWithRemainingBalance = await Promise.all(
-//       allMonths.map(async (month) => {
-//         // Get total paid for this month
-//         const payments = await db
-//           .select({
-//             amount: MonthlyPayementTable.amount,
-//           })
-//           .from(MonthlyPayementTable)
-//           .where(eq(MonthlyPayementTable.month_id, month.month_id));
+     const currentMonthId = currentMonthRow.month_id;
 
-//         const totalPaid = payments.reduce((sum, payment) => sum + payment.amount, 0);
-//         const remainingBalance = month.amount - totalPaid;
+     try{
+     const result =
+    await db
+       .insert(MonthlyPayementTable)
+       .values({
+        student_id: studentId,
+        month_id: currentMonthId,
+        amount: amount,
+        proofOfPayment: POP,
+        modeOfPayment: mop,
+        dateOfPayment: new Date().toISOString().split('T')[0],
+        status: "Pending",
+        SInumber: await generateSINumber(),
+    })
+    .returning();
+    console.log("Payment added:", result);
+  } catch (error) {
+    console.error("Error adding payment:", error);
+    return { success: false, error: "Error adding payment" };
+  }
 
-//         return {
-//           ...month,
-//           totalPaid,
-//           remainingBalance,
-//         };
-//       })
-//     );
-
-//     // Filter only months with remaining balance (unpaid or partially paid)
-//     const unpaid = monthsWithRemainingBalance.filter(month => month.remainingBalance > 0);
-
-//     return { success: true, unpaidMonths: unpaid }
-//   } catch (error) {
-//     console.error('Error getting unpaid months:', error);
-//     return { success: false, error: 'Failed to get unpaid months' }
-//   }
-// }
-
-// export async function getStudentTransactionHistory() {
-//   try {
-//     // Use `auth()` to get the user's ID
-//     const { userId } = await auth()
-
-//     // Protect the route by checking if the user is signed in
-//     if (!userId) {
-//       return { success: false, error: 'Unauthorized' }
-//     }
-
-//     // Get student information
-//     const clerkRecord = await db
-//       .select()
-//       .from(ClerkUserTable)
-//       .where(eq(ClerkUserTable.clerkId, userId))
-//       .limit(1);
-
-//     const applicant = clerkRecord[0];
-//     if (!applicant) {
-//       return { success: false, error: 'Student not found' }
-//     }
-
-//     const applicantId = applicant.applicants_id;
-
-//     const [studentInfo] = await db
-//       .select()
-//       .from(StudentInfoTable)
-//       .where(eq(StudentInfoTable.applicants_id, applicantId));
-
-//     if (!studentInfo) {
-//       return { success: false, error: 'Student information not found' }
-//     }
-
-//     // Get transaction history from MonthlyPayementTable
-//     const transactions = await db
-//       .select({
-//         date: MonthlyPayementTable.dateOfPayment,
-//         amount: MonthlyPayementTable.amount,
-//         method: MonthlyPayementTable.modeOfPayment,
-//         siNumber: MonthlyPayementTable.SInumber,
-//         status: MonthlyPayementTable.status,
-//         proofOfPayment: MonthlyPayementTable.proofOfPayment,
-//       })
-//       .from(MonthlyPayementTable)
-//       .where(eq(MonthlyPayementTable.student_id, studentInfo.student_id))
-//       .orderBy(MonthlyPayementTable.dateOfPayment);
-
-//     return { success: true, transactions }
-//   } catch (error) {
-//     console.error('Error getting transaction history:', error);
-//     return { success: false, error: 'Failed to get transaction history' }
-//   }
-// }
+  return { success: true };
+  } 

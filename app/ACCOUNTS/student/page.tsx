@@ -1,5 +1,5 @@
 import Admin_student from "@/components/header/header_student";
-// import { StudentDashboard } from "@/components/students/dashboard/dashboard";
+import { StudentDashboard } from "@/components/students/dashboard/dashboard";
 import StudentClientComponent from "@/components/validation/student_validate";
 
 const Dashboard = () => {
@@ -10,7 +10,7 @@ const Dashboard = () => {
                 <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg shadow-lg overflow-hidden border border-gray-200">
                     <div className="h-full flex flex-col">
                         <div className="flex-grow overflow-auto">
-                            {/* <StudentDashboard /> */}
+                            <StudentDashboard />
                         </div>
                     </div>
                 </div>
