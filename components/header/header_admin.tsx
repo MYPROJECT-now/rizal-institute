@@ -12,17 +12,22 @@ const Admin_header = () => {
       
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] mt-12 sm:text-sm md:text-base lg:text-lg">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-4">
             <div className="flex flex-col">
-              {/*  <p className=" font-Alfa text-lGreen text-2xl mt-5">
+                <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE
-                </p> */} 
-                <p className="font-oswald text-sm lg:text-lg text-green-500">
+                </p>
+                <p className="font-mono text-xs text-green-500">
                     {currentDate}
                 </p>
             </div>
+<<<<<<< HEAD
             <div className="flex flex-row items-center gap-6 ">
                 <p className="font-Alfa text-lGreen text-sm lg:text-xl">
+=======
+            <div className="flex flex-row items-center gap-6">
+                <p className="font-Alfa text-lGreen text-2xl">
+>>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1
                     ADMIN
                 </p>
                 {/* <Image

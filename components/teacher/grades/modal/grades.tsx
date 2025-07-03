@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useRegGradesModal } from "@/src/store/registrar/grades"
+import { useShowGradesModal } from "@/src/store/REGISTRAR/grades"
 
 export const Reg_Grades = () => {
-  const { isOpen, close } = useRegGradesModal()
+  const { isOpen, close } = useShowGradesModal()
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>

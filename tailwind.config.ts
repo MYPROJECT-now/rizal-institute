@@ -32,7 +32,6 @@ export default {
   			d2Green: 'var(--d2Green)',
   			slGreen: 'var(--slGreen)',
   			sl2Green: 'var(--sl2Green)',
-  			yellow: 'var(--yellow)',
   			g1: 'var(--g1)',
   			g2: 'var(--g2)',
 			page: 'var(--page)',

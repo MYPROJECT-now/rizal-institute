@@ -12,7 +12,6 @@
   --d2Green: #002E10;
   --slGreen: #8EFFB5;
   --sl2Green: #B5CDB4; 
-  --yellow: #FFFB00;
   --g1: #BDFFD4;
   --g2: #007529;
   --page: #DFF5E2;
@@ -142,4 +141,22 @@
 
   }
 
+}
+
+/* Accept button gradient hover effect */
+.accept-gradient {
+  background: linear-gradient(to bottom, #3b82f6, #1e3a8a); /* blue-500 to blue-900 */
+  transition: background 0.2s;
+}
+.accept-gradient:hover {
+  background: linear-gradient(to top, #1e3a8a, #3b82f6);
+}
+
+/* Reject button gradient hover effect */
+.reject-gradient {
+  background: linear-gradient(to bottom, #ef4444, #7f1d1d); /* red-500 to red-900 */
+  transition: background 0.2s;
+}
+.reject-gradient:hover {
+  background: linear-gradient(to top, #7f1d1d, #ef4444);
 }

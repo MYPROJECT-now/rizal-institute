@@ -7,21 +7,25 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useFiscalYearModal } from "@/src/store/admin/fiscal_year";
+import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
 
 export const Fiscal_Year = () => {
   const { isOpen, close } = useFiscalYearModal();
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
+<<<<<<< HEAD
       <DialogContent className="w-auto lg:w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
+=======
+      <DialogContent className="w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
+>>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1
         <DialogHeader>
-          <DialogTitle className="font-bold text-white bg-dGreen h-[60px] flex items-center justify-center sm:text-sm md:text-base lg:text-lg">
+          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
            Manage Academic Year
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 px-4 py-6 text-sm text-gray-700 ">
+        <div className="space-y-6 px-4 py-6 text-sm text-gray-700">
           {/* Current Fiscal Year Info */}
           <section className="bg-gray-100 p-4 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold mb-2">📅 Current Academic Year</h3>

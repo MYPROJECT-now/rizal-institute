@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 
 export const UsersTable = () => {
   const users = [
@@ -21,6 +20,7 @@ export const UsersTable = () => {
       username: "student_user",
       email: "student@example.com",
     },
+<<<<<<< HEAD
     {
       id: 4,
       role: "Student",
@@ -99,6 +99,8 @@ export const UsersTable = () => {
       username: "student_user",
       email: "student@example.com",
     },
+=======
+>>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1
   ];
 
   const handleDelete = (id: number) => {
@@ -107,6 +109,7 @@ export const UsersTable = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="w-full h-auto  flex flex-col sm:text-sm md:text-base lg:text-lg">
         <div className="flex flex-row items-center gap-5">
             <p className="font-bold  text-dGreen font-merriweather ml-5">
@@ -136,6 +139,11 @@ export const UsersTable = () => {
     <div className="h-[500px] lg:h-[350px] overflow-y-auto sm:text-sm md:text-base lg:text-lg mt-10">
       <table className="min-w-full border-collapse border border-gray-600 text-center overflow-auto table-fixed ">
         <thead className="sticky top-0 z-10">
+=======
+    <div className="overflow-x-auto mb-10 mx-10 mt-10">
+      <table className="min-w-full border-collapse border border-gray-300 text-center">
+        <thead>
+>>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1
           <tr className="bg-gray-200">
             <th className="border p-2">Role</th>
             <th className="border p-2">Username</th>
@@ -161,7 +169,6 @@ export const UsersTable = () => {
           ))}
         </tbody>
       </table>
-    </div>
     </div>
   );
 };
