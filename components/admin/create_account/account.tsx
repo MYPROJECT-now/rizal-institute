@@ -37,8 +37,8 @@ const AccountCard = ({
 
 export const CreateAccount = () => {
   return (
-    <div className="w-full max-h-[420px] overflow-auto flex justify-center px-4 pt-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px] w-full ">
+    <div className="w-full h-auto overflow-auto flex justify-center px-4 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px] w-full h-[650px] md:h-[500px]">
         <AccountCard
           title="Registrar Account"
           fields={[

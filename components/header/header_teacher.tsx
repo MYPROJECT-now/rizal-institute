@@ -23,7 +23,7 @@ const Teacher_header = () => {
                 </p>
             </div>
             <div className="flex flex-row items-center gap-5">
-                <p className="font-Alfa text-lGreen text-2xl">
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
                     TEACHER 1
                 </p>
                 {/* <Image

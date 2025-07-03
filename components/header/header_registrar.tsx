@@ -21,7 +21,7 @@ const Registrar_header = () => {
                 </p>
             </div>
             <div className="flex flex-row items-center gap-6">
-                <p className="font-Alfa text-lGreen text-2xl">
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
                     REGISTRAR
                 </p>
                 {/* <Image

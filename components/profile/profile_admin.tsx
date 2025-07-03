@@ -30,9 +30,9 @@ export const Profile_admin = () => {
                     <Image
                        src={user?.imageUrl ?? '/profile.png'} 
                         alt="User Profile Picture"
-                        width={30}
-                        height={30}
-                        className="rounded-full" // For circular profile picture
+                        width={15}
+                        height={15}
+                        className="rounded-full lg:w-[30px] lg:h-[30px]" // For circular profile picture
                     />
                     </div>
             

@@ -9,7 +9,11 @@ export const Top_analytics = async () => {
     return (
         <div className="flex flex-row gap-9">
 
+<<<<<<< HEAD:components/cashiersTable/dashboard/analytics/top_analyitcs.tsx
+            <div className="lg:w-[200px] w-[200px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2 ">
+=======
             <div className="w-[250px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+>>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1:components/cashier/dashboard/analytics/top_analyitcs.tsx
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-lg">
                        Pending Applicants
@@ -28,7 +32,7 @@ export const Top_analytics = async () => {
                 </div>
             </div>
 
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className="lg:w-[200px] w-[200px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-[16px]">
                         Reserved Slot
@@ -47,7 +51,7 @@ export const Top_analytics = async () => {
                 </div>
             </div>
 
-            <div className="w-[300px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className="lg:w-[300px] w-[200px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-[16px]">
                         Pending Students Payment 
