@@ -71,8 +71,8 @@ export const GradeTable = () => {
     const { open } = useRegGradesModal();
 
     return (
-        <div className="w-full max-h-full flex flex-col sm:text-sm md:text-base lg:text-lg">
-            <div className="flex flex-row items-center ml-10 gap-5">
+        <div className="w-full max-h-full flex flex-wrap sm:text-sm md:text-base lg:text-lg">
+            <div className="flex flex-wrap items-center ml-10 gap-5">
                 <p className="font-bold text-dGreen font-merriweather">
                     Filter By:
                 </p>
@@ -102,7 +102,7 @@ export const GradeTable = () => {
                 </Button>
             </div>
 
-            <div className="h-[350px] overflow-y-auto">
+            <div className="h-[350px] lg:h-[300px] w-full overflow-y-auto mt-5">
                 <table className="min-w-full border-collapse border border-green-600 text-center table-fixed overflow-auto">
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-green-600 text-white">

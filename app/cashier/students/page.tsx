@@ -6,8 +6,8 @@ const RegistrarsStudentsTable = () => {
         <CashierClientComponent>
         <div className="w-full max-h-full rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg ">
             <Cashier_header /> 
-            <div className="w-full h-full bg-white self-center rounded-lg mt-3">
-                <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
+            <div className="w-full h-full bg-white self-center rounded-lg">
+                <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-lg lg:text-3xl text-white items-center justify-center flex">
                     STUDENT FEE MANAGEMENT
                 </div>
                 <StudentsTableCashier />

@@ -3,8 +3,8 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/changePassword";
-import Admin_header from "@/components/header/header_admin";
 import TeacherClientComponent from "@/components/validation/teacher_validate";
+import Teacher_header from "@/components/header/header_teacher";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -48,14 +48,14 @@ const RegistrarsEnrolleesTable = () => {
 
   return (
     <TeacherClientComponent>
-      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
-        <Admin_header />
-        <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
-          <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
+      <div className="w-full h-auto mt-0 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+        <Teacher_header />
+        <div className="w-full lg:w-[600px] h-[500px] bg-white self-center rounded-lg flex flex-col items-center text-center">
+          <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex">
               PASSWORD MANAGEMENT
             </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full h-[350px] mt-[80px] rounded-lg">
+          <div className="flex flex-col gap-4 items-center justify-center w-full h-[350px]  rounded-lg">
             <div className="flex flex-col w-full px-10 lg:w-[500px]">
               <label htmlFor="current-password">Current Password</label>
               <input

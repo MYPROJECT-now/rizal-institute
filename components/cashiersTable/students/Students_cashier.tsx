@@ -101,7 +101,7 @@ export const StudentsTableCashier = () => {
           {/* HINDI PA TO TAPOS, TABLE AYUSIN MO YAH!// OKS NA YA
             {/* Table Section */}
             
-                <div className="min-w-full h-[320px] overflow-y-auto">
+                <div className="min-w-full h-[340px] lg:h-[320px] overflow-y-auto mt-3">
                 <table className="min-w-full border-collapse border border-green-600 text-center overflow-auto table-fixed ">
                     <thead className="sticky top-0 z-10">
                         <tr className="bg-green-600 text-white">

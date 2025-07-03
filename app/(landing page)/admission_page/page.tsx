@@ -28,7 +28,7 @@ const AdmissionPage = () => {
         <div className="w-full h-full flex flex-col">
 
             {/* first section */}
-            <div className="w-full h-[600px] bg-green-300/30 flex flex-row items-center justify-evenly gap-[1px] ">
+            <div className="w-full h-[600px] bg-green-300/30 flex flex-row items-center justify-center gap-[1px] ">
                 <div className="flex flex-col gap-10 items-center text-d2Green lg:flex lg:flex-row">
                     <Image
                         src="/studentboy.png"
@@ -208,38 +208,39 @@ const AdmissionPage = () => {
 
             {/* start of third section  */}
             <div className="h-[200px] w-full bg-dGreen flex flex-col gap-4 items-center justify-center text-center">
-                <p className="font-bold font-merriweather text-4xl text-white">READY TO TAKE A LEAP?</p>
+                <p className="font-bold font-merriweather text-2xl lg:text-4xl text-white">READY TO TAKE A LEAP?</p>
                 <a href="/new_application">
-                <button className="bg-yellow h-[60px] w-[700px] rounded-md font-bold font-merriweather text-dGreen text-2xl">
-                    ENROLL NOW!!
+                <button className="bg-yellow h-[60px] w-auto lg:w-[700px] rounded-md font-bold font-merriweather text-dGreen text-xl lg:text-2xl">
+                    ENROLL NOW
                 </button>
                 </a>
             </div>
             {/* end of third section  */}
 
             {/* start of fourth section  */}
-            <div className="h-[500px] w-full pt-[50px] flex flex-col gap-10 items-center text-center  font-merriweather text-dGreen ">
-                <p className="font-bold text-2xl md:text-4xl">FREQUENTLY ASKED QUESTIONS</p>
-                <Accordion type="single" collapsible className="text-base" >
-                <AccordionItem value="item-1" className="w-[400px]  text-sm px-10 rounded-lg lg:w-[640px]">
+           <div className="w-full flex justify-center">
+            <div className="h-auto w-full max-w-[640px] pt-[50px] flex flex-col gap-10 justify-center text-center  font-merriweather text-dGreen ">
+                <p className="font-bold text-xl md:text-4xl">FREQUENTLY ASKED QUESTIONS</p>
+                <Accordion type="single" collapsible className="text-base"  >
+                <AccordionItem value="item-1" className="px-10 rounded-lg ">
                     <AccordionTrigger className="text-lg">What are the requirements in enrolling?</AccordionTrigger>
-                    <AccordionContent className="text-lg">
+                    <AccordionContent className="text-base">
                     <em>Please provide basic information, the most important document is the report card, and a reservation fee of PHP 500.</em>
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-2" className="w-[400px]  text-lg px-10 rounded-lg lg:w-[640px]">
+                <AccordionItem value="item-2" className=" px-10 rounded-lg ">
                     <AccordionTrigger className="text-lg">How much is the downpayment?</AccordionTrigger>
                     <AccordionContent className="text-lg">
                     <em>The downpayment is P500.</em>
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-3" className="w-[400px]  text-lg px-10 rounded-lg lg:w-[640px]">
+                <AccordionItem value="item-3" className=" px-10 rounded-lg ">
                     <AccordionTrigger className="text-lg">Can I pay in full?</AccordionTrigger>
                     <AccordionContent className="text-lg">
                     <em>Yes. You can pay in full.</em>
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-4" className="w-[400px]  text-lg px-10 rounded-lg lg:w-[640px]">
+                <AccordionItem value="item-4" className=" px-10 rounded-lg ">
                     <AccordionTrigger className="text-lg">How do I track my application?</AccordionTrigger>
                     <AccordionContent className="text-lg">
                     <em>You can track your application by entering your tracking ID in the button in the home page.</em>
@@ -251,7 +252,7 @@ const AdmissionPage = () => {
 
                 
             </div>
-
+            </div>
 
 
 

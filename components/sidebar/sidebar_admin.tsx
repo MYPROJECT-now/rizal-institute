@@ -26,11 +26,11 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
 
       <div
         className={cn(
-          "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2",
+          "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2 ",
           className
         )}
       >
-        <div className="gap-1 mx-auto flex flex-col items-center mt-[30px]">
+        <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] cursor-pointer">
           <Link href="/admin" onClick={onClose}>
             <Image
               src="/school.png"
@@ -40,7 +40,7 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
             />
           </Link>
 
-          <div className="flex flex-col gap-3 mt-[50px]">
+          <div className="flex flex-col gap-3 mt-[50px] cursor-pointer">
             <SidebarItem
               label="Dashboard"
               href="/admin"

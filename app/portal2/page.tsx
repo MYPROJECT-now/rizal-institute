@@ -48,7 +48,7 @@ export default function Home() {
     <Image src="/bg_home10.jpg" fill alt="logo"/>
     <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center -mt-10 sm:-mt-4 mx-auto  gap-3">
       <div className="flex justify-center items-center h-screen">
-          <div className="bg-white/30 border-2 border-white p-10 rounded-2xl shadow-lg w-96 text-center">
+          <div className="bg-white/30 border-2 border-white p-10 rounded-2xl shadow-lg text-center h-[500px] lg:h-[400px] w-[300px] lg:w-[500px]">
             <div className="mb-6 flex flex-row relative">
               <div className="absolute top-[-20px] left-[-20px]  z-10 flex flex-row gap-2 items-center">
                 <Link href="/">

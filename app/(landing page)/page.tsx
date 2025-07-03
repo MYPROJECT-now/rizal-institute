@@ -18,10 +18,10 @@ export default function Home() {
   <StatusModal />
   const { open } = useStatusModal();
   return (
-    <div className="w-full h-min-screen">
+    <div className="w-full h-min-screen overflow-x-hidden">
 
       {/* first section */}
-      <div className="h-[600px] w-full relative flex items-center justify-center ">
+      <div className="h-[600px] w-full relative flex items-center justify-center overflow-hidden">
       <Carousel
       opts={{
         align: "start",
@@ -86,7 +86,7 @@ export default function Home() {
                 Proudly Rizalian, Ready for
                 </p>
                 <p className="font-bold font-merriweather relative z-10 text-white text-center text-5xl">
-                the World!!
+                the World!
                 </p>
               </div>
 
@@ -126,7 +126,7 @@ export default function Home() {
       </div>
 
       {/* second section */}
-      <div className="w-full h-[250px] bg-sl2Green flex flex-col justify-center items-center gap-3">
+      <div className="w-full h-auto lg:h-[250px] bg-sl2Green flex flex-col justify-center items-center gap-3">
         <p className="font-bold font-merriweather text-d2Green sm:text-sm md:text-base lg:text-2xl">
         WHY CHOOSE RIZAL INSTITUTE?
         </p>
@@ -164,7 +164,7 @@ export default function Home() {
       {/* end third section */}
 
       {/* fourth section */}
-      <div className="h-[600px] w-full relative flex items-center justify-center">
+      <div className="lg:h-[600px] w-full relative flex items-center justify-center">
         {/* background */}
         <Image
           src="/bf.jpeg"
@@ -173,19 +173,16 @@ export default function Home() {
           height={1000}
           className="h-full w-full absolute top-0 left-0 object-cover blur-sm"
         />
-       {/* shadow */}
-       <div className="bg-black/40 h-[600px] w-full absolute top-100 left-0 " />
-
-        
+       
 
         {/* main text */}
-        <div className="relative w-full h-[600px] flex flex-col text-center items-center justify-center gap-10">  
+        <div className="relative w-full h-auto flex flex-col text-center items-center justify-center gap-10">  
           {/* FIRST PART */}
           <p className="font-bold font-oswald text-4xl text-white lg:text-6xl ">
             Coming Soon: RI Baseball Program!
           </p>
            {/* SECOND PART */}
-          <div className="grid grid-cols-2  mt-2 text-white lg:flex gap-2 text-base md:text-lg lg:text-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2  mt-2 text-white lg:flex gap-2 text-base md:text-lg lg:text-2xl bg-black/40 w-full h-auto items-center justify-center">
             <div className="flex flex-col items-center ">
               <Image
               src="/star.png"
@@ -242,7 +239,7 @@ export default function Home() {
          <a href="/new_application">
           <Button
             variant="mButton"
-            className="rounded-xl lg:text-2xl lg:h-[55px] lg:w-[210px]">
+            className="rounded-xl mb-5 lg:text-2xl lg:h-[55px] lg:w-[210px]">
               <p className="font-oswald font-bold ">
                 ENROLL NOW!
               </p>
