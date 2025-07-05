@@ -3,8 +3,8 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
-import { db } from "../db/drizzle";
-import { ClerkUserTable, StudentInfoTable } from "../db/schema";
+import { db } from "../../db/drizzle";
+import { ClerkUserTable, StudentInfoTable } from "../../db/schema";
 
 
 

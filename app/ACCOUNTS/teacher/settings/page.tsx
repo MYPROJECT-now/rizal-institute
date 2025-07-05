@@ -2,9 +2,8 @@
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { handlePasswordUpdate } from "@/src/actions/changePassword";
+import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
 import Admin_header from "@/components/header/header_admin";
-import TeacherClientComponent from "@/components/validation/teacher_validate";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -47,7 +46,6 @@ const RegistrarsEnrolleesTable = () => {
   };
 
   return (
-    <TeacherClientComponent>
       <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
         <Admin_header />
         <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
@@ -93,7 +91,6 @@ const RegistrarsEnrolleesTable = () => {
           </div>
         </div>
       </div>
-    </TeacherClientComponent>
   );
 };
 

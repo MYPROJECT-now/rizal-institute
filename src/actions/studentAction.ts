@@ -4,8 +4,9 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
-import { generateSINumber } from './SI_Number_counter';
-import { getStudentId } from './studentID';
+import { generateSINumber } from './utils/SI_Number_counter';
+import { getStudentId } from './utils/studentID';
+import { getAcademicYearID } from "./utils/academicYear";
 
 
 
@@ -165,7 +166,9 @@ export const addPayment = async (
     }
 
 
-     const currentMonthId = currentMonthRow.month_id;
+    const currentMonthId = currentMonthRow.month_id;
+    const academicYearID = await getAcademicYearID();
+     
 
      try{
      const result =
@@ -174,6 +177,7 @@ export const addPayment = async (
        .values({
         student_id: studentId,
         month_id: currentMonthId,
+        academicYear_id: academicYearID,
         amount: amount,
         proofOfPayment: POP,
         modeOfPayment: mop,

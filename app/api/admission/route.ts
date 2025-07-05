@@ -4,6 +4,7 @@ import { AdmissionStatusTable, applicantsInformationTable, ClerkUserTable, guard
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { clerkClient } from '@clerk/nextjs/server';
+import { getAcademicYearID } from '@/src/actions/utils/academicYear';
 
 // Define Clerk error interface
 interface ClerkError extends Error {
@@ -223,14 +224,22 @@ export async function POST(request: Request) {
     // Update admission status
     await db
       .update(AdmissionStatusTable)
-      .set({ admissionStatus: "Enrolled" })
+      .set({ 
+        admissionStatus: "Enrolled",
+        isActive: true,
+        dateAdmitted: new Date().toISOString().split("T")[0],
+      })
       .where(eq(AdmissionStatusTable.applicants_id, studentId));
 
+    
+      const academicYearID = await getAcademicYearID();
+      
     // Insert student info
     await db
       .insert(StudentInfoTable)
       .values({
         applicants_id: studentId,
+        academicYear_id: academicYearID,
         lrn,
         studentFirstName: firstName,
         studentMiddleName: middleName ?? undefined,
@@ -244,8 +253,12 @@ export async function POST(request: Request) {
 
     // Insert Clerk user reference
     await db.insert(ClerkUserTable).values({
+      selected_AcademicYear_id: academicYearID,
       clerkId: user.id,
       applicants_id: studentId,
+      userType: "student",
+      clerk_username: `RIZAL-${lrn}`,
+      clerk_email: email,
     });
 
     // Send admission email

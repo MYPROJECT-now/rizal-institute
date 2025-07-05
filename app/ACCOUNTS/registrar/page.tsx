@@ -2,13 +2,11 @@ import Registrar_header from "@/components/header/header_registrar";
 import { Top_analytics } from "@/components/registrar/dashboard/analytics/top_analyitcs";
 import { Ppgl } from "@/components/registrar/dashboard/graphs/ppgl";
 import { Enrollment } from "@/components/registrar/dashboard/graphs/enrollment";
-import RegistrarClientComponent from "@/components/validation/registrar_validate";
 import { RecentApplicantsTable } from "@/components/registrar/dashboard/recentApplicants/recentApplicants";
 
 
 const Dashboard = () => {
     return (
-        <RegistrarClientComponent>
         <div className="w-full max-h-[680px] overflow-auto mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Registrar_header />
             <div className="w-full h-[540px] flex flex-col gap-10 mt-10 rounded-lg ">
@@ -38,7 +36,6 @@ const Dashboard = () => {
                </div>
             </div>
         </div>
-        </RegistrarClientComponent>
     );
 };
 

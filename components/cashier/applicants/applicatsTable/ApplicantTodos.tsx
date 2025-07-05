@@ -26,16 +26,16 @@
       await acceptStudentsReservationPayment(id, "Reserved");
 
     // Call the API to send the email if the status is Ongoing
-    const response = await fetch('/api/accept', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ studentId: id }),
-    });
+      const response = await fetch('/api/accept', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ studentId: id }),
+      });
 
-    const data = await response.json();
-    console.log(data.message);
+      const data = await response.json();
+      console.log(data.message);
 
     };
     

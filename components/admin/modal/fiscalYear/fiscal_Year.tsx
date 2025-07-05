@@ -6,11 +6,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
+import { UpdateCurrentYear } from "./updateCurrentYear";
+import { InsertNewYear } from "./insertNewYear";
+import { useState } from "react";
+
+
+
+
 
 export const Fiscal_Year = () => {
   const { isOpen, close } = useFiscalYearModal();
+    const [refresh, setRefresh] = useState(0);
+
+    const handleRefresh = () => {
+      setRefresh(prev => prev + 1); // trigger refresh
+    };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
@@ -25,46 +37,13 @@ export const Fiscal_Year = () => {
           {/* Current Fiscal Year Info */}
           <section className="bg-gray-100 p-4 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold mb-2">📅 Current Academic Year</h3>
-            <p><strong>Year:</strong> 2024 - 2025</p>
-            <p><strong>Start Date:</strong> July 1, 2024</p>
-            <p><strong>End Date:</strong> June 30, 2025</p>
+              <UpdateCurrentYear refreshTrigger={refresh} />
           </section>
 
           {/* Update Form */}
           <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-4">✏️ Update Academic Year</h3>
-            <div className="space-y-4">
-              <div className="flex flex-col">
-                <label htmlFor="fiscal-year" className="mb-1 font-medium">Academic Year</label>
-                <input
-                  id="fiscal-year"
-                  type="text"
-                  placeholder="e.g. 2025 - 2026"
-                  className="border border-gray-300 rounded px-3 py-2"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label htmlFor="start-date" className="mb-1 font-medium">Start Date</label>
-                  <input
-                    id="start-date"
-                    type="date"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="end-date" className="mb-1 font-medium">End Date</label>
-                  <input
-                    id="end-date"
-                    type="date"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                </div>
-              </div>
-              <Button className="w-full mt-4 bg-dGreen text-white hover:bg-green-700">
-                Save Changes
-              </Button>
-            </div>
+            <h3 className="text-lg font-semibold mb-4">✏️ Set New Academic Year</h3>
+              <InsertNewYear onCreated={handleRefresh} />          
           </section>
         </div>
       </DialogContent>

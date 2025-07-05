@@ -1,8 +1,8 @@
 
 
-import { db } from "../db/drizzle";
+import { db } from "../../db/drizzle";
 import { eq } from "drizzle-orm";
-import { SINumberCounter } from "../db/schema";
+import { SINumberCounter } from "../../db/schema";
 
 // export const generateSINumber = async () => {
 //   const counter = await db.select().from(SINumberCounter).limit(1);
