@@ -1,5 +1,5 @@
-import { MobileHeader } from "@/components/sidebar/cashier_mobile_header";
-import { Sidebar_cashier } from "@/components/sidebar/sidebar_cashier";
+import { MobileHeader } from "@/components/sidebar/cashier/cashier_mobile_header";
+import { Sidebar_cashier } from "@/components/sidebar/cashier/sidebar_cashier";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 

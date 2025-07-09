@@ -1,5 +1,6 @@
-import { Sidebar_teacher } from "@/components/sidebar/sidebar_teacher";
-import { MobileHeader } from "@/components/sidebar/teacher_mobile_header";
+
+import { Sidebar_teacher } from "@/components/sidebar/teacher/sidebar_teacher";
+import { MobileHeader } from "@/components/sidebar/teacher/teacher_mobile_header";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 type props  = {

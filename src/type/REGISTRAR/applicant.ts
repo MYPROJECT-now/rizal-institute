@@ -51,4 +51,7 @@
     goodMoral: string | null;
     idPic: string | null;
     studentExitForm: string | null;
+
+    reg_remarks: string | null;
+    dateOfRemarks: string | null;
 }

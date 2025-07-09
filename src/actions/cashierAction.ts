@@ -4,9 +4,12 @@ import { and, desc, eq, } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
+import { requireStaffAuth } from "./utils/staffAuth";
 
 
   export const getAllEnrollees_cashier = async () => {
+    await requireStaffAuth(["cashier"]); // gatekeeper
+
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
@@ -14,14 +17,16 @@ import { revalidatePath } from "next/cache";
       firstName: applicantsInformationTable.applicantsFirstName,
       middleName: applicantsInformationTable.applicantsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
+      reservationReceipt: reservationFeeTable.reservationReceipt,
       reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
       applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
-      soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
+      // soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
     })
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))    
-    .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
+    // .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
+    .leftJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
   
     console.log("Fetched Enrollees:", allEnrollees);
     
@@ -29,7 +34,9 @@ import { revalidatePath } from "next/cache";
   };
 
 
-    export const getAllReservedSlot_cashier = async () => {
+  export const getAllReservedSlot_cashier = async () => {
+    await requireStaffAuth(["cashier"]); // gatekeeper
+
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
@@ -38,12 +45,16 @@ import { revalidatePath } from "next/cache";
       middleName: applicantsInformationTable.applicantsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
       admissionStatus: AdmissionStatusTable.admissionStatus,
+            soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
+
     })
     .from(applicantsInformationTable)
     .where(and(eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"), eq(applicationStatusTable.reservationPaymentStatus, "Reserved") ))
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+        .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
+
     
   
     console.log("Fetched Enrollees:", allEnrollees);
@@ -52,7 +63,10 @@ import { revalidatePath } from "next/cache";
   };
 
 
-    export const acceptStudentsReservationPayment= async (id: number, reservationPaymentStatus: string) => {
+  export const acceptStudentsReservationPayment= async (id: number, reservationPaymentStatus: string) => {
+    
+    await requireStaffAuth(["admin"]); // gatekeeper
+
     await db
     .update(applicationStatusTable)
     .set({
@@ -63,6 +77,8 @@ import { revalidatePath } from "next/cache";
   };
 
   export const getApplicantsPayment = async (lrn: string) => {
+    await requireStaffAuth(["cashier"]); // gatekeeper
+
     const applicantsPayment = await db
     .select({
       reservationReceipt: reservationFeeTable.reservationReceipt,
@@ -78,6 +94,8 @@ import { revalidatePath } from "next/cache";
     
   
 export const getEnrolledStudents = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
   const enrolledStudents = await db.select({
     id: StudentInfoTable.student_id,
     lrn: StudentInfoTable.lrn,
@@ -94,6 +112,8 @@ return enrolledStudents;
 
 
 export const getSOAsStudent = async (lrn: string) => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
   console.log("Fetching SOA data for LRN:", lrn);
   
   // Get student information and down payment in one query
@@ -174,6 +194,7 @@ export const getSOAsStudent = async (lrn: string) => {
 
 
 export const paymentToVerify = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
 
   const paymentToVerify = await db.select({
     monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
@@ -196,6 +217,9 @@ export const paymentToVerify = async () => {
 
 // Get all pending monthly payments for approval
 export const getPendingPayments = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
+
   const payments = await db.select({
     monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
     month_id: MonthlyPayementTable.month_id,
@@ -214,6 +238,7 @@ export const getPendingPayments = async () => {
 
 
 export const acceptPayment = async (monthlyPaymentId: number, month_id: number, amount: number) => {
+  await requireStaffAuth(["cashier"]);
 
   const result = await db.select({
     SInumber: MonthlyPayementTable.SInumber,
@@ -240,6 +265,8 @@ export const acceptPayment = async (monthlyPaymentId: number, month_id: number, 
 };
 
 export const declinePayment = async (monthlyPaymentId: number,) => {
+  await requireStaffAuth(["cashier"]);
+
   await db.update(MonthlyPayementTable)
     .set({ status: 'Declined' })
     .where(eq(MonthlyPayementTable.monthlyPayment_id, monthlyPaymentId));
@@ -248,6 +275,9 @@ export const declinePayment = async (monthlyPaymentId: number,) => {
 
 // Get the count of pending applicants
 export const getPendingApplicantsCount = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
+
   const allEnrollees = await db.select({
     id: applicantsInformationTable.applicants_id,
   })
@@ -259,6 +289,8 @@ export const getPendingApplicantsCount = async () => {
 
 // Get the count of reserved slots
 export const getReservedSlotCount = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
   const allReserved = await db.select({
     id: applicantsInformationTable.applicants_id,
   })
@@ -270,6 +302,8 @@ export const getReservedSlotCount = async () => {
 
 // Get the count of pending student payments
 export const getPendingPaymentsCount = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
   const payments = await db.select({
     monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
   })
@@ -279,6 +313,7 @@ export const getPendingPaymentsCount = async () => {
 };
 
 export const getRecentPayments = async () => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
   const recentPayments = await db.select({
     monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
     student_id: MonthlyPayementTable.student_id,

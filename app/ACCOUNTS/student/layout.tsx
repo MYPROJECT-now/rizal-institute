@@ -1,5 +1,5 @@
-import { Sidebar_student } from "@/components/sidebar/sidebar_student";
-import { MobileHeader } from "@/components/sidebar/student_mobile_header";
+import { Sidebar_student } from "@/components/sidebar/student/sidebar_student";
+import { MobileHeader } from "@/components/sidebar/student/student_mobile_header";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 

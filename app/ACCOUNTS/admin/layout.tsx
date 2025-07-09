@@ -2,7 +2,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import { Sidebar_admin } from "@/components/sidebar/admin/sidebar_admin";
-import { MobileHeader } from "@/components/sidebar/admin_mobile_header";
+import { MobileHeader } from "@/components/sidebar/admin/admin_mobile_header";
 
 type Props = {
   children: React.ReactNode;

@@ -17,8 +17,8 @@ const transporter = nodemailer.createTransport({
 async function getStudentEmail(studentId: number): Promise<string | null> {
   const result = await db
     .select({ email: applicantsInformationTable.email })
-    .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.applicants_id, studentId))
+    .from(applicantsInformationTable)
+    .where(eq(applicantsInformationTable.applicants_id, studentId))
     .limit(1);
 
   return result.length > 0 ? result[0].email : null;
@@ -80,32 +80,56 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
     }
 
-    // Fetch student data to check the status
-    const student = await db
-      .select()
+    // Get applicationStatus first
+    const applicationFormReviewStatusResult = await db
+      .select({ applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus })
       .from(applicationStatusTable)
       .where(eq(applicationStatusTable.applicants_id, studentId))
-      .then((res) => res[0]);
+      .limit(1);
 
-    const applicationFormReviewStatus = student?.applicationFormReviewStatus;
-    const reservationPaymentStatus = student?.reservationPaymentStatus;
+    const applicationFormReviewStatus = applicationFormReviewStatusResult[0].applicationFormReviewStatus || null;
 
-    // Send email only if applicationStatus is "Ongoing"
-    if (applicationFormReviewStatus === "Reserved" && reservationPaymentStatus === "Reserved") {
-      const email = await getStudentEmail(studentId);
-      const trackingId = await getTrackingId(studentId);
+    // Run DB actions in parallel
+    const [email, trackingId, updateResult] = await Promise.all([
+      getStudentEmail(studentId),
+      getTrackingId(studentId),
+      db.update(applicationStatusTable)
+        .set({ 
+          reservationPaymentStatus: "Reserved",
+          dateApprovedByCashier: new Date().toISOString(),
+        })
+        .where(eq(applicationStatusTable.applicants_id, studentId)),
+    ]);
 
-      if (email) {
-        await sendReservationEmail(email, trackingId);
-        return NextResponse.json({ message: "Reservation confirmation email sent successfully." });
-      } else {
-        return NextResponse.json({ error: "Student email not found" }, { status: 404 });
-      }
-    } else {
-      return NextResponse.json({ message: "Application status is not Ongoing, no email sent." });
+    if (!email) {
+      return NextResponse.json({ error: "Student email not found" }, { status: 404 });
     }
+
+    if (updateResult.rowCount === 0) {
+      return NextResponse.json({ error: "Failed to update application status." }, { status: 500 });
+    }
+
+    const dateApprovedByCashier = new Date().toISOString().split('T')[0];;
+
+    // ✅ Only send email if cashier confirmed the reservation
+    if (applicationFormReviewStatus === "Reserved") {
+      await sendReservationEmail(email, trackingId);
+      return NextResponse.json({
+        message: "Reservation Payment was approved and confirmation email sent successfully.",
+        reservationPaymentStatus: "Reserved",
+        dateApprovedByCashier: dateApprovedByCashier,
+      });
+    }
+
+    // ❌ Do not send email if pending
+    return NextResponse.json({
+      message: "Reservation Payement was accepted successfully.",
+      reservationPaymentStatus: "Reserved",
+      dateApprovedByCashier: dateApprovedByCashier,
+    });
+
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Error in reservation flow:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

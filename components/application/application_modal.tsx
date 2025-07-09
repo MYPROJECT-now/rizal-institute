@@ -41,7 +41,7 @@ export const Application_Modal = () => {
         </div>
         <div className="flex flex-col mx-10">
           <Link 
-          href="/new_application/new_applicant"
+          href="/application/new_applicant"
           >
             <Button
               variant="CButton"
@@ -52,7 +52,7 @@ export const Application_Modal = () => {
           </Link>
 
           <Link 
-          href="/new_application/old_student"
+          href="/application/old_student"
           >
             <Button
               variant="CButton"

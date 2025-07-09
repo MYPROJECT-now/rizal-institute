@@ -3,10 +3,10 @@
 import { Sheet,
     SheetContent,
     SheetTrigger
- } from "../ui/sheet";  
+ } from "../../ui/sheet";  
 
 import { Menu } from "lucide-react";
-import { Sidebar_registrar } from "./sidebar_registrar";
+import { Sidebar_student } from "./sidebar_student";
 import { useState } from "react";
 
 export const MobileSidebar = () => {
@@ -19,12 +19,9 @@ export const MobileSidebar = () => {
             </SheetTrigger>
             
             <SheetContent className ="p-0 z-[100] bg-lGreen" side="left">
-                <Sidebar_registrar onClose={() => setOpen(false)}/>    
+                <Sidebar_student onClose={ () => setOpen(false)}/>    
             </SheetContent>       
         </Sheet>
     )
 }
 
-
-
-// sheet content = mismong sidebar, ito yung dinedesesignan 

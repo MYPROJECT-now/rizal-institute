@@ -3,8 +3,11 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AcademicYearTable } from "../db/schema";
+import { requireStaffAuth } from "./utils/staffAuth";
 
 export const getCurrentAcademicYear = async () => {
+    await requireStaffAuth(["admin"]); // gatekeeper
+
     const getacademicYear = await db
         .select({
             academicYear_id: AcademicYearTable.academicYear_id,
@@ -26,6 +29,8 @@ export const updateCurrentAcademicYear = async (
     academicYearStart: string, 
     academicYearEnd: string
 ) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
+
     await db
         .update(AcademicYearTable)
         .set({
@@ -37,6 +42,8 @@ export const updateCurrentAcademicYear = async (
 }
 
 export const stopCurrentAcademicYear = async (academicYear_id: number,) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
+
     await db
         .update(AcademicYearTable)
         .set({
@@ -51,6 +58,7 @@ export const createAcademicYear = async (
     academicYearStart: string,
     academicYearEnd: string
 ) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
 
     await db
         .update(AcademicYearTable)

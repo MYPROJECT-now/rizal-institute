@@ -11,9 +11,11 @@
     "db:push": "npx drizzle-kit push",
     "db:seed": "tsx ./scripts/seed.ts",
     "db:drop": "tsx ./scripts/drop.ts",
-    "db:acad": "tsx ./scripts/acadYear.ts"
+    "db:acad": "tsx ./scripts/acadYear.ts",
+    "db:staff": "tsx ./scripts/staff.ts"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/nextjs": "^6.12.3",
     "@neondatabase/serverless": "^0.10.4",
     "@radix-ui/react-accordion": "^1.2.3",

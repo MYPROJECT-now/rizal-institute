@@ -12,12 +12,6 @@ const insertAcademicYear = async () => {
   try {
     const AcademicYear = [
     {
-      academicYear: "2024-2025",
-      academicYearStart: new Date("2024-06-10").toISOString(),
-      academicYearEnd: new Date("2025-03-30").toISOString(),
-      isActive: false,
-    },
-    {
       academicYear: "2025-2026",
       academicYearStart: new Date("2025-06-10").toISOString(),
       academicYearEnd: new Date("2026-03-30").toISOString(),

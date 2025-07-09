@@ -56,7 +56,7 @@ export const UploadSoaModal = () => {
         toast.error(data.error || "Error uploading SOA file.");
       }
 
-      toast.success("SOA File uploaded successfully.");
+      toast.success(data.message);
       close();
 
     } catch (error) {

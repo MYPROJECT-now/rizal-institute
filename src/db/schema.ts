@@ -105,13 +105,12 @@
       clerk_email: varchar("clerk_email", { length: 100 }).notNull(),
       isActive: boolean('isActive').notNull().default(true),
       selected_AcademicYear_id: integer('selected_AcademicYear_id').references(() => AcademicYearTable.academicYear_id).notNull(),
-
     })
 
 
     export const Registrar_remaks_table = pgTable("Registrar_remaks_table", {
       reg_remarks_id: serial('reg_remarks_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       reg_remarks: varchar('reg_remarks', { length:100 }).notNull(),
       dateOfRemarks: date('dateOfRemarks').notNull(),
@@ -120,7 +119,7 @@
 
     export const Cashier_remaks_table = pgTable("Cashier_remaks_table", {
       cashier_remarks_id: serial('cashier_remarks_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       cashier_remarks: varchar('cashier_remarks', { length:100 }).notNull(),
       dateOfRemarks: date('dateOfRemarks').notNull(),
@@ -291,7 +290,7 @@
 
   export const staffClerkUserTable = pgTable("staffClerkUserTable", {
     clerk_uid: serial("clerk_uid").primaryKey(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+    selected_AcademicYear_id: integer("selected_AcademicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     clerkId: varchar("clerkID", { length: 100 }).notNull(),
     userType: varchar("userType", { length: 100 }).notNull(),
     clerk_username: varchar("clerk_username", { length: 100 }).notNull(),

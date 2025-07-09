@@ -3,7 +3,8 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { SidebarItem } from "./sidebar_item";
+import { SidebarItem } from "../sidebar_item";
+
 
 type Props = {
     className?: string;

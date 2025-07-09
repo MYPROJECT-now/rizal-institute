@@ -3,16 +3,18 @@
     import Student from "./reservedTodo";
     import { TableReserved_Type } from "@/src/type/REGISTRAR/reserved";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
     interface Props {
       reserved: TableReserved_Type [];
     }
 
     const Reserved: FC<Props> = ({ reserved }) => {
-      const [reservedList] = useState<TableReserved_Type []>(reserved);
+      const [reservedList, setApplicantList] = useState<TableReserved_Type []>(reserved);
       const [filterName, setFilterName] = useState("");
       const [filterLRN, setFilterLRN] = useState("");
       const [filterGrade, setFilterGrade] = useState("");
+      const [loadingId, setLoadingId] = useState<number | null>(null);
 
 
       // 🔢 Pagination State
@@ -36,10 +38,9 @@ import { Button } from "@/components/ui/button";
       const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
       const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
-        const handleAccept = async (id: number) => {
-        // await acceptStudentsApplication(id, "Enrolled");
-
-        // Call the API to send the email if the status is Ongoing
+    const handleAccept = async (id: number) => {
+      setLoadingId(id);
+      try {
         const response = await fetch('/api/admission', {
           method: 'POST',
           headers: {
@@ -49,9 +50,25 @@ import { Button } from "@/components/ui/button";
         });
 
         const data = await response.json();
-        console.log(data.message);
-
-      };
+      if (response.ok) {
+                toast.success(data.message);
+                setApplicantList((prevList) => 
+                  prevList.map((student) => 
+                    (student.id === id 
+                      ?{...student, 
+                            admissionStatus: data.admissionStatus,} 
+                      : student)));
+              } else {
+                toast.error(data.message || "Failed to send email.");
+              }
+            } catch (error) {
+              toast.error("Something went wrong while accepting reservation payment.");
+              console.error(error);
+            }
+          finally {
+            setLoadingId(null);
+          }
+          };
 
 
       return (
@@ -82,10 +99,10 @@ import { Button } from "@/components/ui/button";
       className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       >
         <option value="">All Grades</option>
-        <option value="Grade 7">Grade 7</option>
-        <option value="Grade 8">Grade 8</option>
-        <option value="Grade 9">Grade 9</option>
-        <option value="Grade 10">Grade 10</option>
+        <option value="7">Grade 7</option>
+        <option value=" 8">Grade 8</option>
+        <option value=" 9">Grade 9</option>
+        <option value=" 10">Grade 10</option>
         {/* Add other grades as needed */}
       </select>
 
@@ -128,6 +145,7 @@ import { Button } from "@/components/ui/button";
                 reserved={student} 
                 onAdmit={handleAccept}
                 className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+                loading={loadingId === student.id}
               />
             ))
           )}

@@ -95,7 +95,7 @@ export async function POST(request: Request) {
         });
       } else {
         await db.insert(staffClerkUserTable).values({
-          academicYear_id: academicYearID,
+          selected_AcademicYear_id: academicYearID,
           clerkId: user.id,
           userType: role,
           clerk_username: `RIZAL-${username}`,

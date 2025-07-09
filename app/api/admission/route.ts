@@ -264,7 +264,9 @@ export async function POST(request: Request) {
     // Send admission email
     await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
 
-    return NextResponse.json({ message: "Student was successfully admitted and email sent successfully." });
+    return NextResponse.json({ 
+      message: "Student was successfully admitted and email sent successfully.",
+      admissionStatus: "Enrolled", });
   } catch (error: unknown) {
     console.error("Admission process failed:", error);
     return NextResponse.json({ 

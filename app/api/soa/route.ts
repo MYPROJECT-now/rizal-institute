@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
   if (!student) {
     console.log("❌ No student found for LRN:", inputLrn);
-    return NextResponse.json({ error: "Student with this LRN not found." }, { status: 404 });
+    return NextResponse.json({ error: "Student with this LRN is not yet admitted." }, { status: 404 });
   }
 
   const studentId = student.student_id;
@@ -136,5 +136,5 @@ export async function POST(req: NextRequest) {
     }
   }
 }
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ message: "SOA uploaded successfully." });
 }
