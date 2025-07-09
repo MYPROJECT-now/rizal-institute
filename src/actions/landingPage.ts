@@ -17,6 +17,7 @@ import {
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { StudentUpdateData } from "../type/reApplication/re_applicationType";
+import { getAcademicYearID } from "./utils/academicYear";
 
 // Generate random tracking ID
 function generateRandomTrackingId(length = 12) {
@@ -204,7 +205,11 @@ export const addNewApplicant = async (formData: {
     throw new Error("This LRN has already submitted an application.");
   }
 
+   const academicYearID = await getAcademicYearID();
+
+
   const [insertedApplicant] = await db.insert(applicantsInformationTable).values({
+    academicYear_id: academicYearID,
     applicantsLastName,
     applicantsFirstName,
     applicantsMiddleName,
@@ -251,6 +256,7 @@ export const addNewApplicant = async (formData: {
       }),
       db.insert(reservationFeeTable).values({
         applicants_id: applicantId,
+        academicYear_id: academicYearID,
         mop,
         reservationReceipt,
         reservationAmount
@@ -266,6 +272,7 @@ export const addNewApplicant = async (formData: {
     const trackingId = generateRandomTrackingId();
     await db.insert(applicationStatusTable).values({
       applicants_id: applicantId,
+      academicYear_id: academicYearID,
       trackingId,
       applicationFormReviewStatus: 'Pending',
       reservationPaymentStatus: 'Pending',
@@ -274,6 +281,7 @@ export const addNewApplicant = async (formData: {
 
     await db.insert(AdmissionStatusTable).values({
       applicants_id: applicantId,
+      academicYear_id: academicYearID,
       admissionStatus: 'Pending',
       confirmationStatus: 'Pending',
       dateOfAdmission: new Date().toISOString().slice(0, 10),

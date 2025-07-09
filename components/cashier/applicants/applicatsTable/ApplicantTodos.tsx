@@ -1,9 +1,9 @@
   "use client";
   import { FC, useState } from "react";
   import Student from "./ApplicantTodo";
-  import { acceptStudentsReservationPayment } from "@/src/actions/cashierAction";
   import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
   import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 
   interface Props {
@@ -11,10 +11,12 @@
   }
 
   const Students: FC<Props> = ({ applicants }) => {
-    const [studentList] = useState<Tableapplicant_Type[]>(applicants);
+    const [studentList, setApplicantList] = useState<Tableapplicant_Type[]>(applicants);
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
     const [filterGrade, setFilterGrade] = useState("");
+    const [loadingId, setLoadingId] = useState<number | null>(null);
+
 
     // 🔢 Pagination State
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,20 +25,50 @@
 
 
     const handleAccept = async (id: number) => {
-      await acceptStudentsReservationPayment(id, "Reserved");
+      // await acceptStudentsReservationPayment(id, "Reserved");
 
     // Call the API to send the email if the status is Ongoing
-    const response = await fetch('/api/accept', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ studentId: id }),
-    });
+    setLoadingId(id);
+    try {
+      const response = await fetch('/api/accept/cashier', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ studentId: id }),
+      });
 
-    const data = await response.json();
-    console.log(data.message);
+      const data = await response.json();
+      if (response.ok) {
+                toast.success(data.message);
+                setApplicantList((prevList) => 
+                  prevList.map((student) => 
+                    (student.id === id 
+                      ?{...student, 
+                            reservationPaymentStatus: data.reservationPaymentStatus, 
+                            dateApprovedByCashier:data.dateApprovedByCashier} 
+                      : student)));
+              } else {
+                toast.error(data.message || "Failed to send email.");
+              }
+            } catch (error) {
+              toast.error("Something went wrong while accepting reservation payment.");
+              console.error(error);
+            }
+          finally {
+            setLoadingId(null);
+          }
+          };
 
+
+      const handleDecline = (id: number) => {
+        setApplicantList((prevList) =>
+          prevList.map((student) =>
+            student.id === id
+              ? { ...student, applicationFormReviewStatus: "Declined" }
+              : student
+          )
+        );
     };
     
   const filteredStudents = studentList.filter((student) => {
@@ -83,10 +115,10 @@
         className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
     >
       <option value="">All Grades</option>
-      <option value="Grade 7">Grade 7</option>
-      <option value="Grade 8">Grade 8</option>
-      <option value="Grade 9">Grade 9</option>
-      <option value="Grade 10">Grade 10</option>
+      <option value="7">Grade 7</option>
+      <option value="8">Grade 8</option>
+      <option value="9">Grade 9</option>
+      <option value="10">Grade 10</option>
       {/* Add other grades as needed */}
     </select>
 
@@ -128,7 +160,9 @@
               key={applicants.lrn} 
               applicants={applicants} 
               onAccept={handleAccept}
+              onDecline={handleDecline}
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+              loading={loadingId === applicants.id}
 
             />
           ))

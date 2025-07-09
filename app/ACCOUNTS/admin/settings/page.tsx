@@ -2,8 +2,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { handlePasswordUpdate } from "@/src/actions/changePassword";
-import AdminClientComponent from "@/components/validation/admin_validate";
+import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
 import Admin_header from "@/components/header/header_admin";
 
 const RegistrarsEnrolleesTable = () => {
@@ -47,8 +46,7 @@ const RegistrarsEnrolleesTable = () => {
   };
 
   return (
-    <AdminClientComponent>
-      <div className="w-full h-auto rounded-xl flex flex-col mt-0 px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
         <Admin_header />
         <div className="w-[300px] h-[500px] lg:w-[600px] bg-white self-center rounded-lg flex flex-col items-center text-center">
           <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold rounded-lg text-xl lg:text-3xl text-white items-center justify-center flex">
@@ -93,7 +91,6 @@ const RegistrarsEnrolleesTable = () => {
           </div>
         </div>
       </div>
-    </AdminClientComponent>
   );
 };
 

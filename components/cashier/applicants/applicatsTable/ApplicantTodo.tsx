@@ -10,10 +10,13 @@ import { Button } from "@/components/ui/button";
 interface Props {
   applicants: Tableapplicant_Type;
   onAccept: (id: number) => void;
+  onDecline: (id: number) => void;
   className?: string;
+  loading?: boolean;
+
 }
 
-const Student: FC<Props> = ({ applicants, onAccept, className  }) => {
+const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loading  }) => {
   const { open } = useDeclineRemarksModal();
   const { open: openEnrollees } = useShowReservationPayementModal();
 
@@ -44,19 +47,19 @@ const Student: FC<Props> = ({ applicants, onAccept, className  }) => {
             View
         </Button>
       </td>
-       <td className="px-4 py-2 text-green-700 font-semibold">{getDisplayStatus()}</td>
+      <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="py-2 space-x-2">
         <Button
           onClick={() => onAccept(applicants.id)}
           className="w-[85px] h-[35px] rounded-lg"
           variant={"acceptButton"}
-          disabled={applicants.reservationPaymentStatus !== "Pending"}
+          disabled={applicants.reservationPaymentStatus !== "Pending" || loading}
         >
-          Accept
+          {loading ? "Accepting..." : "Accept"}
         </Button>
         
         {/* Decline button only opens the modal */}
-        <RemarksModal />
+        <RemarksModal onDecline={onDecline} />
         <Button
           onClick={() => open(applicants.id)}
           variant={"rejectButton"}

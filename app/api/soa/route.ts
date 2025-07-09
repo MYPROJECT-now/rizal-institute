@@ -4,7 +4,8 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import {  downPaymentTable, MonthsInSoaTable, StudentInfoTable } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
-import { generateSINumber } from "@/src/actions/SI_Number_counter";
+import { generateSINumber } from "@/src/actions/utils/SI_Number_counter";
+import { getAcademicYearID } from "@/src/actions/utils/academicYear";
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
 
   if (!student) {
     console.log("❌ No student found for LRN:", inputLrn);
-    return NextResponse.json({ error: "Student with this LRN not found." }, { status: 404 });
+    return NextResponse.json({ error: "Student with this LRN is not yet admitted." }, { status: 404 });
   }
 
   const studentId = student.student_id;
@@ -42,6 +43,8 @@ export async function POST(req: NextRequest) {
   let isMonthlyPayments = false;
   let hasStartedMonthly = false; 
   let downPaymentId: number | null = null;
+  const academicYearID = await getAcademicYearID();
+  
 
 
   for (const row of allRows) {
@@ -87,6 +90,7 @@ export async function POST(req: NextRequest) {
 
       await db.insert(MonthsInSoaTable).values({
         student_id: studentId,
+        academicYear_id: academicYearID,
         downPaymentId, 
         month,
         monthlyDue: monthlyDue,
@@ -118,6 +122,7 @@ export async function POST(req: NextRequest) {
       const inserted = await db.insert(downPaymentTable)
         .values({
           student_id: studentId,
+          academicYear_id: academicYearID,
           amount,
           downPaymentDate: date,
           SINumberDP: siNumber1,
@@ -131,5 +136,5 @@ export async function POST(req: NextRequest) {
     }
   }
 }
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ message: "SOA uploaded successfully." });
 }

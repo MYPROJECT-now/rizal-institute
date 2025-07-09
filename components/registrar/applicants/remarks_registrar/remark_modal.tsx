@@ -11,7 +11,11 @@ import { useState } from "react";
 import { useDeclineRemarksModal } from "@/src/store/REGISTRAR/applicant";
 import { Button } from "@/components/ui/button";
 
-export const StatusModal = () => {
+interface Props {
+  onDecline?: (studentId: number) => void;
+}
+
+export const StatusModal = ({ onDecline }: Props) => {
   const { isOpen, close, remarks, setRemarks, studentId } = useDeclineRemarksModal();
   const [isDeclining, setIsDeclining] = useState(false);
 
@@ -35,10 +39,11 @@ export const StatusModal = () => {
       }
 
       toast.success("Decline email sent successfully.");
+      if (onDecline && studentId) {
+        onDecline(studentId);
+      }
       close();
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+
     } catch (error) {
       console.error("Error declining application:", error);
       toast.error("Error sending decline email.");

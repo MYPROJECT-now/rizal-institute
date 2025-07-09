@@ -2,11 +2,14 @@
 
 import { desc, eq, or, and } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, documentsTable, educationalBackgroundTable, guardianAndParentsTable, StudentInfoTable } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, documentsTable, educationalBackgroundTable, guardianAndParentsTable, Registrar_remaks_table, StudentInfoTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { sql } from "drizzle-orm";
+import { requireStaffAuth } from "./utils/staffAuth";
 
   export const getRecentApplicants = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
     const recentEnrollees = await db.select({
       lrn: applicantsInformationTable.lrn,
       lastName: applicantsInformationTable.applicantsLastName,
@@ -31,6 +34,9 @@ import { sql } from "drizzle-orm";
 
 
     export const getAllEnrollees_registrar = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
@@ -62,7 +68,9 @@ import { sql } from "drizzle-orm";
   //   revalidatePath("/");
   // };
 
-      export const acceptStudentsAddmission = async (id: number, admissionStatus: string) => {
+  export const acceptStudentsAddmission = async (id: number, admissionStatus: string) => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
     await db
     .update(AdmissionStatusTable)
     .set({
@@ -73,6 +81,19 @@ import { sql } from "drizzle-orm";
   };
 
   export const getInfoByLrn = async (lrn: string) => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+
+      const latestRemark = db
+        .select({
+          applicants_id: Registrar_remaks_table.applicants_id,
+          reg_remarks: Registrar_remaks_table.reg_remarks,
+          dateOfRemarks: Registrar_remaks_table.dateOfRemarks,
+        })
+        .from(Registrar_remaks_table)
+        .orderBy(desc(Registrar_remaks_table.dateOfRemarks))
+        .as("latest_remark");
+
     const info = await db.select({
       applicantsLastName: applicantsInformationTable.applicantsLastName,
       applicantsFirstName: applicantsInformationTable.applicantsFirstName,
@@ -105,11 +126,15 @@ import { sql } from "drizzle-orm";
       idPic: documentsTable.idPic,
       studentExitForm: documentsTable.studentExitForm,
 
+      reg_remarks: latestRemark.reg_remarks,
+      dateOfRemarks: latestRemark.dateOfRemarks,
+
     })
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(guardianAndParentsTable, eq(applicantsInformationTable.applicants_id, guardianAndParentsTable.applicants_id))
     .leftJoin(documentsTable, eq(applicantsInformationTable.applicants_id, documentsTable.applicants_id))
+    .leftJoin(latestRemark, eq(applicantsInformationTable.applicants_id, latestRemark.applicants_id))
     .where(eq(applicantsInformationTable.lrn, lrn))
     .limit(1);
 
@@ -119,6 +144,8 @@ import { sql } from "drizzle-orm";
   };
 
   export const get_ReservedApplicants = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+    
     const allReserved = await db.select({
       id: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
@@ -151,6 +178,8 @@ import { sql } from "drizzle-orm";
 
 
   export const getEnrolledStudent = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
     const allStudent = await db.select({
       lrn: StudentInfoTable.lrn,
       studentLastName: StudentInfoTable.studentLastName,
@@ -172,6 +201,8 @@ import { sql } from "drizzle-orm";
 
     // export const getEnrolledStudentsInfo = async (lrn: string) => {
 export const getEnrolledStudentsInfo = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
     const allStudentsInfo = await db.select({
       lrn: StudentInfoTable.lrn,
       studentLastName: StudentInfoTable.studentLastName,
@@ -192,6 +223,9 @@ export const getEnrolledStudentsInfo = async () => {
   };
 
 export const getTotalStudents = async () => {
+  await requireStaffAuth(["registrar"]); // gatekeeper
+
+
   const totalStudents = await db
     .select({ count: sql<number>`count(*)` })
     .from(StudentInfoTable);
@@ -200,6 +234,9 @@ export const getTotalStudents = async () => {
 };
 
 export const getGenderCounts = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+
   const genderCounts = await db
     .select({
       gender: StudentInfoTable.studentGender,
@@ -212,6 +249,10 @@ export const getGenderCounts = async () => {
 };
 
 export const getTotalApplicants = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+
+
   const totalApplicants = await db
     .select({ count: sql<number>`count(*)` })
     .from(applicantsInformationTable)
@@ -229,6 +270,9 @@ export const getTotalApplicants = async () => {
 };
 
 export const getTotalReserved = async () => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+
   const totalReserved = await db
     .select({ count: sql<number>`count(*)` })
     .from(applicantsInformationTable)

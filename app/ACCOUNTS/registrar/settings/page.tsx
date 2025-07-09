@@ -2,9 +2,8 @@
 import Registrar_header from "@/components/header/header_registrar";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
-import RegistrarClientComponent from "@/components/validation/registrar_validate";
 import { Button } from "@/components/ui/button";
-import { handlePasswordUpdate } from "@/src/actions/changePassword";
+import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -47,8 +46,7 @@ const RegistrarsEnrolleesTable = () => {
   };
 
   return (
-    <RegistrarClientComponent>
-      <div className="w-full h-auto lg:h-[680px] mt-3 lg:mx-3 rounded-xl flex flex-col px-10 bg-page">
+      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
         <Registrar_header />
         <div className="w-[300px] h-auto lg:h-[500px] lg:w-[700px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
             <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex ">
@@ -93,7 +91,6 @@ const RegistrarsEnrolleesTable = () => {
           </div>
         </div>
       </div>
-    </RegistrarClientComponent>
   );
 };
 

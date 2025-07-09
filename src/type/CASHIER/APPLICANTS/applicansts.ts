@@ -7,4 +7,5 @@ export type Tableapplicant_Type = {
     gradeLevel: string | null;
     reservationPaymentStatus: string | null;
     applicationFormReviewStatus: string | null;
+    reservationReceipt: string | null;
   };

@@ -193,10 +193,10 @@ const AdmissionPage = () => {
 
             {/* start of third section  */}
             <div className="h-[200px] w-full bg-dGreen flex flex-col gap-4 items-center justify-center text-center">
-                <p className="font-bold font-merriweather text-2xl lg:text-4xl text-white">READY TO TAKE A LEAP?</p>
-                <a href="/new_application">
-                <button className="bg-yellow h-[60px] w-auto lg:w-[700px] rounded-md font-bold font-merriweather text-dGreen text-xl lg:text-2xl">
-                    ENROLL NOW
+                <p className="font-bold font-merriweather text-4xl text-white">READY TO TAKE A LEAP?</p>
+                <a href="/application">
+                <button className="bg-yellow h-[60px] w-[700px] rounded-md font-bold font-merriweather text-dGreen text-2xl">
+                    ENROLL NOW!!
                 </button>
                 </a>
             </div>

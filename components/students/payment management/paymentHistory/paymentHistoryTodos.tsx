@@ -77,7 +77,7 @@ const Todos: FC<Props> = ({ todos }) => {
                     {currentItems.length === 0 ? (
                     <tr>
                         <td colSpan={6} className="p-4 text-black">
-                            No recent applicants found.
+                            No history was found.
                         </td>
                     </tr> 
                     ) : (currentItems.map((todo, idx) => (

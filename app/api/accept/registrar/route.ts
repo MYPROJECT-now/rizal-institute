@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable, reservationFeeTable } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 
@@ -35,16 +35,6 @@ async function getTrackingId(studentId: number): Promise<string> {
   return result.length > 0 ? result[0].trackingId : "N/A";
 }
 
-// Function to check if reservation fee is paid
-async function checkReservationFee(studentId: number): Promise<boolean> {
-  const result = await db
-    .select()
-    .from(reservationFeeTable)
-    .where(eq(reservationFeeTable.applicants_id, studentId))
-    .limit(1);
-
-  return result.length > 0 && result[0].reservationReceipt !== null;
-}
 
 // Function to send reservation email
 async function sendReservationEmail(email: string, trackingId: string) {
@@ -75,48 +65,12 @@ async function sendReservationEmail(email: string, trackingId: string) {
     Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
 
     Best regards,
-    Rizal Institute - Canlubang Registrar Office
+    Rizal Institute - Canlubang 
     `,
   };
 
   return transporter.sendMail(mailOptions);
 }
-
-// Function to send reservation fee reminder email
-async function sendReservationFeeReminderEmail(email: string, trackingId: string) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Important: Reservation Fee Required - Rizal Institute - Canlubang',
-    text: `
-    Dear Applicant,
-
-    We would like to inform you that your application at Rizal Institute - Canlubang requires a reservation fee to be processed and secured.
-
-    Tracking ID: ${trackingId}
-
-    Important Notice:
-    - Your application will not be processed or secured until the reservation fee is paid
-    - Please use the tracking ID above to access the payment section on our website
-    - The reservation fee is required to secure your slot in the institution
-
-    Next Steps:
-    1. Visit our website and use your tracking ID to access the payment section
-    2. Complete the reservation fee payment
-    3. Keep the payment receipt for your records
-    4. Once payment is confirmed, you will receive a confirmation email
-
-    If you have any questions or concerns, please do not hesitate to contact our office. We are here to assist you.
-
-    Best regards,
-    Rizal Institute - Canlubang Registrar Office
-    `,
-  };
-
-  return transporter.sendMail(mailOptions);
-}
-
-
 
 
 export async function POST(request: Request) {
@@ -127,17 +81,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
     }
 
-    // Run all necessary DB actions in parallel — one fails, all fail
-    const [email, trackingId, hasReservationFee, updateResult] = await Promise.all([
+    // Get reservationPaymentStatus first
+    const reservationStatusResult = await db
+      .select({ reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus })
+      .from(applicationStatusTable)
+      .where(eq(applicationStatusTable.applicants_id, studentId))
+      .limit(1);
+
+    const reservationPaymentStatus = reservationStatusResult[0]?.reservationPaymentStatus || null;
+
+    // Run DB actions in parallel
+    const [email, trackingId, updateResult] = await Promise.all([
       getStudentEmail(studentId),
       getTrackingId(studentId),
-      checkReservationFee(studentId),
       db.update(applicationStatusTable)
-        .set({ applicationFormReviewStatus: "Reserved" })
+        .set({ 
+          applicationFormReviewStatus: "Reserved",
+          dateApprovedByRegistrar: new Date().toISOString(),
+        })
         .where(eq(applicationStatusTable.applicants_id, studentId)),
     ]);
 
-    // Check update result
     if (!email) {
       return NextResponse.json({ error: "Student email not found" }, { status: 404 });
     }
@@ -146,14 +110,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Failed to update application status." }, { status: 500 });
     }
 
-    // Now send the appropriate email
-    if (hasReservationFee) {
+    const dateApprovedByRegistrar = new Date().toISOString().split("T")[0];
+
+    // ✅ Only send email if cashier confirmed the reservation
+    if (reservationPaymentStatus === "Reserved") {
       await sendReservationEmail(email, trackingId);
-      return NextResponse.json({ message: "Reservation confirmation email sent successfully." });
-    } else {
-      await sendReservationFeeReminderEmail(email, trackingId);
-      return NextResponse.json({ message: "Reservation fee reminder email sent successfully." });
+      return NextResponse.json({
+        message: "Application accepted and reservation confirmation email sent successfully.",
+        applicationFormReviewStatus: "Reserved",
+        dateApprovedByRegistrar: dateApprovedByRegistrar,
+      });
     }
+
+    // ❌ Do not send email if pending
+    return NextResponse.json({
+      message: "Application accepted successfully.",
+      applicationFormReviewStatus: "Reserved",
+      dateApprovedByRegistrar: dateApprovedByRegistrar,
+    });
 
   } catch (error) {
     console.error("Error in reservation flow:", error);

@@ -11,10 +11,12 @@ import { Button } from "@/components/ui/button";
 interface Props {
   applicant: Tableapplicant_Type;
   onAccept: (id: number) => void;
+  onDecline: (id: number) => void;
   className?: string;
+  loading?: boolean;
 }
 
-const Applicant: FC<Props> = ({ applicant, onAccept, className }) => {
+const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loading }) => {
   const { open } = useDeclineRemarksModal();
   const { open: openEnrollees } = useShowApplicantInfoModal();
 
@@ -44,20 +46,20 @@ const Applicant: FC<Props> = ({ applicant, onAccept, className }) => {
             View
           </Button>
       </td>
-      <td className="px-4 py-2 text-green-700 font-semibold">{getDisplayStatus()}</td>
+      <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>  
       <td className="px-4 py-2 space-x-2">
         <Button
           onClick={() => onAccept(applicant.id)}
           variant={"acceptButton"}
           className="w-[95px] h-[35px] rounded-lg"
-          disabled={applicant.applicationFormReviewStatus !== "Pending"}
+          disabled={applicant.applicationFormReviewStatus !== "Pending" || loading}
         >
-          Accept
+          {loading ? "Accepting..." : "Accept"}
         </Button>
         
         {/* Decline button only opens the modal */}
-        <StatusModal />
+        <StatusModal onDecline={onDecline}/>
         <Button
           onClick={() => open(applicant.id)}
            variant={"rejectButton"}

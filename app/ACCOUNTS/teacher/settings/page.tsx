@@ -2,9 +2,8 @@
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { handlePasswordUpdate } from "@/src/actions/changePassword";
-import TeacherClientComponent from "@/components/validation/teacher_validate";
-import Teacher_header from "@/components/header/header_teacher";
+import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
+import Admin_header from "@/components/header/header_admin";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -47,11 +46,10 @@ const RegistrarsEnrolleesTable = () => {
   };
 
   return (
-    <TeacherClientComponent>
-      <div className="w-full h-auto mt-0 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
-        <Teacher_header />
-        <div className="w-full lg:w-[600px] h-[500px] bg-white self-center rounded-lg flex flex-col items-center text-center">
-          <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex">
+      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+        <Admin_header />
+        <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
+          <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
               PASSWORD MANAGEMENT
             </div>
 
@@ -93,7 +91,6 @@ const RegistrarsEnrolleesTable = () => {
           </div>
         </div>
       </div>
-    </TeacherClientComponent>
   );
 };
 

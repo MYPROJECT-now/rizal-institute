@@ -2,12 +2,10 @@
 import { UsersTable } from "@/components/admin/users/users";
 import Admin_header from "@/components/header/header_admin";
 import { Button } from "@/components/ui/button";
-import AdminClientComponent from "@/components/validation/admin_validate";
 
 
 const Announcement = () => {
     return (
-        <AdminClientComponent>
         <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Admin_header />
             <div className="w-full h-[540px] bg-white self-center  mt-10 rounded-lg ">
@@ -41,7 +39,6 @@ const Announcement = () => {
                 </div>
             </div>
         </div>
-        </AdminClientComponent>
     );
 };
 

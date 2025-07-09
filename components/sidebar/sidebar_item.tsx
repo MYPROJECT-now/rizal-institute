@@ -1,34 +1,35 @@
-"use client";
+    "use client";
 
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
+    import { Button } from "@/components/ui/button";
+    import Image from "next/image";
+    import Link from "next/link";
 
-type Props = {
-    label: string;
-    iconSrc: string;
-    href: string;
-    onClick?: () => void;
-};
+    type Props = {
+        label: string;
+        iconSrc: string;
+        href: string;
+        onClick?: () => void;
+    };
 
-export const SidebarItem = ({
-label,
-iconSrc,
-href,
-onClick
-}: Props) => {
+    export const SidebarItem = ({
+    label,
+    iconSrc,
+    href,
+    onClick
+    }: Props) => {
 
     return(
         <Button 
-        className="flex flex-row justify-start h-[40px]  "
-        variant="link"
-        asChild
-        >
+            className="flex flex-row justify-start h-[40px]  "
+            variant="link"
+            onClick={onClick}
+            asChild
+            >
             <Link href={href}
             onClick={() => {
-          onClick?.();
-        }}
-        >
+            onClick?.();
+            }}
+            >
                 <Image 
                     src={iconSrc}    
                     alt={label}
@@ -39,6 +40,6 @@ onClick
                 {label}
             </Link>
         </Button>
-    );
-};
+        );
+    };
 

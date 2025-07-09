@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { applicantsInformationTable, applicationStatusTable, Registrar_remaks_table } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
+import { getAcademicYearID } from '@/src/actions/utils/academicYear';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -87,10 +88,13 @@ export async function POST(request: Request) {
       .set({ applicationFormReviewStatus: "Declined" })
       .where(eq(applicationStatusTable.applicants_id, studentId));
 
+    const academicYearID = await getAcademicYearID();
+    
     await db
       .insert(Registrar_remaks_table)
       .values({ 
         applicants_id: studentId, 
+        academicYear_id: academicYearID,
         reg_remarks: remarks, 
         dateOfRemarks: new Date().toISOString() });
 

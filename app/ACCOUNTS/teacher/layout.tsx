@@ -1,11 +1,27 @@
-import { Sidebar_teacher } from "@/components/sidebar/sidebar_teacher";
-import { MobileHeader } from "@/components/sidebar/teacher_mobile_header";
 
+import { Sidebar_teacher } from "@/components/sidebar/teacher/sidebar_teacher";
+import { MobileHeader } from "@/components/sidebar/teacher/teacher_mobile_header";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 type props  = {
     children: React.ReactNode;
 };
 
-const AdminLayout = ({children}: props) => {
+const AdminLayout = async ({children}: props) => {
+    const { userId } = await auth();
+
+    if (!userId) {
+        redirect("/portal2"); // not logged in
+    }
+
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    const role = user?.publicMetadata?.role;
+
+    if (role !== "teacher") {
+        redirect("/"); // unauthorized
+    }
+
     return (
         <>
         

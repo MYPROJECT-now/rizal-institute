@@ -2,8 +2,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { handlePasswordUpdate } from "@/src/actions/changePassword";
-import CashierClientComponent from "@/components/validation/cashier_validate";
+import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
 import Cashier_header from "@/components/header/header_cashier";
 
 const RegistrarsEnrolleesTable = () => {
@@ -47,8 +46,7 @@ const RegistrarsEnrolleesTable = () => {
   };
 
   return (
-    <CashierClientComponent>
-      <div className="w-full h-auto mt-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
         <Cashier_header />
         <div className="w-[300px] lg:w-[600px] h-[500px]  bg-white self-center rounded-lg flex flex-col items-center text-center">
             <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold rounded-lg text-xl lg:text-3xl text-white items-center justify-center flex">
@@ -93,7 +91,6 @@ const RegistrarsEnrolleesTable = () => {
           </div>
         </div>
       </div>
-    </CashierClientComponent>
   );
 };
 

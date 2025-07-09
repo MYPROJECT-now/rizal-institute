@@ -3,7 +3,8 @@
   import Student from "./applicantTodo";
   import { Tableapplicant_Type } from "@/src/type/REGISTRAR/applicant";
   import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+  import { toast } from "sonner";
+
 
 
   interface Props {
@@ -11,10 +12,12 @@ import { toast } from "sonner";
   }
 
   const Applicants: FC<Props> = ({ applicants }) => {
-    const [applicantList] = useState<Tableapplicant_Type []>(applicants);
+    const [applicantList, setApplicantList] = useState<Tableapplicant_Type []>(applicants);
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
     const [filterGrade, setFilterGrade] = useState("");
+    const [loadingId, setLoadingId] = useState<number | null>(null);
+
 
 
     // 🔢 Pagination State
@@ -22,6 +25,7 @@ import { toast } from "sonner";
     const studentsPerPage = 5;
 
     const handleAccept = async (id: number) => {
+      setLoadingId(id);
       try {
         const response = await fetch('/api/accept/registrar', {
           method: 'POST',
@@ -34,7 +38,14 @@ import { toast } from "sonner";
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Applicant accepted successfully and email sent.");
+          toast.success(data.message);
+          setApplicantList((prevList) => 
+            prevList.map((student) => 
+              (student.id === id 
+                ?{...student, 
+                      applicationFormReviewStatus: data.applicationFormReviewStatus, 
+                      dateApprovedByRegistrar:data.dateApprovedByRegistrar} 
+                : student)));
         } else {
           toast.error(data.message || "Failed to send email.");
         }
@@ -42,9 +53,22 @@ import { toast } from "sonner";
         toast.error("Something went wrong while accepting the applicant.");
         console.error(error);
       }
+    finally {
+      setLoadingId(null);
+    }
     };
 
-    
+    const handleDecline = (id: number) => {
+      setApplicantList((prevList) =>
+        prevList.map((student) =>
+          student.id === id
+            ? { ...student, applicationFormReviewStatus: "Declined" }
+            : student
+        )
+      );
+    };
+
+
   const filteredStudents = applicantList.filter((student) => {
     const fullName = `${student.firstName} ${student.middleName ?? ""} ${student.lastName}`.toLowerCase();
     const matchesName = fullName.includes(filterName.toLowerCase());
@@ -89,10 +113,10 @@ import { toast } from "sonner";
       className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
     >
       <option value="">All Grades</option>
-      <option value="Grade 7">Grade 7</option>
-      <option value="Grade 8">Grade 8</option>
-      <option value="Grade 9">Grade 9</option>
-      <option value="Grade 10">Grade 10</option>
+      <option value="7">Grade 7</option>
+      <option value="8">Grade 8</option>
+      <option value="9">Grade 9</option>
+      <option value="10">Grade 10</option>
       {/* Add other grades as needed */}
     </select>
 
@@ -135,7 +159,9 @@ import { toast } from "sonner";
               key={student.lrn} 
               applicant={student} 
               onAccept={handleAccept}
+              onDecline={handleDecline} // 👈 NEW!
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+              loading={loadingId === student.id}
             />
           ))
         )}
