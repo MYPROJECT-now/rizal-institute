@@ -48,7 +48,7 @@ const RegistrarsEnrolleesTable = () => {
 
   return (
     <CashierClientComponent>
-      <div className="w-full h-auto mt-0 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+      <div className="w-full h-auto mt-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
         <Cashier_header />
         <div className="w-[300px] lg:w-[600px] h-[500px]  bg-white self-center rounded-lg flex flex-col items-center text-center">
             <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold rounded-lg text-xl lg:text-3xl text-white items-center justify-center flex">

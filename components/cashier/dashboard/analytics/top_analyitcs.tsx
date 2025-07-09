@@ -7,13 +7,9 @@ export const Top_analytics = async () => {
     const pendingPayments = await getPendingPaymentsCount();
 
     return (
-        <div className="flex flex-row gap-9">
+        <div className="flex flex-wrap lg:flex-row gap-9">
 
-<<<<<<< HEAD:components/cashiersTable/dashboard/analytics/top_analyitcs.tsx
-            <div className="lg:w-[200px] w-[200px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2 ">
-=======
             <div className="w-[250px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1:components/cashier/dashboard/analytics/top_analyitcs.tsx
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-lg">
                        Pending Applicants

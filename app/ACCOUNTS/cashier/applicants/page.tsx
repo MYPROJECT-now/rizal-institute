@@ -4,9 +4,9 @@ import CashierClientComponent from "@/components/validation/cashier_validate";
 const RegistrarsEnrolleesTable = () => {
     return(
     <CashierClientComponent>
-        <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
+        <div className="w-full h-auto lg:h-[680px] mt-3 lg:mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Cashier_header /> 
-            <div className="w-full h-[540px] bg-white self-center  mt-10 rounded-lg ">
+            <div className="w-full h-auto lg:h-[540px] bg-white self-center  mt-10 rounded-lg ">
                 <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
                     APPLICANT MANAGEMENT
                 </div>

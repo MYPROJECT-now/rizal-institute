@@ -37,21 +37,12 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
 
       <div
         className={cn(
-<<<<<<< HEAD:components/sidebar/sidebar_admin.tsx
-          "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2 ",
-          className
-        )}
-      >
-        <div className="gap-1 mx-auto flex flex-col items-center mt-[30px] cursor-pointer">
-          <Link href="/admin" onClick={onClose}>
-=======
           "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 ",
           className
         )}
       >
         <div className="gap-1 mx-auto flex flex-col items-center mt-[30px]">
           <Link href="/ACCOUNTS/admin" onClick={onClose}>
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1:components/sidebar/admin/sidebar_admin.tsx
             <Image
               src="/school.png"
               width={130}

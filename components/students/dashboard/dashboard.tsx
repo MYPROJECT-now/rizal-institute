@@ -104,9 +104,9 @@ export const StudentDashboard = () => {
 
       {/* Outstanding Balance Section */}
       <div className="mt-8">
-        <div className="bg-red-50 p-6 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
-          <span className="text-xl font-bold text-red-700">Outstanding Balance:</span>
-          <span className="text-2xl font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md">
+        <div className="bg-red-50 p-6 border-t-2 border-red-300 rounded-lg shadow-md flex flex-wrap justify-between items-center">
+          <span className="text-xl lg:text-2xl font-bold text-red-700">Outstanding Balance:</span>
+          <span className="text-lg lg:text-2xl font-bold text-white bg-red-600 px-3 py-1 mt-1 lg:px-6 lg:py-3 rounded-lg shadow-md">
             {studentInfo?.outstandingBalance !== undefined ? `₱${studentInfo.outstandingBalance}` : 'Loading...'}
           </span>
         </div>

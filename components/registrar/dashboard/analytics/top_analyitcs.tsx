@@ -11,7 +11,7 @@ export const Top_analytics = async () => {
     const girlsCount = genderCounts.find(count => count.gender === "Female")?.count || 0;
 
     return (
-        <div className="flex flex-row gap-9">
+        <div className="flex flex-wrap lg:flex-row gap-9">
             <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold text-[16px]">

@@ -238,13 +238,8 @@ export default function Home() {
          {/* THIRD PART */}
          <a href="/new_application">
           <Button
-<<<<<<< HEAD:app/(landing page)/page.tsx
-            variant="mButton"
-            className="rounded-xl mb-5 lg:text-2xl lg:h-[55px] lg:w-[210px]">
-=======
             variant="mainButton"
             className="rounded-xl lg:text-2xl lg:h-[55px] lg:w-[210px]">
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1:app/(WEBSITE)/(landing page)/page.tsx
               <p className="font-oswald font-bold ">
                 ENROLL NOW!
               </p>

@@ -48,24 +48,15 @@ const RegistrarsEnrolleesTable = () => {
 
   return (
     <RegistrarClientComponent>
-<<<<<<< HEAD:app/registrar/settings/page.tsx
-      <div className="w-full h-auto mt-0 px-10 flex flex-col bg-page sm:text-sm md:text-base lg:text-lg">
-=======
-      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1:app/ACCOUNTS/registrar/settings/page.tsx
+      <div className="w-full h-auto lg:h-[680px] mt-3 lg:mx-3 rounded-xl flex flex-col px-10 bg-page">
         <Registrar_header />
-        <div className="w-[300px] h-[500px] lg:w-[600px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
+        <div className="w-[300px] h-auto lg:h-[500px] lg:w-[700px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
             <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex ">
               PASSWORD MANAGEMENT
             </div>
 
-<<<<<<< HEAD:app/registrar/settings/page.tsx
-          <div className="flex flex-col gap-4 items-center justify-center w-full h-[350px] mt-[80px] rounded-lg">
-            <div className="flex flex-col w-full px-10 lg:w-[500px]">
-=======
-          <div className="flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-[700px] h-[350px] mt-[80px] rounded-lg">
+          <div className="flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full lg:w-[700px] h-[350px] mt-[80px] rounded-lg">
             <div className="flex flex-col w-full px-10">
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1:app/ACCOUNTS/registrar/settings/page.tsx
               <label htmlFor="current-password">Current Password</label>
               <input
                 type="password"

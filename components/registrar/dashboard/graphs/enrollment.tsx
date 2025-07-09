@@ -101,7 +101,7 @@ const chartConfig = {
 export const Enrollment = () => {
   return (
     <div>
-      <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
+      <Card className="w-[230px] lg:w-[500px] gap-10">
         <CardHeader>
           <CardTitle className="text-center">Enrollment Trend</CardTitle>
         </CardHeader>

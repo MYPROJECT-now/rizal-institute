@@ -12,16 +12,16 @@ const Admin_student = () => {
       
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] mt-4">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-10 lg:mt-4">
             <div className="flex flex-col">
-                <p className=" font-Alfa text-lGreen text-2xl">
+                <p className=" font-Alfa text-lGreen text-base lg:text-2xl">
                     RIZAL INSTITUTE
                 </p>
                 <p className="font-mono text-xs text-green-500">
                     {currentDate}
                 </p>
             </div>
-            <div className="flex flex-row items-center gap-6">
+            <div className="flex flex-row items-center gap-3">
                 <p className="font-Alfa text-lGreen text-sm lg:text-xl">
                     STUDENT
                 </p>

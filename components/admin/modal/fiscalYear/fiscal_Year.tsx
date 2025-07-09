@@ -14,11 +14,7 @@ export const Fiscal_Year = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-<<<<<<< HEAD
-      <DialogContent className="w-auto lg:w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
-=======
       <DialogContent className="w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
            Manage Academic Year

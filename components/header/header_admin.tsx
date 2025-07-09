@@ -21,13 +21,8 @@ const Admin_header = () => {
                     {currentDate}
                 </p>
             </div>
-<<<<<<< HEAD
-            <div className="flex flex-row items-center gap-6 ">
-                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-=======
             <div className="flex flex-row items-center gap-6">
                 <p className="font-Alfa text-lGreen text-2xl">
->>>>>>> 69fa2d4498f24bef8e4bb818cf37c25028ffe2c1
                     ADMIN
                 </p>
                 {/* <Image
