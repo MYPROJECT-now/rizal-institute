@@ -19,36 +19,36 @@ function generateRandomPassword(length = 12) {
 }
 
 // Fetch student email
-async function getStudentEmail(studentId: number): Promise<string | null> {
+async function getStudentEmail(applicantId: number): Promise<string | null> {
   const result = await db
     .select({ email: applicantsInformationTable.email })
     .from(applicantsInformationTable)
-    .where(eq(applicantsInformationTable.applicants_id, studentId))
+    .where(eq(applicantsInformationTable.applicants_id, applicantId))
     .limit(1);
 
   return result.length > 0 ? result[0].email : null;
 }
 
 // Fetch LRN
-async function getLRN(studentId: number): Promise<string> {
+async function getLRN(applicantId: number): Promise<string> {
   const result = await db
     .select({ lrn: applicantsInformationTable.lrn })
     .from(applicantsInformationTable)
-    .where(eq(applicantsInformationTable.applicants_id, studentId))
+    .where(eq(applicantsInformationTable.applicants_id, applicantId))
     .limit(1);
 
   return result.length > 0 ? result[0].lrn : "N/A";
 }
 
 // Fetch student name
-async function getStudentName(studentId: number): Promise<{ lastName: string; firstName: string }> {
+async function getStudentName(applicantId: number): Promise<{ lastName: string; firstName: string }> {
   const result = await db
     .select({
       applicantsLastName: applicantsInformationTable.applicantsLastName,
       applicantsFirstName: applicantsInformationTable.applicantsFirstName
     })
     .from(applicantsInformationTable)
-    .where(eq(applicantsInformationTable.applicants_id, studentId))
+    .where(eq(applicantsInformationTable.applicants_id, applicantId))
     .limit(1);
 
   return result.length > 0
@@ -58,6 +58,7 @@ async function getStudentName(studentId: number): Promise<{ lastName: string; fi
 
 async function getApplicantInfo
   (studentId: number): Promise<{ 
+    applicantId: number;
     lrn: string;
     lastName: string; 
     firstName: string 
@@ -71,6 +72,7 @@ async function getApplicantInfo
 
   const result = await db
     .select({
+      applicantId: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
       applicantsLastName: applicantsInformationTable.applicantsLastName,
       applicantsFirstName: applicantsInformationTable.applicantsFirstName,
@@ -89,6 +91,7 @@ async function getApplicantInfo
 
   return result.length > 0
     ? { 
+      applicantId: result[0].applicantId,
       lrn: result[0].lrn,
       lastName: result[0].applicantsLastName, 
       firstName: result[0].applicantsFirstName,
@@ -100,6 +103,7 @@ async function getApplicantInfo
       fullAddress: result[0].fullAddress,
     }
     : { 
+      applicantId: 0,
       lrn: "N/A", 
       lastName: "N/A", 
       firstName: "N/A",
@@ -165,19 +169,19 @@ async function sendAdmissionEmail(
 // API Handler
 export async function POST(request: Request) {
   try {
-    const { studentId } = await request.json();
+    const { applicantId } = await request.json();
 
-    if (!studentId) {
+    if (!applicantId) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
     }
 
-    const email = await getStudentEmail(studentId);
+    const email = await getStudentEmail(applicantId);
     if (!email) {
       return NextResponse.json({ error: "Student email not found" }, { status: 404 });
     }
 
-    const lrn = await getLRN(studentId);
-    const { firstName, lastName } = await getStudentName(studentId);
+    const lrn = await getLRN(applicantId);
+    const { firstName, lastName } = await getStudentName(applicantId);
     const randomPassword = generateRandomPassword();
     const {
       middleName,
@@ -186,7 +190,7 @@ export async function POST(request: Request) {
       age,
       gender,
       fullAddress
-    } = await getApplicantInfo(studentId);
+    } = await getApplicantInfo(applicantId);
 
     // Create Clerk user
     const clerk = await clerkClient();
@@ -229,17 +233,16 @@ export async function POST(request: Request) {
         isActive: true,
         dateAdmitted: new Date().toISOString().split("T")[0],
       })
-      .where(eq(AdmissionStatusTable.applicants_id, studentId));
+      .where(eq(AdmissionStatusTable.applicants_id, applicantId));
 
     
       const academicYearID = await getAcademicYearID();
       
     // Insert student info
-    await db
+    const [insertStudent] = await db
       .insert(StudentInfoTable)
       .values({
-        applicants_id: studentId,
-        academicYear_id: academicYearID,
+        applicants_id: applicantId,
         lrn,
         studentFirstName: firstName,
         studentMiddleName: middleName ?? undefined,
@@ -249,13 +252,17 @@ export async function POST(request: Request) {
         studentGender: gender,
         studentBirthDate: dateOfBirth.toISOString().split('T')[0],
         studentAge: age,
-      });
+      })
+      .returning({ id: StudentInfoTable.student_id});
+
+      const student_id = insertStudent.id;
 
     // Insert Clerk user reference
     await db.insert(ClerkUserTable).values({
       selected_AcademicYear_id: academicYearID,
       clerkId: user.id,
-      applicants_id: studentId,
+      applicants_id: applicantId,
+      student_id: student_id,
       userType: "student",
       clerk_username: `RIZAL-${lrn}`,
       clerk_email: email,

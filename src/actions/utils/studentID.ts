@@ -24,7 +24,7 @@
     const studentInfo = await db
       .select({ student_id: StudentInfoTable.student_id })
       .from(StudentInfoTable)
-      .where(eq(StudentInfoTable.applicants_id, applicant.applicants_id));
+      .where(eq(StudentInfoTable.student_id, applicant.student_id));
 
     return studentInfo[0]?.student_id ?? null;
   };

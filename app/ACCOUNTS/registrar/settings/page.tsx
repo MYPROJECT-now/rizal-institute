@@ -1,5 +1,5 @@
 "use client";
-import Registrar_header from "@/components/header/header_registrar";
+import Registrar_header from "@/components/sidebar/header/header_registrar";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";

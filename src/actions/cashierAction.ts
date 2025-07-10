@@ -5,10 +5,18 @@ import { db } from "../db/drizzle";
 import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
+import { getSelectedAcademicYear } from "./utils/academicYear";
 
 
   export const getAllEnrollees_cashier = async () => {
     await requireStaffAuth(["cashier"]); // gatekeeper
+
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
 
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
@@ -25,8 +33,9 @@ import { requireStaffAuth } from "./utils/staffAuth";
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))    
-    // .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
     .leftJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear))
   
     console.log("Fetched Enrollees:", allEnrollees);
     
@@ -37,6 +46,12 @@ import { requireStaffAuth } from "./utils/staffAuth";
   export const getAllReservedSlot_cashier = async () => {
     await requireStaffAuth(["cashier"]); // gatekeeper
 
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
@@ -49,13 +64,11 @@ import { requireStaffAuth } from "./utils/staffAuth";
 
     })
     .from(applicantsInformationTable)
-    .where(and(eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"), eq(applicationStatusTable.reservationPaymentStatus, "Reserved") ))
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
+    .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
-        .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
-
-    
+    .where(and(eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"), eq(applicationStatusTable.reservationPaymentStatus, "Reserved"), eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear)))
   
     console.log("Fetched Enrollees:", allEnrollees);
     

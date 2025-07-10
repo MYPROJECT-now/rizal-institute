@@ -1,5 +1,5 @@
 
-import { ReApplication } from "@/components/reApplications/reapplication";
+import { ReApplication } from "@/components/landing_page/reApplications/reapplication";
 import { Suspense } from "react";
 
 const ReApplyPage = () => {

@@ -6,9 +6,16 @@ import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTabl
 import { revalidatePath } from "next/cache";
 import { sql } from "drizzle-orm";
 import { requireStaffAuth } from "./utils/staffAuth";
+import { getSelectedAcademicYear } from "./utils/academicYear";
 
   export const getRecentApplicants = async () => {
     await requireStaffAuth(["registrar"]); // gatekeeper
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
 
     const recentEnrollees = await db.select({
       lrn: applicantsInformationTable.lrn,
@@ -22,7 +29,16 @@ import { requireStaffAuth } from "./utils/staffAuth";
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
-    .where(or(eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),eq(applicationStatusTable.reservationPaymentStatus, "Pending")))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(
+      and(
+        or(
+          eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),
+          eq(applicationStatusTable.reservationPaymentStatus, "Pending")
+        ), 
+        eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear)
+      )
+    )
     .orderBy(desc(applicationStatusTable.dateOfApplication))
     .limit(5);
     
@@ -33,9 +49,14 @@ import { requireStaffAuth } from "./utils/staffAuth";
   };
 
 
-    export const getAllEnrollees_registrar = async () => {
+  export const getAllEnrollees_registrar = async () => {
     await requireStaffAuth(["registrar"]); // gatekeeper
+    const selectedAcademicYear = await getSelectedAcademicYear();
 
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
 
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
@@ -51,6 +72,10 @@ import { requireStaffAuth } from "./utils/staffAuth";
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear))
+    
+
     
   
     console.log("Fetched Enrollees:", allEnrollees);
@@ -83,6 +108,12 @@ import { requireStaffAuth } from "./utils/staffAuth";
   export const getInfoByLrn = async (lrn: string) => {
     await requireStaffAuth(["registrar"]); // gatekeeper
 
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
 
       const latestRemark = db
         .select({
@@ -91,6 +122,8 @@ import { requireStaffAuth } from "./utils/staffAuth";
           dateOfRemarks: Registrar_remaks_table.dateOfRemarks,
         })
         .from(Registrar_remaks_table)
+        .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+        .where(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear))
         .orderBy(desc(Registrar_remaks_table.dateOfRemarks))
         .as("latest_remark");
 
@@ -135,6 +168,7 @@ import { requireStaffAuth } from "./utils/staffAuth";
     .leftJoin(guardianAndParentsTable, eq(applicantsInformationTable.applicants_id, guardianAndParentsTable.applicants_id))
     .leftJoin(documentsTable, eq(applicantsInformationTable.applicants_id, documentsTable.applicants_id))
     .leftJoin(latestRemark, eq(applicantsInformationTable.applicants_id, latestRemark.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
     .where(eq(applicantsInformationTable.lrn, lrn))
     .limit(1);
 
@@ -146,6 +180,13 @@ import { requireStaffAuth } from "./utils/staffAuth";
   export const get_ReservedApplicants = async () => {
     await requireStaffAuth(["registrar"]); // gatekeeper
     
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
+
     const allReserved = await db.select({
       id: applicantsInformationTable.applicants_id,
       lrn: applicantsInformationTable.lrn,
@@ -165,8 +206,9 @@ import { requireStaffAuth } from "./utils/staffAuth";
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
     .where(
       and(
-        eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
-        eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
+          eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
+          eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
+          eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear),
       )
     )
     
@@ -179,21 +221,22 @@ import { requireStaffAuth } from "./utils/staffAuth";
 
   export const getEnrolledStudent = async () => {
     await requireStaffAuth(["registrar"]); // gatekeeper
+    const selectedAcademicYear = await getSelectedAcademicYear();
 
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
+    
     const allStudent = await db.select({
       lrn: StudentInfoTable.lrn,
       studentLastName: StudentInfoTable.studentLastName,
       studentFirstName: StudentInfoTable.studentFirstName,
       studentMiddleName: StudentInfoTable.studentMiddleName,
-      // studentSuffix: StudentInfoTable.studentSuffix,
-      // studentGender: StudentInfoTable.studentGender,
-      // studentBirthDate: StudentInfoTable.studentBirthDate,
-      // studentAge: StudentInfoTable.studentAge,
-      // fullAddress: StudentInfoTable.fullAddress,
-    
     })
     .from(StudentInfoTable)
-  
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear))
     console.log("Fetched Enrollees:", allStudent);
     
     return allStudent;

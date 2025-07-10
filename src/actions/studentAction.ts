@@ -3,7 +3,7 @@
 
 import { eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable } from "../db/schema";
 import { generateSINumber } from './utils/SI_Number_counter';
 import { getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
@@ -194,3 +194,17 @@ export const addPayment = async (
 
   return { success: true };
   } 
+
+
+  export const getAcademicYear = async () => {
+    const studentId = await getStudentId();
+    if (!studentId) return null;
+
+    const academicYear = await db
+      .select({academicYear: AcademicYearTable.academicYear})
+      .from(AdmissionStatusTable)
+      .innerJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
+      .where(eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+
+    return academicYear;
+  }

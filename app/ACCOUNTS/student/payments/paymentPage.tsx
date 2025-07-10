@@ -1,8 +1,8 @@
 
 
-import { Balance } from "@/components/students/payment management/outstandingBalance/balance";
-import { PaymentMainPage } from "@/components/students/payment management/payment/paymentMainPage";
-import { PaymentHistoryPage } from "@/components/students/payment management/paymentHistory/paymentHistoryPage";
+import { Balance } from "@/components/accounts/students/payment management/outstandingBalance/balance";
+import { PaymentMainPage } from "@/components/accounts/students/payment management/payment/paymentMainPage";
+import { PaymentHistoryPage } from "@/components/accounts/students/payment management/paymentHistory/paymentHistoryPage";
 
 
 

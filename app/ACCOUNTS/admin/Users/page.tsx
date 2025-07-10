@@ -1,6 +1,6 @@
 
-import { UsersTable } from "@/components/admin/users/users";
-import Admin_header from "@/components/header/header_admin";
+import { UsersTable } from "@/components/accounts/admin/users/users";
+import Admin_header from "@/components/sidebar/header/header_admin";
 import { Button } from "@/components/ui/button";
 
 

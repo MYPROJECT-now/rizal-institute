@@ -1,7 +1,7 @@
 
-import { Top_analytics } from "@/components/admin/dashboard/analytics/top_analyitcs";
-import { AdminAuditTrailsTable } from "@/components/admin/dashboard/auditTrails/auditTrails";
-import Admin_header from "@/components/header/header_admin";
+import { Top_analytics } from "@/components/accounts/admin/dashboard/analytics/top_analyitcs";
+import { AdminAuditTrailsTable } from "@/components/accounts/admin/dashboard/auditTrails/auditTrails";
+import Admin_header from "@/components/sidebar/header/header_admin";
 
 
 const Dashboard = () => {

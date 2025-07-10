@@ -79,16 +79,23 @@ export async function POST(request: Request) {
     try {
       if (role === "student") {
         const getStudentId = await db
-          .select()
+          .select({
+            student_id: StudentInfoTable.student_id,
+            applicants_id: StudentInfoTable.applicants_id
+          })
           .from(StudentInfoTable)
           .where(eq(StudentInfoTable.lrn, username))
           .limit(1);
-        const studentId = getStudentId[0]?.student_id;
+          
+          const studentId = getStudentId[0]?.student_id ?? 0;
+          const applicantsId = getStudentId[0]?.applicants_id ?? 0;
+
 
         await db.insert(ClerkUserTable).values({
           selected_AcademicYear_id: academicYearID,
+          student_id: studentId,
+          applicants_id: applicantsId,
           clerkId: user.id,
-          applicants_id: studentId,
           userType: role,
           clerk_username: `RIZAL-${username}`,
           clerk_email: email,

@@ -1,6 +1,6 @@
 
-import { Registration_Form } from "@/components/students/reg form/reg_form";
-import Admin_student from "@/components/header/header_student";
+import { Registration_Form } from "@/components/accounts/students/reg form/reg_form";
+import Admin_student from "@/components/sidebar/header/header_student";
 
 
 const Reg_Form = () => {

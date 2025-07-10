@@ -1,5 +1,5 @@
 
-import { Application_Modal } from "@/components/application/application_modal";
+import { Application_Modal } from "@/components/landing_page/application_modal";
 
 
 

@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import { StatusModal } from "@/components/landing_page_portal/status_modal/status_modal";
+import { StatusModal } from "@/components/landing_page/landing_page_portal/status_modal/status_modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

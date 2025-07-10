@@ -10,8 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
-import { StatusModal } from "@/components/landing_page_portal/status_modal/status_modal";
 import { useShowStatusModal } from "@/src/store/LANDING_PAGE/landing_page";
+import { StatusModal } from "@/components/landing_page/landing_page_portal/status_modal/status_modal";
 
 
 export default function Home() {

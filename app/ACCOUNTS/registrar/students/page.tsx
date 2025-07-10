@@ -1,5 +1,5 @@
-import Registrar_header  from "@/components/header/header_registrar";
-import { CurrentStudentPage } from "@/components/registrar/enrolled_Students/student_page";
+import Registrar_header  from "@/components/sidebar/header/header_registrar";
+import { CurrentStudentPage } from "@/components/accounts/registrar/enrolled_Students/student_page";
 const RegistrarsStudentsTable = () => {
     return (
         <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">

@@ -5,7 +5,6 @@
     import { toast } from "sonner";
     import Image from "next/image";
     import { usePreviewModal } from "@/src/store/preview";
-    import { PreviewModal } from "@/components/landing_page_portal/preview/preview_modal";
     import { verifyEmail, verifyLrn } from "@/src/actions/landingPage";
 
     import {
@@ -14,6 +13,7 @@
         CardHeader,
         CardTitle,
     } from "@/components/ui/card"
+import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
 
 
     interface Props {

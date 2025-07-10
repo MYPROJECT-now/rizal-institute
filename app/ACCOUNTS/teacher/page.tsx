@@ -1,5 +1,5 @@
-import Teacher_header from "@/components/header/header_teacher";
-import { GradeTable } from "@/components/teacher/grades/grades_registrar";
+import Teacher_header from "@/components/sidebar/header/header_teacher";
+import { GradeTable } from "@/components/accounts/teacher/grades/grades_registrar";
 const RegistrarsStudentsTable = () => {
     return (
         <div className="w-full max-h-full rounded-xl flex flex-col px-10 bg-page">

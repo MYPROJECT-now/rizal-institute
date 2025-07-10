@@ -5,7 +5,6 @@
 
     export const applicantsInformationTable = pgTable("applicationInformationTable", {
       applicants_id: serial("applicants_id").primaryKey(),
-      academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       applicantsLastName: varchar('applicantsLastName', { length:100 }).notNull(),
       applicantsFirstName: varchar('applicantsFirstName',{ length: 100 }).notNull(),
       applicantsMiddleName: varchar('applicantsMiddleName', { length:100 }),
@@ -63,7 +62,7 @@
 
     export const reservationFeeTable = pgTable("reservationFeeTable" ,{
       reservation_id: serial('reservation_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       reservationAmount: integer('reservationAmount').notNull(),
       mop: varchar('mop', { length:100 }),
@@ -72,7 +71,7 @@
 
     export const applicationStatusTable = pgTable("applicationStatusTable", {
       application_status_id: serial('application_status_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       trackingId: varchar('trackingId', { length:100 }).notNull(),
       applicationFormReviewStatus: varchar('applicationFormReviewStatus', { length:100 }).notNull(),
@@ -96,21 +95,11 @@
       isActive: boolean('isActive').notNull().default(false),
     })
 
-    export const ClerkUserTable = pgTable("ClerkUserTable", {
-      clerk_uid: serial('clerk_uid').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull().unique(),
-      clerkId: varchar("clerkID", { length: 100 }).notNull(),
-      userType: varchar("userType", { length: 100 }).notNull(),
-      clerk_username: varchar("clerk_username", { length: 100 }).notNull(),
-      clerk_email: varchar("clerk_email", { length: 100 }).notNull(),
-      isActive: boolean('isActive').notNull().default(true),
-      selected_AcademicYear_id: integer('selected_AcademicYear_id').references(() => AcademicYearTable.academicYear_id).notNull(),
-    })
 
 
     export const Registrar_remaks_table = pgTable("Registrar_remaks_table", {
       reg_remarks_id: serial('reg_remarks_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       reg_remarks: varchar('reg_remarks', { length:100 }).notNull(),
       dateOfRemarks: date('dateOfRemarks').notNull(),
@@ -119,7 +108,7 @@
 
     export const Cashier_remaks_table = pgTable("Cashier_remaks_table", {
       cashier_remarks_id: serial('cashier_remarks_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       cashier_remarks: varchar('cashier_remarks', { length:100 }).notNull(),
       dateOfRemarks: date('dateOfRemarks').notNull(),
@@ -156,10 +145,6 @@
         references: [AdmissionStatusTable.applicants_id],
       }),
 
-      clerk: one(ClerkUserTable, {
-        fields: [applicantsInformationTable.applicants_id],
-        references: [ClerkUserTable.applicants_id],
-      }),
 
       reg_remarks: many(Registrar_remaks_table),
       cashier_remarks: many(Cashier_remaks_table),
@@ -173,8 +158,7 @@
 
     export const StudentInfoTable = pgTable("studentInfoTable", {
       student_id: serial('student_id').primaryKey(),
-      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull().unique(),
-      academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull().unique(),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).unique(),
       lrn: varchar('lrn', { length:100 }).notNull().unique(),
       studentLastName: varchar('studentLastName', { length:100 }).notNull(),
       studentFirstName: varchar('studentFirstName', { length:100 }).notNull(),
@@ -186,10 +170,22 @@
       studentAge: integer('studentAge').notNull(),
     })
 
+    export const ClerkUserTable = pgTable("ClerkUserTable", {
+      clerk_uid: serial('clerk_uid').primaryKey(),
+      student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull().unique(),
+      applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+      clerkId: varchar("clerkID", { length: 100 }).notNull(),
+      userType: varchar("userType", { length: 100 }).notNull(),
+      clerk_username: varchar("clerk_username", { length: 100 }).notNull(),
+      clerk_email: varchar("clerk_email", { length: 100 }).notNull(),
+      isActive: boolean('isActive').notNull().default(true),
+      selected_AcademicYear_id: integer('selected_AcademicYear_id').references(() => AcademicYearTable.academicYear_id).notNull(),
+    })
+
 
     export const downPaymentTable = pgTable("downPaymentTable", {
       donw_id: serial('donw_id').primaryKey(),
-      student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull().unique(),
+      student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull(),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
       amount: integer('amount').notNull(),
       downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
@@ -218,7 +214,7 @@
     export const MonthlyPayementTable = pgTable("MonthlyPayementTable", {
       monthlyPayment_id: serial('monthlyPayment_id').primaryKey(),
       student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull(),
-      month_id: integer('month_id').references(() => MonthsInSoaTable.month_id),
+      month_id: integer('month_id').references(() => MonthsInSoaTable.month_id).notNull(),
       academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
 
       dateOfPayment: varchar('dateOfPayment', { length:100 }).notNull(),
@@ -244,6 +240,10 @@
       downPayment: one(downPaymentTable, {
         fields: [StudentInfoTable.student_id],
         references: [downPaymentTable.student_id],
+      }),
+      clerkUserRelations: one(ClerkUserTable, {
+        fields: [StudentInfoTable.student_id],
+        references: [ClerkUserTable.student_id],
       }),
 
       soa: many(MonthsInSoaTable),

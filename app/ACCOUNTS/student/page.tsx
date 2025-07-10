@@ -1,5 +1,5 @@
-import Admin_student from "@/components/header/header_student";
-import { StudentDashboard } from "@/components/students/dashboard/dashboard";
+import Admin_student from "@/components/sidebar/header/header_student";
+import { StudentDashboard } from "@/components/accounts/students/dashboard/dashboard";
 
 const Dashboard = () => {
     return (

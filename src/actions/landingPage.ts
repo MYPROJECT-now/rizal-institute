@@ -209,7 +209,7 @@ export const addNewApplicant = async (formData: {
 
 
   const [insertedApplicant] = await db.insert(applicantsInformationTable).values({
-    academicYear_id: academicYearID,
+    // academicYear_id: academicYearID,
     applicantsLastName,
     applicantsFirstName,
     applicantsMiddleName,

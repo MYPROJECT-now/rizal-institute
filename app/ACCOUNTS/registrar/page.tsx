@@ -1,8 +1,8 @@
-import Registrar_header from "@/components/header/header_registrar";
-import { Top_analytics } from "@/components/registrar/dashboard/analytics/top_analyitcs";
-import { Ppgl } from "@/components/registrar/dashboard/graphs/ppgl";
-import { Enrollment } from "@/components/registrar/dashboard/graphs/enrollment";
-import { RecentApplicantsTable } from "@/components/registrar/dashboard/recentApplicants/recentApplicants";
+import Registrar_header from "@/components/sidebar/header/header_registrar";
+import { Top_analytics } from "@/components/accounts/registrar/dashboard/analytics/top_analyitcs";
+import { Ppgl } from "@/components/accounts/registrar/dashboard/graphs/ppgl";
+import { Enrollment } from "@/components/accounts/registrar/dashboard/graphs/enrollment";
+import { RecentApplicantsTable } from "@/components/accounts/registrar/dashboard/recentApplicants/recentApplicants";
 
 
 const Dashboard = () => {

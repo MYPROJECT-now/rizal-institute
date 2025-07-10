@@ -1,5 +1,5 @@
-import Cashier_header from "@/components/header/header_cashier";
-import { VerifyPage } from "@/components/cashier/payment_verification/VerifyPage";
+import Cashier_header from "@/components/sidebar/header/header_cashier";
+import { VerifyPage } from "@/components/accounts/cashier/payment_verification/VerifyPage";
 const RegistrarsEnrolleesTable = () => {
     return(
         <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
