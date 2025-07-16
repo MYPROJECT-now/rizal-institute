@@ -7,4 +7,5 @@ export type VerifyPayment = {
     modeOfPayment: string;
     SInumber: string | null;
     status: string;
+    isActive: boolean | null;
 }

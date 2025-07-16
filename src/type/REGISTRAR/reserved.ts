@@ -7,5 +7,6 @@ export type TableReserved_Type = {
     gradeLevel: string | null;
     confirmationStatus: string | null;
     admissionStatus: string | null;
+    isActive: boolean | null;
   };
   

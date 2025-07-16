@@ -12,11 +12,11 @@ const Teacher_header = () => {
       
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] mt-12 sm:text-sm md:text-base lg:text-lg">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-4">
             <div className="flex flex-col">
-                {/*<p className=" font-Alfa text-lGreen text-2xl">
+                <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE
-                </p> */}
+                </p>
                 
                 <p className="font-oswald text-sm lg:text-lg text-green-500">
                     {currentDate}

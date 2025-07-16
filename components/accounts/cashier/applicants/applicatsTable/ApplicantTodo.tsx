@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   applicants: Tableapplicant_Type;
-  onAccept: (id: number) => void;
+  onAccept: (id: number, lastName: string, firstName: string, middleName: string) => void;
   onDecline: (id: number) => void;
   className?: string;
   loading?: boolean;
@@ -50,10 +50,10 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="py-2 space-x-2">
         <Button
-          onClick={() => onAccept(applicants.id)}
+          onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
           className="w-[85px] h-[35px] rounded-lg"
           variant={"acceptButton"}
-          disabled={applicants.reservationPaymentStatus !== "Pending" || loading}
+          disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
         >
           {loading ? "Accepting..." : "Accept"}
         </Button>
@@ -61,10 +61,10 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
         {/* Decline button only opens the modal */}
         <RemarksModal onDecline={onDecline} />
         <Button
-          onClick={() => open(applicants.id)}
+          onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
           variant={"rejectButton"}
           className="w-[85px] h-[35px] rounded-lg"
-          disabled={applicants.reservationPaymentStatus !== "Pending"}
+          disabled={applicants.reservationPaymentStatus !== "Pending" || applicants.isActive === false}
           
         >
           Decline

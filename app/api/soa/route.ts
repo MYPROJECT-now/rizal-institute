@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import {  downPaymentTable, MonthsInSoaTable, StudentInfoTable } from "@/src/db/schema";
+import {  applicantsInformationTable, auditTrailsTable, downPaymentTable, MonthsInSoaTable, StudentInfoTable } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 import { generateSINumber } from "@/src/actions/utils/SI_Number_counter";
 import { getAcademicYearID } from "@/src/actions/utils/academicYear";
+import { getStaffCredentials } from "@/src/actions/utils/staffID";
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
@@ -28,7 +29,12 @@ export async function POST(req: NextRequest) {
     console.log("❌ No student found for LRN:", inputLrn);
     return NextResponse.json({ error: "Student with this LRN is not yet admitted." }, { status: 404 });
   }
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
+    }
 
+   
   const studentId = student.student_id;
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -134,6 +140,33 @@ export async function POST(req: NextRequest) {
         downPaymentId = inserted[0].id;
       }
     }
+    const [applicant] = await db
+      .select({
+        firstName: applicantsInformationTable.applicantsFirstName,
+        middleName: applicantsInformationTable.applicantsMiddleName,
+        lastName: applicantsInformationTable.applicantsLastName,
+        suffix: applicantsInformationTable.applicantsSuffix,
+      })
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, inputLrn));
+
+    const fullName = [
+      applicant.lastName,
+      applicant.firstName,
+      applicant.middleName ?? '',
+      applicant.suffix ?? '',
+    ].filter(Boolean).join(' ');
+
+    // 📝 Insert audit log after successful down payment
+    await db.insert(auditTrailsTable).values({
+      actionTaken: "Uploaded SOA",
+      actionTakenFor: fullName,
+      dateOfAction: new Date().toISOString().split("T")[0],
+      username: credentials.clerk_username,
+      usertype: credentials.userType,
+      academicYear_id: academicYearID,
+    });
+
   }
 }
   return NextResponse.json({ message: "SOA uploaded successfully." });

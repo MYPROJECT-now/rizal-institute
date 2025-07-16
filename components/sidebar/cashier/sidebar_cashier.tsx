@@ -74,7 +74,7 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     <AcademicYearModal />
                     <SidebarAcad 
                         label="Academic Year"
-                        iconSrc="/acad.png"
+                        iconSrc="/calendar.png"
                         onClick={open} 
                     />
 

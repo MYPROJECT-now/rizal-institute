@@ -36,7 +36,7 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onAccept, onDecline }) => {
                     variant="acceptButton"
                     className="h-[30px] w-[80px] rounded-lg"
                     onClick={handleAccept}
-                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined"}
+                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}
                 >
                     Approve
                 </Button>
@@ -44,7 +44,7 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onAccept, onDecline }) => {
                     variant="rejectButton"
                     className="h-[30px] w-[80px] rounded-lg"
                     onClick={handleDecline}
-                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined"}
+                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}
                 >
                     Decline
                 </Button>

@@ -9,6 +9,7 @@
 
   interface Props {
     applicants: Tableapplicant_Type [];
+    
   }
 
   const Applicants: FC<Props> = ({ applicants }) => {
@@ -24,7 +25,7 @@
     const [currentPage, setCurrentPage] = useState(1);
     const studentsPerPage = 5;
 
-    const handleAccept = async (id: number) => {
+    const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string) => {
       setLoadingId(id);
       try {
         const response = await fetch('/api/accept/registrar', {
@@ -32,7 +33,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ studentId: id }),
+          body: JSON.stringify({ studentId: id, name: lastName + " " + firstName + " " + middleName }),
         });
 
         const data = await response.json();
@@ -89,48 +90,48 @@
     <main className="mx-auto max-w-8xl w-full  p-8  text-center">
 
     <div className="flex flex-wrap items-center gap-4 mb-6">
-    <label className="text-green-900 font-bold text-lg">Filter By:</label>
+      <label className="text-green-900 font-bold text-lg">Filter By:</label>
 
-    <input
-      type="text"
-      placeholder="Name"
-      value={filterName}
-      onChange={(e) => setFilterName(e.target.value)}
+      <input
+        type="text"
+        placeholder="Name"
+        value={filterName}
+        onChange={(e) => setFilterName(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      />
+
+      <input
+        type="text"
+        placeholder="LRN"
+        value={filterLRN}
+        onChange={(e) => setFilterLRN(e.target.value)}
       className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-    />
+      />
 
-    <input
-      type="text"
-      placeholder="LRN"
-      value={filterLRN}
-      onChange={(e) => setFilterLRN(e.target.value)}
-    className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-    />
+      <select
+        value={filterGrade}
+        onChange={(e) => setFilterGrade(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      >
+        <option value="">All Grades</option>
+        <option value="7">Grade 7</option>
+        <option value="8">Grade 8</option>
+        <option value="9">Grade 9</option>
+        <option value="10">Grade 10</option>
+        {/* Add other grades as needed */}
+      </select>
 
-    <select
-      value={filterGrade}
-      onChange={(e) => setFilterGrade(e.target.value)}
-      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-    >
-      <option value="">All Grades</option>
-      <option value="7">Grade 7</option>
-      <option value="8">Grade 8</option>
-      <option value="9">Grade 9</option>
-      <option value="10">Grade 10</option>
-      {/* Add other grades as needed */}
-    </select>
-
-    <Button
-      onClick={() => {
-        setFilterName("");
-        setFilterLRN("");
-        setFilterGrade("");
-      }}
-      variant="confirmButton"
-      className="w-[100px] h-[40px] rounded-lg"
-    >
-      Clear Filter
-    </Button>
+      <Button
+        onClick={() => {
+          setFilterName("");
+          setFilterLRN("");
+          setFilterGrade("");
+        }}
+        variant="confirmButton"
+        className="w-[100px] h-[40px] rounded-lg"
+      >
+        Clear Filter
+      </Button>
   </div>
 
   <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
@@ -161,7 +162,7 @@
               onAccept={handleAccept}
               onDecline={handleDecline} // 👈 NEW!
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
-              loading={loadingId === student.id}
+              loading={loadingId === student.admission_id}
             />
           ))
         )}

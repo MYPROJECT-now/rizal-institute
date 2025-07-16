@@ -60,7 +60,7 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                     <AcademicYearModal />
                     <SidebarAcad 
                         label="Academic Year"
-                        iconSrc="/acad.png"
+                        iconSrc="/calendar.png"
                         onClick={open} 
                     />
             

@@ -25,8 +25,6 @@
         const result = await getAcademicYear(); // Already ordered in descending
         const defaultYr = await getDefaultYear(); // This returns "2024-2025"
 
-            console.log("Academic Year List:", result);
-    console.log("Default Year from DB:", defaultYr);
 
         if (result) {
           const yearList = result.map((item) => item.academicYear);

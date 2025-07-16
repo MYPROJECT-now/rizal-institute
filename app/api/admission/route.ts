@@ -1,16 +1,17 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import { AdmissionStatusTable, applicantsInformationTable, ClerkUserTable, guardianAndParentsTable, StudentInfoTable } from '@/src/db/schema';
+import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, StudentGradesTable, StudentInfoTable, SubjectTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { clerkClient } from '@clerk/nextjs/server';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
+import { getStaffCredentials } from '@/src/actions/utils/staffID';
 
 // Define Clerk error interface
-interface ClerkError extends Error {
-  status?: number;
-  errors?: unknown[];
-}
+// interface ClerkError extends Error {
+//   status?: number;
+//   errors?: unknown[];
+// }
 
 // Generate a random password
 function generateRandomPassword(length = 12) {
@@ -166,10 +167,144 @@ async function sendAdmissionEmail(
   await transporter.sendMail(mailOptions);
 }
 
-// API Handler
+// // API Handler
+// export async function POST(request: Request) {
+//   try {
+//     const { applicantId, name } = await request.json();
+
+//     if (!applicantId) {
+//       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
+//     }
+
+//     const email = await getStudentEmail(applicantId);
+//     if (!email) {
+//       return NextResponse.json({ error: "Student email not found" }, { status: 404 });
+//     }
+
+//     const lrn = await getLRN(applicantId);
+//     const { firstName, lastName } = await getStudentName(applicantId);
+//     const randomPassword = generateRandomPassword();
+//     const {
+//       middleName,
+//       suffix,
+//       dateOfBirth,
+//       age,
+//       gender,
+//       fullAddress
+//     } = await getApplicantInfo(applicantId);
+
+//     // Create Clerk user
+//     const clerk = await clerkClient();
+    
+//     console.log('Creating Clerk user with:', {
+//       username: `RIZAL-${lrn}`,
+//       email: email,
+//       firstName,
+//       lastName
+//     });
+    
+    
+//   const credentials = await getStaffCredentials();
+//     if (!credentials) {
+//       return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
+//     }
+    
+    
+//     let user;
+//     try {
+//       user = await clerk.users.createUser({
+//         username: `RIZAL-${lrn}`,
+//         password: randomPassword,
+//         emailAddress: [email],
+//         firstName,
+//         lastName,
+//         publicMetadata: {
+//           role: "student",
+//         },
+//       });
+      
+//       console.log('Clerk user created successfully:', user.id);
+//     } catch (clerkError: unknown) {
+//       console.error('Clerk user creation failed:', {
+//         error: clerkError instanceof Error ? clerkError.message : 'Unknown error',
+//         status: (clerkError as ClerkError)?.status,
+//         errors: (clerkError as ClerkError)?.errors
+//       });
+//       throw clerkError;
+//     }
+
+//     // Update admission status
+//     await db
+//       .update(AdmissionStatusTable)
+//       .set({ 
+//         admissionStatus: "Enrolled",
+//         isActive: true,
+//         dateAdmitted: new Date().toISOString().split("T")[0],
+//       })
+//       .where(eq(AdmissionStatusTable.applicants_id, applicantId));
+
+    
+//       const academicYearID = await getAcademicYearID();
+      
+//     // Insert student info
+//     const [insertStudent] = await db
+//       .insert(StudentInfoTable)
+//       .values({
+//         applicants_id: applicantId,
+//         lrn,
+//         studentFirstName: firstName,
+//         studentMiddleName: middleName ?? undefined,
+//         studentLastName: lastName,
+//         studentSuffix: suffix ?? undefined,
+//         fullAddress: fullAddress ?? "",
+//         studentGender: gender,
+//         studentBirthDate: dateOfBirth.toISOString().split('T')[0],
+//         studentAge: age,
+//       })
+//       .returning({ id: StudentInfoTable.student_id});
+
+//       const student_id = insertStudent.id;
+
+//     // Insert Clerk user reference
+//     await db.insert(ClerkUserTable).values({
+//       selected_AcademicYear_id: academicYearID,
+//       clerkId: user.id,
+//       applicants_id: applicantId,
+//       student_id: student_id,
+//       userType: "student",
+//       clerk_username: `RIZAL-${lrn}`,
+//       clerk_email: email,
+//     });
+
+//     await  db.insert(auditTrailsTable)
+//         .values({
+//         actionTaken: "Applicant was admitted",
+//         actionTakenFor: name,
+//         dateOfAction: new Date().toISOString(),
+//         username: credentials.clerk_username,
+//         usertype: credentials.userType,
+//         academicYear_id: await getAcademicYearID(),
+//       })
+
+//     // Send admission email
+//     await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
+
+//     return NextResponse.json({ 
+//       message: "Student was successfully admitted and email sent successfully.",
+//       admissionStatus: "Enrolled", });
+//   } catch (error: unknown) {
+//     console.error("Admission process failed:", error);
+//     return NextResponse.json({ 
+//       error: "Failed to complete admission process", 
+//       details: error instanceof Error ? error.message : 'Unknown error'
+//     }, { status: 500 });
+//   }
+// }
+
+
 export async function POST(request: Request) {
   try {
-    const { applicantId } = await request.json();
+    const { applicantId, name } = await request.json();
 
     if (!applicantId) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
@@ -192,72 +327,50 @@ export async function POST(request: Request) {
       fullAddress
     } = await getApplicantInfo(applicantId);
 
-    // Create Clerk user
     const clerk = await clerkClient();
-    
-    console.log('Creating Clerk user with:', {
-      username: `RIZAL-${lrn}`,
-      email: email,
-      firstName,
-      lastName
-    });
-    
-    let user;
-    try {
-      user = await clerk.users.createUser({
-        username: `RIZAL-${lrn}`,
-        password: randomPassword,
-        emailAddress: [email],
-        firstName,
-        lastName,
-        publicMetadata: {
-          role: "student",
-        }
-      });
-      
-      console.log('Clerk user created successfully:', user.id);
-    } catch (clerkError: unknown) {
-      console.error('Clerk user creation failed:', {
-        error: clerkError instanceof Error ? clerkError.message : 'Unknown error',
-        status: (clerkError as ClerkError)?.status,
-        errors: (clerkError as ClerkError)?.errors
-      });
-      throw clerkError;
+    const credentials = await getStaffCredentials();
+    if (!credentials) {
+      return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
     }
 
+    // Create Clerk user
+    const user = await clerk.users.createUser({
+      username: `RIZAL-${lrn}`,
+      password: randomPassword,
+      emailAddress: [email],
+      firstName,
+      lastName,
+      publicMetadata: { role: "student" },
+    });
+
     // Update admission status
-    await db
-      .update(AdmissionStatusTable)
-      .set({ 
+    await db.update(AdmissionStatusTable)
+      .set({
         admissionStatus: "Enrolled",
         isActive: true,
         dateAdmitted: new Date().toISOString().split("T")[0],
       })
       .where(eq(AdmissionStatusTable.applicants_id, applicantId));
 
-    
-      const academicYearID = await getAcademicYearID();
-      
-    // Insert student info
-    const [insertStudent] = await db
-      .insert(StudentInfoTable)
-      .values({
-        applicants_id: applicantId,
-        lrn,
-        studentFirstName: firstName,
-        studentMiddleName: middleName ?? undefined,
-        studentLastName: lastName,
-        studentSuffix: suffix ?? undefined,
-        fullAddress: fullAddress ?? "",
-        studentGender: gender,
-        studentBirthDate: dateOfBirth.toISOString().split('T')[0],
-        studentAge: age,
-      })
-      .returning({ id: StudentInfoTable.student_id});
+    const academicYearID = await getAcademicYearID();
 
-      const student_id = insertStudent.id;
+    // Insert into StudentInfoTable
+    const [insertStudent] = await db.insert(StudentInfoTable).values({
+      applicants_id: applicantId,
+      lrn,
+      studentFirstName: firstName,
+      studentMiddleName: middleName ?? undefined,
+      studentLastName: lastName,
+      studentSuffix: suffix ?? undefined,
+      fullAddress: fullAddress ?? "",
+      studentGender: gender,
+      studentBirthDate: dateOfBirth.toISOString().split('T')[0],
+      studentAge: age,
+    }).returning({ id: StudentInfoTable.student_id });
 
-    // Insert Clerk user reference
+    const student_id = insertStudent.id;
+
+    // Insert into ClerkUserTable
     await db.insert(ClerkUserTable).values({
       selected_AcademicYear_id: academicYearID,
       clerkId: user.id,
@@ -268,17 +381,67 @@ export async function POST(request: Request) {
       clerk_email: email,
     });
 
-    // Send admission email
+    // Get grade level
+    const gradeLevelResult = await db
+      .select({ gradeLevel: educationalBackgroundTable.gradeLevel })
+      .from(educationalBackgroundTable)
+      .where(eq(educationalBackgroundTable.applicants_id, applicantId))
+      .limit(1);
+
+    const gradeLevelName = gradeLevelResult[0]?.gradeLevel;
+    if (!gradeLevelName) {
+      throw new Error("Grade level not found for applicant");
+    }
+
+    // Get gradeLevel_id
+    const gradeLevelRow = await db
+      .select({ id: GradeLevelTable.gradeLevel_id })
+      .from(GradeLevelTable)
+      .where(eq(GradeLevelTable.gradeLevelName, gradeLevelName))
+      .limit(1);
+
+    const gradeLevel_id = gradeLevelRow[0]?.id;
+    if (!gradeLevel_id) {
+      throw new Error(`Grade level ID not found for "${gradeLevelName}"`);
+    }
+
+    // Get all subjects
+    const subjects = await db.select().from(SubjectTable);
+
+    // Prepare and insert StudentGrades
+    const gradeEntries = subjects.map(subject => ({
+      student_id,
+      academicYear_id: academicYearID,
+      gradeLevel_id,
+      subject_id: subject.subject_id,
+      finalGrade: null,
+      remarks: null,
+    }));
+
+    await db.insert(StudentGradesTable).values(gradeEntries);
+
+    // Insert audit trail
+    await db.insert(auditTrailsTable).values({
+      actionTaken: "Applicant was admitted",
+      actionTakenFor: name,
+      dateOfAction: new Date().toISOString(),
+      username: credentials.clerk_username,
+      usertype: credentials.userType,
+      academicYear_id: academicYearID,
+    });
+
+    // Send Email
     await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: "Student was successfully admitted and email sent successfully.",
-      admissionStatus: "Enrolled", });
+      admissionStatus: "Enrolled",
+    });
   } catch (error: unknown) {
     console.error("Admission process failed:", error);
-    return NextResponse.json({ 
-      error: "Failed to complete admission process", 
-      details: error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({
+      error: "Failed to complete admission process",
+      details: error instanceof Error ? error.message : "Unknown error"
     }, { status: 500 });
   }
 }

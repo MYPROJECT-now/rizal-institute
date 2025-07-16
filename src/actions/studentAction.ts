@@ -1,11 +1,11 @@
 // app/actions/getStudentData.ts
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable } from "../db/schema";
 import { generateSINumber } from './utils/SI_Number_counter';
-import { getStudentId } from './utils/studentID';
+import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
 
 
@@ -15,13 +15,28 @@ export const getInfoForDashboard = async () => {
   const applicantId = await getStudentId();
   if (!applicantId) return null;
 
+  const selectedAcademicYear = await getSelectedAcademicYear();
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+    return [];
+  }
+
   const studentInfo = await db
     .select({
       lrn: StudentInfoTable.lrn,
       student_id: StudentInfoTable.student_id,
+      admissionStatus: AdmissionStatusTable.admissionStatus,
+      gradeLevelName: GradeLevelTable.gradeLevelName,
+      academicYear: AcademicYearTable.academicYear,
     })
     .from(StudentInfoTable)
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+    .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
     .where(eq(StudentInfoTable.applicants_id, applicantId));
+
+    
 
   let outstandingBalance = 0;
   if (studentInfo[0]?.student_id) {
@@ -33,9 +48,10 @@ export const getInfoForDashboard = async () => {
         month_id: MonthsInSoaTable.month_id,
       })
       .from(MonthsInSoaTable)
-      .where(
-        eq(MonthsInSoaTable.student_id, studentInfo[0].student_id)
-      );
+      .where(and(
+        eq(MonthsInSoaTable.student_id, studentInfo[0].student_id),
+        eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)
+     ));
     // Get current month name (e.g., 'October')
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
     // Find the SOA row for the current month
@@ -54,7 +70,11 @@ export const getInfoForDashboard = async () => {
 
   return {
     lrn: studentInfo[0]?.lrn,
+    admissionStatus: studentInfo[0]?.admissionStatus,
+    gradeLevelName: studentInfo[0]?.gradeLevelName,
+    academicYear: studentInfo[0]?.academicYear,
     outstandingBalance,
+
   };
 }
 
@@ -64,6 +84,13 @@ export const getInfoForDashboard = async () => {
 
   const applicantId = await getStudentId();
   if (!applicantId) return [];
+
+  const selectedAcademicYear = await getSelectedAcademicYear();
+    
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+    return [];
+  }
 
   const paymentHistory = await db
     .select({
@@ -76,7 +103,8 @@ export const getInfoForDashboard = async () => {
       status: MonthlyPayementTable.status,
     })
     .from(MonthlyPayementTable)
-    .where(eq(MonthlyPayementTable.student_id, applicantId))
+    .where(and (eq(MonthlyPayementTable.student_id, applicantId), eq(MonthlyPayementTable.academicYear_id, selectedAcademicYear))
+)
 
   return paymentHistory;
 
@@ -90,6 +118,12 @@ export const getBalance = async () => {
   const studentId = await getStudentId();
     if (!studentId) return null;
 
+  const selectedAcademicYear = await getSelectedAcademicYear();
+    
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+    return null;
+  }
 
     // Get all SOA records for the student
     const soaRecords = await db
@@ -100,7 +134,7 @@ export const getBalance = async () => {
         amountPaid: MonthsInSoaTable.amountPaid,
       })
       .from(MonthsInSoaTable)
-      .where(eq(MonthsInSoaTable.student_id, studentId))
+      .where(and(eq(MonthsInSoaTable.student_id, studentId), eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)))
       .orderBy(MonthsInSoaTable.month_id);
 
     if (soaRecords.length === 0) return null;
@@ -196,15 +230,75 @@ export const addPayment = async (
   } 
 
 
+
+
   export const getAcademicYear = async () => {
     const studentId = await getStudentId();
     if (!studentId) return null;
 
+    const applicantId = await getApplicantID();
+    if (!applicantId) return null;
+
     const academicYear = await db
       .select({academicYear: AcademicYearTable.academicYear})
       .from(AdmissionStatusTable)
-      .innerJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
-      .where(eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+      .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
+      .where(and(eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id), eq(AdmissionStatusTable.applicants_id, applicantId)))
 
     return academicYear;
+  }
+
+
+  export const getDefaultYear = async () => {
+    const studentId = await getStudentClerkID();
+    if (!studentId) return null;
+  
+    const defaultYear = await db
+      .select({AcademicYear: AcademicYearTable.academicYear})
+      .from(ClerkUserTable)
+      .innerJoin(AcademicYearTable, eq(ClerkUserTable.selected_AcademicYear_id, AcademicYearTable.academicYear_id))
+      .where(eq(ClerkUserTable.clerkId, studentId))
+      .limit(1);
+    console.log("defaultYear result:", defaultYear);
+    return defaultYear[0]?.AcademicYear ?? null;
+    
+  }
+
+
+  export const updateAcademicYear = async (academicYear: string) => {
+    const studentId = await getStudentClerkID();
+    if (!studentId) return null;
+
+    const academicYearID = await db
+      .select({academicYear_id: AcademicYearTable.academicYear_id})
+      .from(AcademicYearTable)
+      .where(eq(AcademicYearTable.academicYear, academicYear))
+      .limit(1);
+  
+    try{
+      await db
+        .update(ClerkUserTable)
+        .set({ selected_AcademicYear_id: academicYearID[0]?.academicYear_id ?? null })
+        .where(eq(ClerkUserTable.clerkId,  studentId))
+  
+      }catch (error) {
+          console.log(error);
+        return ({ message: "Academic Year Not Updated" });
+  
+      }
+  
+      return ({ message: "Academic Year Updated" });
+  };
+
+    export const getSelectedAcademicYear = async () => {
+    const studentId = await getStudentClerkID();
+    if (!studentId) return null;
+  
+    const selectedAcademicYear = await db
+    .select({selected_AcademicYear_id: ClerkUserTable.selected_AcademicYear_id})
+    .from(ClerkUserTable)
+    .where(eq(ClerkUserTable.clerkId, studentId))
+    .limit(1);
+  
+    return selectedAcademicYear[0]?.selected_AcademicYear_id ?? null;
   }

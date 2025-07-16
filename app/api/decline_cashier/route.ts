@@ -1,8 +1,10 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
+import { getStaffCredentials } from '@/src/actions/utils/staffID';
+import { getAcademicYearID } from '@/src/actions/utils/academicYear';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -66,7 +68,7 @@ async function sendDeclineEmail(email: string, trackingId: string, remarks: stri
 // API handler for declining an application
 export async function POST(request: Request) {
   try {
-    const { studentId, remarks } = await request.json();
+    const { studentId, remarks, fullName } = await request.json();
 
     if (!studentId || !remarks.trim()) {
       return NextResponse.json({ error: "Missing student ID or remarks" }, { status: 400 });
@@ -80,12 +82,26 @@ export async function POST(request: Request) {
 
     // Fetch tracking ID
     const trackingId = await getTrackingId(studentId);
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
+    }
 
     // Update student's status to "Declined"
     await db
       .update(applicationStatusTable)
       .set({ reservationPaymentStatus: "Declined" })
       .where(eq(applicationStatusTable.applicants_id, studentId));
+
+    await  db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Decline Reservation Payment",
+        actionTakenFor: fullName,
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 
     // Send decline email
     await sendDeclineEmail(email, trackingId, remarks);

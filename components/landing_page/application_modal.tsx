@@ -52,7 +52,7 @@ export const Application_Modal = () => {
           </Link>
 
           <Link 
-          href="/application/old_student"
+          href="/application/check"
           >
             <Button
               variant="CButton"

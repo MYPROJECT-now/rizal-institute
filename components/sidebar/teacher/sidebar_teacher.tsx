@@ -15,7 +15,7 @@ export const Sidebar_teacher = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
+                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 ", 
                 className
             )}
         >
@@ -33,12 +33,18 @@ export const Sidebar_teacher = ({ className, onClose }: Props) => {
 
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
-                        label="Grades" 
+                        label="My Classes" 
                         href="/ACCOUNTS/teacher"
-                        iconSrc="/grades.png"
+                        iconSrc="/class.png"
                         onClick={onClose} 
                     />
 
+                    <SidebarItem 
+                        label="Input Grades" 
+                        href="/ACCOUNTS/teacher/grade"
+                        iconSrc="/grades.png"
+                        onClick={onClose} 
+                    />
             
                 </div>
             </div>

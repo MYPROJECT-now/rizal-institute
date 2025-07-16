@@ -13,6 +13,7 @@ import {
   Registrar_remaks_table,
   Cashier_remaks_table,
   additionalInformationTable,
+  StudentInfoTable,
 } from "../db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
@@ -571,5 +572,88 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
 };
 
 
+export const checkLRN = async (lrn: string) => {
+  try {
+    // Check in applicants table
+    const applicantExists = await db
+      .select()
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn))
+      .limit(1);
+
+    if (applicantExists.length > 0) return true;
+
+    // Check in students table
+    const studentExists = await db
+      .select()
+      .from(StudentInfoTable)
+      .where(eq(StudentInfoTable.lrn, lrn))
+      .limit(1);
+
+    return studentExists.length > 0;
+  } catch (error) {
+    console.error("Error checking LRN:", error);
+    throw error;
+  }
+};
 
 
+
+export const enrollOldStudent = async (
+    lrn: string,
+    gradeLevel: string,
+    mop: string,
+    reservationReceipt: string,
+    reservationAmount: number,
+) => {
+  const getStudentID = await db
+  .select({
+    applicants_id: applicantsInformationTable.applicants_id
+  })
+  .from(applicantsInformationTable)
+  .where(eq(applicantsInformationTable.lrn, lrn)).limit(1); 
+
+  const studentID = getStudentID[0]?.applicants_id;
+  const trackingId = generateRandomTrackingId();
+  const academicYearID = await getAcademicYearID();
+
+
+  await db
+  .insert(reservationFeeTable)
+  .values({
+    applicants_id: studentID,
+    mop,
+    reservationReceipt,
+    reservationAmount,
+    academicYear_id: academicYearID,
+  });
+
+
+
+      await db
+      .insert(applicationStatusTable)
+      .values({
+      applicants_id: studentID,
+      academicYear_id: academicYearID,
+      trackingId: trackingId,
+      applicationFormReviewStatus: 'Pending',
+      reservationPaymentStatus: 'Pending',
+      dateOfApplication: new Date().toISOString().slice(0, 10),
+    });
+
+    await db.insert(AdmissionStatusTable).values({
+      applicants_id: studentID,
+      academicYear_id: academicYearID,
+      admissionStatus: 'Pending',
+      confirmationStatus: 'Pending',
+      dateOfAdmission: new Date().toISOString().slice(0, 10),
+    });
+
+    await db.update(educationalBackgroundTable)
+    .set({
+      gradeLevel: gradeLevel,
+      studentType: 'Old Student',
+    })
+    .where(eq(educationalBackgroundTable.applicants_id, studentID));
+
+}

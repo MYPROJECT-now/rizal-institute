@@ -2,7 +2,7 @@
 
 import { and, desc, eq, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getSelectedAcademicYear } from "./utils/academicYear";
@@ -28,6 +28,7 @@ import { getSelectedAcademicYear } from "./utils/academicYear";
       reservationReceipt: reservationFeeTable.reservationReceipt,
       reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
       applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
+      isActive: AcademicYearTable.isActive,
       // soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
     })
     .from(applicantsInformationTable)
@@ -35,7 +36,12 @@ import { getSelectedAcademicYear } from "./utils/academicYear";
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))    
     .leftJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
-    .where(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear))
+    .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(and(
+      eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear),
+      eq(reservationFeeTable.academicYear_id, selectedAcademicYear),
+      eq(applicationStatusTable.academicYear_id, selectedAcademicYear),
+    ))
   
     console.log("Fetched Enrollees:", allEnrollees);
     
@@ -60,7 +66,7 @@ import { getSelectedAcademicYear } from "./utils/academicYear";
       middleName: applicantsInformationTable.applicantsMiddleName,
       gradeLevel: educationalBackgroundTable.gradeLevel,
       admissionStatus: AdmissionStatusTable.admissionStatus,
-            soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
+      soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
 
     })
     .from(applicantsInformationTable)
@@ -108,6 +114,12 @@ import { getSelectedAcademicYear } from "./utils/academicYear";
   
 export const getEnrolledStudents = async () => {
   await requireStaffAuth(["cashier"]); // gatekeeper
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
 
   const enrolledStudents = await db.select({
     id: StudentInfoTable.student_id,
@@ -118,7 +130,8 @@ export const getEnrolledStudents = async () => {
     Suffix: StudentInfoTable.studentSuffix,
   })
 .from(StudentInfoTable)
-
+.leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+.where(and(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear), eq(AdmissionStatusTable.admissionStatus, "Enrolled")));
 console.log("Fetched Enrolled Students:", enrolledStudents);
 return enrolledStudents;
 }
@@ -218,9 +231,13 @@ export const paymentToVerify = async () => {
     proofOfPayment: MonthlyPayementTable.proofOfPayment,
     modeOfPayment: MonthlyPayementTable.modeOfPayment,
     status: MonthlyPayementTable.status,
+    isActive: AcademicYearTable.isActive,
+
   })
   .from(MonthlyPayementTable)
   .leftJoin(MonthsInSoaTable, eq(MonthlyPayementTable.month_id, MonthsInSoaTable.month_id))
+  .leftJoin(AcademicYearTable, eq(MonthlyPayementTable.academicYear_id, AcademicYearTable.academicYear_id))
+  
 
   return paymentToVerify;
 }

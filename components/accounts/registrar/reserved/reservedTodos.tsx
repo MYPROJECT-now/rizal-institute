@@ -38,7 +38,7 @@
       const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
       const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
-    const handleAccept = async (id: number) => {
+    const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string) => {
       setLoadingId(id);
       try {
         const response = await fetch('/api/admission', {
@@ -46,7 +46,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ applicantId: id }),
+          body: JSON.stringify({ applicantId: id, name: lastName + " " + firstName + " " + middleName}),
         });
 
         const data = await response.json();

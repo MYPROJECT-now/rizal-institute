@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const StatusModal = ({ onDecline }: Props) => {
-  const { isOpen, close, remarks, setRemarks, studentId } = useDeclineRemarksModal();
+  const { isOpen, close, remarks, setRemarks, studentId , fullName} = useDeclineRemarksModal();
   const [isDeclining, setIsDeclining] = useState(false);
 
   const handleDecline = async () => {
@@ -31,7 +31,7 @@ export const StatusModal = ({ onDecline }: Props) => {
       const response = await fetch("/api/decline_registrar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId, remarks }),
+        body: JSON.stringify({ studentId, remarks, fullName, }),
       });
 
       if (!response.ok) {

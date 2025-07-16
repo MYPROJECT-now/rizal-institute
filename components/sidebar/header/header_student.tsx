@@ -17,11 +17,11 @@ const Admin_student = () => {
                 <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE
                 </p>
-                <p className="font-mono text-xs text-green-500">
+                <p className="font-oswald text-sm lg:text-lg text-green-500">
                     {currentDate}
                 </p>
             </div>
-            <div className="flex flex-row items-center gap-6">
+            <div className="flex flex-row items-center gap-5">
                 <p className="font-Alfa text-lGreen text-2xl">
                     STUDENT
                 </p>

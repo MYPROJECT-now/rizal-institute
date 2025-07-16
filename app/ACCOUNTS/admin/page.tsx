@@ -1,6 +1,6 @@
 
 import { Top_analytics } from "@/components/accounts/admin/dashboard/analytics/top_analyitcs";
-import { AdminAuditTrailsTable } from "@/components/accounts/admin/dashboard/auditTrails/auditTrails";
+import {  RecentAuditTrailsTable } from "@/components/accounts/admin/dashboard/auditTrails/auditTrails";
 import Admin_header from "@/components/sidebar/header/header_admin";
 
 
@@ -18,10 +18,10 @@ const Dashboard = () => {
 
                 <div className="flex flex-col">
                     <p className="text-2xl font-bold text-dGreen mb-2">
-                       Audit Trails
+                       Recent Actions
                     </p>
                     <div>
-                        <AdminAuditTrailsTable />
+                        <RecentAuditTrailsTable />
                     </div>
                     </div>
                 </div>

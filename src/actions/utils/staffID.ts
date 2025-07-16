@@ -22,6 +22,29 @@ import { staffClerkUserTable } from "@/src/db/schema";
       if (!staffID) return null;
       console.log(staffID);
   
-    return staffID?.clerkId ?? null;
+    // return staffID?.clerkId ?? null;
+    return staffID.clerkId;
+
     };
+
+    export const getStaffCredentials = async () =>
+    {
+      const { userId } = await auth();
+      if (!userId) return null;
+
+      const clerkRecord = await db
+        .select({
+          clerk_username: staffClerkUserTable.clerk_username,
+          userType: staffClerkUserTable.userType
+        })
+        .from(staffClerkUserTable)
+        .where(eq(staffClerkUserTable.clerkId, userId))
+        .limit(1);
+
+      const clerk_username = clerkRecord[0].clerk_username;
+      const userType = clerkRecord[0].userType;
+
+      return {clerk_username, userType};
+
+    }
   

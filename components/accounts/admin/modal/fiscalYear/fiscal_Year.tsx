@@ -10,6 +10,7 @@ import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
 import { UpdateCurrentYear } from "./updateCurrentYear";
 import { InsertNewYear } from "./insertNewYear";
 import { useState } from "react";
+import { AcademicYear } from "@/components/sidebar/utils/academicYearAdmin";
 
 
 
@@ -45,6 +46,13 @@ export const Fiscal_Year = () => {
             <h3 className="text-lg font-semibold mb-4">✏️ Set New Academic Year</h3>
               <InsertNewYear onCreated={handleRefresh} />          
           </section>
+  
+          {/* select academic year */}
+          <section className="bg-white p-4 rounded-lg shadow-sm border">
+            <h3 className="text-lg font-semibold mb-4">✏️ Select Academic Year</h3>
+              <AcademicYear />          
+          </section>       
+
         </div>
       </DialogContent>
     </Dialog>

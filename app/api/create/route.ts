@@ -97,7 +97,7 @@ export async function POST(request: Request) {
           applicants_id: applicantsId,
           clerkId: user.id,
           userType: role,
-          clerk_username: `RIZAL-${username}`,
+          clerk_username: username,
           clerk_email: email,
         });
       } else {

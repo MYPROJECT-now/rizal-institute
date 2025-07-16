@@ -24,10 +24,7 @@ import { toast } from "sonner";
 
 
 
-    const handleAccept = async (id: number) => {
-      // await acceptStudentsReservationPayment(id, "Reserved");
-
-    // Call the API to send the email if the status is Ongoing
+    const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string) => {
     setLoadingId(id);
     try {
       const response = await fetch('/api/accept/cashier', {
@@ -35,7 +32,7 @@ import { toast } from "sonner";
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ studentId: id }),
+        body: JSON.stringify({ studentId: id, name: lastName + " " + firstName + " " + middleName }),
       });
 
       const data = await response.json();

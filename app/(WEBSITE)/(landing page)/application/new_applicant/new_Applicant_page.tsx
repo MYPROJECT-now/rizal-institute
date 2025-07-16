@@ -1100,6 +1100,7 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                                         <option value="" >Select Option</option>
                                         <option value="New">Incoming G7</option>
                                         <option value="Transferee">Transferee</option>
+                                        <option value="Returnee">Old Student</option>
                                 </select>
                             </div>
                         </section>        

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   reserved: TableReserved_Type;
-  onAdmit: (id: number) => void;
+  onAdmit: (id: number, lastName: string, firstName: string, middleName: string) => void;
   className?: string;
     loading?: boolean;
 
@@ -24,9 +24,9 @@ const Reserved: FC<Props> = ({ reserved, onAdmit, className, loading }) => {
       <td className="px-4 py-2">
         <Button
           className="h-[30px] w-[80px] rounded-lg"
-          disabled={reserved.admissionStatus === "Enrolled" || loading}
+          disabled={reserved.admissionStatus === "Enrolled" || loading || reserved.isActive === false}
           variant={"confirmButton"}
-            onClick={() => onAdmit(reserved.id)}>
+            onClick={() => onAdmit(reserved.id, reserved.lastName, reserved.firstName, reserved.middleName ?? "")}>
             {loading ? "Admitting..." : "Admit"}
           
         </Button>

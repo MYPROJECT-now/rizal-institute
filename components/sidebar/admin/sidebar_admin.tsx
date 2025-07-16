@@ -32,6 +32,7 @@ type Props = {
 export const Sidebar_admin = ({ className, onClose}: Props) => {
   const { open } = useFiscalYearModal();
   const { open: openEnrollment } = useEnrollmentModal();
+  
 
   return (
 
@@ -74,15 +75,37 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
               onClick={onClose}
             />
 
+            <SidebarItem
+              label="Assign Class"
+              href="/ACCOUNTS/admin/teacher"
+              iconSrc="/role.png"
+              onClick={onClose}
+            />
+
+            <SidebarItem
+              label="Audit Trails"
+              href="/ACCOUNTS/admin/audit"
+              iconSrc="/audit.png"
+              onClick={onClose}
+            />
+
             <Fiscal_Year />
             <SidebarItemAdmin
-              label="Fiscal Year"
+              label="Set Academic Year"
               iconSrc="/calendar.png"
               onClick={() => {
                 open();
                 onClose?.();
               }}
             />
+
+
+            {/* <AcademicYearModal />
+              <SidebarAcad
+                label="Academic Year"
+                iconSrc="/acad.png"
+                onClick={openAcad} 
+            /> */}
 
             <EnrollmentManagement />
             <SidebarItemAdmin
