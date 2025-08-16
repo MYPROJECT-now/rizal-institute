@@ -1,10 +1,10 @@
 export type all_student_Type = {
-    id: number;
     lrn: string;
-    LastName: string;
-    FirstName: string;
-    MiddleName?: string | null;
-    Suffix?: string | null;
+    studentLastName: string;
+    studentFirstName: string;
+    studentMiddleName?: string | null;
+    studentSuffix?: string | null;
+    gradeLevelName: string | null;
   };
   
 export type SOAsStudent = {

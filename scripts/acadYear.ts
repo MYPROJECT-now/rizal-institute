@@ -3,7 +3,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 
-import { AcademicYearTable, GradeLevelTable, SubjectTable } from "../src/db/schema";
+import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, SubjectTable } from "../src/db/schema";
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
@@ -65,7 +65,20 @@ const insertAcademicYear = async () => {
     ];
     const result3 = db.insert(SubjectTable).values(Subjects).returning();
 
-    const insertAll = await Promise.all([result, result2, result3]);
+
+    const enrollment = [
+      {
+      academicYear_id: 1,
+      enrollment_period: "2025-2026",
+      enrollment_start_date: "2025-01-01",
+      enrollment_end_date: "2026-01-01",
+      }
+
+
+    ]
+    const result4 = db.insert(EnrollmentStatusTable).values(enrollment).returning();
+
+    const insertAll = await Promise.all([result, result2, result3, result4]);
     console.log("Data inserted successfully", insertAll);
 
   } catch (error) {

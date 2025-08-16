@@ -67,6 +67,7 @@
         reservationAmount: integer('reservationAmount').notNull(),
         mop: varchar('mop', { length:100 }),
         reservationReceipt: varchar ('reservationReceipt', { length:300 }),
+        dateOfPayment: varchar('dateOfPayment').notNull(),
       })
 
       export const applicationStatusTable = pgTable("applicationStatusTable", {
@@ -214,7 +215,7 @@
       export const MonthlyPayementTable = pgTable("MonthlyPayementTable", {
         monthlyPayment_id: serial('monthlyPayment_id').primaryKey(),
         student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull(),
-        month_id: integer('month_id').references(() => MonthsInSoaTable.month_id).notNull(),
+        month_id: integer('month_id').references(() => MonthsInSoaTable.month_id),
         academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
 
         dateOfPayment: varchar('dateOfPayment', { length:100 }).notNull(),
@@ -265,6 +266,15 @@
         isActive: boolean('isActive').notNull().default(true),
       })
 
+      export const EnrollmentStatusTable = pgTable("EnrollmentStatusTable", {
+        enrollment_status_id: serial('enrollment_status_id').primaryKey(),
+        academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+        enrollment_period: varchar('enrollment_period', { length:100 }).notNull(),
+        enrollment_start_date: varchar('enrollment_start_date', { length:100 }).notNull(),
+        enrollment_end_date: varchar('enrollment_end_date', { length:100 }).notNull(),
+        isActive: boolean('isActive').notNull().default(true),
+      })
+
       export const clerkUserRelations = relations(ClerkUserTable, ({ one }) => ({
         selectedYear: one(AcademicYearTable, {
           fields: [ClerkUserTable.selected_AcademicYear_id],
@@ -286,6 +296,7 @@
       monthlyPayments: many(MonthlyPayementTable),
       selectedByUsers: many(ClerkUserTable),
       auditTrails: many(auditTrailsTable),
+      enrollment: many(EnrollmentStatusTable),
     }));
 
 
@@ -324,25 +335,7 @@
     });
 
 
-    export const TeacherAssignmentTable = pgTable("TeacherAssignmentTable", {
-      assignment_id: serial("assignment_id").primaryKey(),
 
-      clerk_uid: integer("clerk_uid")
-        .references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
-        .notNull(),
-
-      gradeLevel_id: integer("gradeLevel_id")
-        .references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" })
-        .notNull(),
-
-      subject_id: integer("subject_id")
-        .references(() => SubjectTable.subject_id, { onDelete: "cascade" })
-        .notNull(),
-
-      academicYear_id: integer("academicYear_id")
-        .references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" })
-        .notNull(),
-    });
 
     export const StudentGradesTable = pgTable("StudentGradesTable", {
       grade_id: serial("grade_id").primaryKey(),
@@ -372,7 +365,26 @@
 
       dateSubmitted: date("dateSubmitted"),
     });
+    
+    export const TeacherAssignmentTable = pgTable("TeacherAssignmentTable", {
+      assignment_id: serial("assignment_id").primaryKey(),
 
+      clerk_uid: integer("clerk_uid")
+        .references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
+        .notNull(),
+
+      gradeLevel_id: integer("gradeLevel_id")
+        .references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" })
+        .notNull(),
+
+      subject_id: integer("subject_id")
+        .references(() => SubjectTable.subject_id, { onDelete: "cascade" })
+        .notNull(),
+
+      academicYear_id: integer("academicYear_id")
+        .references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" })
+        .notNull(),
+    });
 
     export const gradeLevelRelations = relations(GradeLevelTable, ({ many }) => ({
       assignments: many(TeacherAssignmentTable),

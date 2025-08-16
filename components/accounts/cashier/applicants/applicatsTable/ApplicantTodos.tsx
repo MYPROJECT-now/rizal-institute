@@ -139,9 +139,9 @@ import { toast } from "sonner";
             <th className="px-4 py-2">LRN</th>
             <th className="px-4 py-2">Full Name</th>
             <th className="px-4 py-2">Grade Level</th>
+            <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Full Details</th>
             <th className="px-4 py-2">Actions</th>
-            <th className="px-4 py-2">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -170,23 +170,25 @@ import { toast } from "sonner";
 
       {/* Pagination Controls */}
         <div className="flex justify-center mt-4 gap-4">
-          <button
+          <Button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            variant={"prevButton"}
+            className="px-3 py-1"
           >
             Previous
-          </button>
+          </Button>
           <span className="font-semibold">
             Page {currentPage} of {totalPages}
           </span>
-          <button
+          <Button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            variant={"prevButton"}
+            className="px-3 py-1"
           >
             Next
-          </button>
+          </Button>
         </div>
 
     </main>

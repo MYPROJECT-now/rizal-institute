@@ -94,6 +94,7 @@ export const getInfoForDashboard = async () => {
 
   const paymentHistory = await db
     .select({
+      monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
       month_id: MonthlyPayementTable.month_id,
       dateOfPayment: MonthlyPayementTable.dateOfPayment,
       amount: MonthlyPayementTable.amount,
@@ -105,6 +106,8 @@ export const getInfoForDashboard = async () => {
     .from(MonthlyPayementTable)
     .where(and (eq(MonthlyPayementTable.student_id, applicantId), eq(MonthlyPayementTable.academicYear_id, selectedAcademicYear))
 )
+
+  console.log(paymentHistory);
 
   return paymentHistory;
 
@@ -301,4 +304,40 @@ export const addPayment = async (
     .limit(1);
   
     return selectedAcademicYear[0]?.selected_AcademicYear_id ?? null;
+  }
+
+
+  export const getRecord = async () => {
+    const studentId = await getStudentId();
+    if (!studentId) return null;
+
+    const getGradeID = await db
+    .select({gradeLevel_ID: StudentGradesTable.gradeLevel_id})
+    .from(StudentGradesTable)
+    .where(eq(StudentGradesTable.student_id, studentId))
+    .limit(1);
+
+    const id = getGradeID[0]?.gradeLevel_ID ?? null;
+    if (!id) return null;
+
+    console.log(id);
+    const record = await db
+    .select({
+      lrn: StudentInfoTable.lrn,
+      studentLastName: StudentInfoTable.studentLastName,
+      studentFirstName: StudentInfoTable.studentFirstName,
+      studentMiddleName: StudentInfoTable.studentMiddleName,
+      studentSuffix: StudentInfoTable.studentSuffix,
+      gradeLevelName: GradeLevelTable.gradeLevelName,
+      ay: AcademicYearTable.academicYear,
+      da: AdmissionStatusTable.dateAdmitted,
+    }).from(StudentInfoTable)
+    .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, id))
+    .leftJoin(ClerkUserTable, eq(ClerkUserTable.student_id, StudentInfoTable.student_id))
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, ClerkUserTable.selected_AcademicYear_id))
+    .leftJoin(AdmissionStatusTable, eq(AdmissionStatusTable.applicants_id, StudentInfoTable.applicants_id))
+    .where(eq(StudentInfoTable.student_id, studentId))
+    .limit(1);
+  
+    return record[0];
   }

@@ -38,3 +38,19 @@ export const useShowReservationPayementModal = create<ReservationReview_ModalSta
     open: (lrn: string) => set({ isOpen: true, selectedLRN: lrn }),
     close: () => set({ isOpen: false, selectedLRN: null }),
 }));
+
+
+
+type DiscountCLassModalState = {
+    isOpen: boolean;
+    selectedLRN: string | null;
+    open: (lrn: string) => void;
+    close: () => void;
+};
+export const useDiscountClass = create<DiscountCLassModalState>((set) => ({
+    isOpen: false, //change mo maya
+    selectedLRN: null,
+    open: (lrn: string) => set({ isOpen: true, selectedLRN: lrn }),
+    close: () => set({ isOpen: false, selectedLRN: null }),
+}));
+

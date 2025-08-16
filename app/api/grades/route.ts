@@ -4,6 +4,7 @@ import { ilike, and, or, eq } from "drizzle-orm";
 
 import { db } from "@/src/db/drizzle";
 import { StudentGradesTable, StudentInfoTable } from "@/src/db/schema";
+import { getAcademicYearID } from "@/src/actions/utils/academicYear";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,6 +12,9 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
+    const gradeLevel_id = Number(formData.get("gradeLevel_id"));
+    const subject_id = Number(formData.get("subject_id"));
+
 
     if (!file) {
       return NextResponse.json({ success: false, error: "No file uploaded." }, { status: 400 });
@@ -189,6 +193,7 @@ export async function POST(req: NextRequest) {
 
 
 
+        const acadId = await getAcademicYearID();
         if (!isNaN(grade)) {
           const updateResult = await db
             .update(StudentGradesTable)
@@ -199,9 +204,9 @@ export async function POST(req: NextRequest) {
             .where(
               and(
                 eq(StudentGradesTable.student_id, found.student_id),
-                eq(StudentGradesTable.academicYear_id, 1),
-                eq(StudentGradesTable.gradeLevel_id, 1),
-                eq(StudentGradesTable.subject_id, 1)
+                eq(StudentGradesTable.academicYear_id, acadId),
+                eq(StudentGradesTable.gradeLevel_id, gradeLevel_id),
+                eq(StudentGradesTable.subject_id, subject_id)
               )
             );
 

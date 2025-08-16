@@ -125,6 +125,7 @@ export default function Home() {
         />
       </div>
 
+
       {/* second section */}
       <div className="w-full h-[250px] bg-sl2Green flex flex-col justify-center items-center gap-3">
         <p className="font-bold font-merriweather text-d2Green sm:text-sm md:text-base lg:text-2xl">

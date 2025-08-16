@@ -52,22 +52,16 @@ async function sendReservationEmail(email: string, trackingId: string) {
     Tracking ID: ${trackingId}
 
     Your spot has been secured, and we look forward to welcoming you to our community. 
-    To complete your enrollment, please wait for the statement of account from our cashier. 
-    You may choose to make a full payment or a down payment to secure your place.
+    To complete your enrollment, please confirm of admission by accepting the offer of admission.
+    You can do that by going on the website, click the track application button, enter you tracking ID, and confirm your admission
+
 
     If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
-
-    Next Steps:
-
-    Wait for the statement of account from our cashier.
-    Use the tracking ID to complete you payment.
-    Make a full payment or down payment to secure your enrollment
-    Contact our office for any further inquiries
 
     Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
 
     Best regards,
-    Rizal Institute - Canlubang 
+    Rizal Institute - Canlubang
     `,
   };
 

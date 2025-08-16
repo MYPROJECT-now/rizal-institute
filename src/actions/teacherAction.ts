@@ -4,7 +4,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { GradeLevelTable, staffClerkUserTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
-import { getStaffId } from "./utils/staffID";
+import { getStaffId, getUid } from "./utils/staffID";
 
 export const getAssignClass = async () => {
     await requireStaffAuth(["teacher"]); // gatekeeper
@@ -81,8 +81,25 @@ export const updateFinalGrade = async (grade_id: number, finalGrade: number) => 
 
 export const getGradeAndSubjects = async () => {
     await requireStaffAuth(["teacher"]); // gatekeeper    
-    
-    const grades = await db.select().from(GradeLevelTable);
-    const subjects = await db.select().from(SubjectTable);
-    return { grades, subjects };
+    const tid = await getUid();
+
+    if (!tid) {
+        return null;
+    }
+
+    const gradeAndGrades = await db
+    .select({
+        gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+        subject_id: TeacherAssignmentTable.subject_id,
+        assignment_id: TeacherAssignmentTable.assignment_id,
+        gradeLevelName: GradeLevelTable.gradeLevelName,
+        subjectName: SubjectTable.subjectName,
+    }).from(TeacherAssignmentTable)
+    .leftJoin(GradeLevelTable, eq(TeacherAssignmentTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(SubjectTable, eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id))
+    .where(eq(TeacherAssignmentTable.clerk_uid, tid))
+    .orderBy(asc(TeacherAssignmentTable.assignment_id));
+
+    console.log(gradeAndGrades);
+    return gradeAndGrades;
 }

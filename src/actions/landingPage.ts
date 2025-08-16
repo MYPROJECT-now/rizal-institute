@@ -17,7 +17,7 @@ import {
 } from "../db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
-import { StudentUpdateData } from "../type/reApplication/re_applicationType";
+import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
 
 // Generate random tracking ID
@@ -49,10 +49,11 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
   
   if (!hasReservationReceipt) {
     additionalContent = `
-    IMPORTANT: To secure your spot, please complete the reservation fee payment of ₱500.00.
+    IMPORTANT: To secure your spot, please complete the reservation fee payment of atleast ₱500.00.
     You can make the payment in two ways:
     a) Online Payment:
        - Use your tracking ID to access the payment section on our website
+       - Go to website and click the button track application
        - Follow the payment instructions provided
     b) In-Person Payment:
        - Visit our cashier's office
@@ -260,7 +261,8 @@ export const addNewApplicant = async (formData: {
         academicYear_id: academicYearID,
         mop,
         reservationReceipt,
-        reservationAmount
+        reservationAmount,
+        dateOfPayment: new Date().toISOString().slice(0, 10),
       }),
       db.insert(additionalInformationTable).values({
         applicants_id: applicantId,
@@ -332,15 +334,22 @@ export const verifyLrn = async (lrn: string) => {
             regDate: Registrar_remaks_table.dateOfRemarks,
             cashierDate: Cashier_remaks_table.dateOfRemarks,
             confirmationStatus: AdmissionStatusTable.confirmationStatus,
+            hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
+
+
           })
           .from(applicationStatusTable)
           .leftJoin(Registrar_remaks_table,eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
           .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
           .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
-          .where(eq(applicationStatusTable.trackingId, trackingId))
+          .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
+          .where(
+              eq(applicationStatusTable.trackingId, trackingId),
+            )
           .limit(1);
 
         if (result.length > 0) {
+                console.log("Reservation ID:", result[0].hasPaidReservation);
           return result[0];
         } else {
           return null; // No match found
@@ -405,6 +414,11 @@ export const acceptAdmission = async (trackingId: string) => {
                 goodMoral: documentsTable.goodMoral,
                 idPic: documentsTable.idPic,
                 studentExitForm: documentsTable.studentExitForm,
+                form137: documentsTable.form137,
+
+                mop: reservationFeeTable.mop,
+                reservationAmount: reservationFeeTable.reservationAmount,
+                reservationReceipt: reservationFeeTable.reservationReceipt,
 
                 regRemarks: Registrar_remaks_table.reg_remarks,
                 cashierRemarks: Cashier_remaks_table.cashier_remarks,
@@ -416,6 +430,7 @@ export const acceptAdmission = async (trackingId: string) => {
             .innerJoin(guardianAndParentsTable, eq(applicantsInformationTable.applicants_id, guardianAndParentsTable.applicants_id))
             .innerJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
             .innerJoin(documentsTable, eq(applicantsInformationTable.applicants_id, documentsTable.applicants_id))
+            .innerJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
             .leftJoin(Registrar_remaks_table, eq(applicantsInformationTable.applicants_id, Registrar_remaks_table.applicants_id))
             .leftJoin(Cashier_remaks_table, eq(applicantsInformationTable.applicants_id, Cashier_remaks_table.applicants_id))
             .where(eq(applicationStatusTable.trackingId, trackingId))
@@ -467,6 +482,11 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       goodMoral,
       idPic,
       studentExitForm,
+      form137,
+
+      mop,
+      reservationAmount,
+      reservationReceipt,
     } = updatedData;
 
     // Update studentsInformationTable
@@ -519,11 +539,21 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
         reportCard,
         goodMoral,
         idPic,
-        studentExitForm
+        studentExitForm,
+        form137,
       })
       .where(eq(documentsTable.applicants_id, updatedStudent[0]?.applicants_id))
       .returning();
 
+    const updatedReservationFee = await db
+      .update(reservationFeeTable)
+      .set({
+        mop,
+        reservationAmount,
+        reservationReceipt,
+      })
+    .returning();
+    
     // Get current application status
     const currentStatus = await db
       .select({
@@ -563,7 +593,86 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       student: updatedStudent[0],
       guardian: updatedGuardian[0],
       educationalBackground: updatedEducationalBackground[0],
-      document: updatedDocument[0]
+      document: updatedDocument[0],
+      reservationFee: updatedReservationFee[0],
+    };
+  } catch (error) {
+    console.error("Error updating student data:", error);
+    throw new Error("Failed to update student and guardian data.");
+  }
+};
+
+
+
+export const lateReservationFee = async (trackingId: string, updatedData: ReservationFee) => {
+  try {
+    // Extract student and guardian data separately
+    const {
+
+      mop,
+      reservationAmount,
+      reservationReceipt,
+    } = updatedData;
+
+    // const getID = await db
+    //   .select({
+    //       applicants_id: applicationStatusTable.applicants_id
+    //   })
+    //   .from(applicationStatusTable)
+    //   .where(eq(applicationStatusTable.trackingId, trackingId))
+
+    //   const getApplicantsId = getID[0].applicants_id;
+
+    const updatedReservationFee = await db
+      .update(reservationFeeTable)
+      .set({
+        mop,
+        reservationAmount,
+        reservationReceipt,
+      })
+    .returning();
+    
+    // // Get current application status
+    // const currentStatus = await db
+    //   .select({
+    //     applicationStatus: applicationStatusTable.applicationFormReviewStatus
+    //   })
+    //   .from(applicationStatusTable)
+    //   .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id))
+    //   .limit(1);
+
+    // // Only update status to Pending if it was previously Declined
+    // if (currentStatus[0]?.applicationStatus === "Declined") {
+    //   await db
+    //     .update(applicationStatusTable)
+    //     .set({
+    //       applicationFormReviewStatus: "Pending",
+    //       dateOfApplication: new Date().toISOString().slice(0, 10)
+    //     })
+    //     .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id));
+    // }
+
+    // // Update resolution status for both registrar and cashier remarks
+    // await db
+    //   .update(Registrar_remaks_table)
+    //   .set({
+    //     resolved_reg_remarks: true
+    //   })
+    //   .where(eq(Registrar_remaks_table.applicants_id, updatedStudent[0]?.applicants_id));
+
+    // await db
+    //   .update(Cashier_remaks_table)
+    //   .set({
+    //     resolved_cashier_remarks: true
+    //   })
+    //   .where(eq(Cashier_remaks_table.applicants_id, updatedStudent[0]?.applicants_id));
+
+    return {
+      // student: updatedStudent[0],
+      // guardian: updatedGuardian[0],
+      // educationalBackground: updatedEducationalBackground[0],
+      // document: updatedDocument[0],
+      reservationFee: updatedReservationFee[0],
     };
   } catch (error) {
     console.error("Error updating student data:", error);
@@ -625,6 +734,7 @@ export const enrollOldStudent = async (
     mop,
     reservationReceipt,
     reservationAmount,
+    dateOfPayment: new Date().toISOString().slice(0, 10),
     academicYear_id: academicYearID,
   });
 

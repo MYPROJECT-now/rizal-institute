@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import VerifyTodo from "./VerifyTodo";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   VerifyTodos: VerifyPayment[];
@@ -9,17 +10,20 @@ interface Props {
 
 const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const [verifyTodos] = useState<VerifyPayment[]>(VerifyTodos);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [filterSiNumber, setFilterSiNumber] = useState("");
+    const [filterMop, setFilterMop] = useState("");
+    const [filterDate, setFilterDate] = useState("");
+    const [filterStatus, setFilterStatus] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
 
-    const filteredData = verifyTodos.filter((item) => {
-        const matchesSearch = 
-            item.SInumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.modeOfPayment.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.amount.toString().includes(searchTerm);
-        
-        return matchesSearch;
+    const filteredData = verifyTodos.filter((payment) => {
+        const MatchSiNumber = (payment.SInumber ?? "").includes(filterSiNumber);
+        const MatchMop = (payment.modeOfPayment ?? "").includes(filterMop);
+        const MatchDate = (payment.dateOfPayment ?? "").includes(filterDate);
+        const MatchStatus = (payment.status ?? "").includes(filterStatus);
+
+        return MatchSiNumber && MatchMop && MatchDate && MatchStatus;
     });
 
     // Pagination
@@ -35,28 +39,58 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                 
                 <input
                     type="text"
-                    placeholder="Search by SI Number, Payment Mode, or Amount..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border rounded px-3 py-1"
+                    placeholder="SI Number"
+                    className="border-2 border-gray-300 rounded px-1 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                    value={filterSiNumber}
+                    onChange={(e) => setFilterSiNumber(e.target.value)}
+                />
+
+                <select
+                    className="border-2 border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                    value={filterMop}
+                    onChange={(e) => setFilterMop(e.target.value)}
+                >
+                    <option value="">Mode of Payment</option>
+                    <option value="GCash">GCash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="OTC">OTC</option>
+                </select>
+
+                <input
+                    type="date"
+                    className="border-2 border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                    value={filterDate}
+                    onChange={(e) => setFilterDate(e.target.value)}
                 />
                 
-                <button
+                <select
+                    className="border-2 border-gray-300 rounded px-5 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                >
+                    <option value="">Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                </select>
+
+                <Button
                     onClick={() => {
-                        setSearchTerm("");
-                        setCurrentPage(1);
+                        setFilterSiNumber("");
+                        setFilterMop("");
+                        setFilterDate("");
+                        setFilterStatus("");
                     }}
-                    className="bg-green-700 text-white font-bold px-4 py-1 rounded hover:bg-green-800"
+                    className="px-4 py-2"
+                    variant={"confirmButton"}
                 >
                     Clear Filter
-                </button>
+                </Button>
             </div>
 
           <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
         <table className="w-full text-sm text-center">
                 <thead>
                     <tr className="bg-green-600 text-white">
-                        <th className="px-4 py-2">Amount</th>
                         <th className="px-4 py-2">SI Number</th>
                         <th className="px-4 py-2">Proof of Payment</th>
                         <th className="px-4 py-2">Mode of Payment</th>
@@ -69,7 +103,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                     {currentData.length === 0 ? (
                         <tr>
                         <td colSpan={7} className="p-4 text-black">
-                        No recent applicants found.
+                        No payments found.
                         </td>
                     </tr>
                     ) : (
@@ -86,24 +120,26 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
             </table>
 </div>
             {/* Pagination Controls */}
-            <div className="flex justify-center mt-4 gap-4">
-                <button
+            <div className="flex justify-center items-center mt-4 gap-4">
+                <Button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                    className="px-3 py-1"
+                    variant={"prevButton"}
                 >
                     Previous
-                </button>
+                </Button>
                 <span className="font-semibold">
                     Page {currentPage} of {totalPages}
                 </span>
-                <button
+                <Button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                    className="px-3 py-1"
+                    variant={"prevButton"}
                 >
                     Next
-                </button>
+                </Button>
             </div>
         </main>
     );

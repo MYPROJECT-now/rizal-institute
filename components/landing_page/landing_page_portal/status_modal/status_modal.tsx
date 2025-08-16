@@ -22,6 +22,7 @@ interface StatusData {
   regDate?: string | null;
   cashierDate?: string | null;
   confirmationStatus?: string | null;
+  hasPaidReservation?: string | null;
 }
 
 export const StatusModal = () => {
@@ -68,6 +69,12 @@ export const StatusModal = () => {
     router.push(`/reApplications?trackingId=${trackingId}`);
   };
 
+  const handlePayReservation = () => {
+    close();
+    router.push(`/payment?trackingId=${trackingId}`);
+  };
+
+  
   const handleclose = () => {
     setTrackingId("");
     setStatusData(null);
@@ -179,7 +186,19 @@ export const StatusModal = () => {
           )}
 
           <div className="flex justify-center mt-4">
-            {statusData?.applicationFormReviewStatus === "Declined" ||
+            { statusData?.applicationFormReviewStatus !== "Declined" &&
+            statusData?.reservationPaymentStatus === "Pending" &&
+            !statusData?.hasPaidReservation ? (
+              <Button
+                variant="mainButton"
+                className="h-[50px] w-[200px] rounded-xl"
+                onClick={handlePayReservation}
+              >
+              Pay Reservation
+              </Button>
+            ) :
+            
+            statusData?.applicationFormReviewStatus === "Declined" ||
             statusData?.reservationPaymentStatus === "Declined" ? (
               <Button
                 variant="mainButton"

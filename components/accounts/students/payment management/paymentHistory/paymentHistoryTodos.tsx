@@ -82,7 +82,7 @@ const Todos: FC<Props> = ({ todos }) => {
                     </tr> 
                     ) : (currentItems.map((todo, idx) => (
                         <Todo 
-                        key={todo.month_id} 
+                        key={todo.monthlyPayment_id} 
                         todo={todo} 
                         className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
 />

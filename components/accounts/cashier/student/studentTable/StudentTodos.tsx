@@ -23,13 +23,13 @@ const Students: FC<Props> = ({ students }) => {
 
   
 const filteredStudents = studentList.filter((student) => {
-  const fullName = `${student.FirstName} ${student.MiddleName ?? ""} ${student.LastName}`.toLowerCase();
+  const fullName = `${student.studentLastName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`.toLowerCase();
   const matchesName = fullName.includes(filterName.toLowerCase());
   const matchesLRN = student.lrn.includes(filterLRN);
-  // const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
+  const matchesGrade = filterGrade === "" || student.gradeLevelName === filterGrade;
 
-  // return matchesName && matchesLRN && matchesGrade;
-  return matchesName && matchesLRN;
+  return matchesName && matchesLRN && matchesGrade;
+  // return matchesName && matchesLRN;
 });
 
   // 🧮 Pagination logic
@@ -66,10 +66,10 @@ const filteredStudents = studentList.filter((student) => {
       className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   >
     <option value="">All Grades</option>
-    <option value="Grade 7">Grade 7</option>
-    <option value="Grade 8">Grade 8</option>
-    <option value="Grade 9">Grade 9</option>
-    <option value="Grade 10">Grade 10</option>
+    <option value="7">Grade 7</option>
+    <option value="8">Grade 8</option>
+    <option value="9">Grade 9</option>
+    <option value="10">Grade 10</option>
     {/* Add other grades as needed */}
   </select>
 
@@ -101,7 +101,7 @@ const filteredStudents = studentList.filter((student) => {
           {currentStudents.length === 0 ? (
             <tr>
             <td colSpan={4} className="p-4 text-black">
-              No recent applicants found.
+              No student found.
             </td>
           </tr>
         ) : (
@@ -119,23 +119,25 @@ const filteredStudents = studentList.filter((student) => {
   </div>
     {/* Pagination Controls */}
       <div className="flex justify-center mt-4 gap-4">
-        <button
+        <Button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+          variant={"prevButton"}
+          className="px-3 py-1"
         >
           Previous
-        </button>
+        </Button>
         <span className="font-semibold">
           Page {currentPage} of {totalPages}
         </span>
-        <button
+        <Button
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
-          className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+          variant={"prevButton"}
+          className="px-3 py-1"
         >
           Next
-        </button>
+        </Button>
       </div>
 
   </main>

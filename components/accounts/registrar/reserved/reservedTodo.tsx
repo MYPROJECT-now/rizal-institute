@@ -17,7 +17,7 @@ const Reserved: FC<Props> = ({ reserved, onAdmit, className, loading }) => {
   return (
     <tr className={`border-b hover:bg-green-300 transition duration-200 ${className || ""}`}>
       <td className="px-4 py-2">{reserved.lrn}</td>
-      <td className="px-4 py-2">{reserved.lastName} {reserved.firstName} {reserved.middleName}</td>
+      <td className="px-4 py-2">{reserved.lastName}, {reserved.firstName} {reserved.middleName}</td>
       <td className="px-4 py-2">{reserved.gradeLevel}</td>
       <td className="px-4 py-2 text-green-600 font-semibold">{reserved.confirmationStatus || "-"}</td>
       <td className="px-4 py-2 text-green-600 font-semibold">{reserved.admissionStatus}</td>

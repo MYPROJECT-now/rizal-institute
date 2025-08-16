@@ -1,4 +1,5 @@
 export type PaymentHistory = {
+    monthlyPayment_id: number | null;
     month_id: number | null;
     dateOfPayment: string | null;
     amount: number | null;

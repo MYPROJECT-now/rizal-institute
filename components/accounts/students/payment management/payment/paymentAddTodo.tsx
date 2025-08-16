@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { getBalance } from "@/src/actions/studentAction";
 import { usePreviewModal } from "@/src/store/preview";
 import { Balance } from "@/src/type/STUDENT/student";
@@ -63,8 +64,8 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
   };
 
   const handleAdd = async () => {
-    setIsSubmitting(true);
     try{
+    setIsSubmitting(true);
 
     const uploadImage = async (file: File, folder: string) => {
       const formData = new FormData();
@@ -179,13 +180,14 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
 
 
         {/* Button for adding a new todo */}
-        <button
-          className="flex items-center justify-center bg-dGreen hover:bg-green-700 text-white font-semibold rounded-lg px-4 h-10 w-full shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
+        <Button
+          className="px-2 py-1"
           onClick={handleAdd}
-          disabled={(!amount || !mop || !POP) && !isSubmitting}
+          variant="confirmButton"
+          disabled={!amount || !mop || !POP || isSubmitting}
         >
-        Submit Payment
-        </button>
+        {isSubmitting ? "Submitting..." : "Submit Payment"}
+        </Button>
       
       </main>
 

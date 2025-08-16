@@ -1,67 +1,81 @@
-"use client"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis,  } from "recharts"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+  "use client";
+  import { useEffect, useState } from "react";
+  import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+  import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card";
+  import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+  } from "@/components/ui/chart";
+  import { getTotalperMonth } from "@/src/actions/cashierAction";
 
-const chartData = [
-    { month: "January", desktop: 186 },
-    { month: "February", desktop: 305 },
-    { month: "March", desktop: 237 },
-    { month: "April", desktop: 73 },
-    { month: "May", desktop: 209 },
-    { month: "June", desktop: 214 },
-  ]
+
   const chartConfig = {
-    desktop: {
-      label: "Mob",
+    totalPaid: {
+      label: "Total Paid",
       color: "hsl(var(--chart-1))",
     },
-  } satisfies ChartConfig
-  
+  } satisfies ChartConfig;
 
-export const Enrollment = () => {
+  export const Enrollment = () => {
+    const [chartData, setChartData] = useState<{ month: string; totalPaid: number }[]>([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getTotalperMonth(); // returns [{ month: "July 2025", totalPaid: 12000 }, ...]
+          setChartData(data);
+        } catch (err) {
+          console.error("Failed to load chart data:", err);
+        }
+      };
+
+      fetchData();
+    }, []);
+
     return (
-        <div>
-        <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
-            <CardHeader>
-                <CardTitle className="text-center">Monthly Collection Trend</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig} style={{ }}>
-                    <BarChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        tickMargin={10}
-                        axisLine={false}
-                        tickFormatter={(value) => value.slice(0, 3)}
-                        />
-
-                        <YAxis 
-                        label={{ value: "Number of Students", angle: -90, position: "insideLeft", textanchor: "center", dy:80, dx:10}} 
-                        style={{ fontSize: '10px' }} 
-                        />
-                        
-                        <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={1} />
-                    </BarChart>
-                </ChartContainer>
-            </CardContent>
+      <div>
+        <Card >
+          <CardHeader>
+            <CardTitle className="text-center">Monthly Collection Trend</CardTitle>
+          </CardHeader>
+          <CardContent className="w-[600px] h-[240px]">
+            <ChartContainer config={chartConfig} className="h-full w-full">
+              <BarChart data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={5}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)} // "July 2025" → "Jul"
+                />
+                <YAxis
+                  label={{
+                    value: "Amount Paid Per Month",
+                    angle: -90,
+                    position: "insideLeft",
+                    textAnchor: "middle",
+                    dy: 80,
+                    dx: 10,
+                  }}
+                  style={{ fontSize: "10px" }}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar dataKey="totalPaid" fill="var(--color-totalPaid)" radius={1} maxBarSize={20} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
         </Card>
-        </div>
+      </div>
     );
-};
+  };

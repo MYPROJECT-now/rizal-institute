@@ -3,6 +3,7 @@ import { addNewApplicant } from "@/src/actions/landingPage";
 import ApplicationPage from "./new_Applicant_page";
 import { toast } from "sonner";
 
+
 const newApplicant = () => {
 
   // Function to create a new todo item

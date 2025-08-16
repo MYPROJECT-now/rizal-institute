@@ -5,47 +5,20 @@ import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-interface GradeOption {
-  gradeLevel_id: string;
-  gradeLevelName: string;
-}
-
-interface SubjectOption {
-  subject_id: string;
-  subjectName: string;
-}
 
 
 export const UploadGrade = () => {
-  const [gradeLevel, setGradeLevel] = useState("");
-  const [subject, setSubject] = useState("");
+  const [gradeLevel_id, setGradeLevel] = useState("");
+  const [subject_id, setSubject] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-const [grades, setGrades] = useState<GradeOption[]>([]);
-const [subjects, setSubjects] = useState<SubjectOption[]>([]);
-
-
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/api/grade-subject");
-        const json = await res.json();
-
-        if (json.success) {
-          setGrades(json.data.grades);
-          setSubjects(json.data.subjects);
-        } else {
-          toast.error("Failed to load grade and subject options.");
-        }
-      } catch (error) {
-        toast.error("Error loading dropdown data.");
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [assignments, setAssignments] = useState<{ 
+    assignment_id: number; 
+    gradeLevel_id: number; 
+    subject_id: number; 
+    gradeLevelName: string; 
+    subjectName: string 
+  }[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -54,16 +27,17 @@ const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   };
 
 const handleSubmit = async () => {
-  if (!file || !gradeLevel || !subject) {
+  if (!file || !gradeLevel_id || !subject_id) {
     toast.error("Please complete all fields.");
     return;
   }
 
   setLoading(true);
   const formData = new FormData();
-  formData.append("gradeLevel", gradeLevel);
-  formData.append("subject", subject);
+  formData.append("gradeLevel_id", gradeLevel_id);
+  formData.append("subject_id", subject_id);
   formData.append("file", file);
+
 
   try {
     const response = await fetch("/api/grades", {
@@ -87,7 +61,6 @@ const handleSubmit = async () => {
       }
       return;
     }
-
     toast.success(data.message);
   } catch (err) {
     const error = err as Error; // 👈 assert to Error
@@ -101,6 +74,22 @@ const handleSubmit = async () => {
   }
 };
 
+useEffect(() => {
+  const fetchAssignments = async () => {
+    try {
+      const res = await fetch("/api/grade-subject");
+      const data = await res.json();
+      console.log(data);
+      setAssignments(data);
+    } catch (error) {
+      toast.error("Failed to load.");
+      console.error(error);
+    }
+  };
+
+  fetchAssignments();
+}, []);
+
 
   return (
     <main className="w-full  items-center justify-center flex mt-10">
@@ -109,39 +98,26 @@ const handleSubmit = async () => {
           <CardTitle className="text-xl">Upload Student Grade</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex flex-col ">
-            <label htmlFor="gradeLevel">Grade Level</label>
-            <select
-              id="gradeLevel"
-              value={gradeLevel}
-              onChange={(e) => setGradeLevel(e.target.value)}
-              className="w-full border px-3 py-2 rounded"
-            >
-              <option value="">Select grade</option>
-              {grades.map((grade) => (
-                <option key={grade.gradeLevel_id} value={grade.gradeLevel_id}>
-                  {grade.gradeLevelName}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          <div className="flex flex-col ">
-            <label htmlFor="subject">Subject</label>
-            <select
-              id="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="w-full border px-3 py-2 rounded"
-            >
-              <option value="">Select subject</option>
-              {subjects.map((subj) => (
-                <option key={subj.subject_id} value={subj.subject_id}>
-                  {subj.subjectName}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={`${gradeLevel_id}-${subject_id}`}
+            onChange={(e) => {
+              const [gId, sId] = e.target.value.split("-");
+              setGradeLevel(gId);
+              setSubject(sId);
+            }}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select grade and subject</option>
+            {assignments.map((item) => (
+              <option
+                key={item.assignment_id}
+                value={`${item.gradeLevel_id}-${item.subject_id}`}
+              >
+                {"Grade " + item.gradeLevelName} - {item.subjectName}
+              </option>
+            ))}
+          </select>
 
           <div className="flex flex-col ">
             <label htmlFor="file">Excel File</label>

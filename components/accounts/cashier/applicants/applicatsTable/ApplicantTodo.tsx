@@ -37,6 +37,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className="px-4 py-2">{applicants.lrn}</td>
       <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
       <td className="px-4 py-2">{applicants.gradeLevel}</td>
+      <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="px-4 py-2">
         <Cashier_ReservationReview />
         <Button 
@@ -47,7 +48,6 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
             View
         </Button>
       </td>
-      <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="py-2 space-x-2">
         <Button
           onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}

@@ -32,6 +32,10 @@ export const CheckLrn = () => {
       return;
     }
 
+    if (!/^\d{12}$/.test(lrn)) {
+      toast.error("Invalid LRN. Please enter a valid LRN.");
+      return;
+    }
     setLoading(true);
     setNotFound(false);
 
@@ -74,10 +78,13 @@ export const CheckLrn = () => {
             value={lrn}
             onChange={(e) => setLrn(e.target.value)}
             placeholder="Enter LRN"
+            className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+
           />
 
           <Button
-            className="bg-dGreen text-white"
+            variant="confirmButton"
+            className="w-full rounded-lg"
             onClick={handleSubmit}
             disabled={loading}
           >
@@ -90,8 +97,8 @@ export const CheckLrn = () => {
                 Your record was not yet establish in the sytem fill in information here. Click the button below to proceed.
               </p>
               <Button
-                variant="outline"
-                className="border-dGreen text-dGreen"
+                variant="confirmButton"
+                className="w-full rounded-lg"
                 onClick={handleProceedAsNew}
               >
                 Proceed

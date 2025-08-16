@@ -1,72 +1,3 @@
-// "use client"
-// import { Bar, BarChart, CartesianGrid, XAxis, YAxis,  } from "recharts"
-// import {
-//   Card,
-//   CardContent,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card"
-// import {
-//   ChartConfig,
-//   ChartContainer,
-//   ChartTooltip,
-//   ChartTooltipContent,
-// } from "@/components/ui/chart"
-
-// const chartData = [
-//     { month: "January", desktop: 186 },
-//     { month: "February", desktop: 305 },
-//     { month: "March", desktop: 237 },
-//     { month: "April", desktop: 73 },
-//     { month: "May", desktop: 209 },
-//     { month: "June", desktop: 214 },
-//   ]
-//   const chartConfig = {
-//     desktop: {
-//       label: "Mob",
-//       color: "hsl(var(--chart-1))",
-//     },
-//   } satisfies ChartConfig
-  
-
-// export const Enrollment = () => {
-//     return (
-//         <div>
-//         <Card className="w-[550px]">
-//             <CardHeader>
-//                 <CardTitle className="text-center">Enrollment Trend</CardTitle>
-//             </CardHeader>
-//             <CardContent>
-//                 <ChartContainer config={chartConfig} style={{ width: 500, height: 200 }}>
-//                     <BarChart accessibilityLayer data={chartData}>
-//                         <CartesianGrid vertical={false} />
-//                         <XAxis
-//                         dataKey="month"
-//                         tickLine={false}
-//                         tickMargin={10}
-//                         axisLine={false}
-//                         tickFormatter={(value) => value.slice(0, 3)}
-//                         />
-
-//                         <YAxis 
-//                         label={{ value: "Number of Students", angle: -90, position: "insideLeft", textanchor: "center", dy:80, dx:10}} 
-//                         style={{ fontSize: '10px' }} 
-//                         />
-                        
-//                         <ChartTooltip
-//                         cursor={false}
-//                         content={<ChartTooltipContent hideLabel />}
-//                         />
-//                         <Bar dataKey="desktop" fill="var(--color-desktop)" radius={1} />
-//                     </BarChart>
-//                 </ChartContainer>
-//             </CardContent>
-//         </Card>
-//         </div>
-//     );
-// };
-
-
 "use client"
 import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
@@ -81,15 +12,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { useEffect, useState } from "react"
+import { getEnrollmentTrend } from "@/src/actions/registrarAction"
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
+
 
 const chartConfig = {
   desktop: {
@@ -99,6 +25,86 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export const Enrollment = () => {
+    const [chartData, setChartData] = useState<{ academicYear: string | null; count: number }[]>([]);
+    const [yAxisMax, setYAxisMax] = useState(5);
+
+
+//     useEffect(() => {
+//     const fetchData = async () => {
+//       const res = await getEnrollmentTrend();
+
+
+//     const formattedData = res.map((item) => ({
+//       academicYear: item.academicYear,
+//       count: Number(item.count),
+//     }));
+
+
+
+//       const maxCount = Math.max(...formattedData.map((d) => d.count));
+//       const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
+//       setYAxisMax(paddedMax);
+
+
+//       setChartData(formattedData);
+//     };
+
+//   fetchData();
+// }, []);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const res = await getEnrollmentTrend();
+
+    // Convert to usable format
+    const formattedData = res.map((item) => ({
+      academicYear: item.academicYear,
+      count: Number(item.count),
+    }));
+
+    // 📌 Pad with future years if less than 3
+    let paddedData = [...formattedData];
+
+    if (paddedData.length < 4) {
+      const existingYears = paddedData.map((d) => d.academicYear).filter(Boolean) as string[];
+
+      const latestYear = existingYears.length > 0
+        ? existingYears[0] // assuming DESC order
+        : "2021-2022"; // fallback
+
+      let [startYear] = latestYear.split("-").map(Number);
+
+      while (paddedData.length < 4) {
+        startYear += 1;
+        const nextYear = `${startYear}-${startYear + 1}`;
+        if (!existingYears.includes(nextYear)) {
+          paddedData.unshift({
+            academicYear: nextYear,
+            count: 0,
+          });
+        }
+      }
+    }
+
+    // Sort ascending for proper chart flow (optional)
+    paddedData = paddedData.sort((a, b) =>
+      a.academicYear && b.academicYear
+        ? a.academicYear.localeCompare(b.academicYear)
+        : 0
+    );
+
+    // Determine max Y-axis
+    const maxCount = Math.max(...paddedData.map((d) => d.count));
+    const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
+    setYAxisMax(paddedMax);
+
+    setChartData(paddedData);
+  };
+
+  fetchData();
+}, []);
+
+
   return (
     <div>
       <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
@@ -106,32 +112,42 @@ export const Enrollment = () => {
           <CardTitle className="text-center">Enrollment Trend</CardTitle>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} style={{ }}>
-            <LineChart data={chartData}>
+          <ChartContainer config={chartConfig} style={{  }}>
+            <LineChart data={chartData} margin={{ top:15, bottom: 30, right: 35 }}>
               <CartesianGrid vertical={false} />
+
               <XAxis
-                dataKey="month"
+                dataKey="academicYear"
                 tickLine={false}
-                tickMargin={10}
+                tickMargin={5}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <YAxis
                 label={{
-                  value: "Number of Students",
-                  angle: -90,
-                  position: "insideLeft",
-                  textAnchor: "middle",
-                  dy: 80,
-                  dx: 10,
+                  value: "Academic Year",
+                  position: "insideBottom",
+                  dy: 25,
+                  style: { fontSize: 12 },
                 }}
-                style={{ fontSize: "10px" }}
-              />
+              >
+              </XAxis>
+            <YAxis
+              domain={[0, yAxisMax]} // always start from 0, end at highest value
+              tick={{ fontSize: 10 }}
+              interval={0}
+              allowDecimals={false} // 👈 this disables .25, .5 etc.
+              label={{
+                value: "Number of Students",
+                angle: -90,
+                position: "insideLeft",
+                dy: 50,
+                dx: 10,
+              }}
+              style={{ fontSize: "10px" }}
+            />
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
               <Line
                 type="monotone"
-                dataKey="desktop"
-                stroke="var(--color-desktop)"
+                dataKey="count"
+                stroke="#0FC64F  "
                 strokeWidth={2}
                 dot={{ r: 3 }}
                 activeDot={{ r: 5 }}

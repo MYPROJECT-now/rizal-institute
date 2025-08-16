@@ -2,11 +2,12 @@
 
   import { desc, eq, or, and } from "drizzle-orm";
   import { db } from "../db/drizzle";
-  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, Registrar_remaks_table, StudentGradesTable, StudentInfoTable, SubjectTable } from "../db/schema";
+  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, Registrar_remaks_table, StudentGradesTable, StudentInfoTable, SubjectTable } from "../db/schema";
   import { revalidatePath } from "next/cache";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
-  import { getSelectedAcademicYear } from "./utils/academicYear";
+  import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
+import { getStaffCredentials } from "./utils/staffID";
 
     export const getRecentApplicants = async () => {
       await requireStaffAuth(["registrar"]); // gatekeeper
@@ -238,43 +239,215 @@
         console.warn("❌ No academic year selected");
         return [];
       }
-      
-      const allStudent = await db.select({
-        lrn: StudentInfoTable.lrn,
-        studentLastName: StudentInfoTable.studentLastName,
-        studentFirstName: StudentInfoTable.studentFirstName,
-        studentMiddleName: StudentInfoTable.studentMiddleName,
-      })
-      .from(StudentInfoTable)
-      .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-      .where(and(eq(AdmissionStatusTable.admissionStatus, "Enrolled"), eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear))) 
+    
+      const allStudent = await db
+        .selectDistinctOn([StudentInfoTable.lrn], {
+          lrn: StudentInfoTable.lrn,
+          studentLastName: StudentInfoTable.studentLastName,
+          studentFirstName: StudentInfoTable.studentFirstName,
+          studentMiddleName: StudentInfoTable.studentMiddleName,
+          status: AdmissionStatusTable.admissionStatus,
+          gradeLevelName: GradeLevelTable.gradeLevelName,
+        })
+        .from(StudentInfoTable)
+        .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+        .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+        .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+        .where(eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear));
+
       console.log("Fetched Enrollees:", allStudent);
-      
       return allStudent;
     };
 
-      // export const getEnrolledStudentsInfo = async (lrn: string) => {
-  export const getEnrolledStudentsInfo = async () => {
-      await requireStaffAuth(["registrar"]); // gatekeeper
 
-      const allStudentsInfo = await db.select({
-        lrn: StudentInfoTable.lrn,
-        studentLastName: StudentInfoTable.studentLastName,
-        studentFirstName: StudentInfoTable.studentFirstName,
-        studentMiddleName: StudentInfoTable.studentMiddleName,
-        studentSuffix: StudentInfoTable.studentSuffix,
-        studentGender: StudentInfoTable.studentGender,
-        studentBirthDate: StudentInfoTable.studentBirthDate,
-        studentAge: StudentInfoTable.studentAge,
-        fullAddress: StudentInfoTable.fullAddress,
-      
+  export const doTransferStudent = async ( lrn: string) => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+    const getId = await db
+      .select({
+        applicants_id: applicantsInformationTable.applicants_id
       })
-      .from(StudentInfoTable)
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn))
+      .limit(1);
     
-      console.log("Fetched Enrollees:", allStudentsInfo);
-      
-      return allStudentsInfo;
-    };
+    const id = getId[0].applicants_id;
+
+    const credentials = await getStaffCredentials();
+     
+    if (!credentials) return null;
+
+    const username = credentials?.clerk_username;
+    const userType = credentials?.userType;
+    await db
+      .update(AdmissionStatusTable)
+      .set({
+        admissionStatus: "Transferred",
+      })
+      .where(eq(AdmissionStatusTable.applicants_id, id));
+
+      await db
+      .insert(auditTrailsTable)
+      .values({
+       username: username,
+       usertype: userType,
+       actionTaken: "Transfer a Student",
+       dateOfAction: new Date().toISOString(),
+       actionTakenFor: lrn,
+       academicYear_id: await getAcademicYearID(),
+      }) ;
+
+  }
+
+  export const doDropferStudent = async ( lrn: string) => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+    const getId = await db
+      .select({
+        applicants_id: applicantsInformationTable.applicants_id
+      })
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn))
+      .limit(1);
+    
+    const id = getId[0].applicants_id;
+
+    const credentials = await getStaffCredentials();
+     
+    if (!credentials) return null;
+
+    const username = credentials?.clerk_username;
+    const userType = credentials?.userType;
+
+    await db
+      .update(AdmissionStatusTable)
+      .set({
+        admissionStatus: "Dropped",
+      })
+      .where(eq(AdmissionStatusTable.applicants_id, id));
+
+      await db
+      .insert(auditTrailsTable)
+      .values({
+       username: username,
+       usertype: userType,
+       actionTaken: "Dropped a Student",
+       dateOfAction: new Date().toISOString(),
+       actionTakenFor: lrn,
+       academicYear_id: await getAcademicYearID(),
+      }) ;
+  }
+
+  // export const getEnrolledStudentsInfo = async (lrn: string) => {
+  export const getEnrolledStudentsInfo = async (lrn: string) => {
+    await requireStaffAuth(["registrar"]); // gatekeeper
+
+    const allStudentsInfo = await db.select({
+      lrn: StudentInfoTable.lrn,
+      studentLastName: StudentInfoTable.studentLastName,
+      studentFirstName: StudentInfoTable.studentFirstName,
+      studentMiddleName: StudentInfoTable.studentMiddleName,
+      studentSuffix: StudentInfoTable.studentSuffix,
+      studentGender: StudentInfoTable.studentGender,
+      studentBirthDate: StudentInfoTable.studentBirthDate,
+      age: StudentInfoTable.studentAge,
+      fullAddress: StudentInfoTable.fullAddress,
+
+      guardiansLastName: guardianAndParentsTable.guardiansLastName,
+      guardiansFirstName: guardianAndParentsTable.guardiansFirstName,
+      guardiansMiddleName: guardianAndParentsTable.guardiansMiddleName,
+      guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
+      emergencyContact: guardianAndParentsTable.emergencyContact,
+      emergencyEmail: guardianAndParentsTable.emergencyEmail,
+    })
+    .from(StudentInfoTable)
+    .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
+    .where(eq(StudentInfoTable.lrn, lrn));
+
+  
+    console.log("Fetched Enrollees:", allStudentsInfo);
+    
+    return allStudentsInfo;
+  };
+
+  // export const updateStudentInfo = async (lrn: string) => {
+  //   await requireStaffAuth(["registrar"]); // gatekeeper
+
+  //   const updateStudentInfo = await db
+  //     .update(StudentInfoTable)
+  //     .set({
+  //       studentLastName: StudentInfoTable.studentLastName,
+  //       studentFirstName: StudentInfoTable.studentFirstName,
+  //       studentMiddleName: StudentInfoTable.studentMiddleName,
+  //       studentSuffix: StudentInfoTable.studentSuffix,
+  //       studentGender: StudentInfoTable.studentGender,
+  //       studentBirthDate: StudentInfoTable.studentBirthDate,
+  //       studentAge: StudentInfoTable.studentAge,
+  //       fullAddress: StudentInfoTable.fullAddress,
+  //     })
+  //     .where(eq(StudentInfoTable.lrn, lrn));
+    
+  //   return updateStudentInfo;
+  // }
+
+  export const updateStudentInfo = async (
+  lrn: string,
+  values: {
+    studentLastName: string;
+    studentFirstName: string;
+    studentMiddleName: string;
+    suffix: string;
+    studentGender: string;
+    studentBirthDate: string;
+    studentAge: number;
+    fullAddress: string;
+
+    guardiansLastName: string;
+    guardiansFirstName: string;
+    guardiansMiddleName: string;
+    guardiansSuffix: string;
+    emergencyContact: string;
+    emergencyEmail: string;
+  }
+) => {
+  await requireStaffAuth(["registrar"]);
+
+  const get_id = await db
+    .select({
+      applicants_id: applicantsInformationTable.applicants_id
+    })
+    .from(applicantsInformationTable)
+    .where(eq(applicantsInformationTable.lrn, lrn))
+  
+    const id = get_id[0].applicants_id;
+
+  await db
+    .update(StudentInfoTable)
+    .set({
+      studentLastName: values.studentLastName,
+      studentFirstName: values.studentFirstName,
+      studentMiddleName: values.studentMiddleName,
+      studentSuffix: values.suffix,
+      studentGender: values.studentGender,
+      studentBirthDate: values.studentBirthDate,
+      studentAge: values.studentAge,
+      fullAddress: values.fullAddress,
+    })
+    .where(eq(StudentInfoTable.applicants_id, id));
+
+  await db
+    .update(guardianAndParentsTable)
+    .set({
+      guardiansLastName: values.guardiansLastName,
+      guardiansFirstName: values.guardiansFirstName,
+      guardiansMiddleName: values.guardiansMiddleName,
+      guardiansSuffix: values.guardiansSuffix,
+      emergencyContact: values.emergencyContact,
+      emergencyEmail: values.emergencyEmail,
+    })
+    .where(eq(guardianAndParentsTable.applicants_id, id));
+
+  return { success: true };};
 
   export const getTotalStudents = async () => {
     await requireStaffAuth(["registrar"]); // gatekeeper
@@ -376,4 +549,94 @@ export const getStudentGradesByLRN = async (lrn: string) => {
 
     console.log("Grades:", grades);
   return grades;
+};
+
+
+
+// export const getEnrolledCountPerGradeLevel = async () => {
+//   await requireStaffAuth(["registrar"]);
+
+//   const selectedAcademicYear = await getSelectedAcademicYear();
+
+//   if (!selectedAcademicYear) {
+//     console.warn("❌ No academic year selected");
+//     return [];
+//   }
+
+//   const result = await db
+//     .select({
+//       gradeLevel: GradeLevelTable.gradeLevelName,
+//       count: count(StudentInfoTable.student_id), // will group by this below
+//     })
+//     .from(StudentGradesTable)
+//     .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+//     .leftJoin(StudentInfoTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+//     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+//     .where(
+//       and(
+//         eq(StudentGradesTable.academicYear_id, selectedAcademicYear),
+//         eq(AdmissionStatusTable.admissionStatus, "Enrolled"),
+//         eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear)
+//       )
+//     )
+//     .groupBy(GradeLevelTable.gradeLevelName);
+
+//   console.log("📊 Enrolled per grade level:", result);
+
+//   return result;
+// };
+
+
+export const getEnrolledCountPerGradeLevel = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedAcademicYear = await getSelectedAcademicYear();
+
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+    return [];
+  }
+
+  const result = await db
+    .select({
+      gradeLevel: GradeLevelTable.gradeLevelName,
+      count: sql<number>`COUNT(DISTINCT ${StudentGradesTable.student_id})`,
+    })
+    .from(StudentGradesTable)
+    .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(StudentInfoTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(
+      and(
+        eq(StudentGradesTable.academicYear_id, selectedAcademicYear),
+        eq(AdmissionStatusTable.admissionStatus, "Enrolled"),
+        eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear)
+      )
+    )
+    .groupBy(GradeLevelTable.gradeLevelName);
+
+  console.log("📊 Enrolled per grade level (deduplicated):", result);
+
+  return result;
+};
+
+
+
+export const getEnrollmentTrend = async () => {
+  await requireStaffAuth(["registrar"]);  
+
+   const Trend = await db
+   .select({
+      count: sql<number>`COUNT (${AdmissionStatusTable.admission_id})`,
+      academicYear: AcademicYearTable.academicYear,
+    })
+    .from(AdmissionStatusTable)
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
+    .where(eq(AdmissionStatusTable.admissionStatus, "Enrolled"))
+    .groupBy(AcademicYearTable.academicYear)
+    .orderBy(desc(AcademicYearTable.academicYear))
+    .limit(4); // get latest 4
+
+    console.log("📊 Enrollment Trend:", Trend);
+    return Trend;
 };

@@ -27,6 +27,22 @@ import { staffClerkUserTable } from "@/src/db/schema";
 
     };
 
+    export const getUid = async () => {
+      const { userId } = await auth();
+      if (!userId) return null;
+  
+      const clerkRecord = await db
+        .select()
+        .from(staffClerkUserTable)
+        .where(eq(staffClerkUserTable.clerkId, userId))
+        .limit(1);
+  
+      const staffID = clerkRecord[0];
+      if (!staffID) return null;
+  
+      return staffID.clerk_uid;
+    };
+
     export const getStaffCredentials = async () =>
     {
       const { userId } = await auth();

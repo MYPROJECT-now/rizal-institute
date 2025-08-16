@@ -37,6 +37,9 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
       <td className="px-4 py-2">{applicant.lrn}</td>
       <td className="px-4 py-2">{applicant.lastName} {applicant.firstName} {applicant.middleName}</td>
       <td className="px-4 py-2">{applicant.gradeLevel}</td>
+
+      <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
+      <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>  
       <td className="px-4 py-2">
         <Enrollees_info_Modal />
         <Button 
@@ -46,8 +49,6 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
             View
           </Button>
       </td>
-      <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
-      <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>  
       <td className="px-4 py-2 space-x-2">
         <Button
           onClick={() => onAccept(applicant.id,  applicant.lastName, applicant.firstName, applicant.middleName ?? "")}

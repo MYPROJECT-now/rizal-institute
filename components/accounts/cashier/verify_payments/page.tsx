@@ -12,6 +12,7 @@ interface PendingPayment {
   status: string;
   dateOfPayment: string | null;
   SInumber: string | null;
+  lrn: string | null;
 }
 
 const PaymentApprovalPage = () => {
@@ -33,14 +34,14 @@ const PaymentApprovalPage = () => {
 
   const handleApprove = async (payment: PendingPayment) => {
     setActionLoading(payment.monthlyPayment_id);
-    await acceptPayment(payment.monthlyPayment_id, payment?.month_id || 0, payment.amount);
+    await acceptPayment(payment.monthlyPayment_id, payment?.month_id || 0, payment.amount, payment.lrn || "");
     await fetchPendingPayments();
     setActionLoading(null);
   };
 
   const handleDecline = async (payment: PendingPayment) => {
     setActionLoading(payment.monthlyPayment_id);
-    await declinePayment(payment.monthlyPayment_id);
+    await declinePayment(payment.monthlyPayment_id, payment.lrn || "");
     await fetchPendingPayments();
     setActionLoading(null);
   };

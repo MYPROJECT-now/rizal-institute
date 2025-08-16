@@ -1,67 +1,134 @@
-"use client"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis,  } from "recharts"
+"use client";
+
+import { useEffect, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
+import { getEnrolledCountPerGradeLevel } from "@/src/actions/registrarAction";
 
-const chartData = [
-    { month: "January", desktop: 186 },
-    { month: "February", desktop: 305 },
-    { month: "March", desktop: 237 },
-    { month: "April", desktop: 73 },
-    { month: "May", desktop: 209 },
-    { month: "June", desktop: 214 },
-  ]
-  const chartConfig = {
-    desktop: {
-      label: "Value",
-      color: "hsl(var(--chart-1))",
-    },
-  } satisfies ChartConfig
-  
-// grid grid-cols-1 gap-5 p-0 sm:grid-cols-2 grid-rows-2 md:grid-cols-2 lg:grid-cols-4
+
+const chartConfig = {
+  desktop: {
+    label: "Students",
+  },
+} satisfies ChartConfig;
+
 export const Ppgl = () => {
-    return (
-        <div>
-        <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
-            <CardHeader>
-                <CardTitle className="text-center">Population Per Grade Level</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig} style={{  }}>
-                    <BarChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        tickMargin={10}
-                        axisLine={false}
-                        tickFormatter={(value) => value.slice(0, 3)}
-                        />
+  const [chartData, setChartData] = useState<{ gradeLevel: string | null; count: number }[]>([]);
+  const [yAxisMax, setYAxisMax] = useState(5);
 
-                        <YAxis 
-                        label={{ value: "Number of Students", angle: -90, position: "insideLeft", textanchor: "center", dy:80, dx:10}} 
-                        style={{ fontSize: '10px' }} 
-                        />
-                        
-                        <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={1} />
-                    </BarChart>
-                </ChartContainer>
-            </CardContent>
-        </Card>
-        </div>
-    );
+  
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await getEnrolledCountPerGradeLevel();
+  //     const formatted = res.map((item) => ({
+  //       gradeLevel: item.gradeLevel,
+  //       count: Number(item.count),
+  //     }));
+  //     setChartData(formatted);
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+  const fetchData = async () => {
+    const res = await getEnrolledCountPerGradeLevel();
+
+    
+
+    const defaultGrades = ["7", "8", "9", "10"];
+
+    // Map received data to an object for quick lookup
+    const dataMap = new Map(res.map(item => [item.gradeLevel, Number(item.count)]));
+
+    // Fill missing grades with 0
+    const filledData = defaultGrades.map(grade => ({
+      gradeLevel: grade,
+      count: dataMap.get(grade) ?? 0,
+    }));
+
+    const maxCount = Math.max(...filledData.map((d) => d.count));
+    const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
+    setYAxisMax(paddedMax);
+
+
+    setChartData(filledData);
+  };
+
+  fetchData();
+}, []);
+
+
+
+  return (
+    <Card className=" w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
+      <CardHeader>
+        <CardTitle className="text-center">Population Per Grade Level</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <BarChart data={chartData} margin={{ bottom: 30, top: 15 }}>
+            <CartesianGrid vertical={false} />
+
+            <XAxis
+              dataKey="gradeLevel"
+              tickLine={false}
+              tickMargin={5}
+              axisLine={false}
+              label={{
+                value: "Grade Level",
+                position: "insideBottom",
+                dy: 25,
+                style: { fontSize: 12 },
+              }}
+            >
+            </XAxis>
+
+            {/* <YAxis
+              label={{
+                value: "Number of Students",
+                angle: -90,
+                position: "insideLeft",
+                dy: 80,
+                dx: 10,
+              }}
+              tickFormatter={(value) => value}
+              style={{ fontSize: "10px" }}
+            /> */}
+            <YAxis
+              domain={[0, yAxisMax]} // always start from 0, end at highest value
+              tick={{ fontSize: 10 }}
+              interval={0}
+              allowDecimals={false} // 👈 this disables .25, .5 etc.
+              label={{
+                value: "Number of Students",
+                angle: -90,
+                position: "insideLeft",
+                dy: 50,
+                dx: 10,
+              }}
+              style={{ fontSize: "10px" }}
+            />
+
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar dataKey="count" fill="#0FC64F  " radius={1} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  );
 };

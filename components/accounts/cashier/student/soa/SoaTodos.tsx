@@ -2,27 +2,32 @@
 import { FC, useState, useEffect } from "react";
 import { SOAsStudent } from "@/src/type/CASHIER/STUDENT/student";
 import SoaTodo from "./SoaTodo";
+import { updateSoa } from "@/src/actions/cashierAction";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Props {
-  SOATodos: SOAsStudent[];
-  
+SOATodos: SOAsStudent[];
+
 }   
 
 // Add a type for the calculated row
 interface SOAWithBalance extends SOAsStudent {
-  currentBalance: number;
-  effectiveDue: number;
+currentBalance: number;
+effectiveDue: number;
 }
 
 const SoaTodos: FC<Props> = ({ SOATodos }) => {
 
     // State to manage the list of todo items
-    const [SOATodoItems] = useState<SOAsStudent[]>(SOATodos);
+    const [SOATodoItems, setSoaTodoItems] = useState<SOAsStudent[]>(SOATodos);
+    const [editing, setEditing] = useState(false); // NEW: track edit mode
+    const [isSaving, setIsSaving] = useState(false);
 
     // Calculate balances
     const calculatedRows: SOAWithBalance[] = [];
     let prevEffectiveDue = 0;
-    for (const soa of SOATodos) {
+    for (const soa of SOATodoItems) {
         const monthlyDue = soa.monthlyDue || 0;
         const amountPaid = soa.amountPaid || 0;
         const currentBalance = monthlyDue - amountPaid;
@@ -68,6 +73,35 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
         );
     }
 
+    const handleChange = (month_id: number, field: "month" | "monthlyDue", value: string | number) => {
+        setSoaTodoItems((prev) =>
+        prev.map((item) =>
+            item.month_id === month_id ? { ...item, [field]: value } : item
+        )
+        );
+    };
+
+    // const handleSaveAll = async () => {
+    //     for (const item of SOATodoItems) {
+    //     await updateSoa(item.month_id, item.month ?? "", item.monthlyDue ?? 0);
+    //     }
+    //     toast.success("SOA updated successfully.");
+    //     setEditing(false);
+    // };
+
+    const handleSaveAll = async () => {
+        setIsSaving(true);
+        await Promise.all(
+            SOATodoItems.map(item =>
+            updateSoa(item.month_id, item.month ?? "", item.monthlyDue ?? 0)
+            )
+        );
+        toast.success("SOA updated successfully.");
+        setEditing(false);
+        setIsSaving(false);
+    };
+
+
     return (
         <main className="p-3">
             <div>
@@ -92,7 +126,7 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                                 <th className="border border-gray-300 p-1">Unpaid Due</th>
                                 <th className="border border-gray-300 p-1">Total Bal. to Date</th>
                             </tr>
-                          
+                        
                             <tr >
                                 <th className="bg-gray-100 border border-gray-300 p-1"colSpan={2}>Downpayment Upon Enrollment</th>
                                 <th className="border border-gray-300 p-1">{SOATodos[0]?.amount || 0}</th>
@@ -112,8 +146,11 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                                 SOAtodo={SOAtodo}
                                 currentBalance={SOAtodo.currentBalance}
                                 effectiveDue={SOAtodo.effectiveDue}
+                                editing={editing}
+                                onChange={handleChange}
                             />
                             ))}
+                            
                         </tbody>
                     </table>
                 </section>
@@ -123,6 +160,24 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                         <p><strong>Remaining Balance:</strong> {calculatedRows[calculatedRows.length - 1].effectiveDue}</p>
                         <p><strong>Total Amount Due:</strong> ₱{calculateTotalAmountDue()}</p>
                     </div>
+                </section>
+
+                <section className="flex flex-row justify-center gap-3 w-full">
+                    <Button
+                        onClick={() => setEditing(true)}
+                        variant="acceptButton"
+                        className=" text-white px-10 py-1 rounded-xl "
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        onClick={handleSaveAll}
+                        variant="confirmButton"
+                        className=" text-white px-10 py-1 rounded-xl"
+                        disabled={isSaving || !editing}
+                    >
+                        {isSaving ? "Saving..." : "Save"}
+                    </Button>
                 </section>
             </div>
 

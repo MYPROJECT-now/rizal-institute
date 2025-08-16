@@ -6,11 +6,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { useEnrollmentModal } from "@/src/store/ADMIN/enrollment"; 
+import { useState } from "react";
+import { InsertEnrollment } from "./insertEnrollment";
+import { UpdateCurrentEnrollmentPeriod } from "./updateEnrollment";
 
 export const EnrollmentManagement = () => {
   const { isOpen, close } = useEnrollmentModal();
+  const [refresh, setRefresh] = useState(0);
+
+  const handleRefresh = () => {
+    setRefresh(prev => prev + 1); // trigger refresh
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
@@ -24,38 +31,14 @@ export const EnrollmentManagement = () => {
         <div className="space-y-6 px-4 py-6 text-sm text-gray-700">
           {/* Current Enrollment Info */}
           <section className="bg-gray-100 p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-2">📅 Current Enrollment Period</h3>
-            <p><strong>Status:</strong> Open</p>
-            <p><strong>Open Date:</strong> April 15, 2025</p>
-            <p><strong>Close Date:</strong> May 31, 2025</p>
+            <h3 className="text-lg font-semibold mb-2">📅 Current Academic Year</h3>
+              <UpdateCurrentEnrollmentPeriod refreshTrigger={refresh} />
           </section>
 
           {/* Update Form */}
           <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-4">✏️ Update Enrollment Dates</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label htmlFor="open-date" className="mb-1 font-medium">Open Date</label>
-                  <input
-                    id="open-date"
-                    type="date"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="close-date" className="mb-1 font-medium">Close Date</label>
-                  <input
-                    id="close-date"
-                    type="date"
-                    className="border border-gray-300 rounded px-3 py-2"
-                  />
-                </div>
-              </div>
-              <Button className="w-full mt-4 bg-dGreen text-white hover:bg-green-700">
-                Save Changes
-              </Button>
-            </div>
+            <h3 className="text-lg font-semibold mb-4">✏️ Set New Enrollment Period</h3>
+              <InsertEnrollment onCreated={handleRefresh} />          
           </section>
         </div>
       </DialogContent>

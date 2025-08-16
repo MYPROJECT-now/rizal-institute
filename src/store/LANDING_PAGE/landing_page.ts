@@ -28,13 +28,13 @@ type ShowRemarksModalState = {
 };
 
 export const useShowRemarksModal = create<ShowRemarksModalState>((set) => ({
-  isOpen: false,
+  isOpen: true,
   regRemarks: null,
   cashierRemarks: null,
   regDate: null,
   cashierDate: null,
   open: (remarks) => set({ 
-    isOpen: false,
+    isOpen: true,
     regRemarks: remarks.regRemarks,
     cashierRemarks: remarks.cashierRemarks,
     regDate: remarks.regDate,

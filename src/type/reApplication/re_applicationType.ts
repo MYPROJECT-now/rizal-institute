@@ -28,4 +28,16 @@ export interface StudentUpdateData {
     goodMoral?: string;
     idPic?: string;
     studentExitForm?: string;
+    form137?: string;
+
+    mop?: string;
+    reservationReceipt?: string;
+    reservationAmount?: number;
+  }
+
+  export interface ReservationFee {
+
+    mop?: string;
+    reservationReceipt?: string;
+    reservationAmount?: number;
   }

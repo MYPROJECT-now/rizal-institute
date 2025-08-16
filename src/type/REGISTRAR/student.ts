@@ -3,6 +3,8 @@ export type all_studentTable_Type = {
     studentLastName: string;
     studentFirstName: string;
     studentMiddleName: string | null;
+    status : string | null;
+    gradeLevelName: string | null
   };
   
 

@@ -2,10 +2,12 @@
 
 import { desc, eq} from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AcademicYearTable, auditTrailsTable, ClerkUserTable, GradeLevelTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { clerkClient } from "@clerk/nextjs/server";
 import { getSelectedAcademicYear } from "./studentAction";
+import { getAcademicYearID } from "./utils/academicYear";
+import { getStaffCredentials } from "./utils/staffID";
 
 
 export const getCurrentAcademicYear = async () => {
@@ -27,7 +29,7 @@ export const getCurrentAcademicYear = async () => {
   if (activeYear.length > 0) {
     return activeYear[0]; // return active year
   }
-
+  
   // If no active year, get the latest one
   const latestYear = await db
     .select({
@@ -38,7 +40,46 @@ export const getCurrentAcademicYear = async () => {
       isActive: AcademicYearTable.isActive,
     })
     .from(AcademicYearTable)
-    .orderBy(desc(AcademicYearTable.academicYearStart))
+    .orderBy(desc(AcademicYearTable.academicYear_id))
+    .limit(1);
+
+  return latestYear[0] ?? null;
+};
+
+  export const getCurrentEnrollmentPeriod = async () => {
+  await requireStaffAuth(["admin"]); // gatekeeper
+
+  // Try to get the active academic year
+  const enrollment = await db
+    .select({
+      enrollmentID: EnrollmentStatusTable.enrollment_status_id,
+      enrollment: EnrollmentStatusTable.enrollment_period,
+      enrollmentStart: EnrollmentStatusTable.enrollment_start_date,
+      academicYearEnd: EnrollmentStatusTable.enrollment_end_date,
+      isActive: EnrollmentStatusTable.isActive,
+    })
+    .from(EnrollmentStatusTable)
+    .where(eq(EnrollmentStatusTable.isActive, true))
+    .limit(1);
+
+    console.log(enrollment);
+    
+  if (enrollment.length > 0) {
+    return enrollment[0]; // return active year
+  }
+
+
+  // If no active year, get the latest one
+  const latestYear = await db
+    .select({
+      enrollmentID: EnrollmentStatusTable.enrollment_status_id,
+      enrollment: EnrollmentStatusTable.enrollment_period,
+      enrollmentStart: EnrollmentStatusTable.enrollment_start_date,
+      academicYearEnd: EnrollmentStatusTable.enrollment_end_date,
+      isActive: EnrollmentStatusTable.isActive,
+    })
+    .from(EnrollmentStatusTable)
+    .orderBy(desc(EnrollmentStatusTable.enrollment_status_id))
     .limit(1);
 
   return latestYear[0] ?? null;
@@ -63,6 +104,24 @@ export const updateCurrentAcademicYear = async (
         .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
 }
 
+export const updateEnrollmentPeriod = async (
+    enrollmentID: number, 
+    enrollment: string, 
+    enrollmentStart: string, 
+    enrollmentEnd: string
+) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
+
+    await db
+        .update(EnrollmentStatusTable)
+        .set({
+            enrollment_period: enrollment,
+            enrollment_start_date: enrollmentStart,
+            enrollment_end_date: enrollmentEnd,
+        })
+        .where(eq(EnrollmentStatusTable.enrollment_status_id, enrollmentID))
+}
+
 export const stopCurrentAcademicYear = async (academicYear_id: number,) => {
     await requireStaffAuth(["admin"]); // gatekeeper
 
@@ -74,6 +133,20 @@ export const stopCurrentAcademicYear = async (academicYear_id: number,) => {
         })
         .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
 }
+
+export const stopCurrentEnrollmentPeriod = async (academicYear_id: number,) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
+
+    await db
+        .update(AcademicYearTable)
+        .set({
+            academicYearEnd: new Date().toISOString().split("T")[0],
+            isActive: false,
+        })
+        .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
+}
+
+
 
 export const createAcademicYear = async (
     academicYear: string,
@@ -95,6 +168,31 @@ export const createAcademicYear = async (
             academicYear: academicYear,
             academicYearStart: academicYearStart,
             academicYearEnd: academicYearEnd,
+    })
+}  
+
+export const createEnrollment = async (
+    enrollment: string,
+    enrollmentStart: string,
+    enrollmentEnd: string
+) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
+    const acad_id = await getAcademicYearID();
+    
+    await db
+        .update(EnrollmentStatusTable)
+        .set({
+            isActive: false,
+        })
+        .where(eq(EnrollmentStatusTable.isActive, true));
+
+    await db
+        .insert(EnrollmentStatusTable)
+        .values({
+            academicYear_id: acad_id,
+            enrollment_period: enrollment,
+            enrollment_start_date: enrollmentStart,
+            enrollment_end_date: enrollmentEnd,
     })
 }  
 
@@ -250,6 +348,26 @@ export const assignSubjectsToTeacher = async ({
   assignments: Assignment[];
 }) => {
   const currentAcademicYear = await getCurrentAcademicYear();
+  if (!currentAcademicYear) {
+    throw new Error("No academic year is active.");
+  }
+
+  const credentials = await getStaffCredentials();
+     
+  if (!credentials) return null;
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+  const getTeachersName = await db
+  .select ({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.clerk_uid, clerk_uid))
+
+  const teachersUsername = getTeachersName[0].clerk_username
+
   const data = assignments.map((a) => ({
     clerk_uid,
     academicYear_id: currentAcademicYear.academicYear_id,
@@ -258,5 +376,86 @@ export const assignSubjectsToTeacher = async ({
   }));
 
   await db.insert(TeacherAssignmentTable).values(data);
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: username,
+    usertype: userType,
+    actionTaken: "Assign Subject",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: teachersUsername,
+    academicYear_id: await getAcademicYearID(),
+  }) ;
 };
   
+
+
+export const getTTotalCashier = async () => {
+  
+  await requireStaffAuth(["admin"]); // Gatekeeper
+
+    
+  const cashier = await db
+  .select({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.userType, "cashier"))
+  return cashier.length;
+}
+
+export const getTotalRegistrar = async () => {
+  
+  await requireStaffAuth(["admin"]); // Gatekeeper
+
+    
+  const registrar = await db
+  .select({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.userType, "registrar"))
+  return registrar.length;
+}
+
+export const getTotalTeacher = async () => {
+  
+  await requireStaffAuth(["admin"]); // Gatekeeper
+
+    
+  const teacher = await db
+  .select({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.userType, "teacher"))
+  return teacher.length;
+}
+
+export const getTotalAdmin = async () => {
+  
+  await requireStaffAuth(["admin"]); // Gatekeeper
+
+    
+  const admin = await db
+  .select({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.userType, "admin"))
+  return admin.length;
+}
+
+
+export const getEnrollmentStatus = async () => {
+
+  await requireStaffAuth(["admin"]); // Gatekeeper
+
+  const enrollmentStatus = await db
+  .select({
+    enrollmentStatus: EnrollmentStatusTable.isActive,
+  })
+  .from(EnrollmentStatusTable)
+  return enrollmentStatus;
+}
