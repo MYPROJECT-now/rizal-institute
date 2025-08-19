@@ -13,7 +13,7 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <header className="bg-gradient-to-t from-d2Green to-lGreen text-white font-bold font-merriweather text-base lg:text-xl h-[90px] flex items-center justify-between px-6 lg:px-[70px] fixed w-full shadow-md z-50">
+        <header className="bg-gradient-to-t from-d2Green to-lGreen text-white font-bold font-merriweather text-base lg:text-xl lg:h-[90px] sm:h-[80px] h-[60px] flex items-center justify-between px-6 sticky w-full shadow-md z-50">
             <Link href="/"  className="flex items-center gap-4">
 
                 <Image 
@@ -31,7 +31,7 @@ const Header = () => {
                 </span>
             </Link>
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-[60px] pr-10">
+            <nav className="hidden lg:flex items-center  xl:gap-[60px] pr-10">
                 <Link href="/">
                     <Button variant="hButton">HOME</Button>
                 </Link>

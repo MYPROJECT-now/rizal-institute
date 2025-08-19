@@ -14,7 +14,7 @@ import Autoplay from "embla-carousel-autoplay";
 const AboutPage = () => {
     return (
         <div className=" w-full h-min-screen ">
-            <div className="h-[600px] w-full relative flex items-center justify-center  ">
+            <div className="lg:h-[600px] sm:h-[400px] w-full relative flex items-center justify-center  ">
             <Carousel
              opts={{
                 align: "start",
@@ -29,7 +29,7 @@ const AboutPage = () => {
               >
 
             <CarouselContent className="relative top-0 left-0 ">
-                <CarouselItem className="h-[600px] w-full">
+                <CarouselItem className="lg:h-[600px] sm:h-[400px] w-full">
                     <Image
                     src="/bg_home12.jpg"
                     alt="school photo"
@@ -38,7 +38,7 @@ const AboutPage = () => {
                     className="h-full w-full object-cover"
                     />
                 </CarouselItem>
-                <CarouselItem className="h-[600px] w-full">
+                <CarouselItem className="lg:h-[600px] sm:h-[400px] w-full">
                     <Image
                     src="/ri_croppedbg6.png"
                     alt="school photo"
@@ -47,7 +47,7 @@ const AboutPage = () => {
                     className="h-full w-full object-cover"
                     />
                 </CarouselItem>
-                <CarouselItem className="h-[600px] w-full">
+                <CarouselItem className="lg:h-[600px] sm:h-[400px] w-full">
                     <Image
                     src="/ri_bg4.png"
                     alt="school photo"
@@ -56,7 +56,7 @@ const AboutPage = () => {
                     className="h-full w-full object-cover"
                     />
                 </CarouselItem>
-                <CarouselItem className="h-[600px] w-full">
+                <CarouselItem className="lg:h-[600px] sm:h-[400px] w-full">
                     <Image
                     src="/bg_home11.jpg"
                     alt="school photo"
@@ -65,7 +65,7 @@ const AboutPage = () => {
                     className="h-full w-full object-cover"
                     />
                 </CarouselItem>
-                <CarouselItem className="h-[600px] w-full">
+                <CarouselItem className="lg:h-[600px] sm:h-[400px] w-full">
                     <Image
                     src="/bg_home10.jpg"
                     alt="school photo"
@@ -81,14 +81,14 @@ const AboutPage = () => {
             </Carousel>
             </div>
 
-            <div className="flex flex-row items-center justify-around text-center w-full h-[600px] bg-green-300/30 ">
-                <div className="flex flex-col gap-10 ">
+            <div className="flex flex-row items-center justify-around text-center w-full lg:h-[600px] sm:h-[300px] bg-green-300/30 ">
+                <div className="flex flex-col gap-10 py-10">
                     <div>
-                        <p className="font-bold font-merriweather text-d2Green text-xl lg:text-2xl">
+                        <p className="font-bold font-merriweather text-d2Green lg:text-2xl sm:text-xl text-lg">
                             ABOUT RIZAL INSTITUTE
                         </p>
                     </div>
-                    <div className="font-light font-merriweather text-justify px-10 w-auto lg:w-[500px] sm:text-sm md:text-base lg:text-lg">
+                    <div className="font-light font-merriweather text-justify px-10 w-auto lg:w-[500px] lg:text-lg sm:text-sm text-[13px]  ">
                         Rizal Institute is a premier educational institution 
                         that offers quality education to students of all ages. 
                         We provide a safe and supportive learning environment 
@@ -112,27 +112,27 @@ const AboutPage = () => {
             </div>
 
             <div className="py-16 px-8 bg-white text-justify">
-                <h2 className="text-center font-bold font-merriweather text-4xl text-d2Green mb-12">
+                <h2 className="text-center font-bold font-merriweather lg:text-3xl sm:text-2xl text-lg text-d2Green mb-12">
                     RIZAL INSTITUTE MISSION AND VISION
                 </h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
-                    <div className="bg-green-100/50 p-8 rounded-lg shadow-md">
-                        <h3 className="font-bold font-merriweather text-2xl text-d2Green mb-4">
+                    <div className="bg-green-100/50 sm:p-8 p-5 rounded-lg shadow-md">
+                        <h3 className="font-bold font-merriweather lg:text-2xl sm:text-xl text-d2Green mb-4 ">
                             VISION
                         </h3>
-                        <p className="font-merriweather text-lg">
+                        <p className="font-merriweather lg:text-lg sm:text-sm text-[13px]">
                             Rizal Institute Canlubang Foundation, Inc. aims to be a leading 21st Century learning
                             institution, ensuring that its completers possess the knowledge, skills, and values
                             needed to thrive in a competitive, interconnected, and rapidly changing world.
                         </p>
                     </div>
                     
-                    <div className="bg-green-100/50 p-8 rounded-lg shadow-md">
-                        <h3 className="font-bold font-merriweather text-2xl text-d2Green mb-4">
+                    <div className="bg-green-100/50 sm:p-8 p-5 rounded-lg shadow-md">
+                        <h3 className="font-bold font-merriweather lg:text-2xl sm:text-xl text-d2Green mb-4 ">
                             MISSION
                         </h3>
-                        <p className="font-merriweather text-lg">
+                        <p className="font-merriweather lg:text-lg sm:text-sm text-[13px]">
                             Rizal Institute Canlubang Foundation, Inc. aims to transform the lives of our students
                             by providing quality secondary education. We focus on instilling 21st Century skills and
                             imparting ethical values that empower students to realize their full potential and become
@@ -141,45 +141,45 @@ const AboutPage = () => {
                     </div>
                 </div>
                 
-                <h3 className="text-center font-bold font-merriweather text-3xl text-d2Green mb-8">
+                <h3 className="text-center font-bold font-merriweather lg:text-3xl text-xl text-d2Green sm:mb-12 mb-6">
                     CORE VALUES
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-green-100/50 p-6 rounded-lg shadow-md text-center">
-                        <div className="bg-d2Green rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <span className="text-white text-2xl font-bold">1</span>
+                        <div className="bg-d2Green rounded-full lg:w-16 lg:h-16 sm:w-12 sm:h-12 w-8 h-8 flex items-center justify-center mx-auto mb-4">
+                            <span className="text-white lg:text-2xl sm:text-xl text:sm font-bold">1</span>
                         </div>
-                        <h4 className="font-bold font-merriweather text-xl text-d2Green mb-3">
+                         <h4 className="font-bold font-merriweather lg:text-xl text-[16px]  text-d2Green mb-3">
                             EXCELLENCE
                         </h4>
-                        <p className="font-merriweather text-justify">
+                        <p className="font-merriweather text-justify lg:text-lg sm:text-sm text-[12px]">
                             We strive for the highest standards in academic achievement and personal development, 
                             encouraging continuous improvement and dedication to learning.
                         </p>
                     </div>
                     
                     <div className="bg-green-100/50 p-6 rounded-lg shadow-md text-center">
-                        <div className="bg-d2Green rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <span className="text-white text-2xl font-bold">2</span>
+                        <div className="bg-d2Green rounded-full lg:w-16 lg:h-16 sm:w-12 sm:h-12 w-8 h-8 flex items-center justify-center mx-auto mb-4">
+                            <span className="text-white lg:text-2xl sm:text-xl text:sm font-bold">2</span>
                         </div>
-                        <h4 className="font-bold font-merriweather text-xl text-d2Green mb-3">
+                         <h4 className="font-bold font-merriweather lg:text-xl text-[16px]  text-d2Green mb-3">
                             INTEGRITY
                         </h4>
-                        <p className="font-merriweather text-justify">
+                        <p className="font-merriweather text-justify lg:text-lg sm:text-sm text-[12px]">
                             We uphold honesty, transparency, and ethical behavior in all our actions, 
                             fostering a culture of trust and respect within our community.
                         </p>
                     </div>
                     
                     <div className="bg-green-100/50 p-6 rounded-lg shadow-md text-center">
-                        <div className="bg-d2Green rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <span className="text-white text-2xl font-bold">3</span>
+                        <div className="bg-d2Green rounded-full lg:w-16 lg:h-16 sm:w-12 sm:h-12 w-8 h-8 flex items-center justify-center mx-auto mb-4">
+                            <span className="text-white lg:text-2xl sm:text-xl text:sm font-bold">3</span>
                         </div>
-                        <h4 className="font-bold font-merriweather text-xl text-d2Green mb-3">
+                         <h4 className="font-bold font-merriweather lg:text-xl text-[16px]  text-d2Green mb-3">
                             SPIRITUALITY
                         </h4>
-                        <p className="font-merriweather text-justify">
+                        <p className="font-merriweather text-justify lg:text-lg sm:text-sm text-[12px]">
                             We nurture spiritual growth and values, encouraging students to develop 
                             a strong moral compass and a deeper understanding of their purpose 
                             while respecting diverse beliefs and traditions.

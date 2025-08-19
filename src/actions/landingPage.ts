@@ -14,6 +14,7 @@ import {
   Cashier_remaks_table,
   additionalInformationTable,
   StudentInfoTable,
+  EnrollmentStatusTable,
 } from "../db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
@@ -767,3 +768,23 @@ export const enrollOldStudent = async (
     .where(eq(educationalBackgroundTable.applicants_id, studentID));
 
 }
+
+
+export const nottice = async () => {
+  const id = await getAcademicYearID();
+  console.log("AcademicYearID:", id);
+  
+  const notice = await db
+    .select({
+      enrollment_period: EnrollmentStatusTable.enrollment_period,
+      enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
+      enrollment_end_date: EnrollmentStatusTable.enrollment_end_date,
+      isActive: EnrollmentStatusTable.isActive,
+    })
+    .from(EnrollmentStatusTable)
+    .where(eq(EnrollmentStatusTable.academicYear_id, id))
+    .limit(1);
+
+  console.log(notice);
+  return notice;
+};

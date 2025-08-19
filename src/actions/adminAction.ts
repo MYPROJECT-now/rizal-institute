@@ -104,23 +104,24 @@ export const updateCurrentAcademicYear = async (
         .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
 }
 
-export const updateEnrollmentPeriod = async (
-    enrollmentID: number, 
-    enrollment: string, 
-    enrollmentStart: string, 
-    enrollmentEnd: string
-) => {
-    await requireStaffAuth(["admin"]); // gatekeeper
+  export const updateEnrollmentPeriod = async (
+      enrollmentID: number, 
+      enrollment: string, 
+      enrollmentStart: string, 
+      enrollmentEnd: string
+  ) => {
+      await requireStaffAuth(["admin"]); // gatekeeper
 
-    await db
-        .update(EnrollmentStatusTable)
-        .set({
-            enrollment_period: enrollment,
-            enrollment_start_date: enrollmentStart,
-            enrollment_end_date: enrollmentEnd,
-        })
-        .where(eq(EnrollmentStatusTable.enrollment_status_id, enrollmentID))
-}
+      await db
+          .update(EnrollmentStatusTable)
+          .set({
+              enrollment_period: enrollment,
+              enrollment_start_date: enrollmentStart,
+              enrollment_end_date: enrollmentEnd,
+              isActive: true,
+          })
+          .where(eq(EnrollmentStatusTable.enrollment_status_id, enrollmentID))
+  }
 
 export const stopCurrentAcademicYear = async (academicYear_id: number,) => {
     await requireStaffAuth(["admin"]); // gatekeeper
@@ -138,12 +139,12 @@ export const stopCurrentEnrollmentPeriod = async (academicYear_id: number,) => {
     await requireStaffAuth(["admin"]); // gatekeeper
 
     await db
-        .update(AcademicYearTable)
+        .update(EnrollmentStatusTable)
         .set({
-            academicYearEnd: new Date().toISOString().split("T")[0],
+            enrollment_end_date: new Date().toISOString().split("T")[0],
             isActive: false,
         })
-        .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
+        .where(eq(EnrollmentStatusTable.academicYear_id, academicYear_id))
 }
 
 

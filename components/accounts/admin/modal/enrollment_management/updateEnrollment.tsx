@@ -26,7 +26,7 @@
             setEnrollement(result.enrollment);
             setEnrollmentStart(result.enrollmentStart);
             setEnrollmentEnd(result.academicYearEnd);
-            setEnrollmentStatus(result.isActive ? "Open" : "Close");
+            setEnrollmentStatus(result.isActive === true ? "Open" : "Close");
             setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching enrollment period:", error);
@@ -45,6 +45,9 @@
                     enrollmentStart,
                     enrollmentEnd
                 );
+                const result = await getCurrentEnrollmentPeriod();
+                setEnrollmentStatus(result.isActive ? "Open" : "Close");
+                window.location.reload();
                 toast.success("Enrollment period updated successfully!");
                 
             } catch (error) {
@@ -69,6 +72,7 @@
         try {
             await stopCurrentEnrollmentPeriod(enrollmentID);
             toast.success("Enrollment period ended successfully!");
+            window.location.reload();
         } catch (error) {
             toast.error("Failed to end enrollment period.");
             console.log(error || "something went wrong");
