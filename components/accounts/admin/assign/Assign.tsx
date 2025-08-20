@@ -107,6 +107,7 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [selectedPairs, setSelectedPairs] = useState<{ gradeLevel_id: number; subject_id: number }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -128,6 +129,7 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const teacher = teachers.find((t) => t.clerk_username === selectedTeacher);
     if (!teacher) return;
 
@@ -140,6 +142,7 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
     setSelectedPairs([]); // clear
     setSelectedTeacher("");
     setTeachers([]); // clear
+    setIsLoading(false);
   };
 
   return (
@@ -187,8 +190,10 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
       <Button 
         onClick={handleSubmit} 
         variant="confirmButton"
-        className="mt-6 px-10 py-5 rounded-xl">
-        Assign
+        className="mt-6 px-10 py-5 rounded-xl"
+        disabled={isLoading}
+      >
+        {isLoading ? "Assigning..." : "Assign"}
       </Button>
       </section>
     </div>

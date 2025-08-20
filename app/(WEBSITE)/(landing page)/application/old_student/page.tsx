@@ -2,9 +2,10 @@
 import { enrollOldStudent } from "@/src/actions/landingPage";
 import ApplicationPage from "./old_student_page";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const newApplicant = () => {
-
+const OldApplicant = () => {
+  const router = useRouter();
   // Function to create a new todo item
   const addApplicant = async (
 
@@ -26,6 +27,7 @@ const newApplicant = () => {
     reservationAmount,
   );
       toast.success("Application was submitted successfully. Check your email for more details");
+      router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message || "Failed to enroll. Please try again.");
@@ -44,4 +46,4 @@ const newApplicant = () => {
   );
 };
 
-export default newApplicant;
+export default OldApplicant;

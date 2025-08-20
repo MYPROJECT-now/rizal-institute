@@ -11,32 +11,34 @@ export const Top_analytics = async () => {
     const girlsCount = genderCounts.find(count => count.gender === "Female")?.count || 0;
 
     return (
-        <div className="flex flex-row gap-9">
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
-                <div className="flex flex-col text-center font-sans">
-                    <p className="font-bold text-[16px]">
+        <div className="grid sm:grid-cols-5 grid-cols-2 gap-3">
+
+            <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
+                <div className=" flex flex-col text-center font-sans">
+                    <p className="font-bold xl:text-[15px] lg:text-[12px]">
                         Total Students
                     </p>
-                    <p className="font-bold text-sm">
-                        {totalStudents}
+                    <p className="font-bold text-[15px]">
+                        {totalStudents} 
                     </p>
                 </div>
                 <div>
                     <Image
                         src="/cup.png"
                         alt="cup"
-                        width={40}
-                        height={40}
+                        width={1000}
+                        height={1000}
+                        className="xl:h-[30px] xl:w-[30px] lg:w-[25px] lg:h-[25px] lg:block hidden"
                     />
                 </div>
             </div>
 
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
-                    <p className="font-bold text-lg">
+                    <p className="font-bold xl:text-[15px] lg:text-[12px]">
                         Total Boys
                     </p>
-                    <p className="font-bold text-sm">
+                    <p className="font-bold text-[15px]">
                         {boysCount}
                     </p>
                 </div>
@@ -44,18 +46,19 @@ export const Top_analytics = async () => {
                     <Image
                         src="/boys.png"
                         alt="cup"
-                        width={40}
-                        height={40}
+                        width={1000}
+                        height={1000}
+                        className="xl:h-[30px] xl:w-[30px] lg:w-[25px] lg:h-[25px] lg:block hidden"
                     />
                 </div>
             </div>
 
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
-                    <p className="font-bold text-lg">
+                    <p className="font-bold xl:text-[15px] lg:text-[12px]">
                         Total Girls
                     </p>
-                    <p className="font-bold text-sm">
+                    <p className="font-bold text-[15px]">
                         {girlsCount}
                     </p>
                 </div>
@@ -63,18 +66,19 @@ export const Top_analytics = async () => {
                     <Image
                         src="/girls.png"
                         alt="cup"
-                        width={40}
-                        height={40}
-                    />
+                        width={1000}
+                        height={1000}
+                        className="xl:h-[30px] xl:w-[30px] lg:w-[25px] lg:h-[25px] lg:block hidden"
+                     />
                 </div>
             </div>
 
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
-                    <p className="font-bold text-lg">
+                    <p className="font-bold xl:text-[15px] lg:text-[12px]">
                        Applicants
                     </p>
-                    <p className="font-bold text-sm">
+                    <p className="font-bold text-[15px]">
                         {totalApplicants}
                     </p>
                 </div>
@@ -82,18 +86,19 @@ export const Top_analytics = async () => {
                     <Image
                         src="/clipboard.png"
                         alt="cup"
-                        width={40}
-                        height={40}
+                        width={1000}
+                        height={1000}
+                        className="xl:h-[30px] xl:w-[30px] lg:w-[25px] lg:h-[25px] lg:block hidden"
                     />
                 </div>
             </div>
 
-            <div className="w-[176px] h-[66px] bg-Green text-white rounded-lg flex flex-row justify-center items-center p-2 gap-2">
+            <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
-                    <p className="font-bold text-[16px]">
+                    <p className="font-bold xl:text-[15px] lg:text-[12px]">
                         Reserved Slot
                     </p>
-                    <p className="font-bold text-sm">
+                    <p className="font-bold text-[15px]">
                         {totalReserved}
                     </p>
                 </div>
@@ -101,8 +106,9 @@ export const Top_analytics = async () => {
                     <Image
                         src="/slot.png"
                         alt="cup"
-                        width={40}
-                        height={40}
+                        width={1000}
+                        height={1000}
+                        className="xl:h-[30px] xl:w-[30px] lg:w-[25px] lg:h-[25px] lg:block hidden"
                     />
                 </div>
             </div>

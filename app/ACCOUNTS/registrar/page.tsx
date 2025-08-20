@@ -7,7 +7,7 @@ import { RecentApplicantsTable } from "@/components/accounts/registrar/dashboard
 
 const Dashboard = () => {
     return (
-        <div className="w-full max-h-[680px] overflow-auto mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
+        <div className=" w-full h-full overflow-auto rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
             <Registrar_header />
             <div className="w-full h-[540px] flex flex-col gap-10 mt-10 rounded-lg ">
                <div className="flex flex-col">
@@ -22,7 +22,7 @@ const Dashboard = () => {
                         Population Insight
                     </p>
 
-                    <div className="flex flex-row gap-10">
+                    <div className="flex sm:flex-row flex-col gap-10">
                     <Ppgl />
                     <Enrollment />
                     </div>

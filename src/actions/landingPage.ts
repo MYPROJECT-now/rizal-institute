@@ -28,6 +28,8 @@ function generateRandomTrackingId(length = 12) {
 }
 
 // Send email with tracking ID
+
+
 async function sendEmail(to: string, trackingId: string, hasReservationReceipt: boolean, hasDocuments: boolean) {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -40,6 +42,8 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
   const baseEmailContent = `
     Thank you for submitting your application for enrollment in Rizal Institute - Canlubang. 
     We appreciate your interest in joining our academic community.
+
+    tracking ID: ${trackingId}
 
     To track the status of your application, please use the following tracking ID: ${trackingId}
     You can use this ID to check on the progress of your application on our website or by contacting our 
@@ -615,14 +619,23 @@ export const lateReservationFee = async (trackingId: string, updatedData: Reserv
       reservationReceipt,
     } = updatedData;
 
-    // const getID = await db
-    //   .select({
-    //       applicants_id: applicationStatusTable.applicants_id
-    //   })
-    //   .from(applicationStatusTable)
-    //   .where(eq(applicationStatusTable.trackingId, trackingId))
+    const getApplicantsId = await db
+      .select({
+          applicants_id: applicationStatusTable.applicants_id
+      })
+      .from(applicationStatusTable)
+      .where(eq(applicationStatusTable.trackingId, trackingId))
 
-    //   const getApplicantsId = getID[0].applicants_id;
+    const id = getApplicantsId[0].applicants_id;
+
+    const getEmail = await db
+      .select({
+          email: applicantsInformationTable.email
+      })
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.applicants_id, id))
+
+    const email = getEmail[0].email;
 
     const updatedReservationFee = await db
       .update(reservationFeeTable)
@@ -631,8 +644,49 @@ export const lateReservationFee = async (trackingId: string, updatedData: Reserv
         reservationAmount,
         reservationReceipt,
       })
+      .where(eq(reservationFeeTable.applicants_id, id))
     .returning();
     
+    
+// Function to send reservation email
+async function sendReservationEmail(email: string, trackingId: string) {
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Reservation Payment at Rizal Institute - Canlubang',
+    text: `
+    Dear Applicant,
+
+    This is a confirmation that we have received your reservation payment for a slot at Rizal Institute - Canlubang.
+
+    Tracking ID: ${trackingId}
+
+    To track the status of your application, please use the following tracking ID: ${trackingId}
+    You can use this ID to check on the progress of your application on our website or by contacting our 
+    admissions office.
+
+    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+
+    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+
+    Best regards,
+    Rizal Institute - Canlubang
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+
+await sendReservationEmail(email, trackingId);
     // // Get current application status
     // const currentStatus = await db
     //   .select({
@@ -727,6 +781,14 @@ export const enrollOldStudent = async (
   const trackingId = generateRandomTrackingId();
   const academicYearID = await getAcademicYearID();
 
+  const getEmail = await db
+  .select({
+    email: applicantsInformationTable.email
+  })
+  .from(applicantsInformationTable)
+  .where(eq(applicantsInformationTable.applicants_id, studentID)).limit(1); 
+
+  const email = getEmail[0]?.email;
 
   await db
   .insert(reservationFeeTable)
@@ -767,13 +829,82 @@ export const enrollOldStudent = async (
     })
     .where(eq(educationalBackgroundTable.applicants_id, studentID));
 
+        
+// Function to send reservation email
+async function sendReservationEmail(email: string, trackingId: string) {
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Application Confirmation at Rizal Institute - Canlubang',
+    text: `
+    Dear Applicant,
+
+    We appreciate your interest in returning to our institution.
+    This is a confirmation that we have received your application for re-admission to Rizal Institute - Canlubang.
+
+    Tracking ID: ${trackingId}
+
+    To track the status of your application, please use the following tracking ID: ${trackingId}
+    You can use this ID to check on the progress of your application on our website or by contacting our 
+    admissions office.
+
+    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+
+    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+
+    Best regards,
+    Rizal Institute - Canlubang
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+await sendReservationEmail(email, trackingId);
 }
 
+
+// export const nottice = async () => {
+//   const id = await getAcademicYearID();
+//   console.log("AcademicYearID:", id);
+  
+//   const notice = await db
+//     .select({
+//       enrollment_period: EnrollmentStatusTable.enrollment_period,
+//       enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
+//       enrollment_end_date: EnrollmentStatusTable.enrollment_end_date,
+//       isActive: EnrollmentStatusTable.isActive,
+//     })
+//     .from(EnrollmentStatusTable)
+//     .where(eq(EnrollmentStatusTable.academicYear_id, id))
+//     .limit(1);
+
+//   console.log(notice);
+//   return notice;
+// };
 
 export const nottice = async () => {
   const id = await getAcademicYearID();
   console.log("AcademicYearID:", id);
-  
+
+  if (!id) {
+    // If no academic year found, return a "Closed" default
+    return [{
+      enrollment_period: null,
+      enrollment_start_date: null,
+      enrollment_end_date: null,
+      isActive: false,
+    }];
+  }
+
   const notice = await db
     .select({
       enrollment_period: EnrollmentStatusTable.enrollment_period,
@@ -786,5 +917,10 @@ export const nottice = async () => {
     .limit(1);
 
   console.log(notice);
-  return notice;
+  return notice.length ? notice : [{
+    enrollment_period: null,
+    enrollment_start_date: null,
+    enrollment_end_date: null,
+    isActive: false,
+  }];
 };

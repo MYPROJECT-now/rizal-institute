@@ -30,9 +30,9 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
     const currentUsers = currentUser.slice(indexOfFirstUser, indexOfLastUser);
     const totalPages = Math.max(1, Math.ceil(currentUser.length / userPerPage));
 
-    const deleteUserItem = ( clerkId: string) => {
+    const deleteUserItem = ( clerkId: string, clerk_username: string) => {
       setUserItems((prev) => prev.filter((user) => user.clerkId !== clerkId));
-      deleteUser( clerkId);
+      deleteUser( clerkId, clerk_username);
     };
 
   return (

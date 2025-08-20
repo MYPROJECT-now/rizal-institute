@@ -104,36 +104,37 @@ export const Registration_Form = () => {
   if (!record) return <p className="text-center text-red-500">No record found.</p>;
 
   return (
-    <div className="p-10 text-center" ref={formRef}>
+    <div>
+      <div className="p-10 text-center" ref={formRef}>
       
-      <h2 className="text-2xl font-bold text-green-700 mb-2">RIZAL INSTITUTE</h2>
-      <p className="text-sm text-gray-500 mb-6">Official Registration Confirmation</p>
+        <h2 className="text-2xl font-bold text-green-700 mb-2">RIZAL INSTITUTE</h2>
+        <p className="text-sm text-gray-500 mb-6">Official Registration Confirmation</p>
 
-      <div className="text-left space-y-2 text-gray-800">
-        <p><strong>Student Name:</strong> {record.studentLastName}, {record.studentFirstName} {record.studentMiddleName} {record.studentSuffix}</p>
-        <p><strong>Grade Level:</strong> {record.gradeLevelName}</p>
-        <p><strong>LRN:</strong> {record.lrn}</p>
-        <p><strong>School Year:</strong> {record.ay}</p>
-        <p><strong>Date Admitted:</strong> {record.da ? new Date(record.da).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : 'N/A'}</p>
-      </div>
-
-      <div className="mt-[50px]">
-        <p>This is to certify that the above-named student is officially enrolled at</p>
-        <p className="font-semibold">Rizal Institute - Canlubang</p>
-      </div>
-
-      <div className="mt-10 justify-between px-10 text-sm text-gray-600 sm:grid grid-cols-1 grid-row-2 md:grid-cols-2">
-        <div className="text-center">
-          _______________________<br />
-          Student Signature
+        <div className="text-left space-y-2 text-gray-800">
+          <p><strong>Student Name:</strong> {record.studentLastName}, {record.studentFirstName} {record.studentMiddleName} {record.studentSuffix}</p>
+          <p><strong>Grade Level:</strong> {record.gradeLevelName}</p>
+          <p><strong>LRN:</strong> {record.lrn}</p>
+          <p><strong>School Year:</strong> {record.ay}</p>
+          <p><strong>Date Admitted:</strong> {record.da ? new Date(record.da).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : 'N/A'}</p>
         </div>
-        <div className="text-center">
-          _______________________<br />
-          Registrar
+
+        <div className="mt-[50px]">
+          <p>This is to certify that the above-named student is officially enrolled at</p>
+          <p className="font-semibold">Rizal Institute - Canlubang</p>
+        </div>
+
+        <div className="mt-8 justify-between px-10 text-sm text-gray-600 sm:grid grid-cols-1 grid-row-2 md:grid-cols-2">
+          <div className="text-center">
+            _______________________<br />
+            Student Signature
+          </div>
+          <div className="text-center">
+            _______________________<br />
+            Registrar
+          </div>
         </div>
       </div>
-
-      <div className="my-6 flex gap-4 justify-center">
+      <div className=" flex gap-4 justify-center">
         <Button
           onClick={handleDownloadPDF}
           className="px-5 py-1 rounded-lg"
@@ -142,6 +143,7 @@ export const Registration_Form = () => {
           Download as PDF
         </Button>
       </div>
+
     </div>
   );
 };

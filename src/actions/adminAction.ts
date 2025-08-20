@@ -5,8 +5,7 @@ import { db } from "../db/drizzle";
 import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { clerkClient } from "@clerk/nextjs/server";
-import { getSelectedAcademicYear } from "./studentAction";
-import { getAcademicYearID } from "./utils/academicYear";
+import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
 import { getStaffCredentials } from "./utils/staffID";
 
 
@@ -92,6 +91,12 @@ export const updateCurrentAcademicYear = async (
     academicYearStart: string, 
     academicYearEnd: string
 ) => {
+
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
+
     await requireStaffAuth(["admin"]); // gatekeeper
 
     await db
@@ -102,6 +107,16 @@ export const updateCurrentAcademicYear = async (
             academicYearEnd: academicYearEnd,
         })
         .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
+
+      await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Updated Academic Year",
+        actionTakenFor: "school",
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 }
 
   export const updateEnrollmentPeriod = async (
@@ -110,6 +125,11 @@ export const updateCurrentAcademicYear = async (
       enrollmentStart: string, 
       enrollmentEnd: string
   ) => {
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
+
       await requireStaffAuth(["admin"]); // gatekeeper
 
       await db
@@ -121,9 +141,24 @@ export const updateCurrentAcademicYear = async (
               isActive: true,
           })
           .where(eq(EnrollmentStatusTable.enrollment_status_id, enrollmentID))
+      await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Update Enrollment Period",
+        actionTakenFor: "school",
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
   }
 
+
 export const stopCurrentAcademicYear = async (academicYear_id: number,) => {
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
+
     await requireStaffAuth(["admin"]); // gatekeeper
 
     await db
@@ -133,10 +168,25 @@ export const stopCurrentAcademicYear = async (academicYear_id: number,) => {
             isActive: false,
         })
         .where(eq(AcademicYearTable.academicYear_id, academicYear_id))
+      
+        await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Stop Academic Year",
+        actionTakenFor: "school",
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 }
 
 export const stopCurrentEnrollmentPeriod = async (academicYear_id: number,) => {
     await requireStaffAuth(["admin"]); // gatekeeper
+
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
 
     await db
         .update(EnrollmentStatusTable)
@@ -145,6 +195,16 @@ export const stopCurrentEnrollmentPeriod = async (academicYear_id: number,) => {
             isActive: false,
         })
         .where(eq(EnrollmentStatusTable.academicYear_id, academicYear_id))
+      
+      await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Stop Enrollment",
+        actionTakenFor: "school",
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 }
 
 
@@ -156,6 +216,10 @@ export const createAcademicYear = async (
 ) => {
     await requireStaffAuth(["admin"]); // gatekeeper
 
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
     await db
         .update(AcademicYearTable)
         .set({
@@ -170,6 +234,16 @@ export const createAcademicYear = async (
             academicYearStart: academicYearStart,
             academicYearEnd: academicYearEnd,
     })
+
+    await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Create New Academic Year",
+        actionTakenFor: "school",
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 }  
 
 export const createEnrollment = async (
@@ -179,6 +253,10 @@ export const createEnrollment = async (
 ) => {
     await requireStaffAuth(["admin"]); // gatekeeper
     const acad_id = await getAcademicYearID();
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
     
     await db
         .update(EnrollmentStatusTable)
@@ -195,6 +273,16 @@ export const createEnrollment = async (
             enrollment_start_date: enrollmentStart,
             enrollment_end_date: enrollmentEnd,
     })
+
+      await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Create New Enrollment Period",
+        actionTakenFor: "school",
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 }  
 
 
@@ -219,8 +307,9 @@ export const getAuditTrails = async () => {
     .from(auditTrailsTable)
     .where(eq(auditTrailsTable.academicYear_id, sy))
     .orderBy(desc(auditTrailsTable.dateOfAction))
-    .limit(10);
+    .limit(7);
 
+    console.log(result)
     return result;
 }
 
@@ -280,17 +369,28 @@ export const getAllAuditTrails = async () => {
       return users;
   }
     
-export const deleteUser = async (clerkId: string) => {
+export const deleteUser = async (clerkId: string, clerk_username: string) => {
   await requireStaffAuth(["admin"]); // Gatekeeper
   
   try {
 
     const userId = clerkId;
-    
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return console.error("User not found.");
+    }
     
     // Try to update staffClerkUserTable first
     const staffDeleteResult = await db.delete(staffClerkUserTable).where(eq(staffClerkUserTable.clerkId, clerkId));
-
+    await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Staff Account Deleted",
+        actionTakenFor: clerk_username,
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
     const client = await clerkClient();
     await client.users.deleteUser(userId);
 
@@ -300,6 +400,16 @@ export const deleteUser = async (clerkId: string) => {
         .update(ClerkUserTable)
         .set({ isActive: false })
         .where(eq(ClerkUserTable.clerkId, clerkId));
+      
+      await db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Student Account Deleted",
+        actionTakenFor: clerk_username,
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 
       if (clerkDeleteResult.rowCount === 0) {
         throw new Error("User not found.");

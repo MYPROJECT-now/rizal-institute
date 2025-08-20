@@ -2,10 +2,11 @@
 import { addNewApplicant } from "@/src/actions/landingPage";
 import ApplicationPage from "./new_Applicant_page";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
-const newApplicant = () => {
-
+const NewApplicant = () => {
+  const router = useRouter();
   // Function to create a new todo item
   const addApplicant = async (
     applicantsLastName: string,
@@ -94,7 +95,8 @@ const newApplicant = () => {
     consistentGPA,
     hasEnrolledSibling,
   });
-      toast.success("Application was submitted successfully. Check your email for more details"); // ✅ Show success message only after successful insertion.
+      toast.success("Application was submitted successfully. Check your email for more details"); 
+      router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message || "Failed to enroll. Please try again.");
@@ -113,4 +115,4 @@ const newApplicant = () => {
   );
 };
 
-export default newApplicant;
+export default NewApplicant;

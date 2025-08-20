@@ -83,22 +83,31 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
 
         
         case 1:
-            const mopFilled = !!mop;
-            const receiptFilled = !!reservationReceipt;
-            const amountFilled = reservationAmount > 0;
-            
-            const anyFilled = mopFilled || receiptFilled || amountFilled;
-            const allFilled = mopFilled && receiptFilled && amountFilled;
-            
-            if (anyFilled && !allFilled) {
-                if (!mopFilled) newErrors.mop = "Required if other payment fields are filled.";
-                if (!amountFilled) newErrors.reservationAmount = "Required if other payment fields are filled.";
-                if (!receiptFilled) newErrors.reservationReceipt = "Required if other payment fields are filled.";
-            
+            if (!mop) newErrors.mop = "Required";
+            if (!reservationReceipt) newErrors.reservationReceipt = "Required";
+            if (reservationAmount <= 0) newErrors.reservationAmount = "Required";
+
+            if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
-                toast.error("Keep all fields blank or complete all payment details.");
+                toast.error("Please fill in all required fields.");
                 return false;
             }
+            // const mopFilled = !!mop;
+            // const receiptFilled = !!reservationReceipt;
+            // const amountFilled = reservationAmount > 0;
+            
+            // const anyFilled = mopFilled || receiptFilled || amountFilled;
+            // const allFilled = mopFilled && receiptFilled && amountFilled;
+            
+            // if (anyFilled && !allFilled) {
+            //     if (!mopFilled) newErrors.mop = "Required if other payment fields are filled.";
+            //     if (!amountFilled) newErrors.reservationAmount = "Required if other payment fields are filled.";
+            //     if (!receiptFilled) newErrors.reservationReceipt = "Required if other payment fields are filled.";
+            
+            //     setErrors(newErrors);
+            //     toast.error("Keep all fields blank or complete all payment details.");
+            //     return false;
+            // }
         return true;
 
 

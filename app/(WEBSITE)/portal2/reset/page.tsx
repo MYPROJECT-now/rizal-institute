@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuth, useSignIn } from '@clerk/nextjs'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 const ForgotPasswordPage: NextPage = () => {
   const [email, setEmail] = useState('')
@@ -80,9 +81,10 @@ const ForgotPasswordPage: NextPage = () => {
               placeholder="e.g john@doe.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             />
 
-            <button>Send password reset code</button>
+            <Button>Send password reset code</Button>
             {error && <p>{error}</p>}
           </>
         )}

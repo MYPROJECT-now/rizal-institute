@@ -50,27 +50,39 @@
 
         const data = await response.json();
       
-        if (!response.ok) {
-          throw new Error(data.error  || "Something went wrong."  );
-        }
+        // if (!response.ok) {
+        //   throw new Error(data.error  || "Something went wrong."  );
+        // }
         if (!data.success) {  
           toast.error(data.error || "Error uploading SOA file.");
+          setLrn("");
+          setFile(null);
+          close();
+          return;
         }
-
+        
         toast.success(data.message);
+        setLrn("");
+        setFile(null);
         close();
         window.location.reload();
 
       } catch (error) {
-        console.error("Error uploading SOA file:", error);
-        toast.error("Error uploading SOA file.");
+        console.error("Something went wrong:", error);
+        toast.error("Something went wrong.");
       } finally {
         setLoading(false);
       }
     };
 
+    const handleClose = () => {
+      setLrn("");
+      setFile(null);
+      close();
+    };
+
     return (
-      <Dialog open={isOpen} onOpenChange={close}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="w-[800px] h-[340px]  bg-gray-50 rounded-xl shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">

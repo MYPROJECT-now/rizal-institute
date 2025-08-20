@@ -226,7 +226,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `Excel processed. ${insertedCount} grades inserted.`,
+      message: `Grade submitted. ${insertedCount} grades inserted.`,
       totalExtracted: allStudents.length,
     });
   } catch (err) {

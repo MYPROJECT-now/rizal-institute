@@ -9,6 +9,7 @@ import {
     DialogTitle,
   } from "@/components/ui/dialog"
 import { useResetPasswordModal } from '@/src/store/LANDING_PAGE/landing_page'
+import { Button } from '@/components/ui/button'
 
   
   
@@ -80,7 +81,7 @@ export const ResetPass = () => {
     
     return (
 <Dialog open={isOpen} onOpenChange={close}>
-  <DialogContent className="w-[500px] p-6 gap-10">
+  <DialogContent className="w-[500px] p-8 gap-10">
     <DialogTitle className="text-lg font-bold text-center">
       Reset Password
     </DialogTitle>
@@ -97,15 +98,18 @@ export const ResetPass = () => {
                 placeholder="e.g john@doe.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dGreen"
               />
             </div>
-            <button
+            <Button
               type="submit"
-              className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              variant="confirmButton"
+              // className="py-2 px-4 bg-lGreen text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-lGreen"
+              className="py-2 px-4 rounded-lg"
+              disabled={!email}
             >
               Send password reset code
-            </button>
+            </Button>
             {error && <p className="text-sm text-red-600">{error}</p>}
           </>
         )}
@@ -120,7 +124,7 @@ export const ResetPass = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dGreen"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -131,15 +135,18 @@ export const ResetPass = () => {
                 type="code"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dGreen"
               />
             </div>
-            <button
+            <Button
               type="submit"
-              className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              variant="confirmButton"
+              // className="py-2 px-4 bg-lGreen text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-lGreen"
+              className="py-2 px-4 rounded-lg"
+              disabled={!password || !code}
             >
               Reset
-            </button>
+            </Button>
             {error && <p className="text-sm text-red-600">{error}</p>}
           </>
         )}

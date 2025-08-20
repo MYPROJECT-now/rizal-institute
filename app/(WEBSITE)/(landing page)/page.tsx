@@ -134,7 +134,7 @@
                   Proudly Rizalian, 
                   </p>
                   <p className="font-bold font-merriweather relative z-10 text-white text-center xl:text-5xl sm:text-2xl text-xl">
-                  Ready for the World!!
+                  Ready for the World!
                   </p>
                 </div>
 
@@ -164,7 +164,7 @@
 
   <div className="w-full flex flex-col items-center justify-center text-center">
 
-    <div className="w-full lg:py-6 py-2 bg-lGreen flex flex-col items-center justify-center text-center">
+    <div className="w-full lg:py-6 py-2 bg-gradient-to-b from-green-800 to-green-600 flex flex-col items-center justify-center text-center">
       <Image 
         src="/logo.png"
         alt="logo"
@@ -207,11 +207,12 @@
       </div>
     ) : noticeData ? (
       <>
-        <p className="text-green-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase">
+        {/* <p className="text-green-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase"> */}
+        <p className={noticeData.isActive === true ? "text-green-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase" : "text-red-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase"}>
           {noticeData.isActive === true ? "Officially Open" : "Closed"}
         </p>
         <p className="text-black/80 font-semibold lg:text-xl sm:text-lg text-sm mt-3 font-oswald">
-          {noticeData?.enrollment_period || "ss"}
+          {"SY " + noticeData?.enrollment_period || ""}
         </p>
         {/* <span>
           {noticeData?.enrollment_start_date || "ss"}
@@ -219,20 +220,37 @@
           {noticeData?.enrollment_end_date || "ss"}
         </span> */}
 
-        <span className="lg:text-lg text-sm">
+        {/* <span className="lg:text-lg text-sm">
           {noticeData
             ? new Date(noticeData.enrollment_start_date).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
               })
-            : "ss"}
+            : ""}
           {" - "}
           {noticeData
             ? new Date(noticeData.enrollment_end_date).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
               })
-            : "ss"}
+            : ""}
+        </span> */}
+        <span className="lg:text-sm text-xs">
+          {noticeData?.enrollment_start_date && noticeData?.enrollment_end_date ? (
+            <>
+              {new Date(noticeData.enrollment_start_date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+              {" - "}
+              {new Date(noticeData.enrollment_end_date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </>
+          ) : null}
         </span>
 
       </>
@@ -365,19 +383,19 @@
             className="h-full w-full absolute top-0 left-0"
           />
         {/* shadow */}
-        <div className="bg-black/40  h-[300px] w-full absolute top-100 left-0 " />
+        <div className="bg-black/40  lg:h-[270px] sm:h-[200px] h-[180px] w-full absolute top-100 left-0 " />
 
           
 
           {/* main text */}
           <div className="relative w-full sm:h-[650px] h-[400px] flex flex-col text-center items-center justify-center gap-10">  
             {/* FIRST PART */}
-            <p className="font-bold font-oswald  text-white lg:text-6xl text-2xl">
+            <p className="font-bold font-oswald  text-white lg:text-6xl sm:text-4xl text-xl">
               Experience the RI Baseball Program
             </p>
             {/* SECOND PART */}
             <div className="grid grid-cols-2 gap-x-[100px]  mt-2 text-white gap-2 text-base md:text-lg lg:text-2xl">
-              <div className="  w-[300px] flex flex-col items-center ">
+              <div className="sm:w-[300px] w-[80px] flex flex-col items-center ">
                 <Image
                 src="/star.png"
                 alt="star"
@@ -389,7 +407,7 @@
                 Pioneering Spirit
                 </p>
               </div>
-              <div className="  w-[300px] flex flex-col items-center ">
+              <div className="sm:w-[300px] w-[80px] flex flex-col items-center ">
                 <Image
                 src="/dia.png"
                 alt="diamond"
@@ -401,7 +419,7 @@
                 Prime Location
                 </p>
               </div>
-              <div className="  w-[300px] flex flex-col items-center ">
+              <div className="sm:w-[300px] w-[80px] flex flex-col items-center ">
                 <Image
                 src="/com.png"
                 alt="community"
@@ -414,7 +432,7 @@
                 </p>
               </div>
 
-              <div className="  w-[300px] flex flex-col items-center ">
+              <div className="sm:w-[300px] w-[80px] flex flex-col items-center ">
                 <Image
                 src="/chart.png"
                 alt="cahrt"

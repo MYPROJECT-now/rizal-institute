@@ -61,19 +61,21 @@ import { getStaffCredentials } from "./utils/staffID";
       }
       const allEnrollees = await db.select({
         id: applicantsInformationTable.applicants_id,
+        sId: StudentInfoTable.student_id,
         lrn: applicantsInformationTable.lrn,
         lastName: applicantsInformationTable.applicantsLastName,
         firstName: applicantsInformationTable.applicantsFirstName,
         middleName: applicantsInformationTable.applicantsMiddleName,
         gradeLevel: educationalBackgroundTable.gradeLevel,
         admissionStatus: AdmissionStatusTable.admissionStatus,
-        soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
+        soaMonthId: downPaymentTable.donw_id, // ✅ just select a nullable column
 
       })
       .from(applicantsInformationTable)
+      .leftJoin(StudentInfoTable, eq(StudentInfoTable.applicants_id, applicantsInformationTable.applicants_id))
       .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
       .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
-      .leftJoin(MonthsInSoaTable, eq(MonthsInSoaTable.month_id, applicationStatusTable.applicants_id))
+      .leftJoin(downPaymentTable, eq(downPaymentTable.student_id, StudentInfoTable.student_id))
       .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
       .where(and(eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"), eq(applicationStatusTable.reservationPaymentStatus, "Reserved"), eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear)))
     
@@ -101,6 +103,7 @@ import { getStaffCredentials } from "./utils/staffID";
 
     const applicantsPayment = await db
     .select({
+      reservationAmount: reservationFeeTable.reservationAmount,
       reservationReceipt: reservationFeeTable.reservationReceipt,
     })
     .from(applicantsInformationTable)

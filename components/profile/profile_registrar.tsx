@@ -30,9 +30,9 @@ export const Profile_registrar = () => {
                     <Image
                        src={user?.imageUrl ?? '/profile.png'} 
                         alt="User Profile Picture"
-                        width={30}
-                        height={30}
-                        className="rounded-full" // For circular profile picture
+                        width={1000}
+                        height={1000}
+                        className="rounded-full lg:w-[30px] lg:h-[30px] w-[25px] h-[25px]" // For circular profile picture
                     />
                     </div>
             

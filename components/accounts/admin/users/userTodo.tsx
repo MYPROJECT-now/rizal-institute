@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 interface Props {
   userTodo: UserType;
   className?: string;
-  deleteUserItem: (clerkId: string) => void;
+  deleteUserItem: (clerkId: string, clerk_username: string) => void;
 
 }
 
@@ -20,7 +20,7 @@ const UserTodo: FC<Props> = ({ userTodo, className, deleteUserItem }) => {
       description: "This action will delete the user and cannot be undone.",
       onConfirm: async () => {
         try {
-          deleteUserItem(userTodo.clerkId);
+          deleteUserItem(userTodo.clerkId, userTodo.clerk_username);
           toast.success("User deleted successfully!");
         } catch (error) {
           toast.error("Failed to delete user.");

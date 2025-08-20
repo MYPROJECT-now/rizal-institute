@@ -49,7 +49,7 @@ export const RecentApplicantsTable = () => {
                 <td className="p-3 font-medium text-gray-800">{applicant.lrn}</td>
                 <td className="p-3">{applicant.lastName}, {applicant.firstName} {applicant.middleName}</td>
                 <td className="p-3">{applicant.gradeLevel}</td>
-                <td className="p-3 font-semibold text-yellow-700">
+                <td className="p-3 font-semibold text-yellow-400">
                   {applicant.applicationFormReviewStatus}
                 </td>
                 <td className="p-3 text-gray-600">{applicant.dateOfApplication?.toString()}</td>

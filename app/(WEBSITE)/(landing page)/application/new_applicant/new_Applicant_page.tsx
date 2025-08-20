@@ -16,6 +16,7 @@
 import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
 
 
+
     interface Props {
     addApplicant: (
         applicantsLastName: string,
@@ -700,12 +701,13 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
 
                     if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
                     if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
-
             } catch (error) {
                 toast.error("Failed to enroll. Please try again.");
                 console.error('Error creating user:', error);
+
             } finally {
-                setIsSubmitting(false);
+                setIsSubmitting(false);                
+
             }
     
         };

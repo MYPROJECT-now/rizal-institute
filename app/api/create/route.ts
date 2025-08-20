@@ -138,7 +138,7 @@ export async function POST(request: Request) {
       .values({
         username: username,
         usertype: role,
-        actionTaken: "Payment Accepted",
+        actionTaken: "Account Created",
         dateOfAction: new Date().toISOString(),
         actionTakenFor: username,
         academicYear_id: await getAcademicYearID(),

@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 export interface ApplicantType {
   reservationReceipt: string | null;
+  reservationAmount: number | null;
 }
 
 export const Cashier_ReservationReview = () => {
@@ -59,17 +60,20 @@ export const Cashier_ReservationReview = () => {
                 <p>No receipt uploaded.</p>
               </div> 
             ) : (
-              <CldImage
-                alt="Receipt Screenshot"
-                src={applicant.reservationReceipt}
-                width="400" 
-                height="400"
-                crop={{
-                  type: 'auto',
-                  source: true
-                }}
-              />
-            )}
+              <div className="flex flex-col gap-5">
+                <p className="text-start text-xl font-bold text-dGreen">Amount: P{applicant.reservationAmount}</p>
+                <CldImage
+                  alt="Receipt Screenshot"
+                  src={applicant.reservationReceipt}
+                  width="300" 
+                  height="300"
+                  crop={{
+                    type: 'auto',
+                    source: true
+                  }}
+                />
+              </div>
+              )}
           </div>
           
       </DialogContent>

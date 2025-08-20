@@ -15,7 +15,7 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
 
     // 🔢 Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const auditsPerPage = 5;
+    const auditsPerPage = 6;
 
     const currentAction = auditItems.filter((audit) => {
         const usernameMatch = audit.username.toLowerCase().includes(filterUsername.toLowerCase());
@@ -83,7 +83,7 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
             <tbody>
             {currentAudits.length === 0 ? (
                 <tr>
-                <td colSpan={7} className="p-4 text-black">
+                <td colSpan={5} className="p-4 text-black">
                 No action found.
                 </td>
             </tr>

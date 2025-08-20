@@ -23,10 +23,10 @@ if (loading) {
 }
 
   return (
-    <div className="overflow-x-auto mb-10">
-      <table className="min-w-full border-collapse border border-gray-300 text-center">
+    <div className="overflow-x-auto mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
+      <table className="w-full text-sm text-center">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className="bg-green-600 text-white">
             <th className="border p-2">LRN</th>
             <th className="border p-2">Student Name</th>
             <th className="border p-2">Grade Level</th>
@@ -43,7 +43,12 @@ if (loading) {
             </tr>
           ) : (
           recentPayment.map((item, index) => (
-            <tr key={index} className="border-t hover:bg-gray-100">
+              <tr
+                key={index}
+                className={`${
+                  index % 2 === 0 ? "bg-white" : "bg-green-100"
+                } hover:bg-green-300 transition duration-200`}
+              >
               <td className="border p-2">{item.lrn}</td>
               <td className="border p-2">{item.studentLastName}, {item.studentFirstName} {item.studentMiddleName} {item.studentSuffix}</td>
               <td className="border p-2">Grade 7</td>

@@ -15,7 +15,6 @@ export const enrollmentStatus = async () => {
         .leftJoin(AcademicYearTable, eq(EnrollmentStatusTable.academicYear_id, id))
         console.log(enrollment);
         return enrollment[0]?.isActive ?? false;
-
 }
 
 // export async function enrollmentGlobalStatus() {

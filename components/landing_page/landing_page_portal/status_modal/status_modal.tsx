@@ -99,20 +99,20 @@ export const StatusModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleclose}>
-      <DialogContent className="flex flex-col items-center min-h-[200px] w-[600px] rounded-t-lg">
-        <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
-          <DialogTitle className="text-center text-white text-2xl">
+      <DialogContent className="flex flex-col items-center lg:h-[240px] lg:w-[600px] sm:h-[220px] sm:w-[500px] h-[200px]  w-[300px] rounded-t-lg">
+        <DialogHeader className="sm:h-[70px] h-[50px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
+          <DialogTitle className="text-center text-white sm:text-2xl text-lg">
             Track Application
           </DialogTitle>
         </DialogHeader>
 
-        <div className="w-full px-6 py-4 space-y-4">
+        <div className="w-full px-6 lg:py-4 py-1  space-y-4">
           <input
             type="text"
             placeholder="Enter Application ID"
             value={trackingId}
             onChange={(e) => setTrackingId(e.target.value)}
-            className="w-full h-[50px] rounded-md border-2 border-dGreen px-3 focus:ring-2 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            className="w-full py-2 rounded-md border-2 border-dGreen px-3 focus:ring-2 focus:ring-dGreen focus:border-dGreen outline-none transition"
           />
 
           {loading && (
@@ -241,7 +241,7 @@ export const StatusModal = () => {
             ) : (
               <Button
                 variant="mainButton"
-                className="h-[50px] w-[200px] rounded-xl"
+                className="sm:py-5 sm:px-[70px] py-4   px-10 rounded-xl"
                 onClick={handleSubmit}
                 disabled={loading || trackingId.trim() === ""}
               >

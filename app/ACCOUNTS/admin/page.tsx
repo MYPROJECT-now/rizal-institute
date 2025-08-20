@@ -6,7 +6,7 @@ import Admin_header from "@/components/sidebar/header/header_admin";
 
 const Dashboard = () => {
     return (
-        <div className="w-full max-h-[680px]  mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
+        <div className="w-full h-[690px]  mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
             <Admin_header />
             <div className="w-full h-[540px] flex flex-col   mt-10 rounded-lg gap-10 ">
                 <div className="flex flex-col">

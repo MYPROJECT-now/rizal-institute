@@ -156,7 +156,6 @@
 
 
       // student information
-
       export const StudentInfoTable = pgTable("studentInfoTable", {
         student_id: serial('student_id').primaryKey(),
         applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).unique(),
@@ -171,6 +170,7 @@
         studentAge: integer('studentAge').notNull(),
       })
 
+      
       export const ClerkUserTable = pgTable("ClerkUserTable", {
         clerk_uid: serial('clerk_uid').primaryKey(),
         student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull().unique(),
