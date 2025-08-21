@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "../sidebar_item";
+import { AcademicYearModal } from "../utils/academicYearA";
+import { SidebarAcad } from "../utils/sidebar_item_admin";
+import { useAcadModal } from "@/src/store/academicYear";
 
 
 type Props = {
@@ -12,10 +15,12 @@ type Props = {
 };
 
 export const Sidebar_teacher = ({ className, onClose }: Props) => {
+    const { open } = useAcadModal();
+    
     return (
         <div
             className={cn(
-                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 border-r-2", 
+                "flex flex-col h-screen w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 ", 
                 className
             )}
         >
@@ -33,13 +38,25 @@ export const Sidebar_teacher = ({ className, onClose }: Props) => {
 
                 <div className="flex flex-col gap-3 mt-[50px] ">
                     <SidebarItem 
-                        label="Grades" 
+                        label="My Classes" 
                         href="/ACCOUNTS/teacher"
+                        iconSrc="/class.png"
+                        onClick={onClose} 
+                    />
+
+                    <SidebarItem 
+                        label="Input Grades" 
+                        href="/ACCOUNTS/teacher/grade"
                         iconSrc="/grades.png"
                         onClick={onClose} 
                     />
 
-            
+                     <AcademicYearModal />
+                     <SidebarAcad 
+                         label="Academic Year"
+                         iconSrc="/calendar.png"
+                         onClick={open} 
+                     />          
                 </div>
             </div>
                 

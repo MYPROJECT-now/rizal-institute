@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "../sidebar_item";
+import { SidebarAcad } from "../utils/sidebar_item_admin";
+import { AcademicYearModal } from "../utils/academicYearA";
+import { useAcadModal } from "@/src/store/academicYear";
 
 type Props = {
     className?: string;
@@ -11,10 +14,12 @@ type Props = {
 };
 
 export const Sidebar_registrar = ({ className, onClose }: Props) => {
+    const { open } = useAcadModal();
+    
     return (
         <div
             className={cn(
-                "flex-col h-full w-[300px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4", 
+                "flex-col h-screen xl:w-[330px] lg:w-[250px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
                 className
             )}
         >
@@ -23,9 +28,10 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                 <Link href="/ACCOUNTS/registrar" onClick={onClose}>
                     <Image 
                         src="/school.png" 
-                        width={130}
-                        height={130} 
+                        width={1000}
+                        height={1000} 
                         alt="PWD Icon"
+                        className="sm:h-[130px] sm:w-[130px] h-[80px] w-[80px]"
                     />
                    
                 </Link>
@@ -64,6 +70,13 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                         href="/ACCOUNTS/registrar/grades"
                         iconSrc="/grades.png" 
                         onClick={onClose} 
+                    />
+
+                    <AcademicYearModal />
+                    <SidebarAcad 
+                        label="Academic Year"
+                        iconSrc="/calendar.png"
+                        onClick={open} 
                     />
                 
             

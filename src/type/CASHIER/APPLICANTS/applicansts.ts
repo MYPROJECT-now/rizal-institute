@@ -8,4 +8,5 @@ export type Tableapplicant_Type = {
     reservationPaymentStatus: string | null;
     applicationFormReviewStatus: string | null;
     reservationReceipt: string | null;
+    isActive: boolean | null;
   };

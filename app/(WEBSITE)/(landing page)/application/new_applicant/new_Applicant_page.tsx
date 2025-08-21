@@ -5,15 +5,16 @@
     import { toast } from "sonner";
     import Image from "next/image";
     import { usePreviewModal } from "@/src/store/preview";
-    import { PreviewModal } from "@/components/landing_page_portal/preview/preview_modal";
     import { verifyEmail, verifyLrn } from "@/src/actions/landingPage";
 
     import {
         Card,
-        CardContent,
+        CardContent,    
         CardHeader,
         CardTitle,
     } from "@/components/ui/card"
+import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
+
 
 
     interface Props {
@@ -700,12 +701,13 @@
 
                     if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
                     if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
-
             } catch (error) {
                 toast.error("Failed to enroll. Please try again.");
                 console.error('Error creating user:', error);
+
             } finally {
-                setIsSubmitting(false);
+                setIsSubmitting(false);                
+
             }
     
         };
@@ -1100,6 +1102,7 @@
                                         <option value="" >Select Option</option>
                                         <option value="New">Incoming G7</option>
                                         <option value="Transferee">Transferee</option>
+                                        <option value="Returnee">Old Student</option>
                                 </select>
                             </div>
                         </section>        
@@ -1773,75 +1776,76 @@
                 ),
                 content: (
                     <main className="w-full grid grid-cols-2 gap-5 items-center justify-center">
-                        <section className="flex flex-col h-[55px] justify-center">
-                            {errors.attainmentUponGraduation === "Required" && (
-                                <p className="text-red-500 text-[12px]">
-                                    {errors.attainmentUponGraduation}
-                                </p>
-                            )}   
-                            <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[280px]">Attaiment upon graduation:</label>
-                            <select 
-                                name="additionalInformation" 
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
-                                    ${errors.attainmentUponGraduation ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`}
-                                value={attainmentUponGraduation}
-                                onChange={handleAttainmentUponGraduation}
-                                >
-                                <option value="">Select Option</option>
-                                <option value="N/a">N/a</option>
-                                <option value="Graduated with Honors">Graduated with Honors</option>
-                                <option value="Graduated with High Honor">Graduated with High Honor</option>
-                                <option value="Graduated with Highest Honor">Graduated with Highest Honor</option>
-                            </select>
+                       <section className="flex flex-row items-end w-full">
+                            <label className="hidden md:block text-[15px] lg:text-[19px] xl:text-xl w-[200px] lg:w-[600px] font-semibold font-merriweather text-dGreen ">Attainment Upon Graduation:</label>
+                            <div className="flex flex-col gap-1 w-full">
+                                <div className="flex flex-row items-center gap-1 w-full">
+                                    <label className="block md:hidden text-[11px] font-semibold font-merriweather text-dGreen ">Attainment Upon Graduation:</label>
+                                    <span className="text-red-500 font-semibold block md:hidden text-[8px]"> (Required) </span>
+                                    <span className="text-red-500 font-semibold md:block hidden text-[11px]"> Required </span>
+                                </div>
+                                <select 
+                                    name="additionalInformation" 
+                                    className={`rounded-sm px-1 w-full md:w-[190px] lg:w-[250px] xl:w-[320px] h-[30px] lg:h-[35px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                        ${errors.attainmentUponGraduation ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
+                                    value={attainmentUponGraduation}
+                                    onChange={handleAttainmentUponGraduation}
+                                    >
+                                    <option value="">Select Option</option>
+                                    <option value="N/a">N/a</option>
+                                    <option value="Graduated with Honors">Graduated with Honors</option>
+                                    <option value="Graduated with High Honor">Graduated with High Honor</option>
+                                    <option value="Graduated with Highest Honor">Graduated with Highest Honor</option>
+                                </select>
                             </div>
                         </section>
                     
 
-                        <section className="flex flex-col h-[55px] justify-center">
-                            {errors.consistentGPA === "Required" && (
-                                <p className="text-red-500 text-[12px]">
-                                    {errors.consistentGPA}
-                                </p>
-                            )}   
-                            <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[280px]">Consistent GWA of:</label>
-                            <select 
-                                name="additionalInformation" 
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
-                                    ${errors.consistentGPA ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`}
-                                value={consistentGPA}
-                                onChange={handleConsistentGPA}
-                                >
-                                    <option value="">Select Option</option>
-                                    <option value="75-80%">75-80%</option>
-                                    <option value="81-85%">81-85%</option>
-                                    <option value="86-90%">86-90%</option>
-                                    <option value="91-95%">91-95%</option>
-                                    <option value="96-100%">96-100%</option>
-                            </select>
+                        <section className="flex flex-row items-end w-full">
+                            <label className="hidden md:block text-[15px] lg:text-[19px] xl:text-xl w-[200px] lg:w-[600px] font-semibold font-merriweather text-dGreen ">Consistent GWA of:</label>
+                            <div className="flex flex-col gap-1 w-full">
+                                <div className="flex flex-row items-center gap-1 w-full">
+                                    <label className="block md:hidden text-[11px] font-semibold font-merriweather text-dGreen ">Consistent GWA of:</label>
+                                    <span className="text-red-500 font-semibold block md:hidden text-[8px]"> (Required) </span>
+                                    <span className="text-red-500 font-semibold md:block hidden text-[11px]"> Required </span>
+                                </div>
+                                <select 
+                                    name="additionalInformation" 
+                                    className={`rounded-sm px-1 w-full md:w-[190px] lg:w-[250px] xl:w-[320px] h-[30px] lg:h-[35px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                        ${errors.consistentGPA ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
+                                    value={consistentGPA}
+                                    onChange={handleConsistentGPA}
+                                    >
+                                        <option value="">Select Option</option>
+                                        <option value="75-80%">75-80%</option>
+                                        <option value="81-85%">81-85%</option>
+                                        <option value="86-90%">86-90%</option>
+                                        <option value="91-95%">91-95%</option>
+                                        <option value="96-100%">96-100%</option>
+                                </select>
                             </div>
                         </section>
-                        <section className="flex flex-col h-[55px] justify-center">
-                            {errors.hasEnrolledSibling === "Required" && (
-                                <p className="text-red-500 text-[12px]">
-                                    {errors.hasEnrolledSibling}
-                                </p>
-                            )}   
-                            <div className="flex flex-row gap-3 items-center">
-                                <label className="font-semibold font-merriweather text-dGreen text-xl w-[280px]">Has enrolled sibling:</label>
-                            <select 
-                                name="additionalInformation" 
-                                className={`rounded-sm px-1 w-[300px] h-[35px]
-                                    ${errors.hasEnrolledSibling ? 'border border-red-600 bg-red-100' : ' bg-gray-200'}`}
-                                value={hasEnrolledSibling}
-                                onChange={handleHasEnrolledSibling}
-                                >
-                                    <option value="">Select Option</option>
-                                    <option value="No">No</option>
-                                    <option value="Yes">Yes</option>
-                                    
-                            </select>
+
+                         <section className="flex flex-row items-end w-full">
+                            <label className="hidden md:block text-[15px] lg:text-[19px] xl:text-xl w-[200px] lg:w-[600px] font-semibold font-merriweather text-dGreen ">Has enrolled sibling:</label>
+                            <div className="flex flex-col gap-1 w-full">
+                                <div className="flex flex-row items-center gap-1 w-full">
+                                    <label className="block md:hidden text-[11px] font-semibold font-merriweather text-dGreen ">Has enrolled sibling:</label>
+                                    <span className="text-red-500 font-semibold block md:hidden text-[8px]"> (Required) </span>
+                                    <span className="text-red-500 font-semibold md:block hidden text-[11px]"> Required </span>
+                                </div>
+                                <select 
+                                    name="additionalInformation" 
+                                    className={`rounded-sm px-1 w-full md:w-[190px] lg:w-[250px] xl:w-[320px] h-[30px] lg:h-[35px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                        ${errors.hasEnrolledSibling ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
+                                    value={hasEnrolledSibling}
+                                    onChange={handleHasEnrolledSibling}
+                                    >
+                                        <option value="">Select Option</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                        
+                                </select>
                             </div>
                         </section>
                     </main>

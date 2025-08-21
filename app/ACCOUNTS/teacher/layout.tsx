@@ -28,7 +28,7 @@ const AdminLayout = async ({children}: props) => {
                  <MobileHeader /> 
                 <Sidebar_teacher className="hidden lg:flex" />
                 <main className="lg:pl-[300px] h-full">
-                <div className="min-h-screen w-full flex flex-row ">
+                <div className="min-h-screen w-full flex flex-row bg-lGreen">
                     
                     {children}
                 </div>

@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { clerkClient } from '@clerk/nextjs/server';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
-import { ClerkUserTable, staffClerkUserTable, StudentInfoTable } from '@/src/db/schema';
+import { auditTrailsTable, ClerkUserTable, staffClerkUserTable, StudentInfoTable } from '@/src/db/schema';
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
 
@@ -62,6 +62,7 @@ export async function POST(request: Request) {
     const randomPassword = generateRandomPassword();
     const clerk = await clerkClient();
 
+
     // 1. Create Clerk user
     const user = await clerk.users.createUser({
       username: `RIZAL-${username}`,
@@ -79,18 +80,25 @@ export async function POST(request: Request) {
     try {
       if (role === "student") {
         const getStudentId = await db
-          .select()
+          .select({
+            student_id: StudentInfoTable.student_id,
+            applicants_id: StudentInfoTable.applicants_id
+          })
           .from(StudentInfoTable)
           .where(eq(StudentInfoTable.lrn, username))
           .limit(1);
-        const studentId = getStudentId[0]?.student_id;
+          
+          const studentId = getStudentId[0]?.student_id ?? 0;
+          const applicantsId = getStudentId[0]?.applicants_id ?? 0;
+
 
         await db.insert(ClerkUserTable).values({
           selected_AcademicYear_id: academicYearID,
+          student_id: studentId,
+          applicants_id: applicantsId,
           clerkId: user.id,
-          applicants_id: studentId,
           userType: role,
-          clerk_username: `RIZAL-${username}`,
+          clerk_username: username,
           clerk_email: email,
         });
       } else {
@@ -124,6 +132,17 @@ export async function POST(request: Request) {
 
       throw emailError;
     }
+
+    await db
+      .insert(auditTrailsTable)
+      .values({
+        username: username,
+        usertype: role,
+        actionTaken: "Account Created",
+        dateOfAction: new Date().toISOString(),
+        actionTakenFor: username,
+        academicYear_id: await getAcademicYearID(),
+    });
 
     return NextResponse.json({
       message: "Account was successfully created and the email was sent successfully.",

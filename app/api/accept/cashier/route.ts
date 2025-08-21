@@ -1,8 +1,10 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
+import { getStaffCredentials } from '@/src/actions/utils/staffID';
+import { getAcademicYearID } from '@/src/actions/utils/academicYear';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -49,22 +51,16 @@ async function sendReservationEmail(email: string, trackingId: string) {
     Tracking ID: ${trackingId}
 
     Your spot has been secured, and we look forward to welcoming you to our community. 
-    To complete your enrollment, please wait for the statement of account from our cashier. 
-    You may choose to make a full payment or a down payment to secure your place.
+    To complete your enrollment, please confirm of admission by accepting the offer of admission.
+    You can do that by going on the website, click the track application button, enter you tracking ID, and confirm your admission
+
 
     If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
-
-    Next Steps:
-
-    Wait for the statement of account from our cashier.
-    Use the tracking ID to complete you payment.
-    Make a full payment or down payment to secure your enrollment
-    Contact our office for any further inquiries
 
     Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
 
     Best regards,
-    Rizal Institute - Canlubang Registrar Office
+    Rizal Institute - Canlubang
     `,
   };
 
@@ -74,7 +70,7 @@ async function sendReservationEmail(email: string, trackingId: string) {
 // API handler for sending reservation confirmation email
 export async function POST(request: Request) {
   try {
-    const { studentId } = await request.json();
+    const { studentId,  name } = await request.json();
 
     if (!studentId) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
@@ -88,6 +84,11 @@ export async function POST(request: Request) {
       .limit(1);
 
     const applicationFormReviewStatus = applicationFormReviewStatusResult[0].applicationFormReviewStatus || null;
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
+    }
+
 
     // Run DB actions in parallel
     const [email, trackingId, updateResult] = await Promise.all([
@@ -99,6 +100,15 @@ export async function POST(request: Request) {
           dateApprovedByCashier: new Date().toISOString(),
         })
         .where(eq(applicationStatusTable.applicants_id, studentId)),
+      db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Reservation Payment Confirmed",
+        actionTakenFor: name,
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
     ]);
 
     if (!email) {

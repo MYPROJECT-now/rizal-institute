@@ -9,10 +9,10 @@ type Props = {
 
 const MainLayout = ({ children }:Props) => {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="w-full h-full flex flex-col">
             
             <Header />
-            <main className ="mt-20">
+            <main>
                 {children}
             </main>        
             <Footer />        

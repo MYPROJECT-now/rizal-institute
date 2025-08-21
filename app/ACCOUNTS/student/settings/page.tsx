@@ -3,7 +3,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
-import Admin_student from "@/components/header/header_student";
+import Admin_student from "@/components/sidebar/header/header_student";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -48,13 +48,13 @@ const RegistrarsEnrolleesTable = () => {
   return (
       <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
         <Admin_student />
-        <div className="w-full lg:w-[600px] h-[500px] bg-white self-center  rounded-lg flex flex-col items-center text-center">
-          <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex">
+        <div className="w-full h-[540px] bg-white self-center mt-10  rounded-lg flex flex-col items-center text-center">
+          <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
               PASSWORD MANAGEMENT
             </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center  w-full h-[350px]  rounded-lg">
-            <div className="flex flex-col w-full px-10 lg:w-[500px]">
+          <div className=" flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full h-[450px] rounded-lg">
+            <div className="flex flex-col text-start w-full px-10 lg:w-[500px]">
               <label htmlFor="current-password">Current Password</label>
               <input
                 type="password"
@@ -65,7 +65,7 @@ const RegistrarsEnrolleesTable = () => {
               />
             </div>
 
-            <div className="flex flex-col w-full px-10 lg:w-[500px]">
+            <div className="flex flex-col text-start w-full px-10 lg:w-[500px]">
               <label htmlFor="new-password">New Password</label>
               <input
                 type="password"

@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "../sidebar_item";
+import { AcademicYearModal } from "../utils/academicYearS";
+import { useAcadModal } from "@/src/store/academicYear";
+import { SidebarAcad } from "../utils/sidebar_item_admin";
 
 type Props = {
     className?: string;
@@ -11,6 +14,8 @@ type Props = {
 };
 
 export const Sidebar_student = ({ className, onClose }: Props) => {
+      const { open } = useAcadModal();
+    
     return (
         <div
             className={cn(
@@ -52,8 +57,12 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                         onClick={onClose} 
                     />
 
-
-
+                    <AcademicYearModal />
+                    <SidebarAcad 
+                        label="Academic Year"
+                        iconSrc="/calendar.png"
+                        onClick={open} 
+                    />
             
                 </div>
             </div>

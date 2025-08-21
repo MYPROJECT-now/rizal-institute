@@ -1,5 +1,5 @@
-import Cashier_header from "@/components/header/header_cashier";
-import { StudentsPage } from "@/components/cashier/student/studentTable/studentPage";
+import Cashier_header from "@/components/sidebar/header/header_cashier";
+import { StudentsPage } from "@/components/accounts/cashier/student/studentTable/studentPage";
 const RegistrarsStudentsTable = () => {
     return (
         <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">

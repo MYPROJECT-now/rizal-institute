@@ -13,3 +13,17 @@ export const useShowSOAModal = create<ShowSOA_ModalState>((set) => ({
     open: (lrn: string) => set({ isOpen: true, selectedLRN: lrn }),
     close: () => set({ isOpen: false, selectedLRN: null }),
 }));
+
+type MonthlyPayment_ModalState = {
+    isOpen: boolean;
+    selectedID: number | null;
+    open: (monthlyPayment_id: number) => void;
+    close: () => void;
+};
+
+export const useShowMonthlyPayementModal = create<MonthlyPayment_ModalState>((set) => ({
+    isOpen: false, //change mo maya
+    selectedID: null,
+    open: (monthlyPayment_id: number) => set({ isOpen: true, selectedID: monthlyPayment_id }),
+    close: () => set({ isOpen: false, selectedID: null }),
+}));

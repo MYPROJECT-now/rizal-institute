@@ -3,7 +3,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
-import Cashier_header from "@/components/header/header_cashier";
+import Cashier_header from "@/components/sidebar/header/header_cashier";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -53,8 +53,8 @@ const RegistrarsEnrolleesTable = () => {
               PASSWORD MANAGEMENT
             </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center w-full h-full  rounded-lg">
-            <div className="flex flex-col w-full px-10 lg:w-[500px]">
+          <div className=" flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full h-[450px] rounded-lg">
+            <div className="flex flex-col text-start w-full px-10 lg:w-[500px]">
               <label htmlFor="current-password">Current Password</label>
               <input
                 type="password"
@@ -65,7 +65,7 @@ const RegistrarsEnrolleesTable = () => {
               />
             </div>
 
-            <div className="flex flex-col w-full px-10 lg:w-[500px]">
+            <div className="flex flex-col text-start w-full px-10 lg:w-[500px]">
               <label htmlFor="new-password">New Password</label>
               <input
                 type="password"

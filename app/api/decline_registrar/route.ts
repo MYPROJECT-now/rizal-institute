@@ -1,9 +1,10 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable, Registrar_remaks_table } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable, auditTrailsTable, Registrar_remaks_table } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
+import { getStaffCredentials } from '@/src/actions/utils/staffID';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -52,6 +53,7 @@ async function sendDeclineEmail(email: string, trackingId: string, remarks: stri
     Remarks: ${remarks}
 
     Use the tracking ID provided to re-apply for enrollment on our website.
+    Go to our website click track application and enter your tracking ID in order to repply.
     Please comply with the note in the remarks section.
 
     If you have any further inquiries, feel free to contact our office.
@@ -67,7 +69,7 @@ async function sendDeclineEmail(email: string, trackingId: string, remarks: stri
 // API handler for declining an application
 export async function POST(request: Request) {
   try {
-    const { studentId, remarks } = await request.json();
+    const { studentId, remarks, fullName } = await request.json();
 
     if (!studentId || !remarks.trim()) {
       return NextResponse.json({ error: "Missing student ID or remarks" }, { status: 400 });
@@ -79,6 +81,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Student email not found" }, { status: 404 });
     }
 
+    const credentials = await getStaffCredentials();
+      if (!credentials) {
+      return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
+    }
     // Fetch tracking ID
     const trackingId = await getTrackingId(studentId);
 
@@ -97,6 +103,16 @@ export async function POST(request: Request) {
         academicYear_id: academicYearID,
         reg_remarks: remarks, 
         dateOfRemarks: new Date().toISOString() });
+
+    await  db.insert(auditTrailsTable)
+        .values({
+        actionTaken: "Declined Documents and Information",
+        actionTakenFor: fullName,
+        dateOfAction: new Date().toISOString(),
+        username: credentials.clerk_username,
+        usertype: credentials.userType,
+        academicYear_id: await getAcademicYearID(),
+      })
 
     // Send decline email
     await sendDeclineEmail(email, trackingId, remarks);

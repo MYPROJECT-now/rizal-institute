@@ -1,5 +1,5 @@
 "use client";
-import Registrar_header from "@/components/header/header_registrar";
+import Registrar_header from "@/components/sidebar/header/header_registrar";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -46,15 +46,15 @@ const RegistrarsEnrolleesTable = () => {
   };
 
   return (
-      <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
+      <div className=" w-full h-full rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
         <Registrar_header />
         <div className="w-[300px] h-auto lg:h-[500px] lg:w-[700px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
             <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex ">
               PASSWORD MANAGEMENT
             </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full lg:w-[700px] h-[350px] mt-[80px] rounded-lg">
-            <div className="flex flex-col w-full px-10">
+          <div className=" flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full h-[450px] rounded-lg">
+            <div className="flex flex-col text-start w-full px-10 lg:w-[500px]">
               <label htmlFor="current-password">Current Password</label>
               <input
                 type="password"
@@ -65,7 +65,7 @@ const RegistrarsEnrolleesTable = () => {
               />
             </div>
 
-            <div className="flex flex-col w-full px-10">
+            <div className="flex flex-col text-start w-full px-10 lg:w-[500px]">
               <label htmlFor="new-password">New Password</label>
               <input
                 type="password"

@@ -65,7 +65,7 @@ const createStaffAccounts = async () => {
         selected_AcademicYear_id: academicYearID,
         clerkId: clerkUser.id,
         userType: role,
-        clerk_username: `RIZAL-${username}`,
+        clerk_username: username,
         clerk_email: email,
       });
 

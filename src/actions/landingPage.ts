@@ -13,10 +13,12 @@ import {
   Registrar_remaks_table,
   Cashier_remaks_table,
   additionalInformationTable,
+  StudentInfoTable,
+  EnrollmentStatusTable,
 } from "../db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
-import { StudentUpdateData } from "../type/reApplication/re_applicationType";
+import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
 
 // Generate random tracking ID
@@ -26,6 +28,8 @@ function generateRandomTrackingId(length = 12) {
 }
 
 // Send email with tracking ID
+
+
 async function sendEmail(to: string, trackingId: string, hasReservationReceipt: boolean, hasDocuments: boolean) {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -39,6 +43,8 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
     Thank you for submitting your application for enrollment in Rizal Institute - Canlubang. 
     We appreciate your interest in joining our academic community.
 
+    tracking ID: ${trackingId}
+
     To track the status of your application, please use the following tracking ID: ${trackingId}
     You can use this ID to check on the progress of your application on our website or by contacting our 
     admissions office.
@@ -48,10 +54,11 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
   
   if (!hasReservationReceipt) {
     additionalContent = `
-    IMPORTANT: To secure your spot, please complete the reservation fee payment of ₱500.00.
+    IMPORTANT: To secure your spot, please complete the reservation fee payment of atleast ₱500.00.
     You can make the payment in two ways:
     a) Online Payment:
        - Use your tracking ID to access the payment section on our website
+       - Go to website and click the button track application
        - Follow the payment instructions provided
     b) In-Person Payment:
        - Visit our cashier's office
@@ -209,7 +216,7 @@ export const addNewApplicant = async (formData: {
 
 
   const [insertedApplicant] = await db.insert(applicantsInformationTable).values({
-    academicYear_id: academicYearID,
+    // academicYear_id: academicYearID,
     applicantsLastName,
     applicantsFirstName,
     applicantsMiddleName,
@@ -259,7 +266,8 @@ export const addNewApplicant = async (formData: {
         academicYear_id: academicYearID,
         mop,
         reservationReceipt,
-        reservationAmount
+        reservationAmount,
+        dateOfPayment: new Date().toISOString().slice(0, 10),
       }),
       db.insert(additionalInformationTable).values({
         applicants_id: applicantId,
@@ -331,15 +339,22 @@ export const verifyLrn = async (lrn: string) => {
             regDate: Registrar_remaks_table.dateOfRemarks,
             cashierDate: Cashier_remaks_table.dateOfRemarks,
             confirmationStatus: AdmissionStatusTable.confirmationStatus,
+            hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
+
+
           })
           .from(applicationStatusTable)
           .leftJoin(Registrar_remaks_table,eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
           .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
           .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
-          .where(eq(applicationStatusTable.trackingId, trackingId))
+          .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
+          .where(
+              eq(applicationStatusTable.trackingId, trackingId),
+            )
           .limit(1);
 
         if (result.length > 0) {
+                console.log("Reservation ID:", result[0].hasPaidReservation);
           return result[0];
         } else {
           return null; // No match found
@@ -404,6 +419,11 @@ export const acceptAdmission = async (trackingId: string) => {
                 goodMoral: documentsTable.goodMoral,
                 idPic: documentsTable.idPic,
                 studentExitForm: documentsTable.studentExitForm,
+                form137: documentsTable.form137,
+
+                mop: reservationFeeTable.mop,
+                reservationAmount: reservationFeeTable.reservationAmount,
+                reservationReceipt: reservationFeeTable.reservationReceipt,
 
                 regRemarks: Registrar_remaks_table.reg_remarks,
                 cashierRemarks: Cashier_remaks_table.cashier_remarks,
@@ -415,6 +435,7 @@ export const acceptAdmission = async (trackingId: string) => {
             .innerJoin(guardianAndParentsTable, eq(applicantsInformationTable.applicants_id, guardianAndParentsTable.applicants_id))
             .innerJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
             .innerJoin(documentsTable, eq(applicantsInformationTable.applicants_id, documentsTable.applicants_id))
+            .innerJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
             .leftJoin(Registrar_remaks_table, eq(applicantsInformationTable.applicants_id, Registrar_remaks_table.applicants_id))
             .leftJoin(Cashier_remaks_table, eq(applicantsInformationTable.applicants_id, Cashier_remaks_table.applicants_id))
             .where(eq(applicationStatusTable.trackingId, trackingId))
@@ -466,6 +487,11 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       goodMoral,
       idPic,
       studentExitForm,
+      form137,
+
+      mop,
+      reservationAmount,
+      reservationReceipt,
     } = updatedData;
 
     // Update studentsInformationTable
@@ -518,11 +544,21 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
         reportCard,
         goodMoral,
         idPic,
-        studentExitForm
+        studentExitForm,
+        form137,
       })
       .where(eq(documentsTable.applicants_id, updatedStudent[0]?.applicants_id))
       .returning();
 
+    const updatedReservationFee = await db
+      .update(reservationFeeTable)
+      .set({
+        mop,
+        reservationAmount,
+        reservationReceipt,
+      })
+    .returning();
+    
     // Get current application status
     const currentStatus = await db
       .select({
@@ -562,7 +598,8 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       student: updatedStudent[0],
       guardian: updatedGuardian[0],
       educationalBackground: updatedEducationalBackground[0],
-      document: updatedDocument[0]
+      document: updatedDocument[0],
+      reservationFee: updatedReservationFee[0],
     };
   } catch (error) {
     console.error("Error updating student data:", error);
@@ -572,4 +609,318 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
 
 
 
+export const lateReservationFee = async (trackingId: string, updatedData: ReservationFee) => {
+  try {
+    // Extract student and guardian data separately
+    const {
 
+      mop,
+      reservationAmount,
+      reservationReceipt,
+    } = updatedData;
+
+    const getApplicantsId = await db
+      .select({
+          applicants_id: applicationStatusTable.applicants_id
+      })
+      .from(applicationStatusTable)
+      .where(eq(applicationStatusTable.trackingId, trackingId))
+
+    const id = getApplicantsId[0].applicants_id;
+
+    const getEmail = await db
+      .select({
+          email: applicantsInformationTable.email
+      })
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.applicants_id, id))
+
+    const email = getEmail[0].email;
+
+    const updatedReservationFee = await db
+      .update(reservationFeeTable)
+      .set({
+        mop,
+        reservationAmount,
+        reservationReceipt,
+      })
+      .where(eq(reservationFeeTable.applicants_id, id))
+    .returning();
+    
+    
+// Function to send reservation email
+async function sendReservationEmail(email: string, trackingId: string) {
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Reservation Payment at Rizal Institute - Canlubang',
+    text: `
+    Dear Applicant,
+
+    This is a confirmation that we have received your reservation payment for a slot at Rizal Institute - Canlubang.
+
+    Tracking ID: ${trackingId}
+
+    To track the status of your application, please use the following tracking ID: ${trackingId}
+    You can use this ID to check on the progress of your application on our website or by contacting our 
+    admissions office.
+
+    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+
+    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+
+    Best regards,
+    Rizal Institute - Canlubang
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+
+await sendReservationEmail(email, trackingId);
+    // // Get current application status
+    // const currentStatus = await db
+    //   .select({
+    //     applicationStatus: applicationStatusTable.applicationFormReviewStatus
+    //   })
+    //   .from(applicationStatusTable)
+    //   .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id))
+    //   .limit(1);
+
+    // // Only update status to Pending if it was previously Declined
+    // if (currentStatus[0]?.applicationStatus === "Declined") {
+    //   await db
+    //     .update(applicationStatusTable)
+    //     .set({
+    //       applicationFormReviewStatus: "Pending",
+    //       dateOfApplication: new Date().toISOString().slice(0, 10)
+    //     })
+    //     .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id));
+    // }
+
+    // // Update resolution status for both registrar and cashier remarks
+    // await db
+    //   .update(Registrar_remaks_table)
+    //   .set({
+    //     resolved_reg_remarks: true
+    //   })
+    //   .where(eq(Registrar_remaks_table.applicants_id, updatedStudent[0]?.applicants_id));
+
+    // await db
+    //   .update(Cashier_remaks_table)
+    //   .set({
+    //     resolved_cashier_remarks: true
+    //   })
+    //   .where(eq(Cashier_remaks_table.applicants_id, updatedStudent[0]?.applicants_id));
+
+    return {
+      // student: updatedStudent[0],
+      // guardian: updatedGuardian[0],
+      // educationalBackground: updatedEducationalBackground[0],
+      // document: updatedDocument[0],
+      reservationFee: updatedReservationFee[0],
+    };
+  } catch (error) {
+    console.error("Error updating student data:", error);
+    throw new Error("Failed to update student and guardian data.");
+  }
+};
+
+
+export const checkLRN = async (lrn: string) => {
+  try {
+    // Check in applicants table
+    const applicantExists = await db
+      .select()
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn))
+      .limit(1);
+
+    if (applicantExists.length > 0) return true;
+
+    // Check in students table
+    const studentExists = await db
+      .select()
+      .from(StudentInfoTable)
+      .where(eq(StudentInfoTable.lrn, lrn))
+      .limit(1);
+
+    return studentExists.length > 0;
+  } catch (error) {
+    console.error("Error checking LRN:", error);
+    throw error;
+  }
+};
+
+
+
+export const enrollOldStudent = async (
+    lrn: string,
+    gradeLevel: string,
+    mop: string,
+    reservationReceipt: string,
+    reservationAmount: number,
+) => {
+  const getStudentID = await db
+  .select({
+    applicants_id: applicantsInformationTable.applicants_id
+  })
+  .from(applicantsInformationTable)
+  .where(eq(applicantsInformationTable.lrn, lrn)).limit(1); 
+
+  const studentID = getStudentID[0]?.applicants_id;
+  const trackingId = generateRandomTrackingId();
+  const academicYearID = await getAcademicYearID();
+
+  const getEmail = await db
+  .select({
+    email: applicantsInformationTable.email
+  })
+  .from(applicantsInformationTable)
+  .where(eq(applicantsInformationTable.applicants_id, studentID)).limit(1); 
+
+  const email = getEmail[0]?.email;
+
+  await db
+  .insert(reservationFeeTable)
+  .values({
+    applicants_id: studentID,
+    mop,
+    reservationReceipt,
+    reservationAmount,
+    dateOfPayment: new Date().toISOString().slice(0, 10),
+    academicYear_id: academicYearID,
+  });
+
+
+
+      await db
+      .insert(applicationStatusTable)
+      .values({
+      applicants_id: studentID,
+      academicYear_id: academicYearID,
+      trackingId: trackingId,
+      applicationFormReviewStatus: 'Pending',
+      reservationPaymentStatus: 'Pending',
+      dateOfApplication: new Date().toISOString().slice(0, 10),
+    });
+
+    await db.insert(AdmissionStatusTable).values({
+      applicants_id: studentID,
+      academicYear_id: academicYearID,
+      admissionStatus: 'Pending',
+      confirmationStatus: 'Pending',
+      dateOfAdmission: new Date().toISOString().slice(0, 10),
+    });
+
+    await db.update(educationalBackgroundTable)
+    .set({
+      gradeLevel: gradeLevel,
+      studentType: 'Old Student',
+    })
+    .where(eq(educationalBackgroundTable.applicants_id, studentID));
+
+        
+// Function to send reservation email
+async function sendReservationEmail(email: string, trackingId: string) {
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Application Confirmation at Rizal Institute - Canlubang',
+    text: `
+    Dear Applicant,
+
+    We appreciate your interest in returning to our institution.
+    This is a confirmation that we have received your application for re-admission to Rizal Institute - Canlubang.
+
+    Tracking ID: ${trackingId}
+
+    To track the status of your application, please use the following tracking ID: ${trackingId}
+    You can use this ID to check on the progress of your application on our website or by contacting our 
+    admissions office.
+
+    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+
+    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+
+    Best regards,
+    Rizal Institute - Canlubang
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+await sendReservationEmail(email, trackingId);
+}
+
+
+// export const nottice = async () => {
+//   const id = await getAcademicYearID();
+//   console.log("AcademicYearID:", id);
+  
+//   const notice = await db
+//     .select({
+//       enrollment_period: EnrollmentStatusTable.enrollment_period,
+//       enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
+//       enrollment_end_date: EnrollmentStatusTable.enrollment_end_date,
+//       isActive: EnrollmentStatusTable.isActive,
+//     })
+//     .from(EnrollmentStatusTable)
+//     .where(eq(EnrollmentStatusTable.academicYear_id, id))
+//     .limit(1);
+
+//   console.log(notice);
+//   return notice;
+// };
+
+export const nottice = async () => {
+  const id = await getAcademicYearID();
+  console.log("AcademicYearID:", id);
+
+  if (!id) {
+    // If no academic year found, return a "Closed" default
+    return [{
+      enrollment_period: null,
+      enrollment_start_date: null,
+      enrollment_end_date: null,
+      isActive: false,
+    }];
+  }
+
+  const notice = await db
+    .select({
+      enrollment_period: EnrollmentStatusTable.enrollment_period,
+      enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
+      enrollment_end_date: EnrollmentStatusTable.enrollment_end_date,
+      isActive: EnrollmentStatusTable.isActive,
+    })
+    .from(EnrollmentStatusTable)
+    .where(eq(EnrollmentStatusTable.academicYear_id, id))
+    .limit(1);
+
+  console.log(notice);
+  return notice.length ? notice : [{
+    enrollment_period: null,
+    enrollment_start_date: null,
+    enrollment_end_date: null,
+    isActive: false,
+  }];
+};

@@ -1,4 +1,5 @@
   export type Tableapplicant_Type = {
+      admission_id?: number | null;
       id: number;
       lrn: string;
       firstName: string;
@@ -8,6 +9,7 @@
       dateApprovedByRegistrar: string | null;
       applicationFormReviewStatus?: string | null;
       reservationPaymentStatus: string | null;
+      isActive: boolean | null;
     };
 
   export type RecentApplicantsType = {
@@ -55,3 +57,12 @@
     reg_remarks: string | null;
     dateOfRemarks: string | null;
 }
+
+  export type Grade_Type = {
+      id: number;
+      lrn: string;
+      studentFirstName: string;
+      studentLastName: string;
+      studentMiddleName: string | null;
+      studentSuffix: string | null;
+    };

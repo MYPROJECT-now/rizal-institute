@@ -1,5 +1,5 @@
-import { CreateAccount } from "@/components/admin/create_account/account";
-import Admin_header from "@/components/header/header_admin";
+import { CreateAccount } from "@/components/accounts/admin/create_account/account";
+import Admin_header from "@/components/sidebar/header/header_admin";
 
 
 const Announcement = () => {

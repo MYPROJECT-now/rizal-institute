@@ -6,9 +6,9 @@ import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "../sidebar_item";
-import { Fiscal_Year } from "@/components/admin/modal/fiscalYear/fiscal_Year";
+import { Fiscal_Year } from "@/components/accounts/admin/modal/fiscalYear/fiscal_Year";
 import { SidebarItemAdmin } from "./sidebar_item_admin";
-import { EnrollmentManagement } from "@/components/admin/modal/enrollment_management/enrollment";
+import { EnrollmentManagement } from "@/components/accounts/admin/modal/enrollment_management/enrollment";
 // import { useEnrollmentModal } from "@/src/store/ADMIN/enrollment";
 // import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
 // import Image from "next/image";
@@ -32,6 +32,7 @@ type Props = {
 export const Sidebar_admin = ({ className, onClose}: Props) => {
   const { open } = useFiscalYearModal();
   const { open: openEnrollment } = useEnrollmentModal();
+  
 
   return (
 
@@ -74,15 +75,37 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
               onClick={onClose}
             />
 
+            <SidebarItem
+              label="Assign Class"
+              href="/ACCOUNTS/admin/teacher"
+              iconSrc="/role.png"
+              onClick={onClose}
+            />
+
+            <SidebarItem
+              label="Audit Trails"
+              href="/ACCOUNTS/admin/audit"
+              iconSrc="/audit.png"
+              onClick={onClose}
+            />
+
             <Fiscal_Year />
             <SidebarItemAdmin
-              label="Fiscal Year"
+              label="Set Academic Year"
               iconSrc="/calendar.png"
               onClick={() => {
                 open();
                 onClose?.();
               }}
             />
+
+
+            {/* <AcademicYearModal />
+              <SidebarAcad
+                label="Academic Year"
+                iconSrc="/acad.png"
+                onClick={openAcad} 
+            /> */}
 
             <EnrollmentManagement />
             <SidebarItemAdmin

@@ -1,0 +1,42 @@
+"use client";
+
+import { FC, } from "react";
+
+
+import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
+import { Grade_Type,  } from "@/src/type/REGISTRAR/applicant";
+import {  useShowApplicantInfoModal } from "@/src/store/REGISTRAR/applicant";
+import { Button } from "@/components/ui/button";
+
+interface Props {
+  grade: Grade_Type;
+  className?: string;
+}
+
+const Grade: FC<Props> = ({ grade, className, }) => {
+  const { open: openEnrollees } = useShowApplicantInfoModal();
+
+
+
+
+  return (
+    <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
+      <td className="px-4 py-2">{grade.lrn}</td>
+      <td className="px-4 py-2">{grade.studentLastName} {grade.studentFirstName} {grade.studentMiddleName}</td>
+      <td className="px-4 py-2">
+        <Enrollees_info_Modal />
+        <Button 
+          variant={"confirmButton"}
+          className="w-[95px] h-[35px] rounded-lg"
+          onClick={() => openEnrollees(grade.lrn)}>
+            View
+          </Button>
+      </td>
+      <td>
+        -
+      </td>  
+    </tr>
+  );
+};
+
+export default Grade;
