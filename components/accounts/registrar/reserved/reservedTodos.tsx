@@ -192,7 +192,6 @@ import Student from "./reservedTodo";
 import { TableReserved_Type } from "@/src/type/REGISTRAR/reserved";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import * as XLSX from "xlsx"; // ← install via: npm install xlsx
 
 interface Props {
   reserved: TableReserved_Type[];

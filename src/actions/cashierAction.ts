@@ -582,8 +582,8 @@ export const getTotalperMonth = async () => {
 
   if (!year) {
     console.warn("❌ No academic year selected");
-    return null;
-
+    return [];
+    
   }
   // Get current date
   const today = new Date();
