@@ -142,7 +142,7 @@
                   <a href="/application">
                   <Button
                   variant="mainButton"
-                  className="rounded-lg sm:h-[100] lg:text-2xl lg:h-[55px] lg:w-[210px] w-[160px]  ">
+                  className="rounded-lg lg:text-2xl px-8 sm:px-12 py-2 sm:py-5 lg:py-6  ">
                     <p className="font-oswald font-bold">
                       ENROLL NOW
                     </p>
@@ -152,7 +152,7 @@
                   <Button
                   variant="subButton"
                   onClick={open}
-                  className="rounded-lg sm:h-[100] lg:text-2xl lg:h-[55px] lg:w-[210px] w-[160px]  ">
+                  className="rounded-lg lg:text-xl px-3 sm:px-7 py-2 sm:py-5 lg:py-6  ">
                     <p className="font-oswald font-bold">
                       TRACK APPLICATION
                     </p>

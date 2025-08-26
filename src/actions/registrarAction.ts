@@ -1,8 +1,8 @@
   "use server"
 
-  import { desc, eq, or, and } from "drizzle-orm";
+  import { desc, eq, or, and, like } from "drizzle-orm";
   import { db } from "../db/drizzle";
-  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, Registrar_remaks_table, StudentGradesTable, StudentInfoTable, SubjectTable } from "../db/schema";
+  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, StudentGradesTable, StudentInfoTable, SubjectTable } from "../db/schema";
   import { revalidatePath } from "next/cache";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
@@ -639,4 +639,197 @@ export const getEnrollmentTrend = async () => {
 
     console.log("📊 Enrollment Trend:", Trend);
     return Trend;
+};
+
+
+export const getAdmittedStudents = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const year = await getSelectedAcademicYear();
+
+  if (!year) {
+    console.warn("❌ No academic year selected");
+    return null;
+  }
+
+  const admittedStudents = await db
+  .selectDistinctOn([StudentInfoTable.lrn],{
+    lrn: StudentInfoTable.lrn,
+    lastName: StudentInfoTable.studentLastName,
+    firstName: StudentInfoTable.studentFirstName,
+    middleName: StudentInfoTable.studentMiddleName,
+    suffix: StudentInfoTable.studentSuffix,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+  })
+  .from(StudentInfoTable)
+  .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+  .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+  .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .where(and(eq(AdmissionStatusTable.academicYear_id, year), eq(AdmissionStatusTable.admissionStatus, "Enrolled")));
+  if (admittedStudents.length === 0) {
+    console.log("❌ No admitted students found");
+  }
+  console.log("Admitted Students:", admittedStudents);
+  return admittedStudents;
+
+}
+
+// export const getAmountPaid = async () => {
+//   await requireStaffAuth(["registrar"]);
+
+//   const amountPaid = await db
+//   .select({
+//     lrn: StudentInfoTable.lrn,
+//     lastName: StudentInfoTable.studentLastName,
+//     firstName: StudentInfoTable.studentFirstName,
+//     middleName: StudentInfoTable.studentMiddleName,
+//     suffix: StudentInfoTable.studentSuffix,
+//     monthlyDue: MonthsInSoaTable.monthlyDue,
+//     amountPaid: MonthsInSoaTable.amountPaid
+//   })
+//   .from(StudentInfoTable)
+//   .leftJoin(MonthsInSoaTable, eq(StudentInfoTable.student_id, MonthsInSoaTable.student_id));
+
+//   console.log("Amount Paid:", amountPaid);
+//   return amountPaid;
+// }
+
+// export const getAmountPaid = async () => {
+//   await requireStaffAuth(["registrar"]);
+
+//   const year = await getSelectedAcademicYear();
+
+//   if (!year) {
+//     console.warn("❌ No academic year selected");
+//     return null;
+
+//   }
+//   // Get current date
+//   const today = new Date();
+//   const currentMonth = today.toLocaleString("default", { month: "long" });
+//   console.log("Current month:", currentMonth);
+
+//   // Get current month_id from DB
+//   const currentMonthRow = await db
+//     .select({
+//       month_id: MonthsInSoaTable.month_id,
+//       month: MonthsInSoaTable.month,
+//     })
+//     .from(MonthsInSoaTable)
+//     .where(
+//       and(
+//         like(MonthsInSoaTable.month, `${currentMonth}%`),
+//         eq(MonthsInSoaTable.academicYear_id, year)
+//       )
+//     );
+
+//   if (currentMonthRow.length === 0) {
+//     console.warn("No current month found in DB, returning empty chart data.");
+//     return[];
+//   }
+
+//   const currentMonthId = currentMonthRow[0].month_id;
+//   console.log("Current month ID:", currentMonthId);
+
+
+//   const amountPaid = await db
+//     .select({
+//       lrn: StudentInfoTable.lrn,
+//       lastName: StudentInfoTable.studentLastName,
+//       firstName: StudentInfoTable.studentFirstName,
+//       middleName: StudentInfoTable.studentMiddleName,
+//       suffix: StudentInfoTable.studentSuffix,
+//       totalDue: sql<number>`SUM(${MonthsInSoaTable.monthlyDue})`,
+//       totalPaid: sql<number>`SUM(${MonthsInSoaTable.amountPaid})`,
+//     })
+//     .from(StudentInfoTable)
+//     .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.student_id))
+//     .where(eq(AdmissionStatusTable.academicYear_id, year))
+//     .groupBy(
+//       StudentInfoTable.student_id,
+//       StudentInfoTable.lrn,
+//       StudentInfoTable.studentLastName,
+//       StudentInfoTable.studentFirstName,
+//       StudentInfoTable.studentMiddleName,
+//       StudentInfoTable.studentSuffix
+//     );
+
+//   console.log("Totals:", amountPaid);
+//   return amountPaid;
+// };
+
+export const getAmountPaid = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const year = await getSelectedAcademicYear();
+
+  if (!year) {
+    console.warn("❌ No academic year selected");
+    return null;
+
+  }
+  // Get current date
+  const today = new Date();
+  const currentMonth = today.toLocaleString("default", { month: "long" });
+  console.log("Current month:", currentMonth);
+
+  // Get current month_id from DB
+  const currentMonthRow = await db
+    .select({
+      month_id: MonthsInSoaTable.month_id,
+      month: MonthsInSoaTable.month,
+    })
+    .from(MonthsInSoaTable)
+    .where(
+      and(
+        like(MonthsInSoaTable.month, `${currentMonth}%`),
+        eq(MonthsInSoaTable.academicYear_id, year)
+      )
+    );
+
+  if (currentMonthRow.length === 0) {
+    console.warn("No current month found in DB, returning empty chart data.");
+    return[];
+  }
+
+  const currentMonthId = currentMonthRow[0].month_id;
+  console.log("Current month ID:", currentMonthId);
+
+
+  const amountPaid = await db
+    .select({
+      lastName: StudentInfoTable.studentLastName,
+      firstName: StudentInfoTable.studentFirstName,
+      middleName: StudentInfoTable.studentMiddleName,
+      suffix: StudentInfoTable.studentSuffix,
+      totalDue: sql<number>`
+        SUM(CASE 
+          WHEN ${MonthsInSoaTable.month_id} <= ${currentMonthId} 
+          THEN ${MonthsInSoaTable.monthlyDue} 
+          ELSE 0 
+        END)
+      `,
+      totalPaid: sql<number>`
+        SUM(CASE 
+          WHEN ${MonthsInSoaTable.month_id} <= ${currentMonthId} 
+          THEN ${MonthsInSoaTable.amountPaid} 
+          ELSE 0 
+        END)
+      `,
+    })
+    .from(StudentInfoTable)
+    .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.student_id))
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(eq(AdmissionStatusTable.academicYear_id, year))
+    .groupBy(
+      StudentInfoTable.student_id,
+      StudentInfoTable.lrn,
+      StudentInfoTable.studentLastName,
+      StudentInfoTable.studentFirstName,
+      StudentInfoTable.studentMiddleName,
+      StudentInfoTable.studentSuffix
+    );
+
+  console.log("Totals:", amountPaid);
+  return amountPaid;
 };

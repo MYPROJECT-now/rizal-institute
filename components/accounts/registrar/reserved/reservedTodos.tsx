@@ -250,19 +250,19 @@ const Reserved: FC<Props> = ({ reserved }) => {
   };
 
   // 📥 Download filtered list as Excel (only LRN, Name, Grade Level)
-  const handleDownload = () => {
-    const dataToExport = filteredStudents.map((student) => ({
-      LRN: student.lrn,
-      Name: `${student.lastName}, ${student.firstName} ${student.middleName ?? ""}`,
-      "Grade Level": student.gradeLevel,
-    }));
+  // const handleDownload = () => {
+  //   const dataToExport = filteredStudents.map((student) => ({
+  //     LRN: student.lrn,
+  //     Name: `${student.lastName}, ${student.firstName} ${student.middleName ?? ""}`,
+  //     "Grade Level": student.gradeLevel,
+  //   }));
 
-    const ws = XLSX.utils.json_to_sheet(dataToExport);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Reserved Students");
+  //   const ws = XLSX.utils.json_to_sheet(dataToExport);
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "Reserved Students");
 
-    XLSX.writeFile(wb, "reserved_students.xlsx");
-  };
+  //   XLSX.writeFile(wb, "reserved_students.xlsx");
+  // };
 
   return (
     <main className="mx-auto max-w-8xl w-full p-8 text-center">
@@ -304,13 +304,13 @@ const Reserved: FC<Props> = ({ reserved }) => {
         >
           Clear Filter
         </Button>
-        <Button
+        {/* <Button 
           onClick={handleDownload}
           variant="confirmButton"
           className="px-4 py-2 rounded-lg"
         >
           Download List
-        </Button>
+        </Button> */}
       </div>
 
       {/* Table */}

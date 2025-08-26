@@ -7,6 +7,8 @@ import { SidebarItem } from "../sidebar_item";
 import { SidebarAcad } from "../utils/sidebar_item_admin";
 import { AcademicYearModal } from "../utils/academicYearA";
 import { useAcadModal } from "@/src/store/academicYear";
+import { Reports } from "@/components/accounts/registrar/reports/reports";
+import { useReportModal } from "@/src/store/REGISTRAR/reports";
 
 type Props = {
     className?: string;
@@ -14,8 +16,9 @@ type Props = {
 };
 
 export const Sidebar_registrar = ({ className, onClose }: Props) => {
-    const { open } = useAcadModal();
-    
+    const { open: openAcad } = useAcadModal();
+    const { open: openReports } = useReportModal();
+
     return (
         <div
             className={cn(
@@ -76,7 +79,14 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                     <SidebarAcad 
                         label="Academic Year"
                         iconSrc="/calendar.png"
-                        onClick={open} 
+                        onClick={openAcad} 
+                    />
+
+                    <Reports />
+                    <SidebarAcad 
+                        label="Generate Report"
+                        iconSrc="/report.png"
+                        onClick={openReports} 
                     />
                 
             
