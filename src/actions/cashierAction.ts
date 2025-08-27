@@ -577,6 +577,14 @@ export const getRecentPayments = async () => {
   }
 
 export const getTotalperMonth = async () => {
+
+  const year = await getSelectedAcademicYear();
+
+  if (!year) {
+    console.warn("❌ No academic year selected");
+    return [];
+    
+  }
   // Get current date
   const today = new Date();
   const currentMonth = today.toLocaleString("default", { month: "long" });
@@ -592,7 +600,7 @@ export const getTotalperMonth = async () => {
     .where(
       and(
         like(MonthsInSoaTable.month, `${currentMonth}%`),
-        eq(MonthsInSoaTable.academicYear_id, 1)
+        eq(MonthsInSoaTable.academicYear_id, year)
       )
     );
 
