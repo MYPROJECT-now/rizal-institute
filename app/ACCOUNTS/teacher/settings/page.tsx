@@ -53,7 +53,7 @@ const RegistrarsEnrolleesTable = () => {
               PASSWORD MANAGEMENT
             </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full h-[350px] mt-[80px] rounded-lg">
+          <div className="flex flex-col gap-4 items-center justify-center w-full h-[350px]  rounded-lg">
             <div className="flex flex-col w-full px-10 lg:w-[500px]">
               <label htmlFor="current-password">Current Password</label>
               <input

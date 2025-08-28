@@ -19,7 +19,7 @@ export const Balance = () => {
   
     const studentInfo = data;
     return (
-        <div className="text-lg font-semibold flex gap-2 ">
+        <div className="text-lg font-semibold flex gap-2 flex-wrap">
         <p>Outstanding Balance:</p>  
         <p className="text-red-600"> 
             {studentInfo?.outstandingBalance !== undefined ? `₱${studentInfo.outstandingBalance}` : 'Loading...'}

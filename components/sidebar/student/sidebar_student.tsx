@@ -44,10 +44,11 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                     />
 
                     <SidebarItem 
-                        label="Registration" 
-                        href="/ACCOUNTS/student/reg_form"
+                        label="Enrollment Certificate" 
+                        href="/ACCOUNTS/student/enrollment_cert"
                         iconSrc="/student_logo.png"
-                        onClick={onClose} 
+                        onClick={onClose}
+                        
                     />
 
                     <SidebarItem 

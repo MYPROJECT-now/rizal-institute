@@ -32,7 +32,7 @@ const chartData = [
 export const Ppgl = () => {
     return (
         <div>
-        <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px] mr-20">
+        <Card className="w-[270px] gap-4 p-4 lg:w-[300px]">
             <CardHeader>
                 <CardTitle className="text-center"> Payment Completion Status per grade level</CardTitle>
             </CardHeader>
