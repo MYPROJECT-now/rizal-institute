@@ -1,9 +1,10 @@
 "use client";
-import Registrar_header from "@/components/sidebar/header/header_registrar";
+
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
+import Registrar_header from "@/components/sidebar/header/header_registrar";
 
 const RegistrarsEnrolleesTable = () => {
   const { user } = useUser();
@@ -48,8 +49,8 @@ const RegistrarsEnrolleesTable = () => {
   return (
       <div className=" w-full h-full rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
         <Registrar_header />
-        <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
-            <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
+        <div className="w-[300px] h-auto lg:h-[500px] lg:w-[700px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
+            <div className="h-[80px] w-full bg-lGreen font-merriweather font-bold text-xl lg:text-3xl text-white items-center justify-center flex ">
               PASSWORD MANAGEMENT
             </div>
 

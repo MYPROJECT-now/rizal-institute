@@ -18,7 +18,7 @@ export const MobileHeader = () => {
                                         className ="ml-5 h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto"
                                     />
                     </Link>
-                <p className="text-white ml-5 mt-2 text-bold font-merriweather">Rizal Institute Canlubang Foundation Inc.</p>
+                <p className="text-white ml-5 mt-2 text-bold font-merriweather">Rizal Institute</p>
             </div>
         </nav>
     )

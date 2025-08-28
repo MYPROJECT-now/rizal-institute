@@ -1,7 +1,17 @@
+// "use client";
 
 import { Profile_registrar } from "../../profile/profile_registrar";
-const Registrar_header = () => {
+// import { useUser } from "@clerk/nextjs";
+// import { useEffect } from "react";
 
+const Registrar_header = () => {
+    // const { user } = useUser();
+
+    // useEffect(() => {
+    //     if (user) {
+    //         console.log("User:", user);
+    //     }
+    // }, [user]);
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
         year: 'numeric',   // Full year (e.g., 2024)
@@ -11,18 +21,18 @@ const Registrar_header = () => {
       
 
     return (
-        <div className="lg:flex flex-row items-center justify-between h-[60px] hidden">
+        <div className="flex flex-row items-center justify-between h-[60px] mt-10 lg:mt-4">
             <div className="flex flex-col">
-                <p className=" font-Alfa text-lGreen text-2xl">
+                <p className=" font-Alfa text-lGreen text-base lg:text-2xl">
                     RIZAL INSTITUTE
                 </p>
                 <p className="font-mono text-xs text-green-500">
                     {currentDate}
                 </p>
             </div>
-            <div className="flex flex-row items-center gap-6">
-                <p className="font-Alfa text-lGreen text-2xl">
-                    REGISTRAR
+            <div className="flex flex-row items-center gap-3">
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
+                    Registrar
                 </p>
                 {/* <Image
                 src="/profile.png"

@@ -9,7 +9,7 @@ const Dashboard = () => {
     return (
         <div className=" w-full h-full overflow-auto rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
             <Registrar_header />
-            <div className="w-full h-[540px] flex flex-col gap-10 mt-10 rounded-lg ">
+            <div className="w-full h-auto lg:h-[540px] flex flex-col gap-10 mt-10 rounded-lg ">
                <div className="flex flex-col">
                     <p className="text-2xl font-bold text-dGreen mb-2">
                         Quick Stats

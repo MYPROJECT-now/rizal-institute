@@ -29,8 +29,9 @@ export const GradeTable = () => {
     const { open } = useShowGradesModal();
 
     return (
-        <div className="flex flex-col">
-            <div className="flex flex-row items-center my-5 ml-10 gap-5">
+        
+        <div className="flex flex-wrap lg:flex-row items-center mb-6 mx-auto">
+            <div className="items-center my-5 ml-10 gap-5">
                 <p className="font-bold text-xl text-dGreen font-merriweather">
                     Filter By:
                 </p>
@@ -58,7 +59,7 @@ export const GradeTable = () => {
                 </Button>
             </div>
 
-            <div className="mx-10">
+            <div className="w-full mx-10 overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
                 <table className="w-full border-collapse border border-green-600 text-center">
                     <thead>
                         <tr className="bg-green-600 text-white">
@@ -91,5 +92,6 @@ export const GradeTable = () => {
                 </table>
             </div>
         </div>
+        
     );
 };

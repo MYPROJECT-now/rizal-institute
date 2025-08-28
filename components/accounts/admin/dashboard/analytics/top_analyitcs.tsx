@@ -1,4 +1,4 @@
-import { getEnrollmentStatus, getTotalAdmin, getTotalRegistrar, getTotalTeacher, getTTotalCashier } from "@/src/actions/adminAction";
+import { getEnrollmentStatus, getTotalAdmin, getTotalRegistrar, getTotalTeacher, getTTotalCashier } from "@/src/actions/adminAction";//
 import Image from "next/image";
 
 export const Top_analytics = async () => {
