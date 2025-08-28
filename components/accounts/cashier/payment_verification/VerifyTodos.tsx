@@ -10,7 +10,6 @@ interface Props {
 
 const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const [verifyTodos] = useState<VerifyPayment[]>(VerifyTodos);
-    const [filterSiNumber, setFilterSiNumber] = useState("");
     const [filterMop, setFilterMop] = useState("");
     const [filterDate, setFilterDate] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
@@ -18,12 +17,11 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const itemsPerPage = 6;
 
     const filteredData = verifyTodos.filter((payment) => {
-        const MatchSiNumber = (payment.SInumber ?? "").includes(filterSiNumber);
         const MatchMop = (payment.modeOfPayment ?? "").includes(filterMop);
         const MatchDate = (payment.dateOfPayment ?? "").includes(filterDate);
         const MatchStatus = (payment.status ?? "").includes(filterStatus);
 
-        return MatchSiNumber && MatchMop && MatchDate && MatchStatus;
+        return  MatchMop && MatchDate && MatchStatus;
     });
 
     // Pagination
@@ -36,14 +34,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         <main className="mx-auto max-w-8xl w-full p-8 text-center">
             <div className="flex flex-wrap items-center gap-4 mb-6">
                 <label className="text-green-900 font-bold text-lg">Filter By:</label>
-                
-                <input
-                    type="text"
-                    placeholder="SI Number"
-                    className="border-2 border-gray-300 rounded px-1 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                    value={filterSiNumber}
-                    onChange={(e) => setFilterSiNumber(e.target.value)}
-                />
+
 
                 <select
                     className="border-2 border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
@@ -75,7 +66,6 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
 
                 <Button
                     onClick={() => {
-                        setFilterSiNumber("");
                         setFilterMop("");
                         setFilterDate("");
                         setFilterStatus("");
@@ -91,7 +81,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         <table className="w-full text-sm text-center">
                 <thead>
                     <tr className="bg-green-600 text-white">
-                        <th className="px-4 py-2">SI Number</th>
+                        {/* <th className="px-4 py-2">SI Number</th> */}
                         <th className="px-4 py-2">Proof of Payment</th>
                         <th className="px-4 py-2">Mode of Payment</th>
                         <th className="px-4 py-2">Date of Payment</th>
@@ -111,7 +101,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                         <VerifyTodo 
                             key={verifyTodo.monthlyPayment_id} 
                             VerifyTodo={verifyTodo} 
-                            onAccept={() => {}}
+                            // onAccept={() => {}}
                             onDecline={() => {}}
                         />
                     ))

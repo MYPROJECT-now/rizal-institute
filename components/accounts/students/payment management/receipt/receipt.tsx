@@ -6,17 +6,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {  getItsPayment } from "@/src/actions/cashierAction";
+import { getReceipt } from "@/src/actions/studentAction";
 import { useShowMonthlyPayementModal } from "@/src/store/CASHIER/student";
 import { CldImage } from 'next-cloudinary';
 import { useEffect, useState } from "react";
 
 export interface MonthsPayment {
-  amount: number | null;
-  proofOfPayment: string | null;
+  SInumber: string | null;
 }
 
-export const StudentsPaymentReview = () => {
+
+export const PaymentReceipt = () => {
   const { isOpen, close, selectedID } = useShowMonthlyPayementModal();
   const [monthsPayment, setMonthsPayment] = useState<MonthsPayment | null>(null)
   const [isLoading, setIsLoading] = useState(false);
@@ -27,8 +27,8 @@ export const StudentsPaymentReview = () => {
         if (!selectedID) return;
         setIsLoading(true);
         try {
-          const monthsPayments = await getItsPayment(selectedID);
-          setMonthsPayment(monthsPayments[0]);
+          const monthsPayments = await getReceipt(selectedID);
+          setMonthsPayment(monthsPayments?.[0]);
         } catch (error) {
           console.error("Error fetching receipt:", error);
         } finally {
@@ -47,7 +47,7 @@ export const StudentsPaymentReview = () => {
       <DialogContent className="w-[600px]   bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="rounded-t-lg text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-           MonthsPayment - Payment Review
+           Receipt
           </DialogTitle>
         </DialogHeader>
           <div className=" flex flex-col text-center items-center justify-center py-5 ">
@@ -55,19 +55,16 @@ export const StudentsPaymentReview = () => {
             <div className="flex justify-center items-center p-8">
               <div className="text-lg">Loading...</div>
             </div>
-            ) :!monthsPayment?.proofOfPayment ? (
+            ) :!monthsPayment?.SInumber ? (
               <div className="">
                 <p>No receipt uploaded.</p>
               </div> 
             ) : (
               <div className="flex flex-col gap-3">
-                <p className="text-start text-dGreen text-lg">
-                  <strong>Amount:</strong> {monthsPayment.amount}
-                </p>
 
                 <CldImage
                   alt="Receipt Screenshot"
-                  src={monthsPayment.proofOfPayment}
+                  src={monthsPayment?.SInumber || ""}
                   width="400" 
                   height="400"
                   crop={{

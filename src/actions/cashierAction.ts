@@ -671,3 +671,41 @@ export const getItsPayment = async (selectedID: number) => {
     .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID ));
   return paymentReceipt;
 } 
+
+export const sendReceipt = async (selectedID: number, SInumber: string, ) => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
+  const data = await db
+  .select({
+    amount: MonthlyPayementTable.amount,
+    month_id: MonthlyPayementTable.month_id,
+  })
+  .from(MonthlyPayementTable)
+  .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID));
+
+  const month_id = data[0].month_id;
+  const amount = data[0].amount;
+
+  if (!month_id || !amount) {
+    console.warn("❌ No month_id or amount found for payment");
+    return;
+  }
+
+  await db
+    .update(MonthlyPayementTable)
+    .set({ 
+      SInumber: SInumber,
+      dateOfVerification: new Date().toLocaleDateString(),
+      status: "Approved",
+     })
+    .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID ));
+
+
+    await db
+    .update(MonthsInSoaTable)
+    .set({ 
+      amountPaid: amount
+         })
+    .where(eq(MonthsInSoaTable.month_id, month_id ));
+  return;
+}

@@ -341,3 +341,14 @@ export const addPayment = async (
   
     return record[0];
   }
+
+  export const getReceipt = async (selectedID: number) => {
+  
+    const paymentReceipt = await db.select({
+      SInumber: MonthlyPayementTable.SInumber,
+    })
+      .from(MonthlyPayementTable)
+      .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID ));
+    return paymentReceipt;
+  } 
+  
