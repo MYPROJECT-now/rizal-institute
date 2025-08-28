@@ -9,8 +9,21 @@ import { getApplicantID, getStudentClerkID, getStudentId } from './utils/student
 import { getAcademicYearID } from "./utils/academicYear";
 
 
+export interface StudentInfo {
+  lrn: string | null;
+  admissionStatus: string | null;
+  gradeLevelName: string | null;
+  academicYear: string | null;
+  outstandingBalance?: number;
+  studentFirstName: string | null;
+  studentMiddleName: string | null;
+  studentLastName: string | null;
+  studentSuffix: string | null;
+}
 
-export const getInfoForDashboard = async () => {
+
+export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
+
 
   const applicantId = await getStudentId();
   if (!applicantId) return null;
@@ -18,7 +31,7 @@ export const getInfoForDashboard = async () => {
   const selectedAcademicYear = await getSelectedAcademicYear();
   if (!selectedAcademicYear) {
     console.warn("❌ No academic year selected");
-    return [];
+    return null;
   }
 
   const studentInfo = await db
@@ -28,6 +41,10 @@ export const getInfoForDashboard = async () => {
       admissionStatus: AdmissionStatusTable.admissionStatus,
       gradeLevelName: GradeLevelTable.gradeLevelName,
       academicYear: AcademicYearTable.academicYear,
+      studentFirstName: StudentInfoTable.studentFirstName,
+      studentMiddleName: StudentInfoTable.studentMiddleName,
+      studentLastName: StudentInfoTable.studentLastName,
+      studentSuffix: StudentInfoTable.studentSuffix,
     })
     .from(StudentInfoTable)
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
@@ -68,13 +85,17 @@ export const getInfoForDashboard = async () => {
     }
   }
 
+  const student = studentInfo[0];
   return {
-    lrn: studentInfo[0]?.lrn,
-    admissionStatus: studentInfo[0]?.admissionStatus,
-    gradeLevelName: studentInfo[0]?.gradeLevelName,
-    academicYear: studentInfo[0]?.academicYear,
+    lrn: studentInfo[0]?.lrn ?? null,
+    admissionStatus: studentInfo[0]?.admissionStatus ?? null,
+    gradeLevelName: studentInfo[0]?.gradeLevelName ?? null,
+    academicYear: studentInfo[0]?.academicYear ?? null,
     outstandingBalance,
-
+    studentFirstName: student?.studentFirstName ?? null,
+    studentMiddleName: student?.studentMiddleName ?? null,
+    studentLastName: student?.studentLastName ?? null,
+    studentSuffix: student?.studentSuffix ?? null,
   };
 }
 

@@ -7,6 +7,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { usePreviewModal } from "@/src/store/preview";
+import Image from "next/image";
+
 
 export const PreviewModal = () => {
   const { isOpen, close, imageUrl } = usePreviewModal();
@@ -19,7 +21,7 @@ export const PreviewModal = () => {
         </DialogHeader>
        <div className="w-full h-[400px] p-5 flex justify-center items-center ">
           {imageUrl ? (
-            <img src={imageUrl} alt="Preview"               
+            <Image src={imageUrl} alt="Preview"               
             className="w-full h-full object-fill rounded "
         />
           ) : (

@@ -5,11 +5,13 @@
   import { BadgeCheck, School } from "lucide-react";
   import { useEffect, useState } from "react";
   import { getInfoForDashboard } from "@/src/actions/studentAction";
+  
 
   export const StudentDashboard = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any>(null);
-
+    
+    
     useEffect(() => {
       const fetchData = async () => {
         const res = await getInfoForDashboard();
@@ -31,7 +33,7 @@
         >
           <h1 className="text-3xl font-bold text-dGreen flex items-center gap-2">
             <School className="w-8 h-8" />
-            Welcome, {studentInfo?.fullName || "Student"}!
+            Welcome, {studentInfo?.studentFirstName || "Student"}!
           </h1>
         </motion.div>
 

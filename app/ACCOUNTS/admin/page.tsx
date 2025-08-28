@@ -1,6 +1,6 @@
 
 import { Top_analytics } from "@/components/accounts/admin/dashboard/analytics/top_analyitcs";
-import {  RecentAuditTrailsTable } from "@/components/accounts/admin/dashboard/auditTrails/auditTrails";
+import { RecentAuditTrailsTable } from "@/components/accounts/admin/dashboard/auditTrails/auditTrails";
 import Admin_header from "@/components/sidebar/header/header_admin";
 
 

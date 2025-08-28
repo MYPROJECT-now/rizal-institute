@@ -1,5 +1,6 @@
-import Registrar_header  from "@/components/sidebar/header/header_registrar";
+
 import { GradesPage } from "@/components/accounts/registrar/grade/gradeTable/grade";
+import Registrar_header from "@/components/sidebar/header/header_registrar";
 const RegistrarsStudentsTable = () => {
     return (
         <div className=" w-full h-full rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
