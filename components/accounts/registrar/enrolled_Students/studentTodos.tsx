@@ -5,6 +5,7 @@ import { all_studentTable_Type } from "@/src/type/REGISTRAR/student";
 import { Button } from "@/components/ui/button";
 import { doDropferStudent, doTransferStudent } from "@/src/actions/registrarAction";
 import { toast } from "sonner";
+import { toastConfirm } from "@/components/ui/toast.confirm";
 
 interface Props {
   students: all_studentTable_Type [];
@@ -20,7 +21,7 @@ const Students: FC<Props> = ({ students }) => {
 
   // 🔢 Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const studentsPerPage = 6;
+  const studentsPerPage = 5;
 
     
   const filteredStudents = studentList.filter((student) => {
@@ -47,28 +48,63 @@ const Students: FC<Props> = ({ students }) => {
   //   doTransferStudent(status, lrn);
   // }
     
-  const transferStudent = async (status: string, lrn: string) => {
-    try {
-      setLoadingId(lrn);
+  // const transferStudenta = async (status: string, lrn: string) => {
 
-      // Call backend
-      await doTransferStudent( lrn);
+  //   try {
+  //     setLoadingId(lrn);
 
-      // Update UI immediately
-      setStudentList((prev) =>
+  //     // Call backend
+  //     await doTransferStudent( lrn);
+
+  //     // Update UI immediately
+  //     setStudentList((prev) =>
+  //       prev.map((student) => (student.lrn === lrn ? { ...student, status : "Transferred" } : student))
+  //     );
+
+  //     toast.success(`Student ${lrn} successfully transferred.`);
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Failed to transfer student.");
+  //   } finally {
+  //     setLoadingId(null);
+  //   }
+  // };
+
+  const transferStudent = async ( lrn: string) => {
+    toastConfirm("Transfer Student?", {
+    description: "This action cannot be undone.",
+    onConfirm: async () => {
+      try {
+        setLoadingId(lrn);
+
+        // Call backend
+        await doTransferStudent(lrn);
+
+        // Update UI immediately
+        setStudentList((prev) =>
         prev.map((student) => (student.lrn === lrn ? { ...student, status : "Transferred" } : student))
       );
+        toast.success(`Student ${lrn} successfully transferred.`);
 
-      toast.success(`Student ${lrn} successfully transferred.`);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to transfer student.");
-    } finally {
-      setLoadingId(null);
-    }
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to transfer student.");
+      } finally {
+        setLoadingId(null);
+      }
+
+  },
+
+  onCancel: () => {
+      toast.info("Action canceled.");
+    },
+    });
   };
-  
-  const dropStudent = async ( lrn: string) => {
+
+    const dropStudent = async ( lrn: string) => {
+    toastConfirm("Drop Student?", {
+    description: "This action cannot be undone.",
+    onConfirm: async () => {
     try {
       setLoadingId(lrn);
 
@@ -87,19 +123,49 @@ const Students: FC<Props> = ({ students }) => {
     } finally {
       setLoadingId(null);
     }
-  };
-  return (
-  <main className="mx-auto max-w-8xl w-full  p-8  text-center">
 
-  <div className="flex flex-wrap items-center gap-4 mb-6">
-  <label className="text-green-900 font-bold text-lg">Filter By:</label>
+  },
+
+  onCancel: () => {
+      toast.info("Action canceled.");
+    },
+    });
+  };
+
+  // const dropStudent = async (  lrn: string) => {
+  //   try {
+  //     setLoadingId(lrn);
+
+  //     // Call backend
+  //     await doDropferStudent( lrn);
+
+  //     // Update UI immediately
+  //     setStudentList((prev) =>
+  //       prev.map((student) => (student.lrn === lrn ? { ...student, status: "Dropped" } : student))
+  //     );
+
+  //     toast.success(`Student ${lrn} successfully drop.`);
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Failed to drop student.");
+  //   } finally {
+  //     setLoadingId(null);
+  //   }
+  // };
+
+
+  return (
+    <main className="text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
+
+    <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
+  <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>
 
   <input
     type="text"
     placeholder="Name"
     value={filterName}
     onChange={(e) => setFilterName(e.target.value)}
-    className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   />
 
   <input
@@ -107,13 +173,13 @@ const Students: FC<Props> = ({ students }) => {
     placeholder="LRN"
     value={filterLRN}
     onChange={(e) => setFilterLRN(e.target.value)}
-    className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   />
 
   <select
     value={filterGrade}
     onChange={(e) => setFilterGrade(e.target.value)}
-    className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
   >
     <option value="">All Grades</option>
     <option value="Grade 7">Grade 7</option>
@@ -130,14 +196,14 @@ const Students: FC<Props> = ({ students }) => {
       setFilterGrade("");
     }}
     variant="confirmButton"
-    className="w-[100px] h-[40px] rounded-lg"
+    className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
   >
     Clear Filter
   </Button>
 </div>
 
-<div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
-  <table className="w-full text-sm text-center">
+<div className="overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <table className="w-full text-xs sm:text-sm text-center">
     <thead>
       <tr className="bg-green-600 text-white">
         <th className="px-4 py-2">LRN</th>
@@ -177,18 +243,18 @@ const Students: FC<Props> = ({ students }) => {
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
           variant="prevButton"
-          className="w-[100px] h-[40px] rounded-lg"
+          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
         >
           Previous
         </Button>
-        <span className="font-semibold">
+        <span className="font-semibold flex items-center">
           Page {currentPage} of {totalPages}
         </span>
         <Button
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
           variant="prevButton"
-          className="w-[100px] h-[40px] rounded-lg"
+          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
         >
           Next
         </Button>

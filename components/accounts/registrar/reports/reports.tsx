@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { getAdmittedStudents, getAmountPaid } from "@/src/actions/registrarAction";
 import { useReportModal } from "@/src/store/REGISTRAR/reports";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 
@@ -33,11 +34,14 @@ export const Reports = () => {
     const { isOpen, close } = useReportModal();
     const [admitted, SetAdmitted] = useState<AdmittedProps[]>([]);
     const [amountPaid, SetAmountPaid] = useState<AmountPaidProps[]>([]);
+    const [loading1, setLoading1] = useState(true);
+    const [loading2, setLoading2] = useState(true);
 
     useEffect(() => {
         const fetchAdmitted = async () => {
             const result = await getAdmittedStudents();
             SetAdmitted(result ?? []);
+            setLoading1(false);
         }
         fetchAdmitted();
     } , []);
@@ -47,6 +51,7 @@ export const Reports = () => {
         const fetchAdmitted = async () => {
             const result = await getAmountPaid();
             SetAmountPaid(result ?? []);
+            setLoading2(false);
         }
         fetchAdmitted();
     } , []);
@@ -176,12 +181,18 @@ export const Reports = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={close}>
-        <DialogContent className="w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
+        <DialogContent className="w-[350px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
             <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+            <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-white bg-dGreen py-3 rounded-t-lg  flex items-center justify-center">
                     Generate Report
                 </DialogTitle>
                 <div className="flex flex-col px-auto mx-auto gap-5 py-10 w-[240px]">
+                    {loading1 && loading2 ? (
+                        <div className="flex items-center justify-center">
+                            <Loader2 className="text-dGreen animate-spin" />
+                        </div>
+                    ) : (
+                    <>
                     <Button
                         onClick={handleDownloadAdmitted}
                         variant="confirmButton"
@@ -197,6 +208,8 @@ export const Reports = () => {
                     >
                         Download Receivables
                     </Button>
+                    </>
+                    )}
                 </div>
             </DialogHeader>
         </DialogContent>

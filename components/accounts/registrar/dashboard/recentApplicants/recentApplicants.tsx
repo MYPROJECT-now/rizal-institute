@@ -20,7 +20,7 @@ export const RecentApplicantsTable = () => {
   if (loading) return <div className="text-center py-4">Loading...</div>;
 
   return (
-    <div className="overflow-x-auto mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
+    <div className="overflow-x-auto min-w-[100px] mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
       <table className="w-full text-sm text-center">
         <thead>
           <tr className="bg-green-600 text-white">
@@ -48,7 +48,7 @@ export const RecentApplicantsTable = () => {
               >
                 <td className="p-3 font-medium text-gray-800">{applicant.lrn}</td>
                 <td className="p-3">{applicant.lastName}, {applicant.firstName} {applicant.middleName}</td>
-                <td className="p-3">{applicant.gradeLevel}</td>
+                <td className="px-[55px]">{applicant.gradeLevel}</td>
                 <td className="p-3 font-semibold text-yellow-400">
                   {applicant.applicationFormReviewStatus}
                 </td>

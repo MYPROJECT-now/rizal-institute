@@ -2,15 +2,17 @@ import { ApplicantsPage } from "@/components/accounts/registrar/applicants/appli
 import Registrar_header from "@/components/sidebar/header/header_registrar";
 const RegistrarsEnrolleesTable = () => {
     return (
-        <div className=" w-full h-full rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
+    <div className="p-4 w-full h-screen">
+        <div className=" w-full h-full rounded-xl flex flex-col pt-4 sm:px-10 px-4  bg-page">
             <Registrar_header /> 
-            <div className="w-full h-auto lg:h-[540px] bg-white self-center  mt-10 rounded-lg ">
-                <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
+            <div className="w-full h-full bg-white self-center mt-2 rounded-lg ">
+                <div className=" w-full bg-lGreen font-merriweather text-white items-center flex sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl">
                     APPLICANT MANAGEMENT
                 </div>
                 <ApplicantsPage />
             </div>
         </div>
+    </div>
     );
 };
 

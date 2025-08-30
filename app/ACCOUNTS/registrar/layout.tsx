@@ -26,13 +26,13 @@
 
 
         return (
-            <div className="flex lg:flex-row flex-col">
+            <div className=" flex lg:flex-row flex-col">
                 <MobileHeader /> 
                 <Sidebar_registrar className="hidden lg:flex"/>
-                <main className=" h-screen w-full ">
-                    <div className="h-full w-full bg-lGreen lg:p-4 px-4 pb-4">
+                <main className="bg-red-400  min-h-screen w-full ">
+                    <div className="h-full w-full bg-lGreen">
             
-                        {children}
+                        {children} 
                     </div>
                 </main>
             </div>

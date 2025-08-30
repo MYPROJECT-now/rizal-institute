@@ -22,7 +22,7 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex-col h-screen xl:w-[330px] lg:w-[250px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
+                "flex-col min-h-screen xl:w-[330px] lg:w-[250px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
                 className
             )}
         >
@@ -84,7 +84,7 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
 
                     <Reports />
                     <SidebarAcad 
-                        label="Generate Report"
+                        label="Report"
                         iconSrc="/report.png"
                         onClick={openReports} 
                     />
