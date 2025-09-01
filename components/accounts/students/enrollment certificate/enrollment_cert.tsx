@@ -50,6 +50,7 @@ import React from "react";
 import { Document, Page, Text, View, Image, StyleSheet} from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { getInfoForDashboard } from "@/src/actions/studentAction";
+import { Container } from "lucide-react";
 
 
     const styles = StyleSheet.create({
@@ -101,6 +102,10 @@ import { getInfoForDashboard } from "@/src/actions/studentAction";
               opacity:0.1,
               transform: "translate (-50%, -50%)"
             },
+            data:{
+              fontWeight:"bold",
+              textTransform:"uppercase",
+            }
 
           
     });
@@ -155,20 +160,19 @@ type EnrollmentCertProps = unknown;
                 <View style={{marginTop:100, alignItems:"center", fontWeight:"bold"}}>
                   <Text>CERTIFICATE OF ENROLLMENT</Text>
                 </View>
-                <View style={styles.greetings}>
+                {/*<View style={styles.greetings}>
                   <Text>Greetings! </Text>
-                </View>
-
+                </View> */}
+              <Container style={{padding: 4, textAlign:"justify",}}>
                 <View>
                   <Text style={styles.indent}>
-                    This is to certify that {fullName}, LRN# {StudentInfoTable?.lrn || "_____________"} is
-                    currently enrolled
+                    This certifies that <Text style={styles.data}>{fullName || "_____________"}</Text>, <Text style={styles.data}>LRN# {StudentInfoTable?.lrn || "_____________"}</Text> is
+                    currently 
                   </Text>
 
                   <Text style={styles.paragraph}>
-                    in Rizal Institute Canlubang Foundation Inc. as a Grade {""}
-                    {StudentInfoTable?.gradeLevelName || "___"} student for the school
-                    year {StudentInfoTable?.academicYear || "____-____"}.
+                   enrolled in Rizal Institute Canlubang Foundation Inc. as a <Text style={styles.data}> Grade {""}
+                    {StudentInfoTable?.gradeLevelName || "___"}</Text> student for the A.Y <Text style={styles.data}>{StudentInfoTable?.academicYear || "____-____"}</Text>.
                   </Text>
                 </View>
 
@@ -176,6 +180,7 @@ type EnrollmentCertProps = unknown;
                 <Text>_________________</Text>
                 <Text style={{marginTop:4, justifySelf:"center", fontSize: 12}}>Registrar&apos;s Signature</Text>
               </View>
+              </Container>
                 
             </Page>
             </Document>
