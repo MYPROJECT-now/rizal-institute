@@ -85,12 +85,12 @@ const handleStop = () => {
 
 
     return (
-        <div className="flex flex-row justify-between px-[20px]">
+        <div className="flex zzflex-row justify-between px-[20px]">
         <section className="grid grid-cols-2 gap-1 w-[250px]">
             <label htmlFor="academicYear" className=" items-center flex">academicYear:</label>
             <input 
                 type="text" 
-                value={isLoading ? "Loading..." : academicYear} 
+                value={isLoading ? "Loading..." : academicYear}     
                 readOnly={!editing}
                 className={`${
                 !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"

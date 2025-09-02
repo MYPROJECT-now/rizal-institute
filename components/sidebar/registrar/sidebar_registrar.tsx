@@ -39,7 +39,7 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                    
                 </Link>
 
-                <div className="flex flex-col gap-3 mt-[50px] ">
+                <div className="flex flex-col gap-3 sm:mt-[50px] mt-[30px] ">
                     <SidebarItem 
                         label="Dashboard" 
                         href="/ACCOUNTS/registrar"

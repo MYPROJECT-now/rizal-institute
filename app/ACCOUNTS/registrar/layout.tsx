@@ -29,7 +29,7 @@
             <div className=" flex lg:flex-row flex-col">
                 <MobileHeader /> 
                 <Sidebar_registrar className="hidden lg:flex"/>
-                <main className="bg-red-400  min-h-screen w-full ">
+                <main className="min-h-screen w-full ">
                     <div className="h-full w-full bg-lGreen">
             
                         {children} 

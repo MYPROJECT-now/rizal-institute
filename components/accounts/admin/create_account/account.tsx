@@ -36,12 +36,13 @@ export const CreateAccount = () => {
   }
   }
   return (
-     <div className="h-[370px] w-[600px] flex flex-col gap-3 items-center bg-gray-200/40 rounded-lg shadow-md pt-4 px-10 m">
-      <h1 className="text-2xl font-bold text-dGreen">Create Account</h1>
-        <div className="flex flex-col gap-1 w-full">
+     <div className="  xl:min-h-[500px] lg:min-h-[400px] min-h-[500px] flex flex-col gap-2 -mt-10 sm:mt-0 items-center justify-center">
+      {/* <h1 className="text-2xl font-bold text-dGreen">Create Account</h1> */}
+
+        <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
           <span className="text-dGreen text-sm font-semibold">Role:</span>
           <select 
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             >
@@ -52,38 +53,38 @@ export const CreateAccount = () => {
             <option value="registrar">Registrar</option>
             <option value="admin">Admin</option>
           </select>
-        </div>
+        </section>
 
-        <div className="flex flex-col gap-1 w-full">
+        <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
           <span className="text-dGreen text-sm font-semibold">Username:</span>
           <input
             type="text"
             placeholder="Gabriel"
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-        </div>
+        </section>
 
-        <div className="flex flex-col gap-1 w-full">
+        <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
           <span className="text-dGreen text-sm font-semibold">Email:</span>
           <input
             type="text"
             placeholder="gabriel@gmail.com"
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </div>
+        </section>
 
         <Button
           variant="confirmButton"
-          className="p-5 mt-2 w-full rounded-lg"
+          className="sm:p-5 p-2 mt-2  rounded-lg"
           onClick={hadleSubmit}
           disabled={(!role || !username || !email) || loading}
         >
           {loading ? "Creating..." : "Create Account"}
         </Button>
-      </div>
+    </div>
   );
 };

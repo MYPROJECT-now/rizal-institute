@@ -24,17 +24,17 @@ const RegistrarLayout = async ({children}: props) => {
     }
 
     return (
-        <>
+        <div className=" flex lg:flex-row flex-col">
 
         <MobileHeader />
         <Sidebar_cashier className ="hidden lg:flex"/>
-        <main className="lg:pl-[300px] h-full">
-        <div className="min-h-screen w-full flex flex-row bg-lGreen">
+        <main className="bg-red-400  min-h-screen w-full ">
+        <div className="h-full w-full bg-lGreen">
             
             {children}
         </div>
         </main>
-        </>
+        </div>
     );
 };
 

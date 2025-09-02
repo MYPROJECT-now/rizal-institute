@@ -146,10 +146,10 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
   };
 
   return (
-    <div className="flex flex-col p-10 max-h-[450px] w-full overflow-y-scroll">
-      <section className="flex flex-row items-center gap-5 mb-6">
-        <label className="mb-2 font-semibold">Username:</label>
-        <select className="p-2 border rounded" onChange={(e) => setSelectedTeacher(e.target.value)}>
+    <div className="flex flex-col sm:p-10 p-4 max-h-[500px] w-full overflow-y-auto">
+      <section className="flex sm:flex-row flex-col items-start sm:items-center gap-0 sm:gap-5 mb-6">
+        <label className="mb-2 font-semibold text-xs sm:text-sm text-dGreen">Username:</label>
+        <select className="p-2 w-full sm:w-[200px] border-2 border-gray-300 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none rounded-lg" onChange={(e) => setSelectedTeacher(e.target.value)}>
           <option value="">Select a teacher</option>
           {teachers.map((teacher, idx) => (
             <option key={idx} value={teacher.clerk_username}>
@@ -159,10 +159,10 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
         </select>
       </section>
 
-      <section className="w-full grid grid-cols-2 gap-4">
+      <section className="w-full grid sm:grid-cols-2 grid-cols-1 gap-4 ">
         {grades.map((grade) => (
           <div key={grade.gradeLevel_id}>
-            <h2 className="text-lg font-bold">Grade {grade.gradeLevelName}</h2>
+            <h2 className="text-lg font-bold text-dGreen">Grade {grade.gradeLevelName}</h2>
             <ul className="pl-4 text-sm">
               {subjects.map((subject) => {
                 const checked = selectedPairs.some(
@@ -190,7 +190,7 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
       <Button 
         onClick={handleSubmit} 
         variant="confirmButton"
-        className="mt-6 px-10 py-5 rounded-xl"
+        className="my-6 sm:px-10 sm:py-5 px-7 py-3 rounded-xl"
         disabled={isLoading}
       >
         {isLoading ? "Assigning..." : "Assign"}

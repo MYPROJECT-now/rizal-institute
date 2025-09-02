@@ -2,15 +2,17 @@ import Cashier_header from "@/components/sidebar/header/header_cashier";
 import { VerifyPage } from "@/components/accounts/cashier/payment_verification/VerifyPage";
 const RegistrarsEnrolleesTable = () => {
     return(
-        <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
+    <div className="p-4 w-full min-h-screen lg:h-screen">
+        <div className=" w-full h-full rounded-xl flex flex-col pt-4 sm:px-10 px-4  bg-page">
             <Cashier_header /> 
-            <div className="w-full h-auto lg:h-[540px] bg-white self-center  mt-10 rounded-lg ">
-                <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
+            <div className="w-full h-full bg-white self-center mt-2 rounded-lg ">
+                <div className=" w-full bg-lGreen font-merriweather text-white items-center flex sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl">
                     Payment Approval
                 </div>
                 <VerifyPage />
             </div>
         </div>
+    </div>
     );
 };
 

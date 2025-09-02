@@ -34,7 +34,7 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
             <td className="px-4 py-2">
                 <StudentsPaymentReview />
                 <Button 
-                className="w-[65px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
                 variant={"confirmButton"}
                 onClick={() => openPayment(VerifyTodo.monthlyPayment_id)}
                 >
@@ -48,7 +48,7 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
                 <StudentsPaymentReceipt />
                 <Button
                     variant="acceptButton"
-                    className="h-[30px] w-[80px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
                     // onClick={handleAccept}
                     onClick={() => sendReceipt(VerifyTodo.monthlyPayment_id)}
                     disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}
@@ -57,7 +57,7 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
                 </Button>
                 <Button
                     variant="rejectButton"
-                    className="h-[30px] w-[80px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
                     onClick={handleDecline}
                     disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}
                 >

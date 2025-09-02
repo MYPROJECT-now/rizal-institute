@@ -23,7 +23,7 @@ if (loading) {
 }
 
   return (
-    <div className="overflow-x-auto mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
+    <div className="overflow-x-auto min-w-[100px] mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
       <table className="w-full text-sm text-center">
         <thead>
           <tr className="bg-green-600 text-white">
@@ -51,7 +51,7 @@ if (loading) {
               >
               <td className="border p-2">{item.lrn}</td>
               <td className="border p-2">{item.studentLastName}, {item.studentFirstName} {item.studentMiddleName} {item.studentSuffix}</td>
-              <td className="border p-2">Grade 7</td>
+              <td className="border px-[55px]">Grade 7</td>
               <td className="border p-2">₱{item.amount.toLocaleString()}</td>
               <td className="border p-2">{item.dateOfPayment}</td>
             </tr>

@@ -20,7 +20,7 @@
 
     return(
         <Button 
-            className="flex flex-row justify-start h-[40px]  "
+            className="flex flex-row justify-start h-[40px] lg:text-xl sm:text-lg text-sm  "
             variant="link"
             onClick={onClick}
             asChild
@@ -33,9 +33,9 @@
                 <Image 
                     src={iconSrc}    
                     alt={label}
-                    className="mr-2"
-                    height={32}
-                    width={32}
+                    className="mr-2 w-[32px] h-[32px] "
+                    height={1000}
+                    width={1000}
                 />
                 {label}
             </Link>

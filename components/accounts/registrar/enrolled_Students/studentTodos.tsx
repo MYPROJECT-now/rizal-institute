@@ -155,7 +155,7 @@ const Students: FC<Props> = ({ students }) => {
 
 
   return (
-    <main className="text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
+    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
 
     <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
   <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>
@@ -202,8 +202,8 @@ const Students: FC<Props> = ({ students }) => {
   </Button>
 </div>
 
-<div className="overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
-  <table className="w-full text-xs sm:text-sm text-center">
+<div className="overflow-x-auto min-w-[100px]  shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <table className="w-full  text-xs sm:text-sm text-center">
     <thead>
       <tr className="bg-green-600 text-white">
         <th className="px-4 py-2">LRN</th>

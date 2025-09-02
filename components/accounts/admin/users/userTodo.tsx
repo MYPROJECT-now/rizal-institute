@@ -38,7 +38,7 @@ const UserTodo: FC<Props> = ({ userTodo, className, deleteUserItem }) => {
         <td className="px-4 py-2">
           <Button
             variant="rejectButton"
-            className="h-[30px] w-[80px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
             onClick={handleDelteUser}
           >
               Delete

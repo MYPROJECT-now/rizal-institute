@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 export const Profile_cashier = () => {
@@ -30,9 +31,9 @@ export const Profile_cashier = () => {
                     <Image
                        src={user?.imageUrl ?? '/profile.png'} 
                         alt="User Profile Picture"
-                        width={15}
-                        height={15}
-                        className="rounded-full lg:w-[30px] lg:h-[30px]" // For circular profile picture
+                        width={1000}
+                        height={1000}
+                        className="rounded-full lg:w-[30px] lg:h-[30px] w-[25px] h-[25px]" // For circular profile picture
                     />
                     </div>
             
@@ -42,11 +43,14 @@ export const Profile_cashier = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <button>
+                    <Link href="/ACCOUNTS/cashier/settings">
+                        Settings
+                    </Link>
+                    {/* <button>
                         <a href="/ACCOUNTS/cashier/settings">
                             Settings
                         </a>
-                    </button>
+                    </button> */}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                 <SignOutButton

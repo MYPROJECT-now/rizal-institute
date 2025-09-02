@@ -21,7 +21,7 @@ export const EnrollmentManagement = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
+      <DialogContent className="lg:w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
             Manage Enrollment Period

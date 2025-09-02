@@ -19,12 +19,12 @@ const Applicant: FC<Props> = ({ applicants, className }) => {
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
       <td className="px-1 py-2">{applicants.lrn}</td>
       <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
-      <td className="px-2 py-2">{applicants.gradeLevel}</td>
+      <td className="px-[55px] py-2">{applicants.gradeLevel}</td>
       <td className="px-2 py-2">
         <DiscountClass />
         <Button
-          className="w-[65px] h-[35px] rounded-lg"
-          variant={"confirmButton"}
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+            variant={"confirmButton"}
           onClick={() => open(applicants.lrn)}
           >
             View

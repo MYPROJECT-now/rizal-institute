@@ -8,10 +8,21 @@ import { Sheet,
 
 import { Menu } from "lucide-react";
 import { Sidebar_registrar } from "./sidebar_registrar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAcadModal } from "@/src/store/academicYear";
+import { useReportModal } from "@/src/store/REGISTRAR/reports";
 
 export const MobileSidebar = () => {
     const [open, setOpen] = useState(false);
+    const { isOpen: acadOpen } = useAcadModal();
+    const { isOpen: reportOpen } = useReportModal();
+
+    // Close sidebar whenever any modal opens
+    useEffect(() => {
+        if (acadOpen || reportOpen) {
+            setOpen(false);
+        }
+    }, [acadOpen, reportOpen]);
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>

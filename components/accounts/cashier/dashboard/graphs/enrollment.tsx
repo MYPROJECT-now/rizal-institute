@@ -43,9 +43,9 @@
       <div>
         <Card >
           <CardHeader>
-            <CardTitle className="text-center">Monthly Collection Trend</CardTitle>
+            <CardTitle className="text-center font-bold text-dGreen">Monthly Collection Trend</CardTitle>
           </CardHeader>
-          <CardContent className="w-[600px] h-[240px]">
+          <CardContent className="min-w-[500px] w-[600px] h-[240px] overflow-hidden">
             <ChartContainer config={chartConfig} className="h-full w-full">
               <BarChart data={chartData}>
                 <CartesianGrid vertical={false} />

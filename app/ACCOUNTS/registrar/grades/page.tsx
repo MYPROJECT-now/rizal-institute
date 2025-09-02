@@ -3,7 +3,7 @@ import { GradesPage } from "@/components/accounts/registrar/grade/gradeTable/gra
 import Registrar_header from "@/components/sidebar/header/header_registrar";
 const RegistrarsStudentsTable = () => {
     return (
-        <div className="p-4 w-full h-screen">
+    <div className="p-4 w-full min-h-screen lg:h-screen">
         <div className=" w-full h-full rounded-xl flex flex-col pt-4 sm:px-10 px-4  bg-page">
             <Registrar_header /> 
             <div className="w-full h-full bg-white self-center mt-2 rounded-lg ">

@@ -15,7 +15,7 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
 
     // 🔢 Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const auditsPerPage = 6;
+    const auditsPerPage = 5;
 
     const currentAction = auditItems.filter((audit) => {
         const usernameMatch = audit.username.toLowerCase().includes(filterUsername.toLowerCase());
@@ -32,24 +32,23 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
 
     
   return (
-    <main className="mx-auto max-w-8xl w-full  p-8  text-center">
+    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  sm:px-8 px-4 py-6 sm:pt-6 text-center">
 
-
-    <div className="flex flex-wrap items-center gap-4 mb-6">
-        <label className="text-green-900 font-bold text-lg">Filter By:</label>
+    <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
+      <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>
 
         <input
             type="text"
             placeholder="Username"
             value={filterUsername}
             onChange={(e) => setFilterUsername(e.target.value)}
-            className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         />
 
         <select 
             value={filterUsertype} 
             onChange={(e) => setFilterUsertype(e.target.value)}
-            className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         >
             <option value="">All Usertypes</option>
             <option value="admin">Admin</option>
@@ -64,13 +63,14 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
                 setFilterUsertype("");
             }}
             variant="confirmButton"
-            className="w-[100px] h-[40px] rounded-lg"
+    className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
         >
             Clear Filter
         </Button>
     </div>
-    <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
-        <table className="w-full text-sm text-center">
+
+<div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <table className="w-full text-xs sm:text-sm text-center">
             <thead>
             <tr className="bg-green-600 text-white ">
                 <th className="px-4 py-2">Username</th>
@@ -101,23 +101,23 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
     </div>
 
     {/* Pagination Controls */}
-        <div className="flex justify-center items-center mt-6 gap-4">
+        <div className="flex justify-center items-center mt-4 gap-4">
           <Button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             variant="prevButton"
-            className="w-[100px] h-[40px] rounded-lg"
+          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
           >
             Previous
           </Button>
-          <span className="font-semibold">
+        <span className="font-semibold flex items-center">
             Page {currentPage} of {totalPages}
           </span>
           <Button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
             variant="prevButton"
-            className="w-[100px] h-[40px] rounded-lg"
+          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
           >
             Next
           </Button>
