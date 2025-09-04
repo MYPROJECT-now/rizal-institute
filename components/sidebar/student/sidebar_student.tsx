@@ -35,7 +35,7 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                    
                 </Link>
 
-                <div className="flex flex-col gap-3 mt-[50px] ">
+                <div className="flex flex-col gap-3 mt-[50px] cursor-pointer">
                     <SidebarItem 
                         label="Dashboard" 
                         href="/ACCOUNTS/student"

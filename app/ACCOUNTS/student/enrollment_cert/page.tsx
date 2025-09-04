@@ -1,17 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Admin_student from "@/components/sidebar/header/header_student";
-import { PDFDownloadLink, PDFViewer, } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
-import Enrollment_cert from "@/components/accounts/students/enrollment certificate/enrollment_cert";
-import { useEffect, useState } from "react";
 import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
 import { Loader2 } from "lucide-react";
 
 
 const Certificate = () => {
-
+      
     const [studentInfo, setstudentInfo] = useState< StudentInfo | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -29,10 +27,8 @@ const Certificate = () => {
     fetchData();
   }, []);
 
-  
-
-    return (
-        <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10  bg-page">
+        return (
+          <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
             <Admin_student />
             <div className="w-full h-auto lg:h-[540px] bg-white self-center  mt-10 rounded-lg ">
                 <div className="w-full h-full flex flex-col gap-3 items-center justify-center">
@@ -42,22 +38,36 @@ const Certificate = () => {
                     </div>
                   ) : (
                 <PDFViewer className="w-[100%] h-[500px]">
-                  <Enrollment_cert />
+                  <Certificate />
               </PDFViewer>
                   )}
                 <div className="flex justify-center">
-                <PDFDownloadLink fileName={`Certificate_of_Enrollment_${fullName}`} 
-                document ={<Enrollment_cert />} >
-
-                <Button className="cursor-pointer bg-dGreen hover:bg-lGreen mt-1 text-center">Download PDF </Button>
-                </PDFDownloadLink>
+                  {studentInfo ? (
+                    <PDFDownloadLink
+                      fileName={`Certificate_of_Enrollment_${fullName}`}
+                      document={<Certificate  />}
+                    >
+                      {({ loading }) => (
+                        <Button
+                          disabled={loading}
+                          className="disabled:opacity-50 disabled:cursor-not-allowed bg-dGreen hover:bg-lGreen mt-1 text-center"
+                        >
+                          {loading ? "Preparing PDF..." : "Download PDF"}
+                        </Button>
+                      )}
+                    </PDFDownloadLink>
+                  ) : (
+                    <Button
+                      disabled
+                      className="disabled:opacity-50 disabled:cursor-not-allowed bg-dGreen mt-1 text-center"
+                    >
+                      Download PDF
+                    </Button>
+                  )}
                 </div>
-                
               </div>
             </div>
-           
-        </div>
-    );
-};
-
+          </div>
+  );
+}
 export default Certificate;
