@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 
 
 const Certificate = () => {
-
+      
     const [studentInfo, setstudentInfo] = useState< StudentInfo | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -38,14 +38,14 @@ const Certificate = () => {
                     </div>
                   ) : (
                 <PDFViewer className="w-[100%] h-[500px]">
-                  <Enrollment_cert />
+                  <Certificate />
               </PDFViewer>
                   )}
                 <div className="flex justify-center">
                   {studentInfo ? (
                     <PDFDownloadLink
                       fileName={`Certificate_of_Enrollment_${fullName}`}
-                      document={<EnrollmentCert studentInfo={studentInfo} />}
+                      document={<Certificate  />}
                     >
                       {({ loading }) => (
                         <Button
@@ -70,3 +70,4 @@ const Certificate = () => {
           </div>
   );
 }
+export default Certificate;
