@@ -50,7 +50,7 @@ import React from "react";
 import { Document, Page, Text, View, Image, StyleSheet} from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { getInfoForDashboard } from "@/src/actions/studentAction";
-import { Container } from "lucide-react";
+
 
 
     const styles = StyleSheet.create({
@@ -84,7 +84,7 @@ import { Container } from "lucide-react";
             indent:{
               fontSize:12,
               marginTop: 50,
-              marginLeft: 80,
+              marginLeft: 100,
             },
             paragraph:{
               fontSize:12,
@@ -106,6 +106,7 @@ import { Container } from "lucide-react";
               fontWeight:"bold",
               textTransform:"uppercase",
             }
+            
 
           
     });
@@ -120,27 +121,37 @@ import { Container } from "lucide-react";
       studentLastName: string | null;
       studentSuffix: string | null;
 }
-type EnrollmentCertProps = unknown;
+export default function EnrollmentCert ({studentInfo} : {studentInfo : StudentInfo}){
 
 
-      const Enrollment_cert : React.FC<EnrollmentCertProps>= () => {
+      {/*const Enrollment_cert : React.FC<EnrollmentCert>= () => */} 
 
         
     const [StudentInfoTable, setStudentInfoTable] = useState<StudentInfo | null >(null); 
-                  const fullName = [
+              
+    
+    useEffect(() => {
+    if (!StudentInfoTable) {
+      const fetchData = async () => {
+        const res = await getInfoForDashboard();
+        setStudentInfoTable(res);
+      };
+      fetchData();
+    }
+  }, [StudentInfoTable]);
+    
+    
+    const fullName = [
                     StudentInfoTable?.studentFirstName,
                     StudentInfoTable?.studentMiddleName,
                     StudentInfoTable?.studentLastName,
-                    StudentInfoTable?.studentSuffix ] .filter(Boolean).join(" ")
-    useEffect(() => {
-        const fetchData = async () => {
-          const res = await getInfoForDashboard();
-          setStudentInfoTable(res);
-        };
-        fetchData();
-      }, []);
+                    StudentInfoTable?.studentSuffix ] 
+                    
+                    .filter(Boolean)
+                    .join(" ");
+      
 
-        return (
+        return ( 
             <Document>
             <Page size="A4" style={styles.page}>
               <Image src="/logo.png" 
@@ -150,23 +161,22 @@ type EnrollmentCertProps = unknown;
                 <View style={styles.header}>
                 <Image src="/logo.png" 
                       style={styles.logo} 
-                      
                       /> 
                 <Text style={styles.title}>
                     RIZAL INSTITUTE CANLUBANG FOUNDATION INC.
                 </Text>
                 <Image src="/logo.png" style={styles.logo} /> 
                 </View>
-                <View style={{marginTop:100, alignItems:"center", fontWeight:"bold"}}>
-                  <Text>CERTIFICATE OF ENROLLMENT</Text>
+                <View style={styles.title}>
+                  <Text style={{marginTop: 100,}}>CERTIFICATE OF ENROLLMENT</Text>
                 </View>
-                {/*<View style={styles.greetings}>
+                <View style={styles.greetings}>
                   <Text>Greetings! </Text>
-                </View> */}
-              <Container style={{padding: 4, textAlign:"justify",}}>
+                </View> 
+              
                 <View>
                   <Text style={styles.indent}>
-                    This certifies that <Text style={styles.data}>{fullName || "_____________"}</Text>, <Text style={styles.data}>LRN# {StudentInfoTable?.lrn || "_____________"}</Text> is
+                    This certifies that <Text style={styles.data}>{fullName || "_____________"}</Text>, <Text style={styles.data}>LRN: {StudentInfoTable?.lrn || "_____________"}</Text> is
                     currently 
                   </Text>
 
@@ -180,7 +190,7 @@ type EnrollmentCertProps = unknown;
                 <Text>_________________</Text>
                 <Text style={{marginTop:4, justifySelf:"center", fontSize: 12}}>Registrar&apos;s Signature</Text>
               </View>
-              </Container>
+             
                 
             </Page>
             </Document>
@@ -198,9 +208,10 @@ type EnrollmentCertProps = unknown;
 
 //  if (!record) return <p className="text-center text-red-500">No record found.</p>;
 
- 
-}
+      
+      }
 
-export default Enrollment_cert;
+
+
 
 

@@ -78,7 +78,7 @@ const AdmissionPage = () => {
              {/* end of first section */}
 
             {/* start of second section */}
-    <div className="w-full sm:h-[580px] h-[450px] flex flex-col items-center py-5 sm:py-0">
+    <div className="w-full h-auto lg:h-[450px] flex flex-col items-center py-5 sm:py-0">
         <h1 className="mt-5 font-bold font-merriweather text-xl lg:text-4xl sm:text-3xl text-dGreen">STEP AND GUIDELINES</h1>
         <div className=" mt-6 flex flex-row  items-center justify-center gap-6 lg:gap-10 ">
 
