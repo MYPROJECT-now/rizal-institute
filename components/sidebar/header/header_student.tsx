@@ -2,11 +2,19 @@
 
 
 import { Profile_student } from "../../profile/profile_student";
-import { useState, useEffect } from "react";
-import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
+import {  useEffect } from "react";
+// import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
+import { useUser } from "@clerk/nextjs";
 
 
 const Student_header = () => {
+    const { user } = useUser();
+
+    useEffect(() => {
+        if (user) {
+            console.log("User:", user);
+        }
+    }, [user]);
 
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
@@ -17,16 +25,16 @@ const Student_header = () => {
 
     
     
-    const [StudentInfo, setStudentInfo] = useState< StudentInfo | null>(null); 
+    // const [StudentInfo, setStudentInfo] = useState< StudentInfo | null>(null); 
     
     
-    useEffect(() => {
-        const fetchData = async () => {
-          const res = await getInfoForDashboard();
-          setStudentInfo(res);
-        };
-        fetchData();
-      }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //       const res = await getInfoForDashboard();
+    //       setStudentInfo(res);
+    //     };
+    //     fetchData();
+    //   }, []);
 
     return (
         <div className="flex flex-row items-center justify-between h-[60px] mt-4">
@@ -41,7 +49,8 @@ const Student_header = () => {
             </div>
             <div className="flex flex-row items-center gap-5">
                 <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-                    {StudentInfo?.studentFirstName || "Loading..."}
+                    {user?.fullName}
+
                 </p>
                 {/* <Image
                 src="/profile.png"

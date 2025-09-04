@@ -21,8 +21,9 @@ export const PreviewModal = () => {
         </DialogHeader>
        <div className="w-full h-[400px] p-5 flex justify-center items-center ">
           {imageUrl ? (
-            <Image src={imageUrl} alt="Preview"               
-            className="w-full h-full object-fill rounded "
+            <Image 
+            height={1000} width={1000} src={imageUrl} alt="Preview"               
+            className="w-[300px] h-[400px]"
         />
           ) : (
             <p>No image selected.</p>

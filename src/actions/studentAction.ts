@@ -25,8 +25,9 @@ export interface StudentInfo {
 export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
 
 
-  const applicantId = await getStudentId();
+  const applicantId = await getApplicantID();
   if (!applicantId) return null;
+  console.log("Applicant ID:", applicantId);
 
   const selectedAcademicYear = await getSelectedAcademicYear();
   if (!selectedAcademicYear) {

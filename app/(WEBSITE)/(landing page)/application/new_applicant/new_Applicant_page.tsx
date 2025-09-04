@@ -1493,7 +1493,7 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                             >
                                 <div className="flex flex-row gap-1">                               
                                     <label className="block md:hidden text-[11px] font-semibold font-merriweather text-dGreen "> Form 137:</label>
-                                    <label className=" text-[11px] font-semibold font-merriweather text-dGreen "> (if private)</label>
+                                    {/* <label className=" text-[11px] font-semibold font-merriweather text-dGreen "> (if private)</label> */}
                                 </div>
                                 <input
                                     type="file"
