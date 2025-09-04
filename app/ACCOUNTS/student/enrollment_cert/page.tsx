@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 import Admin_student from "@/components/sidebar/header/header_student";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
-import { getInfoForDashboard } from "@/src/actions/studentAction";
+import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
 import EnrollmentCert from "@/components/accounts/students/enrollment certificate/enrollment_cert";
 
 export default function Certificate() {
-  const [studentInfo, setStudentInfo] = useState<any | null>(null);
+  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
 
   const fullName = [
     studentInfo?.studentFirstName,
