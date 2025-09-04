@@ -80,6 +80,7 @@ export const StatusModal = () => {
     setStatusData(null);
     setError(null);
     close();
+    toast.success("The offer is still valid. You can accept the admission later.")
   };
 
   const getStatusColor = (status: string) => {

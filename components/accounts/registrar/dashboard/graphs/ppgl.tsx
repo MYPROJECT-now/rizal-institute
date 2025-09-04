@@ -15,6 +15,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { getEnrolledCountPerGradeLevel } from "@/src/actions/registrarAction";
+import { Loader2 } from "lucide-react";
 
 
 const chartConfig = {
@@ -26,6 +27,7 @@ const chartConfig = {
 export const Ppgl = () => {
   const [chartData, setChartData] = useState<{ gradeLevel: string | null; count: number }[]>([]);
   const [yAxisMax, setYAxisMax] = useState(5);
+  const [loading, setLoading] = useState(true);
 
   
   // useEffect(() => {
@@ -64,6 +66,7 @@ export const Ppgl = () => {
 
 
     setChartData(filledData);
+    setLoading(false);
   };
 
   fetchData();
@@ -72,11 +75,16 @@ export const Ppgl = () => {
 
 
   return (
-    <Card className=" w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
+    <Card className=" w-full sm:w-[300px]  gap-4  lg:w-[300px] xl:w-[400px] 2xl:[550px]">
       <CardHeader>
-        <CardTitle className="text-center">Population Per Grade Level</CardTitle>
+        <CardTitle className="text-center font-bold text-dGreen">Population Per Grade Level</CardTitle>
       </CardHeader>
       <CardContent>
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-green-700" />
+            </div>
+          ) : (
         <ChartContainer config={chartConfig}>
           <BarChart data={chartData} margin={{ bottom: 30, top: 15 }}>
             <CartesianGrid vertical={false} />
@@ -128,6 +136,7 @@ export const Ppgl = () => {
             <Bar dataKey="count" fill="#0FC64F  " radius={1} />
           </BarChart>
         </ChartContainer>
+          )}
       </CardContent>
     </Card>
   );

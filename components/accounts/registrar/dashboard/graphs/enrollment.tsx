@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/chart"
 import { useEffect, useState } from "react"
 import { getEnrollmentTrend } from "@/src/actions/registrarAction"
+import { Loader2 } from "lucide-react"
 
 
 
@@ -27,6 +28,7 @@ const chartConfig = {
 export const Enrollment = () => {
     const [chartData, setChartData] = useState<{ academicYear: string | null; count: number }[]>([]);
     const [yAxisMax, setYAxisMax] = useState(5);
+    const [loading, setLoading] = useState(true);
 
 
 //     useEffect(() => {
@@ -99,6 +101,8 @@ useEffect(() => {
     setYAxisMax(paddedMax);
 
     setChartData(paddedData);
+    setLoading(false);
+
   };
 
   fetchData();
@@ -107,11 +111,16 @@ useEffect(() => {
 
   return (
     <div>
-      <Card className="w-full sm:w-[250px] md:w-[270px] gap-4 p-4 lg:w-[300px] xl:w-[400px] 2xl:[550px]">
+      <Card className="w-full sm:w-[300px] gap-4  lg:w-[300px] xl:w-[400px] 2xl:[550px]">
         <CardHeader>
-          <CardTitle className="text-center">Enrollment Trend</CardTitle>
+          <CardTitle className="text-center font-bold text-dGreen">Enrollment Trend</CardTitle>
         </CardHeader>
         <CardContent>
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-green-700" />
+            </div>
+          ) : (
           <ChartContainer config={chartConfig} style={{  }}>
             <LineChart data={chartData} margin={{ top:15, bottom: 30, right: 35 }}>
               <CartesianGrid vertical={false} />
@@ -154,6 +163,7 @@ useEffect(() => {
               />
             </LineChart>
           </ChartContainer>
+          )}
         </CardContent>
       </Card>
     </div>

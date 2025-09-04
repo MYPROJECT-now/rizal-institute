@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import { getTotal } from "@/src/actions/cashierAction";
+import { Loader2 } from "lucide-react";
+
 
 // const chartData = [
 //   {
@@ -90,6 +92,8 @@ const chartConfig: ChartConfig = {
 
 export const Ppgl = () => {
     const [chartData, setChartData] = useState<ChartRow[]>([]);
+    const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
   const normalizeChartData = (data: ChartRow[]): ChartRow[] => {
@@ -110,6 +114,7 @@ export const Ppgl = () => {
     const normalized = normalizeChartData(data);
     console.log("📊 Normalized chart data:", normalized);
     setChartData(normalized);
+    setLoading(false);
       } catch (err) {
         console.error("❌ Failed to load chart data:", err);
       }
@@ -119,14 +124,20 @@ export const Ppgl = () => {
   }, []);
 
   return (
-    <Card>
+  <div className="min-w-[100px] overflow-x-auto">
+    <Card className=" w-full sm:w-[300px] gap-4  lg:w-[300px] xl:w-[400px] 2xl:[550px]">
       <CardHeader>
-        <CardTitle className="text-center">
+        <CardTitle className="text-center font-bold text-dGreen">
           Payment Completion Status per Grade Level
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[240px] w-[430px]">
-        <ChartContainer config={chartConfig} className="h-full">
+      <CardContent>
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-green-700" />
+            </div>
+          ) : (
+        <ChartContainer config={chartConfig} className="h-full w-full">
           <BarChart data={chartData} >
             <CartesianGrid vertical={false} />
             <XAxis
@@ -143,9 +154,9 @@ export const Ppgl = () => {
                 angle: -90,
                 position: "insideLeft",
                 textAnchor: "middle",
-                dy: 80,
+                dy: 60,
               }}
-              style={{ fontSize: "10px" }}
+              style={{ fontSize: 12 }}
             />
             <ChartTooltip
               cursor={false}
@@ -161,7 +172,9 @@ export const Ppgl = () => {
             )}
           </BarChart>
         </ChartContainer>
+         )}
       </CardContent>
     </Card>
+    </div>
   );
 };

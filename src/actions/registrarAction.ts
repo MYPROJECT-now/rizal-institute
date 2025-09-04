@@ -272,6 +272,7 @@ import { getStaffCredentials } from "./utils/staffID";
       .limit(1);
     
     const id = getId[0].applicants_id;
+    console.log("ID:", id);
 
     const credentials = await getStaffCredentials();
      
@@ -307,10 +308,16 @@ import { getStaffCredentials } from "./utils/staffID";
         applicants_id: applicantsInformationTable.applicants_id
       })
       .from(applicantsInformationTable)
-      .where(eq(applicantsInformationTable.lrn, lrn))
+      .where(eq(applicantsInformationTable.lrn, "109856585654"))
       .limit(1);
+
+    // if (!getId || getId.length === 0) {
+    //   console.log(`No applicant found for LRN: ${lrn}`);
+    //   return 0; // or throw an error depending on your use case
+    // }
     
     const id = getId[0].applicants_id;
+
 
     const credentials = await getStaffCredentials();
      

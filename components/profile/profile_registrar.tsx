@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 export const Profile_registrar = () => {
@@ -42,11 +43,9 @@ export const Profile_registrar = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <button>
-                        <a href="/ACCOUNTS/registrar/settings">
-                            Settings
-                        </a>
-                    </button>
+                    <Link href="/ACCOUNTS/registrar/settings">
+                        Settings
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                 <SignOutButton

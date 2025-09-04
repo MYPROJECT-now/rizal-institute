@@ -36,22 +36,22 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
       <td className="px-4 py-2">{applicants.lrn}</td>
       <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
-      <td className="px-4 py-2">{applicants.gradeLevel}</td>
+      <td className="px-[55px] py-2">{applicants.gradeLevel}</td>
       <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="px-4 py-2">
         <Cashier_ReservationReview />
         <Button 
-          className="w-[65px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           variant={"confirmButton"}
           onClick={() => openEnrollees(applicants.lrn)}
           >
             View
         </Button>
       </td>
-      <td className="py-2 space-x-2">
+      <td className=" flex flex-row gap-1 items-center justify-center py-2">
         <Button
           onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
-          className="w-[85px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           variant={"acceptButton"}
           disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
         >
@@ -63,7 +63,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
         <Button
           onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
           variant={"rejectButton"}
-          className="w-[85px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           disabled={applicants.reservationPaymentStatus !== "Pending" || applicants.isActive === false}
           
         >

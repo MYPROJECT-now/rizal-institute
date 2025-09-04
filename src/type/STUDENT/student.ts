@@ -14,3 +14,16 @@ export type Balance = {
     dueThisMonth: number;
     totalRemainingBalance: number;
 }
+
+
+export interface StudentInfo {
+  lrn: string | null;
+  admissionStatus: string | null;
+  gradeLevelName: string | null;
+  academicYear: string | null;
+  outstandingBalance?: number;
+  studentFirstName: string | null;
+  studentMiddleName: string | null;
+  studentLastName: string | null;
+  studentSuffix: string | null;
+}

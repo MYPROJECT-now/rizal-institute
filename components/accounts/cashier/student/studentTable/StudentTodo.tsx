@@ -20,11 +20,11 @@ const Student: FC<Props> = ({ student, className  }) => {
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
       <td className="px-4 py-2">{student.lrn}</td>
       <td className="px-4 py-2">{student.studentLastName}, {student.studentFirstName} {student.studentMiddleName} {student.studentSuffix}</td>
-      <td className="px-4 py-2">{student.gradeLevelName}</td>
+      <td className="px-[55px] py-2">{student.gradeLevelName}</td>
       <td className="px-4 py-2">
         <SoaModal />
         <Button 
-          className="h-[30px] w-[80px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           variant={"confirmButton"}
           onClick={() => openSoa(student.lrn)}
           >

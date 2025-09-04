@@ -36,24 +36,24 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
       <td className="px-4 py-2">{applicant.lrn}</td>
       <td className="px-4 py-2">{applicant.lastName} {applicant.firstName} {applicant.middleName}</td>
-      <td className="px-4 py-2">{applicant.gradeLevel}</td>
+      <td className="px-[55px] py-2">{applicant.gradeLevel}</td>
 
       <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
-      <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>  
+      {/* <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>   */}
       <td className="px-4 py-2">
         <Enrollees_info_Modal />
         <Button 
           variant={"confirmButton"}
-          className="w-[95px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           onClick={() => openEnrollees(applicant.lrn)}>
             View
           </Button>
       </td>
-      <td className="px-4 py-2 space-x-2">
+      <td className=" py-3 space-x-2 flex gap-2">
         <Button
           onClick={() => onAccept(applicant.id,  applicant.lastName, applicant.firstName, applicant.middleName ?? "")}
           variant={"acceptButton"}
-          className="w-[95px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           disabled={applicant.applicationFormReviewStatus !== "Pending" || loading || applicant.isActive === false}
         >
           {loading ? "Accepting..." : "Accept"}
@@ -64,7 +64,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
         <Button
           onClick={() => open(applicant.id, `${applicant.lastName} ${applicant.firstName} ${applicant.middleName}`)}
            variant={"rejectButton"}
-          className="w-[95px] h-[35px] rounded-lg"
+          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           disabled={applicant.applicationFormReviewStatus !== "Pending" || applicant.isActive === false}
         >
           Decline

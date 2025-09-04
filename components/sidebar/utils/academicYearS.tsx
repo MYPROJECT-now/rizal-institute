@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { getAcademicYear, getDefaultYear, updateAcademicYear } from "@/src/actions/studentAction";
 import { useAcadModal } from "@/src/store/academicYear";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ export const AcademicYearModal = () => {
   const [academicYear, setAcademicYear] = useState<string[]>([]);
   const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>("");
   const [defaultYear, setDefaultYear] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
@@ -32,6 +34,7 @@ export const AcademicYearModal = () => {
 
         setDefaultYear(defaultYr);
         setSelectedAcademicYear(defaultYr ?? "");
+        setLoading(false);
       };
 
       fetchAcademicYear();
@@ -56,36 +59,42 @@ export const AcademicYearModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleclose}>
-      <DialogContent className="w-[600px] h-[200px] bg-white rounded-xl shadow-lg">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+        <DialogContent className="w-[350px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
+          <DialogHeader>
+            <DialogTitle className="text-lg sm:text-xl lg:text-2xl py-3 font-bold text-white bg-dGreen rounded-t-lg flex items-center justify-center">
             Academic Year
           </DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col items-center gap-5 px-10">
+        <div className="flex flex-col items-center gap-5 px-10 py-2">
+            {loading ? (
+              <div>
+                <Loader2 className="text-dGreen animate-spin" />
+              </div>
+            ) : (
             <select
-            className="h-[40px] w-[250px] rounded-xl text-center"
+              className="border-2 border-gray-300 px-3 py-1 h-[40px] w-[250px] rounded-xl text-center focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             value={selectedAcademicYear}
             onChange={(e) => setSelectedAcademicYear(e.target.value)}
           >
             {academicYear.map((year) => (
-              <option key={year} value={year}>
+                <option className="text-center bg-gray-300" key={year} value={year}>
                 {year === defaultYear ? `${year}` : year}
               </option>
             ))}
           </select>
-
+            )}
 
           <div className="flex  gap-5">
             <Button
             variant="prevButton"
-            className="h-[40px] w-[100px] rounded-xl">
+              className="sm:px-5 px-3 sm:py-5 py-2 rounded-xl text-xs sm:text-sm  "
+            >
               Cancel
             </Button>
             
             <Button
             variant="confirmButton"
-            className="h-[40px] w-[100px] rounded-xl"
+              className="sm:px-5 px-3 sm:py-5 py-2 rounded-xl text-xs sm:text-sm  "
               onClick={handleUpdateselectedAcademicYear}>
               Set
             </Button>

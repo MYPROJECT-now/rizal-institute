@@ -12,7 +12,6 @@ const Todos: FC<Props> = ({ todos }) => {
     const [paymentHistoryItems] = useState<PaymentHistory[]>(todos);
     // Filter states
     const [filterDate, setFilterDate] = useState("");
-    const [filterSINumber, setFilterSINumber] = useState("");
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -20,8 +19,7 @@ const Todos: FC<Props> = ({ todos }) => {
     // Filtering logic
     const filteredItems = paymentHistoryItems.filter((item) => {
         const matchesDate = filterDate === "" || (item.dateOfPayment ? item.dateOfPayment === filterDate : false);
-        const matchesSINumber = filterSINumber === "" || (item.siNumber ? item.siNumber.includes(filterSINumber) : false);
-        return matchesDate && matchesSINumber;
+        return matchesDate;
     });
 
     // Pagination logic
@@ -42,17 +40,10 @@ const Todos: FC<Props> = ({ todos }) => {
                     onChange={(e) => setFilterDate(e.target.value)}
                     className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
                 />
-                <input
-                    type="text"
-                    placeholder="SI Number"
-                    value={filterSINumber}
-                    onChange={(e) => setFilterSINumber(e.target.value)}
-                    className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                />
+
                 <Button
                     onClick={() => {
                         setFilterDate("");
-                        setFilterSINumber("");
                     }}
                     variant={"confirmButton"}
                     className="h-[40px] w-[110px] rounded-xl"
@@ -68,9 +59,10 @@ const Todos: FC<Props> = ({ todos }) => {
                         <th className="px-4 py-2">Date</th>
                         <th className="px-4 py-2">Amount</th>
                         <th className="px-4 py-2">Method</th>                        
-                        <th className="px-4 py-2">SI Number</th>
-                        <th className="px-4 py-2">Date of Verification</th>
+                        <th className="px-4 py-2">Date Verified</th>
                         <th className="px-4 py-2">Status</th>
+                        <th className="px-4 py-2">Receipt</th>
+
                     </tr>
                 </thead>
                 <tbody>
