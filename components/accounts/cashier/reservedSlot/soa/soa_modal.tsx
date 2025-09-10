@@ -1,6 +1,6 @@
   "use client";
 
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
   import {
     Dialog,
     DialogContent,
@@ -11,118 +11,136 @@
   import { toast } from "sonner";
   import { Button } from "@/components/ui/button";
 
-
+type Props = {
+  children: React.ReactNode;
+};
 
   export const UploadSoaModal = () => {
+    
+
     const { isOpen, close } = useUploadSoaModal();
-
     const [lrn, setLrn] = useState("");
-    const [file, setFile] = useState<File | null>(null);
-    const [loading, setLoading] = useState(false);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files && e.target.files.length > 0) {
-        setFile(e.target.files[0]);
-      }
-    };
-
-    const handleSubmit = async () => {
-      // setError(null);
-      // setSuccess(false);
-
-      if (!lrn || !file) {
-        toast.error("Please provide both LRN and SOA file.");
-        console.error("Please provide both LRN and SOA file.");
-        return;
-      }
-
-      setLoading(true);
-
-      const formData = new FormData();
-      formData.append("lrn", lrn);
-      formData.append("file", file);
-
-      try {
-        const response = await fetch("/api/soa", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await response.json();
-      
-        // if (!response.ok) {
-        //   throw new Error(data.error  || "Something went wrong."  );
-        // }
-        if (!data.success) {  
-          toast.error(data.error || "Error uploading SOA file.");
-          setLrn("");
-          setFile(null);
-          close();
-          return;
-        }
-        
-        toast.success(data.message);
-        setLrn("");
-        setFile(null);
-        close();
-        window.location.reload();
-
-      } catch (error) {
-        console.error("Something went wrong:", error);
-        toast.error("Something went wrong.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
+    const [academicDiscount, setAcademicDiscount]= useState("");
+    const [siblingDiscount, setSiblingDiscount]= useState("");
+    const [acads, setAcads] = useState("");
+    const [escDiscount, setEscDiscount] = useState ("");
+    const [amount, setAmount] = useState<number | "">("");
+    const [misc, setMisc] = useState<number | ""> ("");
+    const [otherF, setOtherF] = useState<number | ""> ("");
+    const [otherD, setOtherD] = useState<number | ""> ("");
     const handleClose = () => {
-      setLrn("");
-      setFile(null);
       close();
     };
-
-    return (
-      <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="w-[800px] h-[340px]  bg-gray-50 rounded-xl shadow-lg">
+    return(
+      <Dialog  open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="w-[800px] h-auto  bg-gray-50 rounded-xl shadow-lg ">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-              SOA Upload
+              Upload SOA
             </DialogTitle>
           </DialogHeader>
-
-          <main className="flex flex-col items-center gap-10 p-6 w-[450px] mx-auto">
-            <section className="flex flex-row self-start items-center gap-4">
-              <label htmlFor="lrn" className="w-12">LRN:</label>
+          <main className="m-10 flex-col gap-4">
+            <div className="grid grid-cols-2 items-center gap-2">
+          <label htmlFor="lrn" className="font-bold">LRN:</label>
               <input
                 id="lrn"
-                type="text"
+                type="number"
                 value={lrn}
                 onChange={(e) => setLrn(e.target.value)}
-                className="w-[300px] border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
               />
-            </section>
+              </div>
+              <div className="mt-5 grid grid-cols-2 items-center gap-2">
+                <label htmlFor="amount" className=" font-bold">
+                  Tuition Fee:
+                </label>
+                <input type="number"
+                  id="amount"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                
+                />
+              </div>
 
-            <section className="flex flex-row self-start items-center gap-4">
-              <label htmlFor="file" className="w-12">SOA:</label>
-              <input
-                id="file"
-                type="file"
-                accept=".xls,.xlsx"
-                onChange={handleFileChange}
-                className="w-[300px] border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-              />
-            </section>
+              <div className="mt-5 grid grid-cols-2 items-center gap-2">
+                <label htmlFor="misc" className=" font-bold">
+                  Miscellaneous Fee:
+                </label>
+                <input type="number"
+                  id="misc"
+                  value={misc}
+                  onChange={(e) => setMisc(Number(e.target.value))}
+                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                
+                />
+              </div>
+              <div className="mt-5 grid grid-cols-2">
+                <p className="font-bold grid">Academic Discount</p>
+              <select
+                name="acads"
+                value={acads}
+                onChange={(e) => setAcads(e.target.value)}
+                className="grid border rounded-lg p-2 items-center ml-10 w-auto lg:w-[300px] text-center"
+              >
+                <option value="">--- Select ---</option>
+                <option value="honor" className="font-semibold text-green-900">With Honors</option>
+                <option value="high" className="font-semibold text-green-900">With High Honors</option>
+                <option value="highest" className="font-semibold text-green-900">With Highest Honors</option>
+              </select>
+             
+              </div>
 
-            <Button
-              className="w-[100px] h-[40px] rounded-xl"
-              variant="confirmButton"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? "Uploading..." : "Upload"}
-            </Button>
+                <div className="mt-5 grid grid-cols-2">
+                <label htmlFor="discount" className="font-bold grid">Sibings Discount</label>
+                <select
+                name="sibs"
+                value={siblingDiscount}
+                onChange={(e) => setSiblingDiscount(e.target.value)}
+                className="grid border rounded-lg p-2 items-center ml-10 w-auto lg:w-[300px] text-center"
+              >
+                <option value="">--- Select ---</option>
+                <option value="yes" className="font-semibold text-green-900">YES</option>
+                <option value="no" className="font-semibold text-green-900">NO</option>
+              </select>
+              </div>
+              
+
+              
+              <div className="mt-5 grid grid-cols-2 gap-2">
+                <p className="font-bold">ESC Grant Remaining:</p>
+                <p className="font-bold text-green-800 text-center">10</p>
+              </div>
+            
+            <div className="mt-5 grid grid-cols-2 items-center gap-2">
+                <label htmlFor="otherF" className=" font-bold">
+                  Other Fees:
+                </label>
+                <input type="number"
+                  id="otherF"
+                  value={otherF}
+                  onChange={(e) => setOtherF(Number(e.target.value))}
+                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                
+                />
+              </div>
+
+            <div className="mt-5 grid grid-cols-2 items-center gap-2">
+                <label htmlFor="otherD" className=" font-bold">
+                  Other Discounts:
+                </label>
+                <input type="number"
+                  id="otherD"
+                  value={otherD}
+                  onChange={(e) => setOtherD(Number(e.target.value))}
+                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                
+                />
+              </div>
           </main>
         </DialogContent>
       </Dialog>
     );
   };
+
+  
