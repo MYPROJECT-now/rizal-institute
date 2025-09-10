@@ -1,4 +1,3 @@
-  import {  relations } from "drizzle-orm";
   import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg-core";
 
 
@@ -117,44 +116,6 @@
   })
 
 
-  // //relation
-  export const studentsInformationRelations = relations(applicantsInformationTable, ({ one, many }) => ({
-    guardian: one(guardianAndParentsTable, {
-      fields: [applicantsInformationTable.applicants_id],
-      references: [guardianAndParentsTable.applicants_id],
-    }),
-    education: one(educationalBackgroundTable, {
-      fields: [applicantsInformationTable.applicants_id],
-      references: [educationalBackgroundTable.applicants_id],
-    }),
-    documents: one(documentsTable, {
-      fields: [applicantsInformationTable.applicants_id],
-      references: [documentsTable.applicants_id],
-    }),
-    status: one(applicationStatusTable, {
-      fields: [applicantsInformationTable.applicants_id],
-      references: [applicationStatusTable.applicants_id],
-    }),
-    reservationFee: one(reservationFeeTable, {
-      fields: [applicantsInformationTable.applicants_id],
-      references: [reservationFeeTable.applicants_id],
-    }),
-
-
-    admissionStatus: one(AdmissionStatusTable, {
-      fields: [applicantsInformationTable.applicants_id],
-      references: [AdmissionStatusTable.applicants_id],
-    }),
-
-
-    reg_remarks: many(Registrar_remaks_table),
-    cashier_remarks: many(Cashier_remaks_table),
-
-  }));
-
-
-
-
   // student information
   export const StudentInfoTable = pgTable("studentInfoTable", {
     student_id: serial('student_id').primaryKey(),
@@ -186,20 +147,35 @@
 
   export const downPaymentTable = pgTable("downPaymentTable", {
     donw_id: serial('donw_id').primaryKey(),
-    student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    temp_down_id: integer('temp_down_id').references(() => tempdownPaymentTable.temp_down_id).notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     amount: integer('amount').notNull(),
     downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
     SINumberDP: varchar('SINumberDp', { length:300 }).notNull(),
     remarksDP: varchar('remarksDP', { length:100 }).notNull(),
+    paymentMethod: varchar('paymentMethod', { length:100 }),
+    
+  })
+
+    export const tempdownPaymentTable = pgTable("tempdownPaymentTable", {
+    temp_down_id: serial('donw_id').primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+    amount: integer('amount').notNull(),
+    downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
+    remarksDP: varchar('remarksDP', { length:100 }).notNull(),
+    paymentMethod: varchar('paymentMethod', { length:100 }),
     
   })
 
 
+
   export const MonthsInSoaTable = pgTable("MonthsInSoaTable", {
     month_id: serial('month_id').primaryKey(),
+    temp_month_id: integer('temp_month_id').references(() => TempMonthsInSoaTable.temp_month_id).notNull(),
     downPaymentId: integer('downPayment_id').references(() => downPaymentTable.donw_id).notNull(),
-    student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
 
     month: varchar('month', { length:100 }).notNull(),
@@ -208,6 +184,26 @@
     dateOfPayment: date('dateOfPayment'),
     remarks: varchar('remarks', { length:100 }),
     SInumber: varchar('SInumber', { length:300 }),
+  })
+
+    export const TempMonthsInSoaTable = pgTable("TempMonthsInSoaTable", {
+    temp_month_id: serial('month_id').primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+
+    temp_month: varchar('month', { length:100 }).notNull(),
+    temp_monthlyDue: integer('monthlyDue').notNull(),
+
+  })
+
+
+  export const fullPaymentTable = pgTable("fullPaymentTable", {
+    payment_id: serial('payment_id').primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    payment_amount: integer('payment_amount').notNull(),
+    payment_receipt: varchar('payment_receipt', { length:300 }).notNull(),
+    paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
+    paymentStatus: varchar('paymentStatus', { length:100 }),
   })
 
 
@@ -239,23 +235,6 @@
 
 
 
-  export const studentInfoRelations = relations(StudentInfoTable, ({ one, many }) => ({
-    downPayment: one(downPaymentTable, {
-      fields: [StudentInfoTable.student_id],
-      references: [downPaymentTable.student_id],
-    }),
-    clerkUserRelations: one(ClerkUserTable, {
-      fields: [StudentInfoTable.student_id],
-      references: [ClerkUserTable.student_id],
-    }),
-
-    soa: many(MonthsInSoaTable),
-  }));
-
-
-  export const SOARelations = relations(downPaymentTable, ({ many }) => ({
-    soa: many(MonthsInSoaTable)
-  }));
 
 
   export const AcademicYearTable = pgTable("AcademicYearTable", {
@@ -275,29 +254,6 @@
     isActive: boolean('isActive').notNull().default(true),
   })
 
-  export const clerkUserRelations = relations(ClerkUserTable, ({ one }) => ({
-    selectedYear: one(AcademicYearTable, {
-      fields: [ClerkUserTable.selected_AcademicYear_id],
-      references: [AcademicYearTable.academicYear_id],
-    }),
-  }));
-
-
-export const AcademicYearRelations = relations(AcademicYearTable, ({ many }) => ({
-  applicants: many(applicantsInformationTable),
-  reservations: many(reservationFeeTable),
-  applications: many(applicationStatusTable),
-  admissions: many(AdmissionStatusTable),
-  registrarRemarks: many(Registrar_remaks_table),
-  cashierRemarks: many(Cashier_remaks_table),
-  students: many(StudentInfoTable),
-  downPayments: many(downPaymentTable),
-  soaMonths: many(MonthsInSoaTable),
-  monthlyPayments: many(MonthlyPayementTable),
-  selectedByUsers: many(ClerkUserTable),
-  auditTrails: many(auditTrailsTable),
-  enrollment: many(EnrollmentStatusTable),
-}));
 
 
 export const staffClerkUserTable = pgTable("staffClerkUserTable", {
@@ -386,57 +342,3 @@ export const TeacherAssignmentTable = pgTable("TeacherAssignmentTable", {
     .notNull(),
 });
 
-export const gradeLevelRelations = relations(GradeLevelTable, ({ many }) => ({
-  assignments: many(TeacherAssignmentTable),
-  studentGrades: many(StudentGradesTable),
-}));
-
-
-export const subjectRelations = relations(SubjectTable, ({ many }) => ({
-  assignments: many(TeacherAssignmentTable),
-  studentGrades: many(StudentGradesTable),
-}));
-
-
-export const teacherAssignmentRelations = relations(TeacherAssignmentTable, ({ one }) => ({
-  teacher: one(staffClerkUserTable, {
-    fields: [TeacherAssignmentTable.clerk_uid],
-    references: [staffClerkUserTable.clerk_uid],
-  }),
-  gradeLevel: one(GradeLevelTable, {
-    fields: [TeacherAssignmentTable.gradeLevel_id],
-    references: [GradeLevelTable.gradeLevel_id],
-  }),
-  subject: one(SubjectTable, {
-    fields: [TeacherAssignmentTable.subject_id],
-    references: [SubjectTable.subject_id],
-  }),
-  academicYear: one(AcademicYearTable, {
-    fields: [TeacherAssignmentTable.academicYear_id],
-    references: [AcademicYearTable.academicYear_id],
-  }),
-}));
-
-
-export const studentGradesRelations = relations(StudentGradesTable, ({ one }) => ({
-  student: one(StudentInfoTable, {
-    fields: [StudentGradesTable.student_id],
-    references: [StudentInfoTable.student_id],
-  }),
-  subject: one(SubjectTable, {
-    fields: [StudentGradesTable.subject_id],
-    references: [SubjectTable.subject_id],
-  }),
-  gradeLevel: one(GradeLevelTable, {
-    fields: [StudentGradesTable.gradeLevel_id],
-    references: [GradeLevelTable.gradeLevel_id],
-  }),
-  teacher: one(staffClerkUserTable, {
-    fields: [StudentGradesTable.clerk_uid],
-    references: [staffClerkUserTable.clerk_uid],
-  }),
-  academicYear: one(AcademicYearTable, {
-    fields: [StudentGradesTable.academicYear_id],
-    references: [AcademicYearTable.academicYear_id],
-  }),
-}));

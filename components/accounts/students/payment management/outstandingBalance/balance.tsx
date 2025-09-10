@@ -21,9 +21,21 @@ export const Balance = () => {
     return (
         <div className="text-lg font-semibold flex gap-2 flex-wrap">
         <p>Outstanding Balance:</p>  
-        <p className="text-red-600"> 
-            {studentInfo?.outstandingBalance !== undefined ? `₱${studentInfo.outstandingBalance}` : 'Loading...'}
-        </p>
+        <div className={studentInfo?.paymentMethod === "full_payment" ? "text-dGreen font-semibold" : "text-red-500 font-semibold"}>
+          {studentInfo?.paymentMethod === "full_payment" ? (
+            <div>
+              <p>Fully Paid</p>
+            </div>
+          ) : (
+            <div>
+              <p>
+                {studentInfo?.outstandingBalance !== undefined
+                  ? `₱${studentInfo.outstandingBalance}`
+                  : "Loading..."}
+              </p>
+            </div>
+          )}
+        </div>
     </div>
     )
 }

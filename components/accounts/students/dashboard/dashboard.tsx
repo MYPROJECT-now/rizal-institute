@@ -108,8 +108,21 @@
         <div className="mt-8">
           <div className="bg-red-50 p-6 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
             <span className="text-xl font-bold text-red-700">Outstanding Balance:</span>
-            <span className="text-2xl font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md">
-              {studentInfo?.outstandingBalance !== undefined ? `₱${studentInfo.outstandingBalance}` : 'Loading...'}
+            <span className={studentInfo?.paymentMethod === "full_payment" ? "text-2xl font-bold text-white bg-dGreen px-6 py-3 rounded-lg shadow-md" : "text-2xl font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
+              {studentInfo?.paymentMethod === "full_payment" ? (
+                <div>
+                  <p>Fully Paid</p>
+                </div>
+              ) : (
+                <div>
+                  <p>
+                    {studentInfo?.outstandingBalance !== undefined
+                      ? `₱${studentInfo.outstandingBalance}`
+                      : "Loading..."}
+                  </p>
+                </div>
+              )}
+
             </span>
           </div>
         </div>

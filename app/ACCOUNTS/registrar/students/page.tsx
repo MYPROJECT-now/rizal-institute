@@ -1,4 +1,4 @@
-import Registrar_header  from "@/components/sidebar/header/header_registrar";
+import Registrar_header  from "@/app/header/header_registrar";
 import { CurrentStudentPage } from "@/components/accounts/registrar/enrolled_Students/student_page";
 const RegistrarsStudentsTable = () => {
     return (

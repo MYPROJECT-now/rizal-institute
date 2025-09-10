@@ -1,8 +1,17 @@
-import { Profile_admin } from "../../profile/profile_admin";
+// "use client";
 
+import { Profile_cashier } from "../../components/profile/profile_cashier";
+// import { useUser } from "@clerk/nextjs";
+// import { useEffect } from "react";
 
-const Admin_header = () => {
+const Cashier_header = () => {
+    // const { user } = useUser();
 
+    // useEffect(() => {
+    //     if (user) {
+    //         console.log("User:", user);
+    //     }
+    // }, [user]);
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
         year: 'numeric',   // Full year (e.g., 2024)
@@ -13,17 +22,17 @@ const Admin_header = () => {
 
     return (
         <div className="lg:flex hidden flex-row items-center justify-between h-[60px] mt-10 lg:mt-4">
-                <div className="flex flex-col">
-                <p className=" font-Alfa text-lGreen text-2xl">
+            <div className="flex flex-col">
+                <p className=" font-Alfa text-lGreen text-base lg:text-2xl">
                     RIZAL INSTITUTE
                 </p>
                 <p className="font-mono text-xs text-green-500">
                     {currentDate}
                 </p>
             </div>
-            <div className="flex flex-row items-center gap-6">
-                <p className="font-Alfa text-lGreen text-2xl">
-                    ADMIN
+            <div className="flex flex-row items-center gap-3">
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
+                    CASHIER
                 </p>
                 {/* <Image
                 src="/profile.png"
@@ -32,10 +41,10 @@ const Admin_header = () => {
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
                 /> */}
-                <Profile_admin />
+                <Profile_cashier />
             </div>
         </div>
     );
 };
 
-export default Admin_header;
+export default Cashier_header;

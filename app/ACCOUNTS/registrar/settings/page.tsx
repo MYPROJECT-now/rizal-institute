@@ -4,7 +4,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
-import Registrar_header from "@/components/sidebar/header/header_registrar";
+import Registrar_header from "@/app/header/header_registrar";
 import { toast } from "sonner";
 
 const RegistrarsEnrolleesTable = () => {

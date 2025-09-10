@@ -1,4 +1,4 @@
-import { Profile_teacher } from "../../profile/profile_teacher";
+import { Profile_teacher } from "../../components/profile/profile_teacher";
 
 
 const Teacher_header = () => {

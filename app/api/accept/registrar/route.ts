@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
+import {  applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
@@ -16,15 +16,15 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to fetch student email from guardianAndParentsTable
-async function getStudentEmail(studentId: number): Promise<string | null> {
-  const result = await db
-    .select({ email: applicantsInformationTable.email })
-    .from(applicantsInformationTable)
-    .where(eq(applicantsInformationTable.applicants_id, studentId))
-    .limit(1);
+// async function getStudentEmail(studentId: number): Promise<string | null> {
+//   const result = await db
+//     .select({ email: applicantsInformationTable.email })
+//     .from(applicantsInformationTable)
+//     .where(eq(applicantsInformationTable.applicants_id, studentId))
+//     .limit(1);
 
-  return result.length > 0 ? result[0].email : null;
-}
+//   return result.length > 0 ? result[0].email : null;
+// }
 
 // Function to fetch tracking ID from applicationStatusTable
 async function getTrackingId(studentId: number): Promise<string> {
@@ -39,7 +39,7 @@ async function getTrackingId(studentId: number): Promise<string> {
 
 
 // Function to send reservation email
-async function sendReservationEmail(email: string, trackingId: string) {
+async function sendReservationEmail(email: string) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -49,11 +49,11 @@ async function sendReservationEmail(email: string, trackingId: string) {
 
     We are pleased to inform you that your reservation for a slot at Rizal Institute - Canlubang has been successfully confirmed.
 
-    Tracking ID: ${trackingId}
-
     Your spot has been secured, and we look forward to welcoming you to our community. 
-    To complete your enrollment, please confirm of admission by accepting the offer of admission.
-    You can do that by going on the website, click the track application button, enter you tracking ID, and confirm your admission
+    
+    Our cashier is now calculating your tuition. You will be notified once the it is calculated.
+    After that you can either choose to pay in full or pay in installments.
+    You can do that by going on the website, click the track application button, enter you tracking ID, and then select your payment method.
 
 
     If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
@@ -91,8 +91,8 @@ export async function POST(request: Request) {
     }
 
     // Run DB actions in parallel
-    const [email, trackingId, updateResult] = await Promise.all([
-      getStudentEmail(studentId),
+    const [email, updateResult] = await Promise.all([
+      // getStudentEmail(studentId),
       getTrackingId(studentId),
       db.update(applicationStatusTable)
         .set({ 
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
 
     // ✅ Only send email if cashier confirmed the reservation
     if (reservationPaymentStatus === "Reserved") {
-      await sendReservationEmail(email, trackingId);
+      await sendReservationEmail(email);
       return NextResponse.json({
         message: "Application accepted and reservation confirmation email sent successfully.",
         applicationFormReviewStatus: "Reserved",

@@ -117,6 +117,8 @@ async function getApplicantInfo
 }
 
 // Send admission email
+
+
 async function sendAdmissionEmail(
   email: string,
   firstName: string,

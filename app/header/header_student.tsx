@@ -1,10 +1,11 @@
 "use client";
 
 
-import { Profile_student } from "../../profile/profile_student";
+import { Profile_student } from "../../components/profile/profile_student";
 import {  useEffect } from "react";
 // import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
 import { useUser } from "@clerk/nextjs";
+
 
 
 const Student_header = () => {
@@ -37,7 +38,9 @@ const Student_header = () => {
     //   }, []);
 
     return (
-        <div className="flex flex-row items-center justify-between h-[60px] mt-4">
+        
+        <div className=
+        "flex flex-row items-center justify-between h-[60px] mt-4">
             <div className="flex flex-col">
                 <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE

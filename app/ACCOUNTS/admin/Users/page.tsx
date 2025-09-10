@@ -1,6 +1,6 @@
 
 import { UsersPage } from "@/components/accounts/admin/users/userPage";
-import Admin_header from "@/components/sidebar/header/header_admin";
+import Admin_header from "@/app/header/header_admin";
 
 
 const Announcement = () => {

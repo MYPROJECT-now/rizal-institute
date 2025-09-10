@@ -8,6 +8,7 @@ type props  = {
 };
 
 const AdminLayout = async ({children}: props) => {
+    
     const { userId } = await auth();
 
     if (!userId) {
@@ -22,6 +23,7 @@ const AdminLayout = async ({children}: props) => {
         redirect("/"); // unauthorized
     }
     return (
+        
         <>
         
                  <MobileHeader /> 

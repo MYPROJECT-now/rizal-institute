@@ -1,10 +1,10 @@
 // "use client";
 
-import { Profile_cashier } from "../../profile/profile_cashier";
+import { Profile_registrar } from "../../components/profile/profile_registrar";
 // import { useUser } from "@clerk/nextjs";
 // import { useEffect } from "react";
 
-const Cashier_header = () => {
+const Registrar_header = () => {
     // const { user } = useUser();
 
     // useEffect(() => {
@@ -32,7 +32,7 @@ const Cashier_header = () => {
             </div>
             <div className="flex flex-row items-center gap-3">
                 <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-                    CASHIER
+                    Registrar
                 </p>
                 {/* <Image
                 src="/profile.png"
@@ -41,10 +41,10 @@ const Cashier_header = () => {
                 height={100}
                 className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
                 /> */}
-                <Profile_cashier />
+                <Profile_registrar />
             </div>
         </div>
     );
 };
 
-export default Cashier_header;
+export default Registrar_header;

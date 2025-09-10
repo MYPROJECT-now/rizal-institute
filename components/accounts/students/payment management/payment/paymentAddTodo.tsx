@@ -102,14 +102,32 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
   return (
     <section className="w-full  p-6 ">
       <section className="bg-green-50 rounded-lg p-4 mb-4">
-        <p className="text-lg font-bold text-dGreen mb-1 flex items-center gap-2">
-          <span>Due this month:</span>
-          <span className="font-semibold text-gray-800">{balance?.dueThisMonth || <span className='animate-pulse text-gray-400'>Loading...</span>}</span>
-        </p>
-        <p className="text-lg font-bold text-dGreen flex items-center gap-2">
-          <span>Total Remaining Balance:</span>
-          <span className="font-semibold text-gray-800">{balance?.totalRemainingBalance || <span className='animate-pulse text-gray-400'>Loading...</span>}</span>
-        </p>
+        {balance?.paymentMethod === "full_payment"  ? (
+          <div>
+            <p className="text-green-600 font-bold">Fully Paid</p>
+          </div>
+        ) : (
+          <div>
+            <p className="text-lg font-bold text-dGreen mb-1 flex items-center gap-2">
+              <span>Due this month:</span>
+              <span className="font-semibold text-gray-800">
+                {balance?.dueThisMonth ?? (
+                  <span className="animate-pulse text-gray-400">Loading...</span>
+                )}
+              </span>
+            </p>
+            <p className="text-lg font-bold text-dGreen flex items-center gap-2">
+              <span>Total Remaining Balance:</span>
+              <span className="font-semibold text-gray-800">
+                {balance?.totalRemainingBalance ?? (
+                  <span className="animate-pulse text-gray-400">Loading...</span>
+                )}
+              </span>
+            </p>
+          </div>
+        )}
+
+
       </section>
 
       <main className="flex flex-col gap-10">
@@ -184,7 +202,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
           className="px-2 py-1"
           onClick={handleAdd}
           variant="confirmButton"
-          disabled={!amount || !mop || !POP || isSubmitting}
+          disabled={!amount || !mop || !POP || isSubmitting || balance?.paymentMethod === "full_payment"}
         >
         {isSubmitting ? "Submitting..." : "Submit Payment"}
         </Button>

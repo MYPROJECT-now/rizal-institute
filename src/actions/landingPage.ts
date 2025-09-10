@@ -15,8 +15,13 @@ import {
   additionalInformationTable,
   StudentInfoTable,
   EnrollmentStatusTable,
+  TempMonthsInSoaTable,
+  tempdownPaymentTable,
+  downPaymentTable,
+  MonthsInSoaTable,
+  fullPaymentTable,
 } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
@@ -339,7 +344,9 @@ export const verifyLrn = async (lrn: string) => {
             regDate: Registrar_remaks_table.dateOfRemarks,
             cashierDate: Cashier_remaks_table.dateOfRemarks,
             confirmationStatus: AdmissionStatusTable.confirmationStatus,
+            admissionStatus: AdmissionStatusTable.admissionStatus,
             hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
+            hasTemptMonthly: TempMonthsInSoaTable.temp_month_id,
 
 
           })
@@ -348,6 +355,7 @@ export const verifyLrn = async (lrn: string) => {
           .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
           .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
           .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
+          .leftJoin(TempMonthsInSoaTable,eq(applicationStatusTable.applicants_id, TempMonthsInSoaTable.applicants_id))
           .where(
               eq(applicationStatusTable.trackingId, trackingId),
             )
@@ -451,6 +459,135 @@ export const acceptAdmission = async (trackingId: string) => {
         throw error;
     }
 };
+
+
+export const getPaymentMethodData = async (trackingId: string) => {
+  const applicantID = await db
+    .select({ applicants_id: applicationStatusTable.applicants_id })
+    .from(applicationStatusTable)
+    .where(eq(applicationStatusTable.trackingId, trackingId))
+    .limit(1);
+
+  const getTotalTuition = await db
+    .select({ total: sql<number>`SUM(${TempMonthsInSoaTable.temp_monthlyDue})` })
+    .from(TempMonthsInSoaTable)
+    .where(eq(TempMonthsInSoaTable.applicants_id, applicantID[0].applicants_id))
+
+  const MonthlyDues = await db
+    .select({ 
+      month: TempMonthsInSoaTable.temp_month,
+      monthlyDues: TempMonthsInSoaTable.temp_monthlyDue
+     })
+    .from(TempMonthsInSoaTable)
+    .where(eq(TempMonthsInSoaTable.applicants_id, applicantID[0].applicants_id))
+
+  const Down = await db
+  .select({
+    amount: tempdownPaymentTable.amount,
+  })
+  .from(tempdownPaymentTable)
+  .where(eq(tempdownPaymentTable.applicants_id, applicantID[0].applicants_id))
+  
+  return{ totalTuitionFee: getTotalTuition[0]?.total ?? 0, MonthlyDues, downPayment: Down[0]?.amount ?? 0 }
+}
+
+
+export const installments = async (trackingId: string, pm: string, DownPayment: number, monthlyDues: { month: string; monthlyDues: number }[] ) => {
+  const getApplicantsID = await db
+    .select({ applicants_id: applicationStatusTable.applicants_id })
+    .from(applicationStatusTable)
+    .where(eq(applicationStatusTable.trackingId, trackingId))
+    .limit(1);
+
+  const getTemptID = await db
+    .select({ temp_down_id: tempdownPaymentTable.temp_down_id })
+    .from(tempdownPaymentTable)
+    .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
+    .limit(1);
+
+  const tempMonthID = await db
+    .select({ temp_month_id: TempMonthsInSoaTable.temp_month_id })
+    .from(TempMonthsInSoaTable)
+    .where(eq(TempMonthsInSoaTable.applicants_id, getApplicantsID[0].applicants_id))
+
+  const downPayment = await db
+  .insert(downPaymentTable)
+  .values({
+    applicants_id: getApplicantsID[0].applicants_id,
+    temp_down_id: getTemptID[0].temp_down_id,
+    amount: DownPayment,
+    paymentMethod: pm,
+    academicYear_id: await getAcademicYearID(),
+    downPaymentDate: new Date().toISOString().slice(0, 10),
+    SINumberDP: "",
+    remarksDP: "",
+  })
+  .returning({ donw_id: downPaymentTable.donw_id });
+  
+  await db
+  .update(AdmissionStatusTable)
+  .set({
+    confirmationStatus: "Aprroved",
+    dateOfConfirmation: new Date().toISOString().slice(0, 10),
+  })
+  .where(eq(AdmissionStatusTable.applicants_id, getApplicantsID[0].applicants_id));
+
+  const downId =  downPayment[0].donw_id;
+  for (const due of monthlyDues) {
+    await db
+    .insert(MonthsInSoaTable)
+    .values({
+      temp_month_id: tempMonthID[0].temp_month_id,
+      downPaymentId: downId,
+      applicants_id: getApplicantsID[0].applicants_id,
+      academicYear_id: await getAcademicYearID(),
+      month: due.month,
+      monthlyDue: due.monthlyDues,
+    });
+  }
+  return { success: true, message: "Payment method updated successfully" }
+}
+
+
+export const full_payment = async (trackingId: string, pm: string, DownPayment: number, totalTuition: number, mop: string, uploadReservationReceipt: string) => {
+  const getApplicantsID = await db
+    .select({ applicants_id: applicationStatusTable.applicants_id })
+    .from(applicationStatusTable)
+    .where(eq(applicationStatusTable.trackingId, trackingId))
+    .limit(1);
+
+  const getTemptID = await db
+    .select({ temp_down_id: tempdownPaymentTable.temp_down_id })
+    .from(tempdownPaymentTable)
+    .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
+    .limit(1);
+
+  await db
+  .insert(downPaymentTable)
+  .values({
+    applicants_id: getApplicantsID[0].applicants_id,
+    temp_down_id: getTemptID[0].temp_down_id,
+    amount: DownPayment,
+    paymentMethod: pm,
+    academicYear_id: await getAcademicYearID(),
+    downPaymentDate: new Date().toISOString().slice(0, 10),
+    SINumberDP: "",
+    remarksDP: "",
+  });
+
+  await db
+  .insert(fullPaymentTable)
+  .values({
+    applicants_id: getApplicantsID[0].applicants_id,
+    payment_amount: totalTuition,
+    payment_receipt: uploadReservationReceipt,
+    paymentMethod: mop,
+    paymentStatus: "Pending",
+  })
+
+  return { success: true, message: "Payment method updated successfully" }
+
+}
 
 
 

@@ -1,5 +1,5 @@
 import { ApplicantsPage } from "@/components/accounts/registrar/applicants/applicants_table/applicants_page";
-import Registrar_header from "@/components/sidebar/header/header_registrar";
+import Registrar_header from "@/app/header/header_registrar";
 const RegistrarsEnrolleesTable = () => {
     return (
     <div className="p-4 w-full min-h-screen lg:h-screen">

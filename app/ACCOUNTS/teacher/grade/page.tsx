@@ -1,6 +1,6 @@
 "use client";
 
-import Teacher_header from "@/components/sidebar/header/header_teacher";
+import Teacher_header from "@/app/header/header_teacher";
 import { UploadGrade } from "@/components/accounts/teacher/grade/addGrade";
 
 const GradePage = () => {

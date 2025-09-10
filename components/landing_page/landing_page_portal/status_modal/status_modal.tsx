@@ -8,10 +8,9 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { acceptAdmission, getStatusByTrackingId } from "@/src/actions/landingPage";
+import {  getStatusByTrackingId } from "@/src/actions/landingPage";
 import { format } from "date-fns";
 import { useShowStatusModal } from "@/src/store/LANDING_PAGE/landing_page";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 interface StatusData {
@@ -22,7 +21,9 @@ interface StatusData {
   regDate?: string | null;
   cashierDate?: string | null;
   confirmationStatus?: string | null;
+  admissionStatus?: string | null;
   hasPaidReservation?: string | null;
+  hasTemptMonthly?: number | null;
 }
 
 export const StatusModal = () => {
@@ -54,14 +55,15 @@ export const StatusModal = () => {
     }
   };
 
-    const handleAccept = async () => {
-    const response = await acceptAdmission(trackingId);
-    if (response.success) {
-        toast.success("Application accepted successfully.");
-    } else {
-        toast.error("Something went wrong while accepting the application.");
-    }
-    };
+    // const handleAccept = async () => {
+    // const response = await acceptAdmission(trackingId);
+    // if (response.success) {
+    //     toast.success("Application accepted successfully.");
+    //     close();
+    // } else {
+    //     toast.error("Something went wrong while accepting the application.");
+    // }
+    // };
 
 
   const handleReApply = () => {
@@ -74,13 +76,17 @@ export const StatusModal = () => {
     router.push(`/payment?trackingId=${trackingId}`);
   };
 
+  const handlePaymentMethod = () => {
+    close();
+    router.push(`/payment_method?trackingId=${trackingId}`);
+  };
+
   
   const handleclose = () => {
     setTrackingId("");
     setStatusData(null);
     setError(null);
     close();
-    toast.success("The offer is still valid. You can accept the admission later.")
   };
 
   const getStatusColor = (status: string) => {
@@ -170,6 +176,22 @@ export const StatusModal = () => {
                 </div>
               )}
 
+            {!statusData?.hasTemptMonthly && (
+              <div className="p-4 bg-gray-50 rounded-lg">
+              <p className=" mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+                Kindly wait for the cashier to finish calculating your tuition. An email will be sent to you about your tuition.
+              </p>            
+              </div>
+            )}
+
+            {statusData?.admissionStatus === "Enrolled" && (
+              <div className="p-4 bg-gray-50 rounded-lg">
+              <p className=" mx-   text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+                You have successfully enrolled!
+              </p>            
+              </div>
+            )}
+
               {statusData?.cashierRemarks && (
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h3 className="text-lg font-semibold mb-2">
@@ -211,34 +233,52 @@ export const StatusModal = () => {
             ) : 
             statusData?.confirmationStatus === "Confirmed" ? (
                 <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
-                    You have already confirmed your enrollment. 🎉<br />
-                    Wait for an email for further instructions.
+                  Kindly wait for registrar to confirm your enrollment
                 </p>
             ) :  
-            statusData?.applicationFormReviewStatus === "Reserved" ||
-              statusData?.reservationPaymentStatus === "Reserved" ? (
-              <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg p-2">
-                <p className="text-[15px] font-bold text-dGreen">
-                  Are you ready to confirm your enrollment at Rizal Institute?
-                </p>
-                <div className="flex flex-row gap-4">
-                  <Button
-                    variant="acceptButton"
-                    className="h-[40px] w-[100px] rounded-xl"
-                    onClick={handleAccept}
-                  >
-                    Accept
-                  </Button>
+            
 
-                  <Button
-                    variant="rejectButton"
-                    className="h-[40px] w-[100px] rounded-xl"
-                    onClick={handleclose}
-                  >
-                    Not now
-                  </Button>
-                </div>
+            statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" ? (
+              <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg px-[80px] py-3">
+                <p className="text-[15px] font-bold text-dGreen">
+                  Proceed to select your payment method
+                </p>    
+
+                <Button
+                  variant="mainButton"
+                  className="h-[50px] w-[200px] rounded-xl"
+                  onClick={handlePaymentMethod}
+                >
+                  Continue to Payment Options
+                </Button>
+
               </div>
+            // ):
+            // //new payment
+            // statusData?.applicationFormReviewStatus === "Reserved" ||
+            //   statusData?.reservationPaymentStatus === "Reserved" ? (
+            //   <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg p-2">
+            //     <p className="text-[15px] font-bold text-dGreen">
+            //       Are you ready to confirm your enrollment at Rizal Institute?
+            //     </p>
+            //     <div className="flex flex-row gap-4">
+            //       <Button
+            //         variant="acceptButton"
+            //         className="h-[40px] w-[100px] rounded-xl"
+            //         onClick={handleAccept}
+            //       >
+            //         Accept
+            //       </Button>
+
+            //       <Button
+            //         variant="rejectButton"
+            //         className="h-[40px] w-[100px] rounded-xl"
+            //         onClick={handleclose}
+            //       >
+            //         Not now
+            //       </Button>
+            //     </div>
+            //   </div>
             ) : (
               <Button
                 variant="mainButton"

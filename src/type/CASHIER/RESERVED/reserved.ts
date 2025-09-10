@@ -6,7 +6,7 @@ export type reservedSlotType = {
     middleName: string | null;
     gradeLevel: string | null;  
     admissionStatus: string | null;
-      soaMonthId?: number | null; 
+    soaMonthId?: number | null; 
   
   };
   

@@ -1,5 +1,5 @@
 import { MyClasses } from "@/components/accounts/teacher/class/class";
-import Teacher_header from "@/components/sidebar/header/header_teacher";
+import Teacher_header from "@/app/header/header_teacher";
 const MyClassesTable = () => {
     return (
             <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">

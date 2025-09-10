@@ -1,5 +1,5 @@
 import { ReservedSlotPage } from "@/components/accounts/cashier/reservedSlot/reservedSlotTable/reservedSlotPage";
-import Cashier_header from "@/components/sidebar/header/header_cashier";
+import Cashier_header from "@/app/header/header_cashier";
 const RegistrarsEnrolleesTable = () => {
     return(
     <div className="p-4 w-full min-h-screen lg:h-screen">

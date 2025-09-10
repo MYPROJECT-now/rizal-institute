@@ -1,4 +1,4 @@
-import Registrar_header from "@/components/sidebar/header/header_registrar";
+import Registrar_header from "@/app/header/header_registrar";
 import { Top_analytics } from "@/components/accounts/registrar/dashboard/analytics/top_analyitcs";
 import { Ppgl } from "@/components/accounts/registrar/dashboard/graphs/ppgl";
 import { Enrollment } from "@/components/accounts/registrar/dashboard/graphs/enrollment";

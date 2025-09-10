@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getAssignClass } from "@/src/actions/teacherAction";
 import { MyStudents } from "@/components/accounts/teacher/student/student";
-import Teacher_header from "@/components/sidebar/header/header_teacher";
+import Teacher_header from "@/app/header/header_teacher";
 
 const StudentPage = () => {
   const [title, setTitle] = useState("...");

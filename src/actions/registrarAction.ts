@@ -825,7 +825,7 @@ export const getAmountPaid = async () => {
       `,
     })
     .from(StudentInfoTable)
-    .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.student_id))
+    .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
     .where(eq(AdmissionStatusTable.academicYear_id, year))
     .groupBy(

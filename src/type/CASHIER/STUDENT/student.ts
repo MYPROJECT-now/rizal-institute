@@ -9,7 +9,7 @@ export type all_student_Type = {
   
 export type SOAsStudent = {
   month_id: number;
-  student_id: number;
+  student_id: number | null;
   lrn: string;
   studentLastName: string;
   studentFirstName: string;
@@ -19,6 +19,7 @@ export type SOAsStudent = {
   amount?: number | null;
   SINumberDP?: string | null;
   remarksDP?: string | null;
+  paymentMethod?: string | null;
   downPaymentDate?: string | null;
 
   month?: string | null;

@@ -3,7 +3,7 @@
 
 import { and, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable } from "../db/schema";
 import { generateSINumber } from './utils/SI_Number_counter';
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
@@ -19,6 +19,7 @@ export interface StudentInfo {
   studentMiddleName: string | null;
   studentLastName: string | null;
   studentSuffix: string | null;
+  paymentMethod: string | null
 }
 
 
@@ -38,7 +39,7 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
   const studentInfo = await db
     .select({
       lrn: StudentInfoTable.lrn,
-      student_id: StudentInfoTable.student_id,
+      student_id: StudentInfoTable.applicants_id,
       admissionStatus: AdmissionStatusTable.admissionStatus,
       gradeLevelName: GradeLevelTable.gradeLevelName,
       academicYear: AcademicYearTable.academicYear,
@@ -46,12 +47,14 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
       studentMiddleName: StudentInfoTable.studentMiddleName,
       studentLastName: StudentInfoTable.studentLastName,
       studentSuffix: StudentInfoTable.studentSuffix,
+      paymentMethod: downPaymentTable.paymentMethod
     })
     .from(StudentInfoTable)
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
     .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
+    .leftJoin(downPaymentTable, eq(downPaymentTable.applicants_id, StudentInfoTable.applicants_id))
     .where(eq(StudentInfoTable.applicants_id, applicantId));
 
     
@@ -67,7 +70,7 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
       })
       .from(MonthsInSoaTable)
       .where(and(
-        eq(MonthsInSoaTable.student_id, studentInfo[0].student_id),
+        eq(MonthsInSoaTable.applicants_id, studentInfo[0].student_id),
         eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)
      ));
     // Get current month name (e.g., 'October')
@@ -97,6 +100,7 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
     studentMiddleName: student?.studentMiddleName ?? null,
     studentLastName: student?.studentLastName ?? null,
     studentSuffix: student?.studentSuffix ?? null,
+    paymentMethod: studentInfo[0]?.paymentMethod ?? null,
   };
 }
 
@@ -140,7 +144,7 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
 
 export const getBalance = async () => {
 
-  const studentId = await getStudentId();
+  const studentId = await getApplicantID();
     if (!studentId) return null;
 
   const selectedAcademicYear = await getSelectedAcademicYear();
@@ -159,10 +163,24 @@ export const getBalance = async () => {
         amountPaid: MonthsInSoaTable.amountPaid,
       })
       .from(MonthsInSoaTable)
-      .where(and(eq(MonthsInSoaTable.student_id, studentId), eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)))
+      .where(and(eq(MonthsInSoaTable.applicants_id, studentId), eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)))
       .orderBy(MonthsInSoaTable.month_id);
 
-    if (soaRecords.length === 0) return null;
+    if (soaRecords.length === 0) {
+      const paymentMethod = await db
+        .select({ paymentMethod: downPaymentTable.paymentMethod })
+        .from(downPaymentTable)
+        .where(eq(downPaymentTable.applicants_id, studentId))
+        .limit(1);
+
+        console.log("none");
+      return {
+        dueThisMonth: 0,
+        totalRemainingBalance: 0,
+        paymentMethod: paymentMethod[0]?.paymentMethod,
+      };
+    }
+
 
     // Get current month name (e.g., 'October')
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
@@ -190,9 +208,18 @@ export const getBalance = async () => {
     const totalAllAmountPaid = soaRecords.reduce((sum, row) => sum + (row.amountPaid || 0), 0);
     totalRemainingBalance = totalAllMonthlyDue - totalAllAmountPaid;
 
+    const paymentMethod = await db
+    .select({
+      paymentMethod: downPaymentTable.paymentMethod,
+    })
+    .from(downPaymentTable)
+    .where(eq(downPaymentTable.applicants_id, studentId))
+    .limit(1);
+
     return {
       dueThisMonth: Math.max(0, dueThisMonth), // Ensure non-negative
       totalRemainingBalance: Math.max(0, totalRemainingBalance), // Ensure non-negative
+      paymentMethod: paymentMethod[0]?.paymentMethod,
     };
 }
 
@@ -205,22 +232,26 @@ export const addPayment = async (
 ) => {
 
 
-    const studentId = await getStudentId();
+    const studentId = await getApplicantID();
       if (!studentId) return null;
+
+    const id = await getStudentId();
+    if (!id) return null;
 
 
      // Get current month name (e.g., 'October')
      const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+     console.log("Current month:", currentMonth);
      // Find the month_id for the current month for this student
      const monthRow = await db
        .select({ month_id: MonthsInSoaTable.month_id, month: MonthsInSoaTable.month })
        .from(MonthsInSoaTable)
-       .where(eq(MonthsInSoaTable.student_id, studentId));
+       .where(eq(MonthsInSoaTable.applicants_id, studentId));
 
      const currentMonthRow = monthRow.find(row => (row.month || '').toLowerCase().includes(currentMonth.toLowerCase()));
     //  if (!currentMonthRow) return null; // No SOA for current month
     if (!currentMonthRow) {
-      console.warn(" No SOA for current month:", currentMonth);
+      console.warn(" No due for current month:", currentMonth);
       return { success: false, error: `No SOA found for ${currentMonth}. Please contact the cashier.` };
     }
 
@@ -234,7 +265,7 @@ export const addPayment = async (
     await db
        .insert(MonthlyPayementTable)
        .values({
-        student_id: studentId,
+        student_id: id,
         month_id: currentMonthId,
         academicYear_id: academicYearID,
         amount: amount,

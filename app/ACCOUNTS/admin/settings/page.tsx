@@ -3,7 +3,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
-import Admin_header from "@/components/sidebar/header/header_admin";
+import Admin_header from "@/app/header/header_admin";
 import { toast } from "sonner";
 
 const RegistrarsEnrolleesTable = () => {

@@ -14,6 +14,9 @@ const dropAllTables = async () => {
     console.log("Dropping all tables...");
     
     // Drop tables in reverse order of dependencies to avoid foreign key constraint issues
+    await db.execute(sql`DROP TABLE IF EXISTS "fullPaymentTable" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "tempdownPaymentTable" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "TempMonthsInSoaTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "EnrollmentStatusTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "StudentGradesTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "TeacherAssignmentTable" CASCADE`);

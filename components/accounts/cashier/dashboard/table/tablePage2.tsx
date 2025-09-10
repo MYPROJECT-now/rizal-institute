@@ -37,7 +37,7 @@ if (loading) {
         <tbody>
           {recentPayment.length === 0 ? (
             <tr>  
-              <td colSpan={4} className="border p-2 text-center">
+              <td colSpan={5} className="border p-2 text-center">
                 No recent payments found.
               </td>
             </tr>

@@ -49,7 +49,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
             View
           </Button>
       </td>
-      <td className=" py-3 space-x-2 flex gap-2">
+      <td className=" py-3 space-x-2 flex gap-2 justify-center">
         <Button
           onClick={() => onAccept(applicant.id,  applicant.lastName, applicant.firstName, applicant.middleName ?? "")}
           variant={"acceptButton"}

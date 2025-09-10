@@ -1,5 +1,5 @@
 
-import Admin_student from "@/components/sidebar/header/header_student";
+import Admin_student from "@/app/header/header_student";
 import { PaymentPage } from "./paymentPage";
 
 

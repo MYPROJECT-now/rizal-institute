@@ -1,6 +1,6 @@
 
 import { GradeSubjectLoader } from "@/components/accounts/admin/assign/assignPage";
-import Admin_header from "@/components/sidebar/header/header_admin";
+import Admin_header from "@/app/header/header_admin";
 
 
 const TeacherAssignment = () => {

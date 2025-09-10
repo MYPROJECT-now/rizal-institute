@@ -9,7 +9,7 @@ const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
 
 const insertAcademicYear = async () => {
-  try {
+
     const AcademicYear = [
     {
       academicYear: "2025-2026",
@@ -19,7 +19,8 @@ const insertAcademicYear = async () => {
     },
 
     ];
-    const result = db.insert(AcademicYearTable).values(AcademicYear).returning();
+    const result = await db.insert(AcademicYearTable).values(AcademicYear).returning();
+    const acadId = result[0].academicYear_id;
 
     const GradeLevel = [
       {
@@ -35,7 +36,7 @@ const insertAcademicYear = async () => {
         gradeLevelName: "10",
       },
     ];
-    const result2 = db.insert(GradeLevelTable).values(GradeLevel).returning();
+    const result2 = await db.insert(GradeLevelTable).values(GradeLevel).returning();
 
     const Subjects = [
       {
@@ -63,12 +64,12 @@ const insertAcademicYear = async () => {
         subjectName: "Technology and Livelihood Education",
       },
     ];
-    const result3 = db.insert(SubjectTable).values(Subjects).returning();
+    const result3 = await db.insert(SubjectTable).values(Subjects).returning();
 
 
     const enrollment = [
       {
-      academicYear_id: 1,
+      academicYear_id: acadId,
       enrollment_period: "2025-2026",
       enrollment_start_date: "2025-01-01",
       enrollment_end_date: "2026-01-01",
@@ -76,16 +77,10 @@ const insertAcademicYear = async () => {
 
 
     ]
-    const result4 = db.insert(EnrollmentStatusTable).values(enrollment).returning();
+    const result4 = await db.insert(EnrollmentStatusTable).values(enrollment).returning();
 
-    const insertAll = await Promise.all([result, result2, result3, result4]);
-    console.log("Data inserted successfully", insertAll);
+    console.log("Data inserted successfully", {result, result2, result3, result4});
 
-  } catch (error) {
-    console.error("Error inserting data", error);
-
-    process.exit(1);
-  }
 };
 
 insertAcademicYear();

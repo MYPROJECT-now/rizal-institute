@@ -26,7 +26,7 @@ const Reserved: FC<Props> = ({ reserved, onAdmit, className, loading }) => {
       <td className="px-4 py-2">
         <Button
           className="h-[30px] w-[80px] rounded-lg"
-          disabled={reserved.admissionStatus === "Enrolled" || loading || reserved.isActive === false}
+          disabled={reserved.admissionStatus === "Enrolled" || reserved.confirmationStatus === "Pending" || loading || reserved.isActive === false}
           variant={"confirmButton"}
             onClick={() => onAdmit(reserved.id, reserved.lastName, reserved.firstName, reserved.middleName ?? "")}>
             {loading ? "Admitting..." : "Admit"}
