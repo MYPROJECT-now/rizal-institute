@@ -1,6 +1,6 @@
   "use client";
 
-  import React, { useState, useEffect } from "react";
+  import React, { useState } from "react";
   import {
     Dialog,
     DialogContent,
@@ -8,22 +8,16 @@
     DialogTitle,
   } from "@/components/ui/dialog";
   import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
-  import { toast } from "sonner";
-  import { Button } from "@/components/ui/button";
 
-type Props = {
-  children: React.ReactNode;
-};
+
 
   export const UploadSoaModal = () => {
     
 
     const { isOpen, close } = useUploadSoaModal();
     const [lrn, setLrn] = useState("");
-    const [academicDiscount, setAcademicDiscount]= useState("");
     const [siblingDiscount, setSiblingDiscount]= useState("");
     const [acads, setAcads] = useState("");
-    const [escDiscount, setEscDiscount] = useState ("");
     const [amount, setAmount] = useState<number | "">("");
     const [misc, setMisc] = useState<number | ""> ("");
     const [otherF, setOtherF] = useState<number | ""> ("");
