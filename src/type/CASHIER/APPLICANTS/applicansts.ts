@@ -22,4 +22,5 @@ export type Tableapplicant_Type = {
     payment_receipt: string | null;
     payment_status: string | null;
     paymentMethod: string | null;
+    isActive: boolean | null;
   };

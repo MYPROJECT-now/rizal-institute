@@ -2,11 +2,12 @@
 
 import { and, desc, eq, like, lte, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
 import { getStaffCredentials } from "./utils/staffID";
+import nodemailer from 'nodemailer';
 
 
   export const getAllEnrollees_cashier = async () => {
@@ -749,15 +750,305 @@ export const sendReceipt = async (selectedID: number, SInumber: string, ) => {
       payment_receipt: fullPaymentTable.payment_receipt,
       payment_status: fullPaymentTable.paymentStatus,
       paymentMethod: fullPaymentTable.paymentMethod,
+      isActive: AcademicYearTable.isActive,
       // soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
     })
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
     .leftJoin(downPaymentTable, eq(applicantsInformationTable.applicants_id, downPaymentTable.applicants_id))
     .leftJoin(fullPaymentTable, eq(applicantsInformationTable.applicants_id, fullPaymentTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
     .where(eq(downPaymentTable.paymentMethod, "full_payment"))
 
     console.log("Fetched Enrollees:", allEnrollees);
     
   return allEnrollees ;
   };
+
+  export const getESC = async () => {
+    await requireStaffAuth(["cashier"]); // gatekeeper
+
+    const selectedAcademicYear = await getSelectedAcademicYear();
+
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return [];
+    }
+
+    const grant = await db.select({
+      grantAvailable: grantAvailable.grantAvailable,
+    })
+    .from(grantAvailable)
+    .where(eq(grantAvailable.academicYear_id, selectedAcademicYear));
+
+    return grant.length > 0 ? grant[0].grantAvailable : 0;
+  }
+
+  export const addGrant = async (grant: number) => {
+    await requireStaffAuth(["cashier"]); // gatekeeper
+
+    const currentYear = await getAcademicYearID();
+
+    await db
+    .insert(grantAvailable)
+    .values({
+      grantAvailable: grant,
+      academicYear_id: currentYear ?? 0,
+    });
+
+    return { message: "Grant Added" };
+  }
+
+
+
+  export const addBreakDown = async (
+    lrn: string,
+    tuition: number,
+    miscellaneous: number,
+    acad: string,
+    sibling: string,
+    other_discount: number,
+    other_fees: number,
+  ) => {
+    await requireStaffAuth(["cashier"]); // gatekeeper
+
+    const currentYear = await getAcademicYearID();
+
+    const getLrn = await db
+      .select({
+        id: applicantsInformationTable.applicants_id,
+      })
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn));
+
+    if (!getLrn) {
+      console.warn("❌ No lrn found");
+      return {message: "no lrn found"};
+    }
+
+    // let esc = 10;
+
+    const escValue = await db
+      .select({
+        grantAvailable: grantAvailable.grantAvailable,
+      })
+      .from(grantAvailable)
+      .where(eq(grantAvailable.academicYear_id, currentYear));
+
+    let grant = 0;
+    if (escValue[0].grantAvailable > 0) {
+      grant = 9000;
+    } else if (escValue[0].grantAvailable < 0) {
+      grant = 0;
+    }
+
+    // --- Step 1: base tuition
+    const base = tuition + miscellaneous - grant;
+    console.log("Step 1 – Base (tuition + misc - grant):", base);
+
+
+    // --- Step 2: academic discount
+    let acadDiscount = 0;
+    if (acad === "With Honor") {
+      acadDiscount = Math.ceil(base * 0.20);
+    } else if (acad === "With High Honor") {
+      acadDiscount = Math.ceil(base * 0.50);
+    } else if (acad === "With Highest Honor") {
+      acadDiscount = Math.ceil(base * 0.75);
+    }
+    console.log("Step 2 – Academic Discount:", acadDiscount);
+
+    let net = base - acadDiscount;
+
+    // --- Step 3: sibling discount
+    const siblingDiscount = sibling === "yes" ? 500 : 0;
+    console.log("Step 3 – Sibling Discount:", siblingDiscount);
+    net -= siblingDiscount;
+
+    // --- Step 4: other discount
+    const otherDisc = other_discount ?? 0;
+    console.log("Step 4 – Other Discount:", otherDisc);
+    net -= otherDisc;
+
+    // --- Step 5: add other fees
+    const finalPayable = net + (other_fees ?? 0);
+    console.log("Step 5 – After Adding Other Fees:", finalPayable);
+
+    
+    const getStartandEnd = await db
+      .select({
+        start: AcademicYearTable.academicYearStart,
+        end: AcademicYearTable.academicYearEnd,
+      })
+      .from(AcademicYearTable)
+      .where(eq(AcademicYearTable.isActive, true));
+
+    const startDate = new Date(getStartandEnd[0].start);
+    const endDate = new Date(getStartandEnd[0].end);
+
+    const months: string[] = [];
+    const current =  new Date(startDate);
+
+    while(current <= endDate) {
+      const monthName = current.toLocaleString("default", { month: "long" });
+      const year = current.getFullYear();
+      months.push(`${monthName} ${year}`);
+
+      current.setMonth(current.getMonth() + 1);
+    }
+
+    const getDOwnPayment = await db
+      .select({
+        reservationAmount: reservationFeeTable.reservationAmount,
+        dateOfPayment: reservationFeeTable.dateOfPayment
+    })
+    .from(reservationFeeTable)
+    .where(eq(reservationFeeTable.applicants_id, getLrn[0].id));
+
+    await db
+      .insert(tempdownPaymentTable)
+      .values({
+        amount: getDOwnPayment[0].reservationAmount,
+        applicants_id: getLrn[0].id,
+        downPaymentDate: getDOwnPayment[0].dateOfPayment,
+        academicYear_id: currentYear ?? 0,
+      });
+      
+    let totalFee = 0;
+    totalFee = finalPayable - getDOwnPayment[0].reservationAmount;
+    console.log("Total Fee less down payment:", totalFee);
+
+    const totalMonths = months.length;
+    // const monthlyDues = totalFee / totalMonths;
+
+    // --- distribute evenly with integers ---
+    const baseDue = Math.floor(totalFee / totalMonths);
+    const remainder = totalFee % totalMonths;
+
+    const monthRows =  months.map((m, index) => ({
+      applicants_id: getLrn[0].id,
+      academicYear_id: currentYear ?? 0,
+      temp_month: m,
+      // temp_monthlyDue: monthlyDues,
+      temp_monthlyDue: baseDue + (index < remainder ? 1 : 0),
+    }))
+
+  await db
+    .insert(BreakDownTable)
+    .values({
+      applicants_id: getLrn[0].id,
+      academicYear_id: currentYear ?? 0,
+      tuitionFee: tuition,
+      miscellaneous: miscellaneous,
+      academic_discount: acad,
+      academic_discount_amount: acadDiscount,
+      withSibling: sibling,
+      withSibling_amount: siblingDiscount,
+      other_fees: other_fees,
+      other_discount: other_discount,
+      totalTuitionFee: totalFee,
+      escGrant: grant,
+    });
+
+    if (escValue[0].grantAvailable > 0) {
+      await db
+      .update(grantAvailable)
+      .set({
+        grantAvailable: escValue[0].grantAvailable - 1,
+      })
+      .where(eq(grantAvailable.academicYear_id, currentYear));
+    }
+
+  await db
+  .insert(TempMonthsInSoaTable)
+  .values(monthRows);
+
+  async function sendAdmissionEmail(
+    email: string,  
+    firstName: string,
+    lastName: string,
+    trackingId: string,
+  ) {
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USER!,
+        pass: process.env.EMAIL_PASS!,
+      },
+    });
+  
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Confirmation of Payment Method at Rizal Institute - Canlubang',
+      text: `
+      Dear ${firstName} ${lastName},
+
+      Your total remaining tuition fee comes to amounting: ₱${totalFee.toFixed(2)}.
+      Your downpayment of: ₱${getDOwnPayment[0].reservationAmount.toFixed(2)} was already reduced from your tuition fee to pay.
+
+      tracking ID: ${trackingId}
+
+      You may choose to pay either in full or in installments.
+
+      Next Steps:
+
+      Visit our website and enter your tracking ID: ${trackingId}.
+
+      Select your preferred payment option: full payment or installment plan.
+
+      If you opt to pay in full, please provide your payment receipt.
+
+      Wait for confirmation from the Registrar's Office. Once verified, you will receive a confirmation email along with your portal credentials.
+  
+      If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+  
+      Best regards,
+      Rizal Institute - Canlubang Registrar Office
+      `,
+    };
+  
+    await transporter.sendMail(mailOptions);
+  }
+
+  const getEmailInfo = await db
+  .select({
+    email: applicantsInformationTable.email,
+    firstName: applicantsInformationTable.applicantsFirstName,
+    lastName: applicantsInformationTable.applicantsLastName,
+    trackingId: applicationStatusTable.trackingId
+  })
+  .from(applicantsInformationTable)
+  .leftJoin(applicationStatusTable, eq(applicationStatusTable.applicants_id, applicantsInformationTable.applicants_id))
+  .where(eq(applicantsInformationTable.lrn, lrn));
+
+  const email = getEmailInfo[0].email;
+  const firstName = getEmailInfo[0].firstName;
+  const lastName = getEmailInfo[0].lastName;
+  const trackingId = getEmailInfo[0]?.trackingId ?? "";
+
+  await sendAdmissionEmail(email, firstName, lastName, trackingId );
+
+
+  const credentials = await getStaffCredentials();
+  if (!credentials) return {message: "User not found."};
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+
+  await db
+    .insert(auditTrailsTable)
+    .values({
+      username: username,
+      usertype: userType,
+      actionTaken: "Tuition Fee Added",
+      dateOfAction: new Date().toISOString(),
+      actionTakenFor: lrn,
+      academicYear_id: await getAcademicYearID(),
+    });
+
+
+  return { message: "Tuition Fee Added Successfully" };
+}

@@ -11,7 +11,7 @@ import { toast } from "sonner";
   }
 
   const Students: FC<Props> = ({ applicants }) => {
-    const [studentList] = useState<Tablefull_Type[]>(applicants);
+    const [studentList, setApplicantList] = useState<Tablefull_Type[]>(applicants);
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
     const [filterGrade, setFilterGrade] = useState("");
@@ -25,6 +25,7 @@ import { toast } from "sonner";
 
 
   const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string) => {
+    setLoadingId(id);
     try {
       const response = await fetch('/api/accept/cashier_full', {
         method: 'POST',
@@ -37,6 +38,12 @@ import { toast } from "sonner";
       const data = await response.json();
       if (response.ok) {
           toast.success(data.message);
+          setApplicantList((prevList) => 
+            prevList.map((student) => 
+              (student.id === id 
+                ?{...student, 
+                      payment_status: data.payment_status}
+                : student)));
         } else {
           toast.error(data.message || "Failed to send email.");
         }
@@ -51,7 +58,7 @@ import { toast } from "sonner";
 
 
     const handleDecline = () => {
-      toast.success("payment declined.");
+      setApplicantList((prevList) => prevList.map((student) => ({ ...student, payment_status: "Declined" })));
     };
     
   const filteredStudents = studentList.filter((student) => {
@@ -127,6 +134,7 @@ import { toast } from "sonner";
             <th className="px-4 py-2">Full Name</th>
             <th className="px-4 py-2">Grade Level</th>
             <th className="px-4 py-2">Full Details</th>
+            <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>

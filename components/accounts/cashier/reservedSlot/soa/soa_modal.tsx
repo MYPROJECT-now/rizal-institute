@@ -1,6 +1,6 @@
   "use client";
 
-  import React, { useState } from "react";
+  import React, { useEffect, useState } from "react";
   import {
     Dialog,
     DialogContent,
@@ -8,130 +8,225 @@
     DialogTitle,
   } from "@/components/ui/dialog";
   import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
+  import { Button } from "@/components/ui/button";
+  import { addBreakDown, addGrant, getESC } from "@/src/actions/cashierAction";
+  import { Loader2 } from "lucide-react";
+  import { toast } from "sonner";
 
 
 
   export const UploadSoaModal = () => {
-    
-
+    const [esc, setEsc] = useState<number | never[]>(0);
+    const [isLoading, setIsLoading] = useState(true);
     const { isOpen, close } = useUploadSoaModal();
+
+    const [grant, setGrant] = useState<number>(0);
+
     const [lrn, setLrn] = useState("");
-    const [siblingDiscount, setSiblingDiscount]= useState("");
-    const [acads, setAcads] = useState("");
-    const [amount, setAmount] = useState<number | "">("");
-    const [misc, setMisc] = useState<number | ""> ("");
-    const [otherF, setOtherF] = useState<number | ""> ("");
-    const [otherD, setOtherD] = useState<number | ""> ("");
+    const [tuition, setTuition] = useState<number>(0);
+    const [miscellaneous, setMiscellaneous] = useState<number>(0);
+    const [acad, setAcad] = useState<string>("");
+    const [sibling, setSibling] = useState<string>("");
+    const [other_discount, setOtherDiscount] = useState<number>(0);
+    const [other_fees, setOtherFees] = useState<number>(0);
+
+    const [grandLoading, setGrandLoading] = useState(false);
+    const [tuitionLoading, setTuitionLoading] = useState(false);
+
+    const handleLrnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setLrn(event.target.value);
+    };
+    const fetchESC = async () => {
+      const esc = await getESC();
+      setEsc(esc);
+      setIsLoading(false);
+    };
+
+    // useEffect(() => {
+    //   const result = async()  =>
+    //   {
+    //     const esc = await getESC();
+    //     setEsc(esc);
+    //     setIsLoading(false);
+    //   }
+    //   result();
+    // }, []);
+
+
+    useEffect(() => { 
+        fetchESC(); 
+    }, []);
+
+
+    const handleAddGrant = async () => {
+      setGrandLoading(true);
+      const grantResult = await addGrant(grant);
+      toast.success(grantResult.message);
+
+      await fetchESC(); // re-fetch after inserting
+      setGrandLoading(false);
+    }
+
     const handleClose = () => {
       close();
+      setGrant(0);
+      setLrn("")
+      setTuition(0);
+      setMiscellaneous(0);
+      setAcad("")
+      setSibling("")
+      setOtherDiscount(0);
+      setOtherFees(0);
     };
+
+    const handelAddTuition = async () => {
+      setTuitionLoading(true);
+      if (!/^\d{12}$/.test(lrn) ) {
+        return toast.error("Invalid LRN. Please enter a valid LRN.");
+      }
+      const result = await addBreakDown(lrn, tuition, miscellaneous, acad, sibling, other_discount, other_fees)
+      toast.success(result.message);
+      handleClose();
+      setTuitionLoading(false);
+      await fetchESC();
+      window.location.reload();
+    }
+
+
     return(
       <Dialog  open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="w-[800px] h-auto  bg-gray-50 rounded-xl shadow-lg ">
+        <DialogContent className="w-[700px] max-h-[400px] overflow-y-auto   bg-gray-50 rounded-xl shadow-lg ">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-              Upload SOA
+              Add Tuition
             </DialogTitle>
           </DialogHeader>
-          <main className="m-10 flex-col gap-4">
-            <div className="grid grid-cols-2 items-center gap-2">
-          <label htmlFor="lrn" className="font-bold">LRN:</label>
-              <input
-                id="lrn"
-                type="number"
-                value={lrn}
-                onChange={(e) => setLrn(e.target.value)}
-                className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-              />
-              </div>
-              <div className="mt-5 grid grid-cols-2 items-center gap-2">
-                <label htmlFor="amount" className=" font-bold">
-                  Tuition Fee:
-                </label>
-                <input type="number"
-                  id="amount"
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                
-                />
-              </div>
+          <main className="py-5 px-7">
+          {isLoading ? (
+            <div className="w-full flex items-center justify-center">
+              <Loader2 className="animate-spin text-dGreen " />
+            </div>
+          ): (
+            <div>
+              {esc !== 0 ? (
+                <div className="flex flex-col gap-8">
+                  <section className="flex flex-row items-center gap-5">
+                    <span className="font-bold font-merriweather text-[17px] text-dGreen">LRN:</span>
+                    <input type="text" placeholder="Enter LRN" value={lrn} onChange={handleLrnChange} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                  </section>
 
-              <div className="mt-5 grid grid-cols-2 items-center gap-2">
-                <label htmlFor="misc" className=" font-bold">
-                  Miscellaneous Fee:
-                </label>
-                <input type="number"
-                  id="misc"
-                  value={misc}
-                  onChange={(e) => setMisc(Number(e.target.value))}
-                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                
-                />
-              </div>
-              <div className="mt-5 grid grid-cols-2">
-                <p className="font-bold grid">Academic Discount</p>
-              <select
-                name="acads"
-                value={acads}
-                onChange={(e) => setAcads(e.target.value)}
-                className="grid border rounded-lg p-2 items-center ml-10 w-auto lg:w-[300px] text-center"
-              >
-                <option value="">--- Select ---</option>
-                <option value="honor" className="font-semibold text-green-900">With Honors</option>
-                <option value="high" className="font-semibold text-green-900">With High Honors</option>
-                <option value="highest" className="font-semibold text-green-900">With Highest Honors</option>
-              </select>
-             
-              </div>
+                  <section className="flex flex-col ">
+                      <span className="font-semibold text-sm text-dGreen mb-1">Main Fees</span>
+                      <div className="flex flex-row gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Tuition Fee</span>
+                          <input type="number" min={0}  value={tuition} onChange={(e) => setTuition(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                        </section>
 
-                <div className="mt-5 grid grid-cols-2">
-                <label htmlFor="discount" className="font-bold grid">Sibings Discount</label>
-                <select
-                name="sibs"
-                value={siblingDiscount}
-                onChange={(e) => setSiblingDiscount(e.target.value)}
-                className="grid border rounded-lg p-2 items-center ml-10 w-auto lg:w-[300px] text-center"
-              >
-                <option value="">--- Select ---</option>
-                <option value="yes" className="font-semibold text-green-900">YES</option>
-                <option value="no" className="font-semibold text-green-900">NO</option>
-              </select>
-              </div>
-              
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Miscellaneous Fee</span>
+                          <input type="number" min={0} value={miscellaneous} onChange={(e) => setMiscellaneous(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                        </section>
+                      </div>
 
-              
-              <div className="mt-5 grid grid-cols-2 gap-2">
-                <p className="font-bold">ESC Grant Remaining:</p>
-                <p className="font-bold text-green-800 text-center">10</p>
-              </div>
-            
-            <div className="mt-5 grid grid-cols-2 items-center gap-2">
-                <label htmlFor="otherF" className=" font-bold">
-                  Other Fees:
-                </label>
-                <input type="number"
-                  id="otherF"
-                  value={otherF}
-                  onChange={(e) => setOtherF(Number(e.target.value))}
-                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                
-                />
-              </div>
+                  </section>
 
-            <div className="mt-5 grid grid-cols-2 items-center gap-2">
-                <label htmlFor="otherD" className=" font-bold">
-                  Other Discounts:
-                </label>
-                <input type="number"
-                  id="otherD"
-                  value={otherD}
-                  onChange={(e) => setOtherD(Number(e.target.value))}
-                  className="w-auto border px-2 py-1 rounded outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                
-                />
-              </div>
-          </main>
+                  <section className="flex flex-col ">
+                      <span className="font-semibold text-sm text-dGreen mb-1">Discounts</span>
+                      <div className="flex flex-row gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">ESC Remaining:</span>
+                          <input type="text" value={esc} readOnly className="py-1 px-2 w-[130px] outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                        </section>
+
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Academic Discount</span>
+                          <select
+                            name="acads"
+                            value={acad}
+                            onChange={(e) => setAcad(e.target.value)}
+                            className="py-1 px-2  outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"  
+                          >                     
+                            <option value="text" className="text-center">--- Select ---</option>
+                            <option value="With Honor">With Honors</option>
+                            <option value="With High Honor" >With High Honors</option>
+                            <option value="With Highest Honor">With Highest Honors</option>
+                          </select> 
+                        </section>
+
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Sibling Discount</span>
+                          <select
+                            value={sibling}
+                            onChange={(e) => setSibling(e.target.value)}
+                            name="acads"
+                            className="py-1 px-2  outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"  
+                          >                     
+                            <option value="text" className="text-center">--- Select ---</option>
+                            <option value="yes" >yes</option>
+                            <option value="no">no</option>
+                          </select> 
+                        </section>
+                      </div>
+
+                  </section>
+
+                  <section className="flex flex-col ">
+                      <span className="font-semibold text-sm text-dGreen mb-1">Additional</span>
+                      <div className="flex flex-row gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Other discounts:</span>
+                          <input type="number" min={0} value={other_discount} onChange={(e) => setOtherDiscount(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                        </section>
+
+                        <section className="flex flex-col">
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Other fees:</span>
+                          <input type="number" min={0} value={other_fees} onChange={(e) => setOtherFees(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                        </section>
+                      </div>
+
+                  </section>
+
+                  <div className="w-full text-center">
+                    <Button
+                      variant="confirmButton"
+                      className="px-5 py-2 rounded-lg"
+                      disabled={tuitionLoading}
+                      onClick={handelAddTuition}
+                    >
+                      {tuitionLoading ? "Adding..." : "Add"}
+                    </Button>
+                  </div>
+
+                </div>
+              ) : (
+                <div className="flex flex-col gap-[50px]  items-center">
+                  <section className="flex flex-row gap-5 justify-center items-center">
+                    <span className="font-bold font-merriweather text-lg text-dGreen">Assign Grant available:</span>
+                    <input 
+                      type="text" 
+                      placeholder="0"
+                      className="px-2 py-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
+                      value={grant}
+                      onChange={(e) => setGrant(Number(e.target.value))}
+                    />
+                  </section>
+
+                  <Button
+                    variant="confirmButton"
+                    onClick={handleAddGrant}
+                    disabled={grandLoading}
+                    className="px-5 py-2 rounded-lg"
+                  >
+                    {grandLoading ? "Adding..." : "Add"}
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+          
+  
+        </main>
         </DialogContent>
       </Dialog>
     );

@@ -95,7 +95,7 @@
 
     
     >
-      Add SOA
+      Add Tuition
     </Button>
   </div>
 
@@ -107,14 +107,14 @@
             <th className="px-4 py-2">Full Name</th>
             <th className="px-4 py-2">Grade Level</th>
             <th className="px-4 py-2">Discount Class</th>
-            <th className="px-4 py-2">SOA</th>
+            <th className="px-4 py-2">Tuition Status</th>
           </tr>
         </thead>
         <tbody>
             {currentStudents.length === 0 ? (
               <tr>
               <td colSpan={5} className="p-4 text-black">
-                No recent applicants found.
+                No recent reserved student found.
               </td>
             </tr>
           ) : (

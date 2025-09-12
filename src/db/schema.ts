@@ -164,7 +164,7 @@
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     amount: integer('amount').notNull(),
     downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
-    remarksDP: varchar('remarksDP', { length:100 }).notNull(),
+    remarksDP: varchar('remarksDP', { length:100 }),
     paymentMethod: varchar('paymentMethod', { length:100 }),
     
   })
@@ -224,6 +224,27 @@
     
   })
 
+  export const grantAvailable = pgTable("GrantAvailableTable", {
+    grand_id: serial('grand_id').primaryKey(),
+    grantAvailable: integer('grantAvailable').notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull().unique(),
+  })
+
+  export const BreakDownTable = pgTable("BreakDownTable", {
+    breakDown_id: serial('breakDown_id').primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+    tuitionFee: integer('tuitionFee').notNull(),
+    miscellaneous: integer('miscellaneous').notNull(),
+    academic_discount: varchar('academic_discount', { length:100 }),
+    academic_discount_amount: integer('academic_discount_amount'),
+    withSibling: varchar('withSibling', { length:100 }),
+    withSibling_amount: integer('withSibling_amount'),
+    other_fees: integer('other_fees'),
+    other_discount: integer('other_discount'),
+    totalTuitionFee: integer('totalTuitionFee'),
+    escGrant: integer('escGrant'),
+  })
 
 
 
@@ -321,6 +342,7 @@ export const StudentGradesTable = pgTable("StudentGradesTable", {
 
   dateSubmitted: date("dateSubmitted"),
 });
+
 
 export const TeacherAssignmentTable = pgTable("TeacherAssignmentTable", {
   assignment_id: serial("assignment_id").primaryKey(),

@@ -13,7 +13,7 @@ const insertAcademicYear = async () => {
     const AcademicYear = [
     {
       academicYear: "2025-2026",
-      academicYearStart: new Date("2025-06-10").toISOString(),
+      academicYearStart: new Date("2025-10-1").toISOString(), //yyyy-mm-dd
       academicYearEnd: new Date("2026-03-30").toISOString(),
       isActive: true,
     },
@@ -71,8 +71,8 @@ const insertAcademicYear = async () => {
       {
       academicYear_id: acadId,
       enrollment_period: "2025-2026",
-      enrollment_start_date: "2025-01-01",
-      enrollment_end_date: "2026-01-01",
+      enrollment_start_date: "2025-06-01",
+      enrollment_end_date: "2025-10-01",
       }
 
 

@@ -46,48 +46,44 @@ export const DiscountClass = () => {
       if (!discount) return null
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[600px] h-[300px] rounded-xl shadow-lg text-center ">
+      <DialogContent className="w-[600px] h-auto rounded-xl shadow-lg text-center ">
         <DialogHeader>
           <DialogTitle className="rounded-t-lg text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center ">
             Discount Classification
           </DialogTitle>
         </DialogHeader> 
           <>
-            <div className="flex flex-col mx-auto  ">
+            <div className="flex flex-col  ">
             {isLoading ? (
               <div className="  ">
                 <div className="text-lg">Loading...</div>
               </div>
               ) : (
-                <div className="flex flex-col">
-                  <section className="flex flex-row text-start gap-10">
-                    <label className="w-[300px] font-semibold text-xl text-dGreen">Date Of Payment:</label>
-                    <p className="font-semibold text-lg text-lGreen">{discount.dateOfPayment?.toString()}</p>
+                <div className="grid grid-cols-2  gap-5 mx-10 pl-5 my-5">
+                  <section className="flex flex-col text-start gap-1">
+                    <label className=" font-semibold text-sm text-dGreen">Date Of Payment:</label>
+                    <p className="font-semibold text-[17px]  text-lGreen border-dGreen border-2 rounded-lg px-2 py-1 w-[200px]">{discount.dateOfPayment ? new Date(discount.dateOfPayment).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric"} ) : "-"}</p>
+                  </section>
+                
+                  <section className="flex flex-col text-start gap-1">
+                    <label  className=" font-semibold text-sm text-dGreen">Reservation Amount:</label>
+                    <p className="font-semibold text-[17px] text-lGreen border-dGreen border-2 rounded-lg px-2 py-1 w-[200px]">{discount.reservationAmount}</p>
                   </section>
 
-                  <section className="flex flex-row text-start gap-10">
-                    <label className="w-[300px] font-semibold text-xl text-dGreen">Rservation Amount:</label>
-                    <p className="font-semibold text-lg text-lGreen">{discount.reservationAmount}</p>
+                  <section className="flex flex-col text-start gap-1">
+                    <label  className=" font-semibold text-sm text-dGreen">Attainment Upon Graduating:</label>
+                    <p className="font-semibold text-[17px]  text-lGreen border-dGreen border-2 rounded-lg px-2 py-1 w-[200px]">{discount.attainment}</p>
                   </section>
 
-                  <section className="flex flex-row text-start gap-10">
-                    <label className="w-[300px] font-semibold text-xl text-dGreen">Attainment Upon Graduating:</label>
-                    <p className="font-semibold text-lg text-lGreen">{discount.attainment}</p>
+                  <section className="flex flex-col text-start gap-1">
+                    <label  className=" font-semibold text-sm text-dGreen">GPA:</label>
+                    <p className="font-semibold text-[17px]  text-lGreen border-dGreen border-2 rounded-lg px-2 py-1 w-[200px]">{discount.gpa}</p>
                   </section>
 
-                  <section className="flex flex-row text-start gap-10">
-                    <label className="w-[300px] font-semibold text-xl text-dGreen">GPA:</label>
-                    <p className="font-semibold text-lg text-lGreen">{discount.gpa}</p>
+                  <section className="flex flex-col text-start gap-1">
+                    <label  className=" font-semibold text-sm text-dGreen">Has Sibling:</label>
+                    <p className="font-semibold text-[17px]  text-lGreen border-dGreen border-2 rounded-lg px-2 py-1 w-[200px]">{discount.hasSibling}</p>
                   </section>
-
-                  <section className="flex flex-row text-start gap-10">
-                    <label className="w-[300px] font-semibold text-xl text-dGreen">Has Sibling:</label>
-                    <p className="font-semibold text-lg text-lGreen">{discount.hasSibling}</p>
-                  </section>
-
-
-
-
 
                 </div> 
               )}

@@ -1007,7 +1007,7 @@ const sections = [
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Grade to Enroll</span>
+                                <span className="text-sm text-dGreen font-semibold">Grade to Enroll <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="grade to enroll"
                                     onChange={handleGradeLevel}
@@ -1023,7 +1023,7 @@ const sections = [
                                 </select>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Student Type</span>
+                                <span className="text-sm text-dGreen font-semibold">Student Type <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="student type"
                                     onChange={handleStudentType}
@@ -1071,7 +1071,7 @@ const sections = [
                                 </select>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">School Type</span>
+                                <span className="text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="Gender"
                                     onChange={handleSchoolType}
@@ -1618,7 +1618,7 @@ const sections = [
                                 step="0.01"
                                 value={reservationAmount || ''}
                                 className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
-                                    ${errors.reservationAmount ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
+                                ${errors.reservationAmount ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
                                 onChange={handleReservationAmount}
                             />
                             </div>
@@ -1631,7 +1631,7 @@ const sections = [
                             <select 
                                 value={mop || ''}
                                 className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
-                                    ${errors.mop ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
+                                ${errors.mop ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
                                 onChange={handleMopChange}
                             >
                                 <option value="">Select Payment Method</option>
@@ -1732,15 +1732,16 @@ const sections = [
                                 <select 
                                     name="additionalInformation" 
                                     className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
-                                    ${errors.attainmentUponGraduation ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
-                                    value={attainmentUponGraduation}
-                                    onChange={handleAttainmentUponGraduation}
+                                    ${errors.consistentGPA ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
+                                    value={consistentGPA}
+                                    onChange={handleConsistentGPA}
                                     >
                                     <option value="">Select Option</option>
-                                    <option value="N/a">N/a</option>
-                                    <option value="Graduated with Honors">Graduated with Honors</option>
-                                    <option value="Graduated with High Honor">Graduated with High Honor</option>
-                                    <option value="Graduated with Highest Honor">Graduated with Highest Honor</option>
+                                    <option value="75-80%">75-80%</option>
+                                    <option value="81-85%">81-85%</option>
+                                    <option value="86-90%">86-90%</option>
+                                    <option value="91-95%">91-95%</option>
+                                    <option value="96-100%">96-100%</option>
                                 </select>
                             </div>
 

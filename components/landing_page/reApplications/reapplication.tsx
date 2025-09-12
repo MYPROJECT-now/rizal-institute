@@ -429,25 +429,25 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
 };
 
 
-        const handleMopChange = (e: ChangeEvent<HTMLSelectElement>) => {
-            setMop(e.target.value);
-            setIsGcashSelected(e.target.value === "GCash");
-            setIsBankTransferSelected(e.target.value === "Bank Transfer");
-            // Clear the receipt when payment method changes
-            setReservationReceipt(null);
-            if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
-            if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
-        };
-        const handleReservationAmount = (e: ChangeEvent<HTMLInputElement>) => {
-            setReservationAmount(Number(e.target.value));
-        };
+    const handleMopChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setMop(e.target.value);
+        setIsGcashSelected(e.target.value === "GCash");
+        setIsBankTransferSelected(e.target.value === "Bank Transfer");
+        // Clear the receipt when payment method changes
+        setReservationReceipt(null);
+        if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
+        if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
+    };
+    const handleReservationAmount = (e: ChangeEvent<HTMLInputElement>) => {
+        setReservationAmount(Number(e.target.value));
+    };
 
-        const handleReceiptChange = (e: ChangeEvent<HTMLInputElement>) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                setReservationReceipt(file);
-            }
-        };
+    const handleReceiptChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setReservationReceipt(file);
+        }
+    };
 
 
 

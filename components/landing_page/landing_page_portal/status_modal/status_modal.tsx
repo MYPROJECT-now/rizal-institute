@@ -24,6 +24,7 @@ interface StatusData {
   admissionStatus?: string | null;
   hasPaidReservation?: string | null;
   hasTemptMonthly?: number | null;
+  paymentStatus?: string | null;
 }
 
 export const StatusModal = () => {
@@ -79,6 +80,11 @@ export const StatusModal = () => {
   const handlePaymentMethod = () => {
     close();
     router.push(`/payment_method?trackingId=${trackingId}`);
+  };
+
+  const handleRePayTuition = () => {
+    close();
+    router.push(`/full_tuition?trackingId=${trackingId}`);
   };
 
   
@@ -176,6 +182,23 @@ export const StatusModal = () => {
                 </div>
               )}
 
+              
+              {statusData?.cashierRemarks && (
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Cashier&apos;s Remarks
+                  </h3>
+                  <p className="text-gray-700">{statusData.cashierRemarks}</p>
+                  {statusData.cashierDate && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      Date: {format(new Date(statusData.cashierDate), "MMMM dd, yyyy")}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
             {!statusData?.hasTemptMonthly && (
               <div className="p-4 bg-gray-50 rounded-lg">
               <p className=" mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
@@ -192,21 +215,6 @@ export const StatusModal = () => {
               </div>
             )}
 
-              {statusData?.cashierRemarks && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Cashier&apos;s Remarks
-                  </h3>
-                  <p className="text-gray-700">{statusData.cashierRemarks}</p>
-                  {statusData.cashierDate && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      Date: {format(new Date(statusData.cashierDate), "MMMM dd, yyyy")}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
 
           <div className="flex justify-center mt-4">
             { statusData?.applicationFormReviewStatus !== "Declined" &&
@@ -231,6 +239,17 @@ export const StatusModal = () => {
                 Re-Apply
               </Button>
             ) : 
+
+            statusData?.paymentStatus === "Declined" ? (
+              <Button
+                variant="mainButton"
+                className="h-[50px] w-[200px] rounded-xl"
+                onClick={handleRePayTuition}
+              >
+                Cancel
+              </Button>
+            ) :
+
             statusData?.confirmationStatus === "Confirmed" ? (
                 <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
                   Kindly wait for registrar to confirm your enrollment

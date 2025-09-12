@@ -28,7 +28,7 @@ export const RemarksModal =  ({ onDecline }: Props) => {
     setIsDeclining(true);
 
     try {
-      const response = await fetch("/api/decline_cashier", {
+      const response = await fetch("/api/decline_cashier/decline_full", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ studentId, remarks, fullName }),

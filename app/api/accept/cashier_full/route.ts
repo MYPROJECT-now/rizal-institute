@@ -109,7 +109,10 @@ export async function POST(request: Request) {
       })
     ]);
 
-    return NextResponse.json({ message: "Payment Approved" }, { status: 200 });
+    return NextResponse.json({ 
+      message: "Payment Approved",
+      payment_status: "Approved" 
+    }, { status: 200 });
 
   } catch (error) {
     console.error("Something went wrong:", error);

@@ -20,8 +20,9 @@ import {
   downPaymentTable,
   MonthsInSoaTable,
   fullPaymentTable,
+  BreakDownTable,
 } from "../db/schema";
-import { eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
@@ -347,6 +348,7 @@ export const verifyLrn = async (lrn: string) => {
             admissionStatus: AdmissionStatusTable.admissionStatus,
             hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
             hasTemptMonthly: TempMonthsInSoaTable.temp_month_id,
+            paymentStatus: fullPaymentTable.paymentStatus,
 
 
           })
@@ -356,6 +358,7 @@ export const verifyLrn = async (lrn: string) => {
           .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
           .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
           .leftJoin(TempMonthsInSoaTable,eq(applicationStatusTable.applicants_id, TempMonthsInSoaTable.applicants_id))
+          .leftJoin(fullPaymentTable,eq(applicationStatusTable.applicants_id, fullPaymentTable.applicants_id))
           .where(
               eq(applicationStatusTable.trackingId, trackingId),
             )
@@ -460,6 +463,39 @@ export const acceptAdmission = async (trackingId: string) => {
     }
 };
 
+  export const getFullPaymentDataByTrackingId = async (trackingId: string) => {
+    try {
+        const student = await db
+            .select({
+
+                mop: fullPaymentTable.paymentMethod,
+                reservationAmount: fullPaymentTable.payment_amount,
+                reservationReceipt: fullPaymentTable.payment_receipt,
+
+                cashierRemarks: Cashier_remaks_table.cashier_remarks,
+                regRemarks: Registrar_remaks_table.reg_remarks,
+                cashierDate: Cashier_remaks_table.dateOfRemarks,
+                regDate: Registrar_remaks_table.dateOfRemarks,
+            })
+            .from(fullPaymentTable)
+            .leftJoin(Cashier_remaks_table, eq(fullPaymentTable.applicants_id, Cashier_remaks_table.applicants_id))
+            .leftJoin(Registrar_remaks_table, eq(fullPaymentTable.applicants_id, Registrar_remaks_table.applicants_id))
+            .leftJoin(applicationStatusTable, eq(fullPaymentTable.applicants_id, applicationStatusTable.applicants_id))
+            .where(eq(applicationStatusTable.trackingId, trackingId))
+            .limit(1);
+
+        if (student.length === 0) {
+            throw new Error("No student data found.");
+        }
+
+        return student[0];
+    } catch (error) {
+        console.error("Error fetching student data:", error);
+        throw error;
+    }
+};
+
+
 
 export const getPaymentMethodData = async (trackingId: string) => {
   const applicantID = await db
@@ -469,9 +505,9 @@ export const getPaymentMethodData = async (trackingId: string) => {
     .limit(1);
 
   const getTotalTuition = await db
-    .select({ total: sql<number>`SUM(${TempMonthsInSoaTable.temp_monthlyDue})` })
-    .from(TempMonthsInSoaTable)
-    .where(eq(TempMonthsInSoaTable.applicants_id, applicantID[0].applicants_id))
+    .select({ total: BreakDownTable.totalTuitionFee})
+    .from(BreakDownTable)
+    .where(eq(BreakDownTable.applicants_id, applicantID[0].applicants_id))
 
   const MonthlyDues = await db
     .select({ 
@@ -487,8 +523,37 @@ export const getPaymentMethodData = async (trackingId: string) => {
   })
   .from(tempdownPaymentTable)
   .where(eq(tempdownPaymentTable.applicants_id, applicantID[0].applicants_id))
+
+  const breakDown = await db
+  .select({
+    miscellaneous: BreakDownTable.miscellaneous,
+    academic_discount: BreakDownTable.academic_discount,
+    academic_discount_amount: BreakDownTable.academic_discount_amount,
+    withSibling: BreakDownTable.withSibling,
+    withSibling_amount: BreakDownTable.withSibling_amount,
+    other_fees: BreakDownTable.other_fees,
+    other_discount: BreakDownTable.other_discount,
+    escGrant: BreakDownTable.escGrant,
+    tuitionFee: BreakDownTable.tuitionFee,
+  })
+  .from(BreakDownTable)
+  .where(eq(BreakDownTable.applicants_id, applicantID[0].applicants_id))
   
-  return{ totalTuitionFee: getTotalTuition[0]?.total ?? 0, MonthlyDues, downPayment: Down[0]?.amount ?? 0 }
+  return{ 
+    totalTuitionFee: getTotalTuition[0]?.total ?? 0, 
+    MonthlyDues, 
+    downPayment: Down[0]?.amount ?? 0,
+    
+    miscellaneous: breakDown[0]?.miscellaneous ?? 0,
+    academic_discount: breakDown[0]?.academic_discount ?? "",
+    academic_discount_amount: breakDown[0]?.academic_discount_amount ?? 0,
+    withSibling: breakDown[0]?.withSibling ?? "",
+    withSibling_amount: breakDown[0]?.withSibling_amount ?? 0,
+    other_fees: breakDown[0]?.other_fees ?? 0,
+    other_discount: breakDown[0]?.other_discount ?? 0,
+    escGrant: breakDown[0]?.escGrant ?? 0,
+    tuitionFee: breakDown[0]?.tuitionFee ?? 0,
+  }
 }
 
 
@@ -803,9 +868,11 @@ async function sendReservationEmail(email: string, trackingId: string) {
     text: `
     Dear Applicant,
 
-    This is a confirmation that we have received your reservation payment for a slot at Rizal Institute - Canlubang.
+    This is a confirmation that you have successfullt made a reservation payment for a slot at Rizal Institute - Canlubang.
 
     Tracking ID: ${trackingId}
+
+    The cashier will promptly verify your payment. Once verified, you will receive a confirmation email.
 
     To track the status of your application, please use the following tracking ID: ${trackingId}
     You can use this ID to check on the progress of your application on our website or by contacting our 
@@ -872,6 +939,138 @@ await sendReservationEmail(email, trackingId);
   }
 };
 
+
+export const tuitionFeeRePayment = async (trackingId: string, updatedData: ReservationFee) => {
+  try {
+    // Extract student and guardian data separately
+    const {
+
+      mop,
+      reservationAmount,
+      reservationReceipt,
+    } = updatedData;
+
+    const getApplicantsId = await db
+      .select({
+          applicants_id: applicationStatusTable.applicants_id
+      })
+      .from(applicationStatusTable)
+      .where(eq(applicationStatusTable.trackingId, trackingId))
+
+    const id = getApplicantsId[0].applicants_id;
+
+    const getEmail = await db
+      .select({
+          email: applicantsInformationTable.email
+      })
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.applicants_id, id))
+
+    const email = getEmail[0].email;
+
+    const updatedReservationFee = await db
+      .update(fullPaymentTable)
+      .set({
+        paymentMethod: mop,
+        payment_amount: reservationAmount,
+        payment_receipt: reservationReceipt,
+        paymentStatus: "Pending",
+      })
+      .where(eq(fullPaymentTable.applicants_id, id))
+    .returning();
+    
+    
+// Function to send reservation email
+async function sendReservationEmail(email: string, trackingId: string) {
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'TUition Fee RE-Payment at Rizal Institute - Canlubang',
+    text: `
+    Dear Applicant,
+
+    This is a confirmation that you have successfully made tuition re-payment for a slot at Rizal Institute - Canlubang.
+    
+    The cashier will promptly verify your payment. Once verified, you will receive a confirmation email.
+
+    Tracking ID: ${trackingId}
+
+    To track the status of your application, please use the following tracking ID: ${trackingId}
+    You can use this ID to check on the progress of your application on our website or by contacting our 
+    admissions office.
+
+    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+
+    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+
+    Best regards,
+    Rizal Institute - Canlubang
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+
+await sendReservationEmail(email, trackingId);
+    // // Get current application status
+    // const currentStatus = await db
+    //   .select({
+    //     applicationStatus: applicationStatusTable.applicationFormReviewStatus
+    //   })
+    //   .from(applicationStatusTable)
+    //   .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id))
+    //   .limit(1);
+
+    // // Only update status to Pending if it was previously Declined
+    // if (currentStatus[0]?.applicationStatus === "Declined") {
+    //   await db
+    //     .update(applicationStatusTable)
+    //     .set({
+    //       applicationFormReviewStatus: "Pending",
+    //       dateOfApplication: new Date().toISOString().slice(0, 10)
+    //     })
+    //     .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id));
+    // }
+
+    // // Update resolution status for both registrar and cashier remarks
+    // await db
+    //   .update(Registrar_remaks_table)
+    //   .set({
+    //     resolved_reg_remarks: true
+    //   })
+    //   .where(eq(Registrar_remaks_table.applicants_id, updatedStudent[0]?.applicants_id));
+
+    await db
+      .update(Cashier_remaks_table)
+      .set({
+        resolved_cashier_remarks: true
+      })
+      .where(and(
+        eq(Cashier_remaks_table.applicants_id, id),
+        eq(Cashier_remaks_table.resolved_cashier_remarks, false)
+        ));
+
+    return {
+      // student: updatedStudent[0],
+      // guardian: updatedGuardian[0],
+      // educationalBackground: updatedEducationalBackground[0],
+      // document: updatedDocument[0],
+      reservationFee: updatedReservationFee[0],
+    };
+  } catch (error) {
+    console.error("Error updating student data:", error);
+    throw new Error("Failed to update student and guardian data.");
+  }
+};
 
 export const checkLRN = async (lrn: string) => {
   try {

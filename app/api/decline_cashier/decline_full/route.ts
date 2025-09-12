@@ -1,7 +1,7 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable, auditTrailsTable, Cashier_remaks_table } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable, auditTrailsTable, Cashier_remaks_table, fullPaymentTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
@@ -42,11 +42,11 @@ async function sendDeclineEmail(email: string, trackingId: string, remarks: stri
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Reservation Payment Declined - Rizal Institute',
+    subject: 'FUll Payment Declined - Rizal Institute',
     text: `
     Dear Applicant,
 
-    We regret to inform you that your payment for the Reservation of slot at Rizal Institute - Canlubang has been declined.
+    We regret to inform you that your full payment for your tuition at Rizal Institute - Canlubang has been declined.
 
     Tracking ID: ${trackingId}
 
@@ -90,9 +90,9 @@ export async function POST(request: Request) {
 
     // Update student's status to "Declined"
     await db
-      .update(applicationStatusTable)
-      .set({ reservationPaymentStatus: "Declined" })
-      .where(eq(applicationStatusTable.applicants_id, studentId));
+      .update(fullPaymentTable)
+      .set({ paymentStatus: "Declined" })
+      .where(eq(fullPaymentTable.applicants_id, studentId));
 
     await db
       .insert(Cashier_remaks_table)
@@ -101,10 +101,10 @@ export async function POST(request: Request) {
         academicYear_id: await getAcademicYearID(),
         cashier_remarks: remarks, 
         dateOfRemarks: new Date().toISOString() });
-
+      
     await  db.insert(auditTrailsTable)
         .values({
-        actionTaken: "Decline Reservation Payment",
+        actionTaken: "Decline FUll Payment",
         actionTakenFor: fullName,
         dateOfAction: new Date().toISOString(),
         username: credentials.clerk_username,
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
     // Send decline email
     await sendDeclineEmail(email, trackingId, remarks);
 
-    return NextResponse.json({ message: "Application declined and email sent successfully." });
+    return NextResponse.json({ message: "Full payment declined and email sent successfully." });
   } catch (error) {
     console.error("Error processing decline:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

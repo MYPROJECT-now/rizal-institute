@@ -46,6 +46,17 @@
         
         const { open: openPreview } = usePreviewModal();
 
+        const [miscellaneous, setMiscellaneous] = useState(0);
+        const [academic_discount, setAcademic_discount] = useState("");
+        const [academic_discount_amount, setAcademic_discount_amount] = useState(0);
+        const [withSibling, setWithSibling] = useState("");
+        const [withSibling_amount, setWithSibling_amount] = useState(0);
+        const [other_fees, setOther_fees] = useState(0);
+        const [other_discount, setOther_discount] = useState(0);
+        const [escGrant, setEscGrant] = useState(0);
+        const [tuitionFee, setTuitionFee] = useState(0);
+        
+
 
         useEffect(() => {
             if (trackingId) {
@@ -59,6 +70,17 @@
                         setTotalTuition(data.totalTuitionFee || 0);
                         setMonthlyDues(data.MonthlyDues || []);
                         setDownPayment(data.downPayment || 0);
+
+                        setMiscellaneous(data.miscellaneous || 0);
+                        setAcademic_discount(data.academic_discount || "");
+                        setAcademic_discount_amount(data.academic_discount_amount || 0);
+                        setWithSibling(data.withSibling || "");
+                        setWithSibling_amount(data.withSibling_amount || 0);
+                        setOther_fees(data.other_fees || 0);
+                        setOther_discount(data.other_discount || 0);
+                        setEscGrant(data.escGrant || 0);
+                        setTuitionFee(data.tuitionFee || 0);
+
                         setIsLoading(false);
                     
                     } catch (error) {
@@ -217,47 +239,302 @@
             title: (
                 <div>
                     <p className="text-2xl text-dGreen font-bold font-merriweather">
-                        Section 2: MonthlyDues
+                        Section 2: Tuition Breakdown & Payment Guide
                     </p>
                 </div>
             ),
             content: (
-                <main className="w-full mt-10 flex flex-col items-center justify-center">
-                    {isLoading ? (
-                        <div>
-                            <Loader2 className="animate-spin text-dGreen" />
-                        </div>
-                    ): (
-                        <>
-                        {monthlyDues.length > 0 ? (
-                            <div className="rounded-md overflow-hidden">
-                            <table className="w-[600px]  border border-gray-300">
-                            <thead className="text-center text-dGreen">
-                                <tr className="bg-gray-100 ">
-                                    <th className="p-2 border text-start ">DownPayment</th>
-                                    <th className="text-start p-2">{downPayment}</th>
-                                </tr>
-                                <tr className="bg-gray-100">
-                                    <th className="p-2 border text-start" colSpan={2}>PaymentSchedule</th>
-                                </tr>
-                            </thead>    
-                            <tbody className="">
-                                {monthlyDues.map((due, idx) => (
-                                <tr key={idx } className={ `${ idx % 2 === 0 ? "bg-white" : "bg-green-100"} hover:bg-green-200`}>
-                                    <td className="p-2 border">{due.month}</td>
-                                    <td className="p-2 border">₱{due.monthlyDues.toFixed(2)}</td>
-                                </tr>
-                                ))}
-                            </tbody>
-                            </table>
-                            </div>
-                        ) : (
-                            <p>No monthly dues found.</p>
-                        )}
-                        </>
-                    )}
+                // <main className="w-full mt-10 flex flex-col items-center justify-center">
+                //     {isLoading ? (
+                //         <div>
+                //             <Loader2 className="animate-spin text-dGreen" />
+                //         </div>
+                //     ): (
+                //         <div className="flex flex-row gap-[70px]">
+                            
+                //             <div className="rounded-lg overflow-hidden">
+                //                 <table className="w-[500px] border-black  border-collapse ">
+                //                     <thead>
+                //                         <tr className="bg-gray-100 text-center">
+                //                             <th className="p-2 border">Particulars</th>
+                //                             <th className="p-2 border">Amount</th>
+                //                         </tr>
+                //                     </thead>
+                //                     <tbody>
+                //                         <tr>
+                //                             <td className="px-2">
+                //                                 Tuition Fee
+                //                             </td>
+                //                             <td className="text-end px-2">
+                //                                 {tuitionFee}
+                //                             </td>
+                //                         </tr>
+                //                         <tr >
+                //                             <td className="px-2">
+                //                                 Miscellaneous Fee
+                //                             </td>
+                //                             <td className="text-end px-2">
+                //                                 {miscellaneous}
+                //                             </td>
+                //                         </tr>
+                //                         <tr  className="border-b-2 border-black px-2">
+                //                             <td className="px-2">
+                //                                 Downpayment
+                //                             </td>
+                //                             <td className="text-end px-2">
+                //                                 {downPayment}
+                //                             </td>
+                //                         </tr>
+                //                         <tr>
+                //                             <td>
 
+                //                             </td>
+                //                             <td className="text-end px-2">
+                //                                {tuitionFee + miscellaneous - downPayment}
+                //                             </td>
+                //                         </tr>
+                //                         {escGrant > 0 && (
+                //                             <tr className="border-b-2 border-black">
+                //                                 <td className="px-2">
+                //                                     Less: ESC Grant
+                //                                 </td>
+                //                                 <td className="text-end px-2">
+                //                                     {escGrant}
+                //                                 </td>
+                //                             </tr>
+                //                         )}
+                //                         <tr>
+                //                             <td>
+
+                //                             </td>
+                //                             <td className="text-end px-2">
+                //                                {tuitionFee + miscellaneous - escGrant}
+                //                             </td>
+                //                         </tr>
+                //                         {academic_discount_amount > 0 && (
+                //                             <tr>
+                //                                 <td className="px-2">
+                //                                     Less: Discount ({academic_discount})
+                //                                 </td>
+                //                                 <td className="text-end px-2">
+                //                                     {academic_discount_amount}
+                //                                 </td>
+                //                             </tr>
+                //                         )}
+                //                         {withSibling_amount > 0 && (
+                //                             <tr>
+                //                                 <td className="px-2">
+                //                                     Less: Discount ({withSibling === "yes" ? "WithSibling" : ""})
+                //                                 </td>
+                //                                 <td className="text-end px-2">
+                //                                     {withSibling_amount}
+                //                                 </td>
+                //                             </tr>
+                //                         )}
+                //                         {other_discount > 0 && (
+                //                             <tr>
+                //                                 <td className="px-2">
+                //                                     Less: Discount (Other discount)
+                //                                 </td>
+                //                                 <td className="text-end px-2">
+                //                                     {other_discount}
+                //                                 </td>
+                //                             </tr>
+                //                         )}
+                //                         <tr className="border-t-2 border-black ">
+                //                             <td className="text-center">
+                //                                 Total tuition fee & Miscellaneous fee
+                //                             </td>
+                //                                 <td className="text-end px-2">
+                //                                 {tuitionFee + miscellaneous - downPayment - escGrant - academic_discount_amount - withSibling_amount - other_discount}
+                //                             </td>
+                //                         </tr>
+                //                         {other_fees > 0 && (
+                //                         <tr className="border-t-2 border-black">
+                //                             <td className="text-center">
+                //                                 Other Fees:
+                //                             </td>
+                //                                 <td className="text-end px-2">
+                //                                 {other_fees}
+                //                             </td>
+                //                         </tr>    
+                //                         )}
+                //                         <tr className="border-t-2 border-black ">
+                //                             <td className="text-center">
+                //                                 Grand Total
+                //                             </td>
+                //                             <td className="text-end px-2">
+                //                                 {totalTuition}
+                //                             </td>
+                //                         </tr>
+                //                     </tbody>
+                //                 </table>
+
+                //             </div>
+
+
+                //             {monthlyDues.length > 0 ? (
+                //                 <div className="rounded-md overflow-hidden">
+                //                 <table className="w-[600px]  border border-gray-300">
+                //                 <thead className="text-center text-dGreen">
+                //                     <tr className="bg-gray-100 "><th colSpan={2} className="text-start p-2"> *INSTALLMENT payment scheme</th></tr>
+                //                     <tr className="bg-gray-100 ">
+                //                         <th className="p-2 border text-start ">DownPayment</th>
+                //                         <th className="text-start p-2">{downPayment}</th>
+                //                     </tr>
+                //                     <tr className="bg-gray-100">
+                //                         <th className="p-2 border text-start" colSpan={2}>PaymentSchedule</th>
+                //                     </tr>
+                //                 </thead>    
+                //                 <tbody className="">
+                //                     {monthlyDues.map((due, idx) => (
+                //                     <tr key={idx } className={ `${ idx % 2 === 0 ? "bg-white" : "bg-green-100"} hover:bg-green-200`}>
+                //                         <td className="p-2 border">{due.month}</td>
+                //                         <td className="p-2 border">₱{due.monthlyDues.toFixed(2)}</td>
+                //                     </tr>
+                //                     ))}
+                //                     <tr>
+                //                         <td className="p-2 border">
+                //                             Total
+                //                         </td>
+                //                         <td className="p-2 border">
+                //                             {totalTuition + downPayment}
+                //                         </td>
+                //                     </tr>
+                //                 </tbody>
+                //                 </table>
+                //                 </div>
+                //             ) : (
+                //                 <p>No monthly dues found.</p>
+                //             )}
+
+                //         </div>
+                //     )}
+
+                // </main>
+            <main className="w-full mt-2 flex flex-col items-center justify-center">
+                {isLoading ? (
+                    <div>
+                    <Loader2 className="animate-spin text-dGreen" />
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                    
+                    {/* Left: Breakdown */}
+                    <div className="bg-white rounded-2xl border-gray-100 shadow-lg p-6 w-[400px]">
+                        <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+                        Tuition Breakdown
+                        </h2>
+                        <table className="w-full text-sm">
+                        <tbody>
+                            <tr>
+                            <td className="py-2">Tuition Fee</td>
+                            <td className="text-right font-medium">₱{tuitionFee}</td>
+                            </tr>
+                            <tr>
+                            <td className="py-2">Miscellaneous Fee</td>
+                            <td className="text-right font-medium">₱{miscellaneous}</td>
+                            </tr>
+                            <tr>
+                            <td className="py-2">Downpayment</td>
+                            <td className="text-right text-green-600 font-semibold">₱{downPayment}</td>
+                            </tr>
+
+                            <tr className="border-t">
+                            <td className="py-2 font-semibold">Subtotal</td>
+                            <td className="text-right">₱{tuitionFee + miscellaneous - downPayment}</td>
+                            </tr>
+
+                            {escGrant > 0 && (
+                            <tr>
+                                <td className="py-2 text-red-600">Less: ESC Grant</td>
+                                <td className="text-right text-red-600">-₱{escGrant}</td>
+                            </tr>
+                            )}
+                            {academic_discount_amount > 0 && (
+                            <tr>
+                                <td className="py-2 text-red-600">Less: {academic_discount} Discount</td>
+                                <td className="text-right text-red-600">-₱{academic_discount_amount}</td>
+                            </tr>
+                            )}
+                            {withSibling === "yes" && (
+                            <tr>
+                                <td className="py-2 text-red-600">Less: </td>
+                                <td className="text-right text-red-600">-₱{withSibling_amount}</td>
+                            </tr>
+                            )}
+                            {other_discount > 0 && (
+                            <tr>
+                                <td className="py-2 text-red-600">Less: Other Discount</td>
+                                <td className="text-right text-red-600">-₱{other_discount}</td>
+                            </tr>
+                            )}
+
+                            <tr className="border-t font-semibold">
+                            <td className="py-2">Total Tuition + Misc.</td>
+                            <td className="text-right">₱{tuitionFee + miscellaneous - downPayment - escGrant - academic_discount_amount - withSibling_amount - other_discount}</td>
+                            </tr>
+
+                            {other_fees > 0 && (
+                            <tr>
+                                <td className="py-2">Other Fees</td>
+                                <td className="text-right">₱{other_fees}</td>
+                            </tr>
+                            )}
+
+                            <tr className="border-t text-lg font-bold text-green-700">
+                            <td className="py-3">Grand Total</td>
+                            <td className="text-right">₱{totalTuition}</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+
+                    {/* Right: Installment Schedule */}
+                    {monthlyDues.length > 0 ? (
+                        <div className="bg-white rounded-2xl border-gray-100 shadow-lg p-6 w-[500px]">
+                        <h2 className="text-lg font-semibold text-dGreen mb-4 border-b pb-2">
+                            Installment Payment Scheme
+                        </h2>
+
+                        <div className="mb-4 flex justify-between">
+                            <span className="font-medium">DownPayment</span>
+                            <span className="font-semibold text-green-600">₱{downPayment}</span>
+                        </div>
+
+                        <table className="w-full text-sm">
+                            <thead>
+                            <tr className="bg-gray-100">
+                                <th className="text-left p-2">Month</th>
+                                <th className="text-right p-2">Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {monthlyDues.map((due, idx) => (
+                                <tr
+                                key={idx}
+                                className={`${
+                                    idx % 2 === 0 ? "bg-white" : "bg-green-50"
+                                } hover:bg-green-100`}
+                                >
+                                <td className="p-2">{due.month}</td>
+                                <td className="p-2 text-right">₱{due.monthlyDues.toFixed(2)}</td>
+                                </tr>
+                            ))}
+                            <tr className="border-t font-bold">
+                                <td className="p-2">Total</td>
+                                <td className="p-2 text-right">₱{totalTuition + downPayment}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    ) : (
+                        <p>No monthly dues found.</p>
+                    )}
+                    </div>
+                )}
                 </main>
+
             ),
 
         },
@@ -562,13 +839,11 @@
 
         // const handlePrev = () => {
         //     if (page > 0) setPage(page - 1);
-        //     // setErrors({}); 
+
         // };
 
         // const handleNext  = async () => {
-        //     // if (!(await validatePage())) return;
         //     if (page < sections.length - 1) setPage(page + 1);
-        //     // setErrors({}); 
         // };
 
     const handleNext = async () => {
