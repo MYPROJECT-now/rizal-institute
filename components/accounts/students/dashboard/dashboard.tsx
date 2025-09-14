@@ -24,14 +24,14 @@
     const studentInfo = data;
 
     return (
-      <div className="p-8">
+      <div className="sm:p-8 px-4 py-3">
         <motion.div
           className="mb-8 border-b border-gray-200 pb-6"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-dGreen flex items-center gap-2">
+          <h1 className=" text-xl sm:text-3xl font-bold text-dGreen flex items-center gap-2">
             <School className="w-8 h-8" />
             Welcome, {studentInfo?.studentFirstName || "Student"}!
           </h1>
@@ -106,9 +106,9 @@
 
         {/* Outstanding Balance Section */}
         <div className="mt-8">
-          <div className="bg-red-50 p-6 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
+          <div className="bg-red-50 sm:p-6 p-2 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
             <span className="text-xl font-bold text-red-700">Outstanding Balance:</span>
-            <span className={studentInfo?.paymentMethod === "full_payment" ? "text-2xl font-bold text-white bg-dGreen px-6 py-3 rounded-lg shadow-md" : "text-2xl font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
+            <span className={studentInfo?.paymentMethod === "full_payment" ? "text-lg sm:text-2xl font-bold text-white bg-dGreen px-6 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
               {studentInfo?.paymentMethod === "full_payment" ? (
                 <div>
                   <p>Fully Paid</p>

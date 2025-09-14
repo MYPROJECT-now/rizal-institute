@@ -31,7 +31,7 @@ const Todos: FC<Props> = ({ todos }) => {
     const totalPages = Math.max(1,Math.ceil(filteredItems.length / itemsPerPage));
 
     return (
-        <main className="w-full text-center">
+        <main className="w-full text-center min-h-[500px]">
             {/* Filter Controls */}
             <div className="flex flex-wrap items-center gap-4 mb-6">
                 <label className="text-green-900 font-bold text-lg">Filter By:</label>

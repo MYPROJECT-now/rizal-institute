@@ -39,8 +39,7 @@ const Student_header = () => {
 
     return (
         
-        <div className=
-        "flex flex-row items-center justify-between h-[60px] mt-4">
+        <div className="lg:flex hidden flex-row items-center justify-between h-[60px] mt-10 lg:mt-4">
             <div className="flex flex-col">
                 <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE

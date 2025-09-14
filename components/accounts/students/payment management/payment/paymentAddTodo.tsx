@@ -108,7 +108,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
           </div>
         ) : (
           <div>
-            <p className="text-lg font-bold text-dGreen mb-1 flex items-center gap-2">
+            <p className="sm:text-lg text-sm font-bold text-dGreen mb-1 flex items-center gap-2">
               <span>Due this month:</span>
               <span className="font-semibold text-gray-800">
                 {balance?.dueThisMonth ?? (
@@ -116,7 +116,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
                 )}
               </span>
             </p>
-            <p className="text-lg font-bold text-dGreen flex items-center gap-2">
+            <p className="sm:text-lg text-sm font-bold text-dGreen flex items-center gap-2">
               <span>Total Remaining Balance:</span>
               <span className="font-semibold text-gray-800">
                 {balance?.totalRemainingBalance ?? (

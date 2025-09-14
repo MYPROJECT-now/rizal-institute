@@ -14,7 +14,7 @@ export const PaymentMainPage = () => {
                 <Button 
                 onClick={open}
                 variant="mainButton" 
-                className="px-6 py-3 text-white rounded-xl">
+                className="sm:px-6 px-3 py-3 text-white rounded-xl">
                     Pay Now
                 </Button>
         </div>

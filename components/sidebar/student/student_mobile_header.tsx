@@ -1,22 +1,23 @@
+import { Profile_student } from "@/components/profile/profile_student"
 import { MobileSidebar } from "./student_mobile_sidebar"
-import Image from "next/image"
 import Link from "next/link"
 export const MobileHeader = () => {
     return (
-        <nav className ="lg:hidden px-4 h-[60px] flex items-center border-b fixed top-0 w-full z-50 bg-lGreen">
-            <MobileSidebar />
-            <div className ="flex flex-row">
-                <Link href="/ACCOUNTS/student">
-                <Image 
-                                        src="/school.png" 
-                                        width={40}
-                                        height={40} 
-                                        alt="PWD Icon"
-                                        className ="ml-5 h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto"
-                                    />
+        <nav className ="lg:hidden px-8 py-3 flex flex-row items-center justify-between w-full bg-lGreen">
+            <div className="flex flex-row items-center">
+                
+                <MobileSidebar />
+                <div className ="flex flex-row">
+                    <Link href="/ACCOUNTS/student">
+                        <p className="text-white ml-5 mt-2 text-bold font-merriweather text-lg">Rizal Institute</p>
                     </Link>
-                <p className="text-white ml-5 mt-2 text-bold font-merriweather text-lg">Rizal Institute </p>
+                </div>
             </div>
+
+            <div>
+                <Profile_student />
+            </div>
+
         </nav>
     )
 }

@@ -10,7 +10,7 @@ import { PaymentHistoryPage } from "@/components/accounts/students/payment manag
 export const PaymentPage = () => {
 
     return (
-        <div className="flex flex-col gap-10 px-8 pt-8 ">
+        <div className="flex flex-col gap-10 px-4 pt-4 sm:px-8 sm:pt-8 ">
             <div className="bg-green-100 p-4 rounded-lg flex items-center justify-between">
                 <Balance />
                 <PaymentMainPage />

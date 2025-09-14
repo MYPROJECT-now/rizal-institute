@@ -33,7 +33,7 @@ export const Profile_student = () => {
                         alt="User Profile Picture"
                         width={15}
                         height={15}
-                        className="rounded-full lg:w-[30px] lg:h-[30px]" // For circular profile picture
+                        className="rounded-full lg:w-[30px] lg:h-[30px] w-[25px] h-[25px]" // For circular profile picture
                     />
                     </div>
             

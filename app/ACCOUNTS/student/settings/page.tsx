@@ -64,10 +64,10 @@ const StudentsPassword = () => {
   };
 
   return (
-    <div className="w-full h-full mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page sm:text-sm md:text-base lg:text-lg">
+    <div className="w-full h-full sm:mt-3 mt-1 mx-3 rounded-xl flex flex-col sm:px-10 px-1 bg-page sm:text-sm md:text-base lg:text-lg">
       <Admin_student />
       <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
-        <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
+        <div className="sm:h-[80px] h-[60px] w-full bg-lGreen font-merriweather text-xl sm:text-3xl text-white items-center flex pl-5">
           PASSWORD MANAGEMENT
         </div>
 

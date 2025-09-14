@@ -31,7 +31,7 @@ const CertificatePage = () => {
     .join(" ");
 
   return (
-    <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
+    <div className="w-full h-full sm:h-[680px] mt-3 mx-3 mb-3 rounded-xl flex flex-col sm:px-10 px-0 bg-page">
       <Student_header />
       <div className="w-full h-auto lg:h-[540px] bg-white self-center mt-10 rounded-lg">
         <div className="w-full h-full flex flex-col gap-3 items-center justify-center">

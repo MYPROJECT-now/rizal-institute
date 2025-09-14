@@ -2,6 +2,7 @@
 
 import { Sheet,
     SheetContent,
+    SheetTitle,
     SheetTrigger
  } from "../../ui/sheet";  
 
@@ -17,6 +18,8 @@ export const MobileSidebar = () => {
             <SheetTrigger asChild>
                 <Menu className="text-white cursor-pointer" />
             </SheetTrigger>
+                        <SheetTitle/>
+
             
             <SheetContent className ="p-0 z-[100] bg-lGreen" side="left">
                 <Sidebar_student onClose={ () => setOpen(false)}/>    
