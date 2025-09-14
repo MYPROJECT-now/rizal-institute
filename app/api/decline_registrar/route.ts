@@ -42,7 +42,7 @@ async function sendDeclineEmail(email: string, trackingId: string, remarks: stri
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Enrollment Application Declined - Rizal Institute',
+    subject: 'Application Declined - Rizal Institute',
     text: `
     Dear Applicant,
 

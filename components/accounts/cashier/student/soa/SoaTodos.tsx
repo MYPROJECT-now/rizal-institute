@@ -90,13 +90,6 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
         );
     };
 
-    // const handleSaveAll = async () => {
-    //     for (const item of SOATodoItems) {
-    //     await updateSoa(item.month_id, item.month ?? "", item.monthlyDue ?? 0);
-    //     }
-    //     toast.success("SOA updated successfully.");
-    //     setEditing(false);
-    // };
 
     const handleSaveAll = async () => {
         setIsSaving(true);
@@ -130,8 +123,8 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                                 <th className="border border-gray-300 p-1">Monthly Due</th>
                                 <th className="border border-gray-300 p-1">Amount Paid</th>
                                 <th className="border border-gray-300 p-1">Date of Payment</th>
-                                <th className="border border-gray-300 p-1">SI #</th>
-                                <th className="border border-gray-300 p-1">Remarks</th>
+                                {/* <th className="border border-gray-300 p-1">SI #</th>
+                                <th className="border border-gray-300 p-1">Remarks</th> */}
                                 <th className="border border-gray-300 p-1">Unpaid Due</th>
                                 <th className="border border-gray-300 p-1">Total Bal. to Date</th>
                             </tr>
@@ -145,7 +138,7 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                                 <th colSpan={2}/>
                             </tr>
                             <tr>
-                                <th className="bg-gray-100 border border-gray-300 p-1 pl-2 text-start" colSpan={8}>Payment Schedule</th>
+                                <th className="bg-gray-100 border border-gray-300 p-1 pl-2 text-start" colSpan={6}>Payment Schedule</th>
                             </tr>
                         </thead>
                         <tbody className="text-center">

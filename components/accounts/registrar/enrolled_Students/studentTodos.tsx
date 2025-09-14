@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { doDropferStudent, doTransferStudent } from "@/src/actions/registrarAction";
 import { toast } from "sonner";
 import { toastConfirm } from "@/components/ui/toast.confirm";
+import { Students_info_Modal } from "./student_modal";
 
 interface Props {
   students: all_studentTable_Type [];
@@ -156,6 +157,7 @@ const Students: FC<Props> = ({ students }) => {
 
   return (
     <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
+        <Students_info_Modal />
 
     <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
   <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>

@@ -3,6 +3,7 @@
   import { Grade_Type, } from "@/src/type/REGISTRAR/applicant";
   import { Button } from "@/components/ui/button";
 import Grade from "./gradeTodo";
+import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
 
 
 
@@ -41,6 +42,7 @@ import Grade from "./gradeTodo";
 
     return (
     <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
+        <Enrollees_info_Modal />
 
     <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
       <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>

@@ -3,6 +3,8 @@ import { FC, useState } from "react";
 import { PaymentHistory } from "@/src/type/STUDENT/student";
 import Todo from "./paymentHistoryTodo";
 import { Button } from "@/components/ui/button";
+import { PaymentReceipt } from "../receipt/receipt";
+import { CashierPaymentReceipt } from "../preceipt/receipt";
 
 interface Props {
     todos: PaymentHistory[];
@@ -53,6 +55,8 @@ const Todos: FC<Props> = ({ todos }) => {
             </div>
             {/* Table */}
             <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
+            <PaymentReceipt />
+            <CashierPaymentReceipt />
             <table className="w-full text-sm text-center">
                 <thead>
                     <tr className="bg-green-600 text-white">
@@ -61,7 +65,8 @@ const Todos: FC<Props> = ({ todos }) => {
                         <th className="px-4 py-2">Method</th>                        
                         <th className="px-4 py-2">Date Verified</th>
                         <th className="px-4 py-2">Status</th>
-                        <th className="px-4 py-2">Receipt</th>
+                        <th className="px-4 py-2">Proof of Payment</th>
+                        <th className="px-4 py-2">Payment Receiept</th>
 
                     </tr>
                 </thead>

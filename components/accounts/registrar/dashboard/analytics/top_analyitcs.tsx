@@ -1,11 +1,23 @@
 import Image from "next/image";
 import { getTotalStudents, getGenderCounts, getTotalApplicants, getTotalReserved } from "@/src/actions/registrarAction";
+import { getSelectedYear } from "@/src/actions/utils/getSelectedYear";
+import { toast } from "sonner";
 
 export const Top_analytics = async () => {
-    const totalStudents = await getTotalStudents();
-    const genderCounts = await getGenderCounts();
-    const totalApplicants = await getTotalApplicants();
-    const totalReserved = await getTotalReserved();
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return toast.error("No selectedacademic year.");
+
+    const [totalStudents, genderCounts, totalApplicants, totalReserved] = await Promise.all([
+        getTotalStudents(selectedYear),
+        getGenderCounts(selectedYear),
+        getTotalApplicants(selectedYear),
+        getTotalReserved(selectedYear),
+    ])
+    // const totalStudents = await getTotalStudents();
+    // const genderCounts = await getGenderCounts();   
+    // const totalApplicants = await getTotalApplicants();
+    // const totalReserved = await getTotalReserved();
 
     const boysCount = genderCounts.find(count => count.gender === "Male")?.count || 0;
     const girlsCount = genderCounts.find(count => count.gender === "Female")?.count || 0;

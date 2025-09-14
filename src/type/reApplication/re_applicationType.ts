@@ -33,6 +33,8 @@ export interface StudentUpdateData {
     mop?: string;
     reservationReceipt?: string;
     reservationAmount?: number;
+
+    trackingId: string;
   }
 
   export interface ReservationFee {

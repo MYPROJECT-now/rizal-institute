@@ -4,7 +4,6 @@ import { FC } from "react";
 import {  Tablefull_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
 import { useDeclineRemarksModal, useShowReservationPayementModal } from "@/src/store/CASHIER/applicants";
 import { Button } from "@/components/ui/button";
-import { Cashier_FullPayment } from "../fullpayment_view/Enrollees_cashier";
 import { RemarksModal } from "../remarks_cashier/remark_modal";
 
 interface Props {
@@ -26,7 +25,6 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
       <td className="px-[55px] py-2">{applicants.gradeLevel}</td>
       <td className="px-4 py-2">
-        <Cashier_FullPayment />
         <Button 
           className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           variant={"confirmButton"}

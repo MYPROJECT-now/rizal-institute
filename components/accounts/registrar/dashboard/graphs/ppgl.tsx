@@ -29,28 +29,12 @@ export const Ppgl = () => {
   const [yAxisMax, setYAxisMax] = useState(5);
   const [loading, setLoading] = useState(true);
 
-  
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await getEnrolledCountPerGradeLevel();
-  //     const formatted = res.map((item) => ({
-  //       gradeLevel: item.gradeLevel,
-  //       count: Number(item.count),
-  //     }));
-  //     setChartData(formatted);
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
   const fetchData = async () => {
     const res = await getEnrolledCountPerGradeLevel();
 
-    
-
     const defaultGrades = ["7", "8", "9", "10"];
-
     // Map received data to an object for quick lookup
     const dataMap = new Map(res.map(item => [item.gradeLevel, Number(item.count)]));
 
@@ -63,7 +47,6 @@ export const Ppgl = () => {
     const maxCount = Math.max(...filledData.map((d) => d.count));
     const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
     setYAxisMax(paddedMax);
-
 
     setChartData(filledData);
     setLoading(false);
@@ -103,17 +86,6 @@ export const Ppgl = () => {
             >
             </XAxis>
 
-            {/* <YAxis
-              label={{
-                value: "Number of Students",
-                angle: -90,
-                position: "insideLeft",
-                dy: 80,
-                dx: 10,
-              }}
-              tickFormatter={(value) => value}
-              style={{ fontSize: "10px" }}
-            /> */}
             <YAxis
               domain={[0, yAxisMax]} // always start from 0, end at highest value
               tick={{ fontSize: 10 }}

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {  declinePayment } from "@/src/actions/cashierAction";
 import { StudentsPaymentReview } from "./payment_receipt/student_payment";
 import { useShowMonthlyPayementModal, useShowPaymentReceiptModal } from "@/src/store/CASHIER/student";
-import { StudentsPaymentReceipt } from "./payment_receipt/cashiers_receipt";
 
 interface Props {
   VerifyTodo: VerifyPayment;
@@ -34,9 +33,9 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
             <td className="px-4 py-2">
                 <StudentsPaymentReview />
                 <Button 
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
-                variant={"confirmButton"}
-                onClick={() => openPayment(VerifyTodo.monthlyPayment_id)}
+                    className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+                    variant={"confirmButton"}
+                    onClick={() => openPayment(VerifyTodo.monthlyPayment_id)}
                 >
                     View
                 </Button> 
@@ -45,10 +44,9 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
             <td className="px-4 py-2">{VerifyTodo.dateOfPayment}</td>
             <td className={VerifyTodo.status === "Approved" ? "px-4 py-2 text-green-600 font-semibold" : VerifyTodo.status === "Pending " ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-yellow-600 font-semibold"}>{VerifyTodo.status}</td>
             <td className="px-4 py-2 space-x-2">
-                <StudentsPaymentReceipt />
                 <Button
                     variant="acceptButton"
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+                    className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
                     // onClick={handleAccept}
                     onClick={() => sendReceipt(VerifyTodo.monthlyPayment_id)}
                     disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}

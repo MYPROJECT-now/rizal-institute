@@ -14,16 +14,13 @@
             redirect("/portal2"); // not logged in
         }
 
-            const client = await clerkClient();
-            const user = await client.users.getUser(userId);
-            const role = user?.publicMetadata?.role;
-        
-            if (role !== "registrar") {
-                redirect("/"); // unauthorized
-            }
-
-
-
+        const client = await clerkClient();
+        const user = await client.users.getUser(userId);
+        const role = user?.publicMetadata?.role;
+    
+        if (role !== "registrar") {
+            redirect("/"); // unauthorized
+        }
 
         return (
             <div className=" flex lg:flex-row flex-col">

@@ -1257,12 +1257,31 @@ await sendReservationEmail(email, trackingId);
 }
 
 
-//server action for getting the status of enrollment period
+// export const nottice = async () => {
+//   const id = await getAcademicYearID();
+//   console.log("AcademicYearID:", id);
+  
+//   const notice = await db
+//     .select({
+//       enrollment_period: EnrollmentStatusTable.enrollment_period,
+//       enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
+//       enrollment_end_date: EnrollmentStatusTable.enrollment_end_date,
+//       isActive: EnrollmentStatusTable.isActive,
+//     })
+//     .from(EnrollmentStatusTable)
+//     .where(eq(EnrollmentStatusTable.academicYear_id, id))
+//     .limit(1);
+
+//   console.log(notice);
+//   return notice;
+// };
+
 export const nottice = async () => {
   const id = await getAcademicYearID();
   console.log("AcademicYearID:", id);
 
   if (!id) {
+    // If no academic year found, return a "Closed" default
     return [{
       enrollment_period: null,
       enrollment_start_date: null,

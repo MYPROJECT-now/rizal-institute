@@ -28,6 +28,19 @@ export const useShowMonthlyPayementModal = create<MonthlyPayment_ModalState>((se
     close: () => set({ isOpen: false, selectedID: null }),
 }));
 
+type MonthlyPaymentReceipts_ModalState = {
+    isOpen: boolean;
+    selectedID: number | null;
+    open: (monthlyPayment_id: number) => void;
+    close: () => void;
+};
+
+export const useShowMonthlyPayementReceiptsModal = create<MonthlyPaymentReceipts_ModalState>((set) => ({
+    isOpen: false, //change mo maya
+    selectedID: null,
+    open: (monthlyPayment_id: number) => set({ isOpen: true, selectedID: monthlyPayment_id }),
+    close: () => set({ isOpen: false, selectedID: null }),
+}));
 
 type PaymentReceipt_ModalState = {
     isOpen: boolean;

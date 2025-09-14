@@ -1,7 +1,6 @@
 "use client";
 
 import { FC } from "react";
-import { Students_info_Modal } from "./student_modal";
 import { all_studentTable_Type } from "@/src/type/REGISTRAR/student";
 import { useTableStudentModal } from "@/src/store/REGISTRAR/student";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,6 @@ const Student: FC<Props> = ({ student, transferStudent, dropStudent, loading  })
       <td className="px-[55px] py-2">{student.gradeLevelName}</td>
       <td className={student.status === "Enrolled" ? "text-green-700 font-semibold" : "text-red-700 font-semibold"}> {student.status}</td>
       <td className="px-4 py-2">
-        <Students_info_Modal />
         <Button 
           variant="confirmButton"
           className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "

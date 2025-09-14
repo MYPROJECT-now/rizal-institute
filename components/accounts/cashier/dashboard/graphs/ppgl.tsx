@@ -18,43 +18,6 @@ import { getTotal } from "@/src/actions/cashierAction";
 import { Loader2 } from "lucide-react";
 
 
-// const chartData = [
-//   {
-//     gradeLevel: "Grade 7",
-//     upToDate: 10,
-//     late: 3,
-//     none: 1,
-//   },
-//   {
-//     gradeLevel: "Grade 8",
-//     upToDate: 12,
-//     late: 5,
-//     none: 0,
-//   },
-// ];
-// type ChartConfig = Record<
-//   string,
-//   {
-//     label: string;
-//     color: string;
-//   }
-// >;
-
-
-// const chartConfig = {
-//   upToDate: {
-//     label: "Up-to-date",
-//     color: "hsl(var(--chart-1))",
-//   },
-//   late: {
-//     label: "Late",
-//     color: "hsl(var(--chart-2))",
-//   },
-//   none: {
-//     label: "No Payment",
-//     color: "hsl(var(--chart-3))",
-//   },
-// } satisfies ChartConfig;
 type ChartRow = {
   gradeLevel: string;
   upToDate: number;

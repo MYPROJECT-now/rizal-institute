@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import VerifyTodo from "./VerifyTodo";
 import { Button } from "@/components/ui/button";
+import { StudentsPaymentReceipt } from "./payment_receipt/cashiers_receipt";
 
 interface Props {
   VerifyTodos: VerifyPayment[];
@@ -79,6 +80,8 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     </div>
 
 <div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+                    <StudentsPaymentReceipt />
+
   <table className="w-full text-xs sm:text-sm text-center">
         <thead>
             <tr className="bg-green-600 text-white">

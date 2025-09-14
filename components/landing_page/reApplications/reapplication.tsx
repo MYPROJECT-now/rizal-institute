@@ -20,6 +20,7 @@ export const ReApplication = () => {
 
     const searchParams = useSearchParams();
     const trackingId = searchParams.get("trackingId");
+    
     const router = useRouter();
 
     const [page, setPage] = useState(0);
@@ -550,6 +551,8 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                 mop,
                 reservationAmount,
                 reservationReceipt: uploadReservationReceipt,
+
+                trackingId: trackingId,
             };
 
             const updatedStudent = await updateStudentData(lrn, updatedData);

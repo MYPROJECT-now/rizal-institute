@@ -217,6 +217,7 @@
     dateOfPayment: varchar('dateOfPayment', { length:100 }).notNull(),
     amount: integer('amount').notNull(),
     proofOfPayment: varchar('proofOfPayment', { length:300 }).notNull(),
+    cashiersReceipt: varchar('cashiersReceipt', { length:300 }),
     modeOfPayment: varchar('modeOfPayment', { length:100 }).notNull(),
     dateOfVerification: varchar('dateOfVerification', { length:100 }),
     SInumber: varchar('SInumber', { length:300 }),

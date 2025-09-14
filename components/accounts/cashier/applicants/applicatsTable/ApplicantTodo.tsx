@@ -2,7 +2,6 @@
 
 import { FC } from "react";
 import { RemarksModal } from "@/components/accounts/cashier/applicants/remarks_cashier/remark_modal";
-import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier";
 import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
 import { useDeclineRemarksModal, useShowReservationPayementModal } from "@/src/store/CASHIER/applicants";
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,6 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className="px-[55px] py-2">{applicants.gradeLevel}</td>
       <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="px-4 py-2">
-        <Cashier_ReservationReview />
         <Button 
           className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
           variant={"confirmButton"}

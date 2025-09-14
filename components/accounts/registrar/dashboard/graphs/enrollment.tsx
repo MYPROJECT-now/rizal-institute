@@ -31,29 +31,6 @@ export const Enrollment = () => {
     const [loading, setLoading] = useState(true);
 
 
-//     useEffect(() => {
-//     const fetchData = async () => {
-//       const res = await getEnrollmentTrend();
-
-
-//     const formattedData = res.map((item) => ({
-//       academicYear: item.academicYear,
-//       count: Number(item.count),
-//     }));
-
-
-
-//       const maxCount = Math.max(...formattedData.map((d) => d.count));
-//       const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
-//       setYAxisMax(paddedMax);
-
-
-//       setChartData(formattedData);
-//     };
-
-//   fetchData();
-// }, []);
-
 useEffect(() => {
   const fetchData = async () => {
     const res = await getEnrollmentTrend();

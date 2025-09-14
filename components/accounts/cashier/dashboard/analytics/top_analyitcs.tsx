@@ -1,10 +1,18 @@
 import Image from "next/image";
 import {  getPendingApplicantsCount,  getPendingPaymentsCount,  getReservedSlotCount } from "@/src/actions/cashierAction";
+import { getSelectedYear } from "@/src/actions/utils/getSelectedYear";
+import { toast } from "sonner";
 
 export const Top_analytics = async () => {
-    const pendingApplicants = await getPendingApplicantsCount();
-    const reservedSlots = await getReservedSlotCount();
-    const pendingPayments = await getPendingPaymentsCount();
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return toast.error("No selectedacademic year.");
+
+    const [pendingApplicants, reservedSlots, pendingPayments] = await Promise.all([
+        getPendingApplicantsCount(selectedYear),
+        getReservedSlotCount(selectedYear),
+        getPendingPaymentsCount(selectedYear),
+    ]);
     return (
         <div className="grid sm:grid-cols-5 grid-cols-2 gap-3">
 

@@ -25,6 +25,8 @@ interface StatusData {
   hasPaidReservation?: string | null;
   hasTemptMonthly?: number | null;
   paymentStatus?: string | null;
+  resolved_reg_remarks?: boolean | null;
+  resolved_cashier_remarks?: boolean | null;
 }
 
 export const StatusModal = () => {
@@ -168,38 +170,44 @@ export const StatusModal = () => {
                 </div>
               </div>
 
-              {statusData?.regRemarks && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Registrar&apos;s Remarks
-                  </h3>
-                  <p className="text-gray-700">{statusData.regRemarks}</p>
-                  {statusData.regDate && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      Date: {format(new Date(statusData.regDate), "MMMM dd, yyyy")}
-                    </p>
-                  )}
-                </div>
-              )}
+              <div className="flex flex-row gap-10 w-full items-center justify-center">
+                {statusData?.regRemarks && !statusData?.resolved_reg_remarks &&(
+                  <div className="py-4 px-8 shadow-lg border-2 border-gray-200 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Registrar&apos;s Remarks
+                    </h3>
+                    <p className="text-gray-700">{statusData.regRemarks}</p>
+                    {statusData.regDate && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Date: {format(new Date(statusData.regDate), "MMMM dd, yyyy")}
+                      </p>
+                    )}
+                  </div>
+                )}
 
               
-              {statusData?.cashierRemarks && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Cashier&apos;s Remarks
-                  </h3>
-                  <p className="text-gray-700">{statusData.cashierRemarks}</p>
-                  {statusData.cashierDate && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      Date: {format(new Date(statusData.cashierDate), "MMMM dd, yyyy")}
-                    </p>
+                {statusData?.cashierRemarks && !statusData?.resolved_cashier_remarks && (
+                  <div className="py-4 px-8 shadow-lg border-2 border-gray-200 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Cashier&apos;s Remarks
+                    </h3>
+                    <p className="text-gray-700">{statusData.cashierRemarks}</p>
+                    {statusData.cashierDate && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Date: {format(new Date(statusData.cashierDate), "MMMM dd, yyyy")}
+                      </p>
                   )}
                 </div>
+
+
+
               )}
+              </div>
+
             </div>
           )}
 
-            {!statusData?.hasTemptMonthly && (
+            {!statusData?.hasTemptMonthly && statusData?.applicationFormReviewStatus === "Reserved" && statusData?.reservationPaymentStatus === "Reserved" && (
               <div className="p-4 bg-gray-50 rounded-lg">
               <p className=" mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
                 Kindly wait for the cashier to finish calculating your tuition. An email will be sent to you about your tuition.
@@ -246,7 +254,7 @@ export const StatusModal = () => {
                 className="h-[50px] w-[200px] rounded-xl"
                 onClick={handleRePayTuition}
               >
-                Cancel
+                Tuition Fee Re-Payment
               </Button>
             ) :
 
@@ -270,7 +278,6 @@ export const StatusModal = () => {
                 >
                   Continue to Payment Options
                 </Button>
-
               </div>
             // ):
             // //new payment

@@ -58,12 +58,11 @@ export const RemarksModal =  ({ onDecline }: Props) => {
           <DialogTitle className="text-center text-white text-2xl">Remarks</DialogTitle>
         </DialogHeader>
         <div className="w-full p-4">
-          <input
-            type="text"
+          <textarea
             placeholder="Enter remarks"
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
-            className="border px-2 py-1 text-sm w-full focus:ring-2 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            className="border-black px-2 py-1 text-sm w-full h-[100px] focus:ring-2 focus:ring-dGreen focus:border-dGreen outline-none transition"
           />
           <Button
             onClick={handleDecline}

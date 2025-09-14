@@ -4,6 +4,7 @@
   import { Tableapplicant_Type } from "@/src/type/REGISTRAR/applicant";
   import { Button } from "@/components/ui/button";
   import { toast } from "sonner";
+import { Enrollees_info_Modal } from "../applicants_information_modal/applicants_modal";
 
 
 
@@ -23,24 +24,6 @@
     // 🔢 Pagination State
     const [currentPage, setCurrentPage] = useState(1);
     const studentsPerPage = 5;
-
-    // useEffect(() => {
-    //   const updateStudentsPerPage = () => {
-    //     if (window.innerWidth >= 1440) {
-    //       setStudentsPerPage(5); 
-    //     } else if (window.innerWidth >= 1024) {
-    //       setStudentsPerPage(5); 
-    //     } else if (window.innerWidth >= 768) {
-    //       setStudentsPerPage(4); 
-    //     } else {
-    //       setStudentsPerPage(5); // default
-    //     }
-    //   };
-
-    //   updateStudentsPerPage(); // run on load
-    //   window.addEventListener("resize", updateStudentsPerPage);
-    //   return () => window.removeEventListener("resize", updateStudentsPerPage);
-    // }, []);
 
     const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string) => {
       setLoadingId(id);
@@ -152,6 +135,8 @@
   </div>
 
 <div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+    <Enrollees_info_Modal />
+
   <table className="w-full text-xs sm:text-sm text-center">
         <thead>
           <tr className="bg-green-600 text-white ">

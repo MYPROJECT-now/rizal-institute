@@ -4,12 +4,16 @@ import { useState, useEffect } from "react";
 import { getRecentApplicants } from "@/src/actions/registrarAction";
 import { RecentApplicantsType } from "@/src/type/REGISTRAR/applicant";
 
+
 export const RecentApplicantsTable = () => {
   const [recentApplicants, setRecentApplicants] = useState<RecentApplicantsType[]>([]);
   const [loading, setLoading] = useState(true);
 
+
+
   useEffect(() => {
     const fetchRecentApplicants = async () => {
+
       const data = await getRecentApplicants();
       setRecentApplicants(data);
       setLoading(false);

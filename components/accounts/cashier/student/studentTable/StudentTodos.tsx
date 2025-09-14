@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import Student from "./StudentTodo";
 import { all_student_Type } from "@/src/type/CASHIER/STUDENT/student";
 import { Button } from "@/components/ui/button";
+import { SoaModal } from "../soa/SoaModal";
 
 
 interface Props {
@@ -89,6 +90,7 @@ const filteredStudents = studentList.filter((student) => {
 
 
 <div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <SoaModal />
   <table className="w-full text-xs sm:text-sm text-center">
       <thead>
         <tr className="bg-green-600 text-white">

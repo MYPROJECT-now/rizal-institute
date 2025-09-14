@@ -3,7 +3,6 @@
 import { FC, } from "react";
 
 import { StatusModal } from "@/components/accounts/registrar/applicants/remarks_registrar/remark_modal";
-import { Enrollees_info_Modal } from "../applicants_information_modal/applicants_modal";
 import { Tableapplicant_Type } from "@/src/type/REGISTRAR/applicant";
 import { useDeclineRemarksModal, useShowApplicantInfoModal } from "@/src/store/REGISTRAR/applicant";
 import { Button } from "@/components/ui/button";
@@ -32,6 +31,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
     }
   };
 
+
   return (
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
       <td className="px-4 py-2">{applicant.lrn}</td>
@@ -41,7 +41,6 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
       <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       {/* <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>   */}
       <td className="px-4 py-2">
-        <Enrollees_info_Modal />
         <Button 
           variant={"confirmButton"}
           className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "

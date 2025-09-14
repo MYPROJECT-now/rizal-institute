@@ -729,90 +729,90 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-[16px] md:text-2xl text-dGreen font-bold font-merriweather">
+                <p className="sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
                     Section 1: Personal Information
                 </p>
             </div>
         ),
         content: (
-            <main className=" w-full flex flex-col gap-10 px-10 h-auto mt-2 ">
+            <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                <section className="w-full px-2 py-2">
+                <section className="w-full px-0 sm:px-2 py-2">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
+                    <div className="w-full gap-4 flexflex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
-                        <section className="flex flex-row gap-5">
+                        <section className="flex flex-col sm:flex-row gap-5 mb-3 sm:mb-0">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="Dela Cruz"
                                     onChange={handleApplicantLastName}
                                     value={applicantsLastName}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.applicantsLastName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input type="text"
                                     placeholder="John"
                                     onChange={handleApplicantFirstName}
                                     value={applicantsFirstName}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.applicantsFirstName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold"> Middle Name</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold"> Middle Name</span>
                                 <input 
                                     type="text" 
                                     placeholder="Doe" 
                                     onChange={handleApplicantMiddleName}
                                     value={applicantsMiddleName}
-                                    className="rounded-sm px-1 w-full sm:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1 w-full sm:w-[170px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold"> Suffix</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold"> Suffix</span>
                                 <input
                                     type="text" 
                                     placeholder="Jr." 
                                     onChange={handleApplicantSuffix}
                                     value={applicantsSuffix}
-                                    className="rounded-sm px-1  w-full sm:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1  w-full sm:w-[70px] lg:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
                             </div>
                         </section>
-                        <section className="flex flex-row gap-5">
+                        <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Date Of Birth <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Date Of Birth <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="date" 
                                     onChange={handleDateOfBirth}
                                     value={dateOfBirth}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.dateOfBirth ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${dateOfBirth === '' ? 'text-gray-500' : 'text-black'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Age <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Age <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                 type="text" 
                                 value={age}
                                 disabled
-                                className="rounded-sm px-1 w-full sm:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1 w-full sm:w-[170px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                             />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Gender <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Gender <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="Gender"
                                     onChange={handleGender}
                                     value={gender}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.gender ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${gender === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Gender</option>
@@ -827,29 +827,29 @@ const sections = [
 
                 <section className="w-full px-2 py-2">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Contact Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Contact Information:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
-                        <section className="flex flex-row gap-5">
+                        <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="09XXXXXXXX" 
                                     onChange={handleMobileNumber}
                                     value={mobileNumber}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.mobileNumber ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Email <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Email <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="l7B4G@example.com" 
                                     onChange={handleEmail}
                                     value={email}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.email ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
@@ -867,66 +867,67 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-[16px] md:text-2xl text-dGreen font-bold font-merriweather">
+                <p className="sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
                     Section 2: Guardian Details
                 </p>
             </div>
         ),
         content: (
-            <main className=" w-full flex flex-col gap-10 px-10 h-auto mt-2 ">
-                <section className="w-full px-2 py-2">
+            <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <section className="w-full px-0 sm:px-2 py-2">
 
-                        <section className="flex flex-row gap-5">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+                        <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="Garcia"
                                     onChange={handleGuardiansLastName}
                                     value={guardiansLastName}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.guardiansLastName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="John" 
                                     onChange={handleGuardiansFirstName}
                                     value={guardiansFirstName}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.guardiansFirstName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Middle Name</span>
+                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Middle Name</span>
                                 <input 
                                     type="text" 
                                     placeholder="Doe"
                                     onChange={handleGuardiansMiddleName}
                                     value={guardiansMiddleName}
-                                    className="rounded-sm px-1 w-full sm:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Suffix</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Suffix</span>
                                 <input 
                                     type="text" 
                                     placeholder="Doe"
                                     onChange={handleGuardiansSuffix}
                                     value={guardiansSuffix}
-                                    className="rounded-sm px-1 w-full sm:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
                             </div>
                         </section>
 
-                        <section className="flex flex-row gap-5">
+                        <section className="flex flex-col sm:flex-row gap-5 sm:mt-0 mt-1"  >
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Full Address <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Full Address <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="123 Main Street, City, Country"
@@ -943,29 +944,29 @@ const sections = [
 
                 <section className="w-full px-2 py-2">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Emergency Contact Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Emergency Contact Information:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
-                        <section className="flex flex-row gap-5">
+                        <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="09XXXXXXXX" 
                                     onChange={handleEmergencyContact}
                                     value={emergencyContact}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.setEmergencyContact ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Email </span>
+                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Email </span>
                                 <input 
                                     type="text" 
                                     placeholder="l7B4G@example.com" 
                                     onChange={handleEmergencyEmail}
                                     value={emergencyEmail}
-                                    className="rounded-sm px-1 w-full sm:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1 w-full sm-[150px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
 
                                 />
                             </div>
@@ -982,37 +983,38 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-[16px] md:text-2xl text-dGreen font-bold font-merriweather">
+                <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
                     Section 3: Educational Background
                 </p>
             </div>
         ),
         content: (
-            <main className=" w-full flex flex-col gap-10 px-10 h-auto mt-2 ">
-                <section className="w-full px-2 py-2">
+            <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Enrollment Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <section className="w-full px-0 sm:px-2 py-2">
 
-                        <section className="flex flex-row gap-5">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Enrollment Information:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+                        <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">LRN <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">LRN <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="123456789102"
                                     onChange={handleLrn}
                                     value={lrn}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.lrn ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Grade to Enroll <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Grade to Enroll <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="grade to enroll"
                                     onChange={handleGradeLevel}
                                     value={gradeLevel}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.gradeLevel ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${gradeLevel === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Grade</option>
@@ -1023,12 +1025,12 @@ const sections = [
                                 </select>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Student Type <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Student Type <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="student type"
                                     onChange={handleStudentType}
                                     value={studentType}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.studentType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${studentType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Option</option>
@@ -1045,18 +1047,18 @@ const sections = [
 
                 <section className="w-full px-2 py-2">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Previous School Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Previous School Information:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col gap-4">
-                            <div className="flex flex-row gap-5">
+                            <div className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">SY Graduated <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">SY Graduated <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <select
                                     name="schoolYear"
                                     onChange={handleSchoolYear}
                                     value={schoolYear}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.schoolYear ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${schoolYear === '' ? 'text-gray-500' : 'text-black'}`}
                                 >
@@ -1070,13 +1072,13 @@ const sections = [
                                     ))}
                                 </select>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                            <div className="flex flex-col sm:flex-row">
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <select 
                                     name="Gender"
                                     onChange={handleSchoolType}
                                     value={schoolType}
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.schoolType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${schoolType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select School Type</option>
@@ -1086,8 +1088,8 @@ const sections = [
                             </div>
                             </div>
 
-                            <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Previous School <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                            <div className="flex flex-col sm:flex-row   ">
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Previous School <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 
                                     placeholder="AB Normal Schoool"
@@ -1099,7 +1101,7 @@ const sections = [
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">School Address <strong className="ml-1 text-red-600 text-xs font-semibold">(Required)</strong></span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">School Address <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text"
                                     placeholder="123 Street, City, Country"
@@ -1122,32 +1124,33 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-[16px] md:text-2xl text-dGreen font-bold font-merriweather">
-                    Section 4: Documents Submission <strong className="text-[12px] md:text-xl pl-2 text-dGreen font-normal">(optional - submit if available)</strong>
+                <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
+                    Section 4: Documents Submission <strong className="text-[11px] md:text-xl pl-0 sm:pl-2 text-dGreen font-normal">(optional - submit if available)</strong>
                 </p>
             </div>
         ),
         content: (
-            <main className=" w-full flex flex-col gap-10 px-10 h-auto mt-2 ">
-                <section className="w-full px-2 py-2">
+            <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Identity Documents:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <section className="w-full px-0 sm:px-2 py-2">
 
-                        <section className="flex flex-row gap-8">
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Identity Documents:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+                        <section className="flex flex-col sm:flex-row gap-8">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Birth Certificate </span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Birth Certificate </span>
                                 <PreviewModal />
                                 {birthCert ? (
                                 <div 
-                                    className="flex flex-col gap-1 w-full sm:w-[320px]]"
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
                                     key="birthcert_preview"
                                 >
                                     <div className="flex flex-row items-center gap-2">
                                         <button
                                             type="button"
                                             onClick={() => previewImage(birthCert)}
-                                            className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
                                             title="Click to preview"
                                             >
                                             {birthCert.name}
@@ -1176,24 +1179,24 @@ const sections = [
                                         accept="image/*"
                                         onChange={handleBirthCertChange}
                                         name="document"
-                                        className="rounded-sm px-1 w-full sm:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
                                 </div>
                                 )}
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">id picture </span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">id picture </span>
                                 {idPic ? (
                                 <div 
-                                    className="flex flex-col gap-1 w-full sm:w-[320px]]"
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
                                     key="idpic_preview"
                                 >
                                     <div className="flex flex-row items-center gap-2">
                                         <button
                                             type="button"
                                             onClick={() => previewImage(idPic)}
-                                            className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
                                             title="Click to preview"
                                             >
                                             {idPic.name}
@@ -1222,7 +1225,7 @@ const sections = [
                                         accept="image/*"
                                         onChange={handleIdPIcChange}
                                         name="document"
-                                        className="rounded-sm px-1 w-full sm:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
                                 </div>
                                 )}
@@ -1233,25 +1236,25 @@ const sections = [
                     </div>
                 </section>
 
-                <section className="w-full px-2 py-2">
+                <section className="w-full px-0 sm:px-2 py-2">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Academic Records:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                   <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Academic Records:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col gap-8">
-                            <div className="flex flex-row gap-8">
+                            <div className="flex flex-col sm:flex-row gap-8">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Report Card </span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Report Card </span>
                                 {reportCard ? (
                                 <div 
-                                    className="flex flex-col gap-1 w-full sm:w-[320px]]"
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
                                     key="reportcard_preview"
                                 >
                                     <div className="flex flex-row items-center gap-2">
                                         <button
                                             type="button"
                                             onClick={() => previewImage(reportCard)}
-                                            className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
                                             title="Click to preview"
                                             >
                                             {reportCard.name}
@@ -1259,7 +1262,7 @@ const sections = [
                                         <button
                                             type="button"
                                             onClick={() => {
-                                            setBirthCert(null);
+                                            setReportCard(null);
                                             if (reportCardRef.current) reportCardRef.current.value = "";}}
                                             className="text-red-500 hover:text-red-700 font-bold"
                                             title="Remove file"
@@ -1280,24 +1283,24 @@ const sections = [
                                         accept="image/*"
                                         onChange={handleReportCardChange}
                                         name="document"
-                                        className="rounded-sm px-1 w-full sm:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
                                 </div>
                                 )}
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Form 137 </span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Form 137 </span>
                                 {form137 ? (
                                 <div 
-                                    className="flex flex-col gap-1 w-full sm:w-[320px]]"
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
                                     key="form137_preview"
                                 >
                                     <div className="flex flex-row items-center gap-2">
                                         <button
                                             type="button"
                                             onClick={() => previewImage(form137)}
-                                            className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
                                             title="Click to preview"
                                             >
                                             {form137.name}
@@ -1305,7 +1308,7 @@ const sections = [
                                         <button
                                             type="button"
                                             onClick={() => {
-                                            setIdPic(null);
+                                            setForm137(null);
                                             if (form137Ref.current) form137Ref.current.value = "";}}
                                             className="text-red-500 hover:text-red-700 font-bold"
                                             title="Remove file"
@@ -1326,24 +1329,24 @@ const sections = [
                                         accept="image/*"
                                         onChange={handleForm137Change}
                                         name="document"
-                                        className="rounded-sm px-1 w-full sm:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
                                 </div>
                                 )}
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Good Moral </span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Good Moral </span>
                                 {goodMoral ? (
                                 <div 
-                                    className="flex flex-col gap-1 w-full sm:w-[320px]]"
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
                                     key="goodmoral_preview"
                                 >
                                     <div className="flex flex-row items-center gap-2">
                                         <button
                                             type="button"
                                             onClick={() => previewImage(goodMoral)}
-                                            className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
                                             title="Click to preview"
                                             >
                                             {goodMoral.name}
@@ -1372,7 +1375,7 @@ const sections = [
                                         accept="image/*"
                                         onChange={handleGoodMoralChange}
                                         name="document"
-                                        className="rounded-sm px-1 w-full sm:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
                                 </div>
                                 )}
@@ -1380,10 +1383,10 @@ const sections = [
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">CAPRISSA (if private) </span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">CAPRISSA (if private) </span>
                                 {studentExitForm ? (
                                 <div 
-                                    className="flex flex-col gap-1 w-full sm:w-[320px]]"
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
                                     key="student_exit_preview"
                                 >
                                     <div className="flex flex-row items-center gap-2">
@@ -1419,7 +1422,7 @@ const sections = [
                                         accept="image/*"
                                         onChange={handleStudentExitFormChange}
                                         name="document"
-                                        className="rounded-sm px-1 w-full sm:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
                                 </div>
                                 )}
@@ -1442,7 +1445,7 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-[16px] md:text-2xl text-dGreen font-bold font-merriweather">
+                <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
                     Section 5: Slot Reservation Fee Minimum (₱500)
                 </p>
             </div>
@@ -1450,18 +1453,18 @@ const sections = [
         content: (
             <main className="w-full flex flex-col gap-5"> 
 
-                <section className=" md:flex md:grid-cols-2 grid-cols-1 justify-center gap-5 pb-10 w-full">
+                <section className=" md:flex  grid-cols-1 justify-center gap-5 pb-10 w-full">
 
                     <div className="w-full md:w-1/2 flex flex-col items-center gap-10 mt-5 px-0 xl:px-10" >
-                        <p className="text-2xl font-bold text-dGreen font-merriweather text-center"> GCash Payment </p>
+                        <p className="sm:text-xl lg:text-2xl font-bold text-dGreen font-merriweather text-center"> GCash Payment </p>
 
                         <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
                             <CardHeader>
-                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
+                                <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-5">
                                 <section className="flex justify-center gap-2">
-                                    <p className="font-bold text-lg text-dGreen ">
+                                    <p className="font-bold text-sm lg:text-lg text-dGreen ">
                                         Gcash: 091234567890
                                     </p>
                                     <button
@@ -1472,13 +1475,14 @@ const sections = [
                                         <Image
                                             src="/copy.png"
                                             alt="copy icon"
-                                            width={20}
-                                            height={20}
+                                            width={1000}
+                                            height={1000}
+                                            className="lg:w-[20px] lg:h-[20px] w-[15px] h-[15px]"
                                         />
                                     </button>
                                 </section>
 
-                                <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
+                                <section className="font-regular text-sm sm:text-md text-dGreen flex flex-row justify-center gap-3">
                                     <p> Click this to download the QR Code</p>
                                     <button
                                         onClick={() => {
@@ -1501,12 +1505,12 @@ const sections = [
                         
                         <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl"> 
                             <CardHeader> 
-                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle> 
+                                <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle> 
                             </CardHeader> 
                             <CardContent className="flex flex-col gap-5"> 
                                 <section className="flex flex-col items-center"> 
                                     <div className="text-start"> 
-                                        <p className="font-regular text-lg text-d2Green"> Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible. </p> 
+                                        <p className="font-regular sm:text-md lg:text-lg text-d2Green"> Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible. </p> 
                                     </div> 
                                 </section> 
                                 <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3"> 
@@ -1514,8 +1518,9 @@ const sections = [
                                         <Image 
                                             src="/image.png" 
                                             alt="receipt" 
-                                            width={300} 
-                                            height={200} 
+                                            width={1000} 
+                                            height={1000}
+                                            className="w-[300px] h-[250px]" 
                                         /> 
                                     </figure> 
                                 </section> 
@@ -1526,15 +1531,15 @@ const sections = [
                     <div className=" my-10 md:my-0 bg-green-900 md:h-auto h-[4px] md:w-[2px] w-full" />
 
                     <div className="w-full md:w-1/2 flex flex-col items-center gap-10 mt-5 px-0 xl:px-10" >
-                        <p className="text-2xl font-bold text-dGreen font-merriweather text-center"> Bank Transfer </p>
+                        <p className="sm:text-xl lg:text-2xl font-bold text-dGreen font-merriweather text-center"> Bank Transfer </p>
 
                         <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
                             <CardHeader>
-                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
+                                <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-5">
                                 <section className="flex justify-center">
-                                    <div className="grid grid-cols-2 gap-y-2 gap-x-[80px] text-dGreen text-lg w-fit">
+                                    <div className="grid grid-cols-2 gap-y-2 gap-x-[30px] lg:gap-x-[80px] text-dGreen sm:text-sm lg:text-lg w-fit">
                                         <p className="font-bold">Bank Name:</p>
                                         <p className="font-semibold">BDO</p>
 
@@ -1546,7 +1551,7 @@ const sections = [
                                     </div>
                                 </section>
 
-                                <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
+                                <section className="font-regular sm:text-sm lg:text-md text-dGreen flex flex-row justify-center gap-3">
                                     <p> Click this to download the QR Code</p>
                                     <button
                                         onClick={() => {
@@ -1559,8 +1564,9 @@ const sections = [
                                         <Image
                                             src="/dl.png"
                                             alt="download icon"
-                                            width={20}
-                                            height={20}
+                                            width={1000}
+                                            height={1000}
+                                            className="w-[20px] h-[20px]"
                                         />
                                     </button>
                                 </section>
@@ -1569,12 +1575,12 @@ const sections = [
 
                         <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
                             <CardHeader>
-                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle>
+                                <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-5">
                                 <section className="flex flex-col items-center">
                                     <div className="text-start">
-                                        <p className="font-regular text-lg text-d2Green">
+                                        <p className="font-regular sm:text-md lg:text-lg text-d2Green">
                                             Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
                                         </p>
                                     </div>
@@ -1585,8 +1591,9 @@ const sections = [
                                         <Image
                                             src="/bank.svg"
                                             alt="receipt"
-                                            width={300}
-                                            height={200}
+                                            width={1000} 
+                                            height={1000}
+                                            className="w-[300px] h-[250px]" 
                                         />
                                     </figure>
                                 </section>
@@ -1598,17 +1605,17 @@ const sections = [
 
                 <section className="w-full flex flex-col gap-6 items-center justify-center">
                     <PreviewModal />
-                    <Card className="w-full max-w-[700px] backdrop-blur-md bg-green-100/10 border border-green-300/30 shadow-xl rounded-2xl p-6">
+                    <Card className="w-full max-w-[700px] backdrop-blur-md bg-green-100/10 border border-green-300/30 shadow-xl rounded-2xl px-0 sm:p-6">
                         <CardHeader>
-                            <CardTitle className="text-2xl font-bold text-dGreen text-center font-merriweather">
+                            <CardTitle className="text-lg sm:text-2xl font-bold text-dGreen text-center font-merriweather">
                             Payment Section
                             </CardTitle>
                         </CardHeader>
 
-                        <CardContent className="flex flex-col gap-6 items-center justify-center">
+                        <CardContent className="flex flex-col gap-6 items-center justify-start">
                             {/* Amount */}
-                            <div className="flex flex-row gap-4 items-center w-full max-w-[500px]">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">
+                            <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 items-start sm:items-center w-full max-w-[500px]">
+                            <label className="font-semibold font-merriweather text-dGreen  text-sm sm:text-xl w-[170px]">
                                 Amount:
                             </label>
                             <input 
@@ -1624,8 +1631,8 @@ const sections = [
                             </div>
 
                             {/* Payment Method */}
-                            <div className="flex flex-row gap-4 items-center w-full max-w-[500px]">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">
+                            <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 items-start sm:items-center w-full max-w-[500px]">
+                            <label className="font-semibold font-merriweather text-dGreen  text-sm sm:text-xl w-[170px]">
                                 Payment Method:
                             </label>
                             <select 
@@ -1641,8 +1648,8 @@ const sections = [
                             </div>
 
                             {/* Payment Receipt */}
-                            <div className="flex flex-row gap-4 items-center w-full max-w-[500px]">
-                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">
+                            <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 items-start sm:items-center w-full max-w-[500px]">
+                            <label className="font-semibold font-merriweather text-dGreen  text-sm sm:text-xl w-[170px]">
                                 Payment Receipt:
                             </label>
 
@@ -1697,24 +1704,25 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-2xl text-dGreen font-bold font-merriweather">
+                <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
                     Section 6: Additional Information
                 </p>
             </div>
         ),
         content: (
-            <main className=" w-full flex flex-col gap-10 px-10 h-auto mt-2 ">
-                <section className="w-full px-2 py-2">
+            <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                    <span className="pl-2 ml-2 text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Discount Class:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <section className="w-full px-0 sm:px-2 py-2">
 
-                        <section className="flex flex-row gap-10">
+                    <span className="pl-2 ml-0 sm:ml-2   text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Discount Class:</span>
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+                        <section className="flex flex-col sm:flex-row gap-10">
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Attainment Upon Graduation</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Attainment Upon Graduation</span>
                                 <select 
                                     name="additionalInformation" 
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.attainmentUponGraduation ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
                                     value={attainmentUponGraduation}
                                     onChange={handleAttainmentUponGraduation}
@@ -1728,10 +1736,10 @@ const sections = [
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Consistent GWA of</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Consistent GWA of</span>
                                 <select 
                                     name="additionalInformation" 
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.consistentGPA ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
                                     value={consistentGPA}
                                     onChange={handleConsistentGPA}
@@ -1746,10 +1754,10 @@ const sections = [
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-sm text-dGreen font-semibold">Has enrolled sibling</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Has enrolled sibling</span>
                                 <select 
                                     name="additionalInformation" 
-                                    className={`rounded-sm px-1 w-full sm:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.hasEnrolledSibling ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
                                     value={hasEnrolledSibling}
                                     onChange={handleHasEnrolledSibling}
@@ -1772,45 +1780,113 @@ const sections = [
     {
         title: (
             <div>
-                <p className="text-2xl text-dGreen font-bold font-merriweather">
-                    Appilication Submission
+                <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
+                    Section 7: Appilication Submission
                 </p>
             </div>
         ),
         content: (
-        <main className="w-full mt-10 flex flex-col items-center justify-center">
-            <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200   w-full grid grid-cols-2 items-center mb-8">
-            <div className="mb-2 flex flex-col items-center px-10 py-10 ">
-                <div className="flex items-center gap-2 mb-2">
-                <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" /></svg>
-                <span className="text-2xl font-bold text-dGreen font-merriweather">Reminder</span>
-                </div>  
-                <ul className="text-left text-d2Green text-lg font-medium space-y-2 pl-2">
-                <li className="flex items-start gap-2"><span className="mt-1">•</span> Ensure that all the information you have provided is correct.</li>
-                <li className="flex items-start gap-2"><span className="mt-1">•</span> You can only <span className="font-semibold text-yellow-700">submit the application once</span>.</li>
-                <li className="flex items-start gap-2"><span className="mt-1">•</span> All documents must be <span className="font-semibold text-blue-700">submitted in person</span>.</li>
-                <li className="flex items-start gap-2"><span className="mt-1">•</span> Check your <span className="font-semibold text-purple-700">email inbox</span> for updates.</li>
-                </ul>
-            </div>
+        // <main className="w-full mt-10 flex flex-col items-center justify-center">
+        //     <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200   w-full grid grid-cols-2 items-center mb-8">
+        //     <div className="mb-2 flex flex-col items-center px-10 py-10 ">
+        //         <div className="flex items-center gap-2 mb-2">
+        //         <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" /></svg>
+        //         <span className="text-2xl font-bold text-dGreen font-merriweather">Reminder</span>
+        //         </div>  
+        //         <ul className="text-left text-d2Green text-lg font-medium space-y-2 pl-2">
+        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> Ensure that all the information you have provided is correct.</li>
+        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> You can only <span className="font-semibold text-yellow-700">submit the application once</span>.</li>
+        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> All documents must be <span className="font-semibold text-blue-700">submitted in person</span>.</li>
+        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> Check your <span className="font-semibold text-purple-700">email inbox</span> for updates.</li>
+        //         </ul>
+        //     </div>
 
-            <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-r-2xl flex flex-col items-center justify-center px-8 py-10 shadow-md">
-                <div className="flex flex-col items-center gap-2 mb-4">
-                <span className="text-3xl font-bold text-white font-merriweather drop-shadow">Congratulations!</span>
-                </div>
-                <p className="text-white text-2xl font-semibold mb-2 text-center tracking-wide">Your application is almost complete!</p>
-                <p className="text-white text-base text-center opacity-80">Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!</p>
-            </div>
-            </section>
+        //     <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-r-2xl flex flex-col items-center justify-center px-8 py-10 shadow-md">
+        //         <div className="flex flex-col items-center gap-2 mb-4">
+        //         <span className="text-3xl font-bold text-white font-merriweather drop-shadow">Congratulations!</span>
+        //         </div>
+        //         <p className="text-white text-2xl font-semibold mb-2 text-center tracking-wide">Your application is almost complete!</p>
+        //         <p className="text-white text-base text-center opacity-80">Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!</p>
+        //     </div>
+        //     </section>
 
-            <Button
-            variant="mainButton"
-            onClick={handleAdd}
-            disabled={isSubmitting}
-            className="w-[180px] h-[50px] text-xl rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
-            >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
-            </Button>
-        </main>
+        //     <Button
+        //     variant="mainButton"
+        //     onClick={handleAdd}
+        //     disabled={isSubmitting}
+        //     className="w-[180px] h-[50px] text-xl rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
+        //     >
+        //     {isSubmitting ? 'Submitting...' : 'Submit'}
+        //     </Button>
+        // </main>
+<main className="w-full mt-10 flex flex-col items-center justify-center px-0 sm:px-4">
+  <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200 w-full grid grid-cols-1 md:grid-cols-2 items-center mb-8">
+    {/* Reminder Box */}
+    <div className="mb-2 flex flex-col items-center px-4 sm:px-6 py-8 md:px-10 md:py-10">
+      <div className="flex items-center gap-2 mb-2">
+        <svg
+          className="w-6 h-6 md:w-7 md:h-7 text-yellow-500"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
+          />
+        </svg>
+        <span className="text-xl md:text-2xl font-bold text-dGreen font-merriweather">
+          Reminder
+        </span>
+      </div>
+      <ul className="text-left text-d2Green text-sm md:text-base lg:text-lg font-medium space-y-2 pl-0 sm:pl-2">
+        <li className="flex items-start gap-2">
+          <span className="mt-1">•</span> Ensure that all the information you have provided is correct.
+        </li>
+        <li className="">
+          <span className="mt-1">•</span> You can only
+          <span className="pl-2 font-semibold text-yellow-700">submit the application once</span>.
+        </li>
+        <li className="">
+          <span className="mt-1">•</span> All documents must be{" "}
+          <span className="pl-2 font-semibold text-blue-700">submitted in person</span>.
+        </li>
+        <li className="2">
+          <span className="mt-1">•</span> Check your
+          <span className="pl-2 font-semibold text-purple-700">email inbox</span> for updates.
+        </li>
+      </ul>
+    </div>
+
+    {/* Congratulations Box */}
+    <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-b-2xl md:rounded-r-2xl md:rounded-b-none flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10 shadow-md">
+      <div className="flex flex-col items-center gap-2 mb-4">
+        <span className="text-2xl md:text-3xl font-bold text-white font-merriweather drop-shadow">
+          Congratulations!
+        </span>
+      </div>
+      <p className="text-lg md:text-2xl font-semibold mb-2 text-center tracking-wide text-white">
+        Your application is almost complete!
+      </p>
+      <p className="text-sm md:text-base lg:text-lg text-center opacity-80 text-white">
+        Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!
+      </p>
+    </div>
+  </section>
+
+  {/* Submit Button */}
+  <Button
+    variant="mainButton"
+    onClick={handleAdd}
+    disabled={isSubmitting}
+    className="px-10 py-3 sm:px-[50px] sm:py-5 rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
+  >
+    {isSubmitting ? "Submitting..." : "Submit"}
+  </Button>
+</main>
+
         ),
     },
 
@@ -1820,13 +1896,13 @@ const sections = [
         <main className="min-h-[600px] w-full mt-2 p-5 flex flex-col">
             <div className="h-full w-full ">
                 <section className="w-full text-center">
-                    <p className="mt-[20px] text-2xl md:text-3xl lg:text-4xl text-dGreen font-bold font-merriweather">
+                    <p className="mt-[20px] text-xl sm:text-2xl lg:text-4xl text-dGreen font-bold font-merriweather">
                         Junior High School Application
                     </p>
                 </section>
 
                 {/* content */}
-                <div className="w-full flex-1 mt-[40px] md:mt-[60px] lg:mt-[80px] px-[5px] md:px-[25px] lg:px-[70px] flex flex-col gap-3 ">
+                <div className="w-full flex-1 mt-[40px] md:mt-[60px] lg:mt-[80px] px-[5px] lg:px-[70px] flex flex-col gap-3 ">
                     {sections[page].title}
                     <hr className="border-b-2 border-dGreen w-full" />
                     {sections[page].content}

@@ -4,6 +4,7 @@
   import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
   import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier";
 
 
   interface Props {
@@ -134,6 +135,7 @@ import { toast } from "sonner";
       
 
 <div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+  <Cashier_ReservationReview />
   <table className="w-full text-xs sm:text-sm text-center">
         <thead>
           <tr className="bg-green-600 text-white">
