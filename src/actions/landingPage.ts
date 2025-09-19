@@ -1257,18 +1257,15 @@ await sendReservationEmail(email, trackingId);
 }
 
 
+
+
 //server action for getting the status of enrollment period
 export const nottice = async () => {
   const id = await getAcademicYearID();
   console.log("AcademicYearID:", id);
 
   if (!id) {
-    return [{
-      enrollment_period: null,
-      enrollment_start_date: null,
-      enrollment_end_date: null,
-      isActive: false,
-    }];
+    return [];
   }
 
   const notice = await db
@@ -1283,10 +1280,5 @@ export const nottice = async () => {
     .limit(1);
 
   console.log(notice);
-  return notice.length ? notice : [{
-    enrollment_period: null,
-    enrollment_start_date: null,
-    enrollment_end_date: null,
-    isActive: false,
-  }];
+  return notice;
 };

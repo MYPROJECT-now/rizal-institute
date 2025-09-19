@@ -22,11 +22,11 @@ const buttonVariants = cva(
         link: "text-white text-xl font-bold font-merriweather w-full px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:text-slate-100 relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white/60 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300",
 
         mainButton:
-          "bg-gradient-to-r from-green-500 to-green-800 text-white hover:bg-green-500 border-b-[7px] active:border-0 border-b-dGreen shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60 font-oswald",
+          "bg-gradient-to-r from-green-500 to-green-800 text-white hover:bg-green-500 sm:border-b-[7px] border-b-[5px] active:border-0 border-b-dGreen shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60 font-oswald",
         subMainButton:
-          "bg-gradient-to-r from-green-500 to-green-800 text-dGreen hover:bg-green-300 border-b-[7px] active:border-0 border-b-green-600 font-oswald shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60",
+          "bg-gradient-to-r from-green-500 to-green-800 text-dGreen hover:bg-green-300 sm:border-b-[7px] border-b-[5px] active:border-0 border-b-green-600 font-oswald shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60",
         subButton:
-          "bg-gradient-to-r from-white to-green-200 text-dGreen hover:bg-green-500 border-b-[7px] active:border-0 border-b-slGreen font-oswald shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60",
+          "bg-gradient-to-r from-white to-green-200 text-dGreen hover:bg-green-500 sm:border-b-[7px] border-b-[5px] active:border-0 border-b-slGreen font-oswald shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60",
 
         acceptButton:
           "bg-gradient-to-b from-blue-500 to-blue-900 text-white transition-all duration-200 active:scale-95 active:shadow-inner disabled:opacity-60 hover:brightness-60",
