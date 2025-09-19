@@ -1,8 +1,7 @@
-  import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg-core";
 
-
-
-  export const applicantsInformationTable = pgTable("applicationInformationTable", {
+  // applicants information
+  export const applicantsInformationTable = pgTable("applicantsInformationTable", {
     applicants_id: serial("applicants_id").primaryKey(),
     applicantsLastName: varchar('applicantsLastName', { length:100 }).notNull(),
     applicantsFirstName: varchar('applicantsFirstName',{ length: 100 }).notNull(),
@@ -69,6 +68,12 @@
     dateOfPayment: varchar('dateOfPayment').notNull(),
   })
 
+
+
+
+
+
+//application status
   export const applicationStatusTable = pgTable("applicationStatusTable", {
     application_status_id: serial('application_status_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
@@ -81,8 +86,6 @@
     dateApprovedByCashier: date('dateApprovedByCashier'),
   })
 
-
-
   export const AdmissionStatusTable = pgTable("AdmissionStatusTable", {
     admission_id: serial('admission_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
@@ -94,8 +97,6 @@
     dateAdmitted: date('dateAdmitted'),
     isActive: boolean('isActive').notNull().default(false),
   })
-
-
 
   export const Registrar_remaks_table = pgTable("Registrar_remaks_table", {
     reg_remarks_id: serial('reg_remarks_id').primaryKey(),
@@ -116,7 +117,9 @@
   })
 
 
-  // student information
+
+
+  // students information
   export const StudentInfoTable = pgTable("studentInfoTable", {
     student_id: serial('student_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).unique(),
@@ -131,20 +134,50 @@
     studentAge: integer('studentAge').notNull(),
   })
 
-  
-  export const ClerkUserTable = pgTable("ClerkUserTable", {
-    clerk_uid: serial('clerk_uid').primaryKey(),
-    student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull().unique(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
-    clerkId: varchar("clerkID", { length: 100 }).notNull(),
-    userType: varchar("userType", { length: 100 }).notNull(),
-    clerk_username: varchar("clerk_username", { length: 100 }).notNull(),
-    clerk_email: varchar("clerk_email", { length: 100 }).notNull(),
-    isActive: boolean('isActive').notNull().default(true),
-    selected_AcademicYear_id: integer('selected_AcademicYear_id').references(() => AcademicYearTable.academicYear_id).notNull(),
+  export const StudentGradesTable = pgTable("StudentGradesTable", {
+    grade_id: serial("grade_id").primaryKey(),
+    student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
+    clerk_uid: integer("clerk_uid").references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" }),
+    finalGrade: integer("finalGrade"),
+    remarks: varchar("remarks", { length: 100 }),
+    dateSubmitted: date("dateSubmitted"),
+  });
+
+  export const SectionTable = pgTable("SectionTable", {
+    section_id: serial("section_id").primaryKey(),
+    sectionName: varchar("sectionName", { length: 100 }).notNull(),
+    limit: integer("limit").notNull(),
+    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
   })
 
+  export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
+    spgac_id: serial("spgac_id").primaryKey(),
+    student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
+    section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
+    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+  })
 
+  export const ScheduleTable = pgTable("ScheduleTable", {
+    schedule_id: serial("schedule_id").primaryKey(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+    section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
+    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
+    clerk_uid: integer("clerk_uid"), // teacher.references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
+    dayOfWeek: varchar("dayOfWeek", { length: 20 }).notNull(), // "Monday", "Tue"
+    startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
+    endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30"
+  });
+
+
+
+
+// student intital tuition details
   export const downPaymentTable = pgTable("downPaymentTable", {
     donw_id: serial('donw_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
@@ -158,7 +191,7 @@
     
   })
 
-    export const tempdownPaymentTable = pgTable("tempdownPaymentTable", {
+  export const tempdownPaymentTable = pgTable("tempdownPaymentTable", {
     temp_down_id: serial('donw_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
@@ -169,8 +202,28 @@
     
   })
 
+  export const TempMonthsInSoaTable = pgTable("TempMonthsInSoaTable", {
+    temp_month_id: serial('month_id').primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+
+    temp_month: varchar('month', { length:100 }).notNull(),
+    temp_monthlyDue: integer('monthlyDue').notNull(),
+
+  })
+
+  export const fullPaymentTable = pgTable("fullPaymentTable", {
+    payment_id: serial('payment_id').primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    payment_amount: integer('payment_amount').notNull(),
+    payment_receipt: varchar('payment_receipt', { length:300 }).notNull(),
+    paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
+    paymentStatus: varchar('paymentStatus', { length:100 }),
+  })
 
 
+
+// students  tuition and payments
   export const MonthsInSoaTable = pgTable("MonthsInSoaTable", {
     month_id: serial('month_id').primaryKey(),
     temp_month_id: integer('temp_month_id').references(() => TempMonthsInSoaTable.temp_month_id).notNull(),
@@ -185,27 +238,6 @@
     remarks: varchar('remarks', { length:100 }),
     SInumber: varchar('SInumber', { length:300 }),
   })
-
-    export const TempMonthsInSoaTable = pgTable("TempMonthsInSoaTable", {
-    temp_month_id: serial('month_id').primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
-
-    temp_month: varchar('month', { length:100 }).notNull(),
-    temp_monthlyDue: integer('monthlyDue').notNull(),
-
-  })
-
-
-  export const fullPaymentTable = pgTable("fullPaymentTable", {
-    payment_id: serial('payment_id').primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
-    payment_amount: integer('payment_amount').notNull(),
-    payment_receipt: varchar('payment_receipt', { length:300 }).notNull(),
-    paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
-    paymentStatus: varchar('paymentStatus', { length:100 }),
-  })
-
 
 
   export const MonthlyPayementTable = pgTable("MonthlyPayementTable", {
@@ -225,7 +257,11 @@
     
   })
 
-  export const grantAvailable = pgTable("GrantAvailableTable", {
+
+
+
+// tuition fee related
+  export const grantAvailable = pgTable("grantAvailable", {
     grand_id: serial('grand_id').primaryKey(),
     grantAvailable: integer('grantAvailable').notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull().unique(),
@@ -250,16 +286,12 @@
 
 
 
-  export const SINumberCounter = pgTable("SINumberCounter", {
-    id: serial("id").primaryKey(),
-    latestNumber: integer("latestNumber").notNull().default(32400),
-  });
 
 
 
 
-
-  export const AcademicYearTable = pgTable("AcademicYearTable", {
+// admin components
+export const AcademicYearTable = pgTable("AcademicYearTable", {
     academicYear_id: serial('academicYear_id').primaryKey(),
     academicYear: varchar('academicYear', { length:100 }).notNull(),
     academicYearStart: date('academicYearStart').notNull(),
@@ -267,7 +299,7 @@
     isActive: boolean('isActive').notNull().default(true),
   })
 
-  export const EnrollmentStatusTable = pgTable("EnrollmentStatusTable", {
+export const EnrollmentStatusTable = pgTable("EnrollmentStatusTable", {
     enrollment_status_id: serial('enrollment_status_id').primaryKey(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     enrollment_period: varchar('enrollment_period', { length:100 }).notNull(),
@@ -276,6 +308,47 @@
     isActive: boolean('isActive').notNull().default(true),
   })
 
+export const auditTrailsTable = pgTable("auditTrailsTable", {
+  auditTrail_id: serial("auditTrail_id").primaryKey(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  username: varchar("username", { length: 100 }).notNull(),
+  usertype: varchar("usertype", { length: 100 }).notNull(),
+  actionTaken: varchar("actionTaken", { length: 100 }).notNull(),
+  actionTakenFor: varchar("actionTakenFor", { length: 100 }).notNull(),
+  dateOfAction: date("dateOfAction").notNull(),
+});
+
+
+
+
+
+//teacher component
+
+export const TeacherAssignmentTable = pgTable("TeacherAssignmentTable", {
+  assignment_id: serial("assignment_id").primaryKey(),
+  clerk_uid: integer("clerk_uid").references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" }).notNull(),
+  gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+  subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
+  section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+});
+
+
+
+
+
+//accounts
+export const ClerkUserTable = pgTable("ClerkUserTable", {
+  clerk_uid: serial('clerk_uid').primaryKey(),
+  student_id: integer('student_id').references(() => StudentInfoTable.student_id).notNull().unique(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+  clerkId: varchar("clerkID", { length: 100 }).notNull(),
+  userType: varchar("userType", { length: 100 }).notNull(),
+  clerk_username: varchar("clerk_username", { length: 100 }).notNull(),
+  clerk_email: varchar("clerk_email", { length: 100 }).notNull(),
+  isActive: boolean('isActive').notNull().default(true),
+  selected_AcademicYear_id: integer('selected_AcademicYear_id').references(() => AcademicYearTable.academicYear_id).notNull(),
+})
 
 
 export const staffClerkUserTable = pgTable("staffClerkUserTable", {
@@ -290,78 +363,32 @@ export const staffClerkUserTable = pgTable("staffClerkUserTable", {
 });
 
 
-export const auditTrailsTable = pgTable("auditTrailsTable", {
-  auditTrail_id: serial("auditTrail_id").primaryKey(),
-  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
-  username: varchar("username", { length: 100 }).notNull(),
-  usertype: varchar("usertype", { length: 100 }).notNull(),
-  actionTaken: varchar("actionTaken", { length: 100 }).notNull(),
-  actionTakenFor: varchar("actionTakenFor", { length: 100 }).notNull(),
-  dateOfAction: date("dateOfAction").notNull(),
-});
 
 
 
+
+
+
+// static components
 export const GradeLevelTable = pgTable("GradeLevelTable", {
   gradeLevel_id: serial("gradeLevel_id").primaryKey(),
-  gradeLevelName: varchar("gradeLevelName", { length: 100 }).notNull(), // ex: "Grade 7"
+  gradeLevelName: varchar("gradeLevelName", { length: 100 }).notNull(), // ex: "7"
 });
 
 export const SubjectTable = pgTable("SubjectTable", {
   subject_id: serial("subject_id").primaryKey(),
   subjectName: varchar("subjectName", { length: 100 }).notNull(), // ex: "Science"
+  isActive: boolean("isActive").notNull().default(true),
 });
 
 
 
 
-export const StudentGradesTable = pgTable("StudentGradesTable", {
-  grade_id: serial("grade_id").primaryKey(),
-
-  student_id: integer("student_id")
-    .references(() => StudentInfoTable.student_id, { onDelete: "cascade" })
-    .notNull(),
-
-  academicYear_id: integer("academicYear_id")
-    .references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" })
-    .notNull(),
-
-  gradeLevel_id: integer("gradeLevel_id")
-    .references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" })
-    .notNull(),
-
-  subject_id: integer("subject_id")
-    .references(() => SubjectTable.subject_id, { onDelete: "cascade" })
-    .notNull(),
-
-  clerk_uid: integer("clerk_uid")
-    .references(() => staffClerkUserTable.clerk_uid, { onDelete: "set null" }),
-
-  finalGrade: integer("finalGrade"),
-
-  remarks: varchar("remarks", { length: 100 }),
-
-  dateSubmitted: date("dateSubmitted"),
-});
 
 
-export const TeacherAssignmentTable = pgTable("TeacherAssignmentTable", {
-  assignment_id: serial("assignment_id").primaryKey(),
 
-  clerk_uid: integer("clerk_uid")
-    .references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
-    .notNull(),
 
-  gradeLevel_id: integer("gradeLevel_id")
-    .references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" })
-    .notNull(),
-
-  subject_id: integer("subject_id")
-    .references(() => SubjectTable.subject_id, { onDelete: "cascade" })
-    .notNull(),
-
-  academicYear_id: integer("academicYear_id")
-    .references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" })
-    .notNull(),
-});
-
+  export const SINumberCounter = pgTable("SINumberCounter", {
+    id: serial("id").primaryKey(),
+    latestNumber: integer("latestNumber").notNull().default(32400),
+  });

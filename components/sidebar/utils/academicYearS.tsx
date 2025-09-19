@@ -40,25 +40,24 @@ export const AcademicYearModal = () => {
       fetchAcademicYear();
     }, []);
 
-  const handleclose = () => {
+
+  
+  const handleUpdateselectedAcademicYear = async () =>{
+    try {
+    const message = await updateAcademicYear (selectedAcademicYear);
+
+    toast.success(message?.message ?? "Academic Year Updated Successfully");
     close();
     window.location.reload();
-  };
-  
-      const handleUpdateselectedAcademicYear = async () =>{
-        try {
-        const message = await updateAcademicYear (selectedAcademicYear);
-  
-        toast.success(message?.message ?? "Academic Year Updated Successfully");
-        } catch (error) {
-          console.log(error);
-        }
-  
-      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleclose}>
+    <Dialog open={isOpen} onOpenChange={close}>
         <DialogContent className="w-[350px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl lg:text-2xl py-3 font-bold text-white bg-dGreen rounded-t-lg flex items-center justify-center">

@@ -73,7 +73,7 @@ const Todos: FC<Props> = ({ todos }) => {
                 <tbody>
                     {currentItems.length === 0 ? (
                     <tr>
-                        <td colSpan={6} className="p-4 text-black">
+                        <td colSpan={7} className="p-4 text-black">
                             No history was found.
                         </td>
                     </tr> 

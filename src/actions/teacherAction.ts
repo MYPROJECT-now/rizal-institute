@@ -2,27 +2,17 @@
 
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { GradeLevelTable, staffClerkUserTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
-import { requireStaffAuth } from "./utils/staffAuth";
-import { getStaffId, getUid } from "./utils/staffID";
+import { GradeLevelTable, ScheduleTable, SectionTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { getUid } from "./utils/staffID";
 
-export const getAssignClass = async () => {
-    await requireStaffAuth(["teacher"]); // gatekeeper
-    const staffId = await getStaffId();
-    if (!staffId) {
+export const getAssignClass2 = async () => {
+
+    // const uid = getTeacherUid[0].clerk_uid;
+    const tid = await getUid();
+
+    if (!tid) {
         return null;
     }
-
-    const getTeacherUid = await db
-    .select({
-        clerk_uid: staffClerkUserTable.clerk_uid,
-    })
-    .from(staffClerkUserTable)
-    .where(eq(staffClerkUserTable.clerkId, staffId ));
-
-
-    const uid = getTeacherUid[0].clerk_uid;
-
     const getClass =  await db
     .select({
         gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
@@ -30,20 +20,49 @@ export const getAssignClass = async () => {
         assignment_id: TeacherAssignmentTable.assignment_id,
         gradeLevelName: GradeLevelTable.gradeLevelName,
         subjectName: SubjectTable.subjectName,
+        sectionName: SectionTable.sectionName,
     }).from(TeacherAssignmentTable)
     .leftJoin(GradeLevelTable, eq(TeacherAssignmentTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
     .leftJoin(SubjectTable, eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id))
-    .where(eq(TeacherAssignmentTable.clerk_uid, uid))
+    .leftJoin(SectionTable, eq(TeacherAssignmentTable.gradeLevel_id, SectionTable.gradeLevel_id))
+    .where(eq(TeacherAssignmentTable.clerk_uid, tid))
     .orderBy(asc(TeacherAssignmentTable.assignment_id));
     return getClass;
 }
+
+export const getAssignClass = async () => {
+  const tid = await getUid();
+  if (!tid) return null;
+
+  const getClass = await db
+    .select({
+      gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+      gradeLevelName: GradeLevelTable.gradeLevelName,
+      subject_id: TeacherAssignmentTable.subject_id,
+      subjectName: SubjectTable.subjectName,
+      sectionName: SectionTable.sectionName,
+    })
+    .from(TeacherAssignmentTable)
+    .leftJoin(GradeLevelTable, eq(TeacherAssignmentTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(SubjectTable, eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id))
+    .leftJoin(SectionTable, and(
+      eq(SectionTable.section_id, TeacherAssignmentTable.section_id),
+      eq(SectionTable.academicYear_id, TeacherAssignmentTable.academicYear_id)
+    ))
+    .where(
+      eq(TeacherAssignmentTable.clerk_uid, tid),
+    );
+
+  return getClass;
+};
+
+
 
 
 export const getMyStudents = async (
     gradeLevel_id: number | null,
     subject_id: number | null
 ) => {
-    await requireStaffAuth(["teacher"]); // gatekeeper
     if (!gradeLevel_id || !subject_id) return [];
 
     const myStudents = await db
@@ -70,17 +89,17 @@ export const getMyStudents = async (
 }
 
 export const updateFinalGrade = async (grade_id: number, finalGrade: number) => {
-        await db
-            .update(StudentGradesTable)
-            .set({
-            finalGrade: finalGrade,
-            })
+    await db
+    .update(StudentGradesTable)
+    .set({
+    finalGrade: finalGrade,
+    remarks: finalGrade >= 75 ? "PASSED" : "FAILED",
+    })
     .where(eq(StudentGradesTable.grade_id, grade_id));
 };
 
 
 export const getGradeAndSubjects = async () => {
-    await requireStaffAuth(["teacher"]); // gatekeeper    
     const tid = await getUid();
 
     if (!tid) {
@@ -94,12 +113,42 @@ export const getGradeAndSubjects = async () => {
         assignment_id: TeacherAssignmentTable.assignment_id,
         gradeLevelName: GradeLevelTable.gradeLevelName,
         subjectName: SubjectTable.subjectName,
+        sectionName: SectionTable.sectionName,
+        section_id: TeacherAssignmentTable.section_id
     }).from(TeacherAssignmentTable)
     .leftJoin(GradeLevelTable, eq(TeacherAssignmentTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
     .leftJoin(SubjectTable, eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id))
+    .leftJoin(SectionTable, eq(TeacherAssignmentTable.section_id, SectionTable.section_id))
     .where(eq(TeacherAssignmentTable.clerk_uid, tid))
     .orderBy(asc(TeacherAssignmentTable.assignment_id));
 
     console.log(gradeAndGrades);
     return gradeAndGrades;
+}
+
+
+export const getMySched = async () => {
+    const tid = await getUid();
+    if (!tid) {return null;}
+
+    const mySched = await db
+    .select({
+        section_id: ScheduleTable.section_id,
+        sectionName: SectionTable.sectionName,
+        gradeLevel_id: ScheduleTable.gradeLevel_id,
+        gradeLevelName: GradeLevelTable.gradeLevelName,
+        subject_id: ScheduleTable.subject_id,
+        subjectName: SubjectTable.subjectName,
+        dayOfWeek: ScheduleTable.dayOfWeek,
+        startTime: ScheduleTable.startTime,
+        endTime: ScheduleTable.endTime
+    })
+    .from(ScheduleTable)
+    .leftJoin(SectionTable, eq(SectionTable.section_id, ScheduleTable.section_id))
+    .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, ScheduleTable.gradeLevel_id))
+    .leftJoin(SubjectTable, eq(SubjectTable.subject_id, ScheduleTable.subject_id))
+    .where(eq(ScheduleTable.clerk_uid, tid))
+    .orderBy(asc(ScheduleTable.dayOfWeek));
+
+    return mySched;
 }

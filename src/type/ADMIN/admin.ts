@@ -25,3 +25,19 @@ export type UserType = {
   clerk_email: string;
   isActive: boolean;
 }
+
+
+export type SchedType = {
+  schedule_id: number;
+  section_id: number;
+  sectionName: string | null;
+  gradeLevel_id: number;
+  gradeLevelName: string | null;
+  subject_id: number;
+  subjectName: string | null;
+  clerk_uid: number | null;
+  clerk_username: string | null;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+}

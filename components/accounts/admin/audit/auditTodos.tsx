@@ -15,8 +15,7 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
 
     // 🔢 Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const auditsPerPage = 5;
-
+    const auditsPerPage = 8;
     const currentAction = auditItems.filter((audit) => {
         const usernameMatch = audit.username.toLowerCase().includes(filterUsername.toLowerCase());
         const usertypeMatch = filterUsertype === "" || audit.usertype === filterUsertype;

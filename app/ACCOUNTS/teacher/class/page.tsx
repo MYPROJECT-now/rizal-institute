@@ -1,26 +1,34 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { getAssignClass } from "@/src/actions/teacherAction";
-import { MyStudents } from "@/components/accounts/teacher/student/student";
+// StudentPage.tsx
 import Teacher_header from "@/app/header/header_teacher";
+import { MyStudentsClient } from "@/components/accounts/teacher/student/student";
+import { getAssignClass, getMyStudents } from "@/src/actions/teacherAction";
+import { MyStudentType } from "@/src/type/TEACHER/teacher";
 
-const StudentPage = () => {
-  const [title, setTitle] = useState("...");
-  const filterID = useSearchParams().get("filterID");
+export default async function StudentPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ filterID?: string }>
+}) {
+  const resolved = await searchParams;
+  const filterID = resolved?.filterID;
+  let title = "No class selected";
+  let students: MyStudentType[] = [];
 
-  useEffect(() => {
-    if (!filterID) return setTitle("No class selected");
-
+  if (filterID) {
     const [gradeLevel_id, subject_id] = filterID.split("-").map(Number);
-    if ([gradeLevel_id, subject_id].some(isNaN)) return setTitle("Invalid class");
+    const classes = await getAssignClass();
+    const match = classes?.find(
+      (c) => c.gradeLevel_id === gradeLevel_id && c.subject_id === subject_id
+    );
 
-    getAssignClass().then((classes) => {
-      const match = classes?.find(c => c.gradeLevel_id === gradeLevel_id && c.subject_id === subject_id);
-      setTitle(match ? `Grade ${match.gradeLevelName} - ${match.subjectName}` : "Class not found");
-    });
-  }, [filterID]);
+    title = match
+      ? `Grade ${match.gradeLevelName} ${match.sectionName ? ` ${match.sectionName}` : ""} - ${match.subjectName}`
+      : "Class not found";
+
+    if (match) {
+      students = await getMyStudents(gradeLevel_id, subject_id);
+    }
+  }
 
   return (
     <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
@@ -29,10 +37,8 @@ const StudentPage = () => {
         <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
           {title}
         </div>
-        <MyStudents />
+        <MyStudentsClient students={students} />
       </div>
     </div>
   );
-};
-
-export default StudentPage;
+}

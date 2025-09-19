@@ -67,7 +67,7 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     <SidebarItem 
                         label="Reserved Slot" 
                         href="/ACCOUNTS/cashier/reserved"
-                        iconSrc="/reserved.png" 
+                        iconSrc="/lock.png" 
                         onClick={onClose}
                     />
 

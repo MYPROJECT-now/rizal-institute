@@ -129,7 +129,7 @@ export function toastConfirm(
     (id) => (
       <div
         className={cn(
-          "w-full max-w-md p-4 rounded-xl shadow-xl border",
+          "w-full max-w-md p-4 rounded-xl shadow-xl border ",
           "bg-white/80 backdrop-blur-md",
           "border-white text-white",
           "flex flex-col gap-3"

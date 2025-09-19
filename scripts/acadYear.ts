@@ -60,9 +60,6 @@ const insertAcademicYear = async () => {
       {
         subjectName: "MAPEH",
       },
-      {
-        subjectName: "Technology and Livelihood Education",
-      },
     ];
     const result3 = await db.insert(SubjectTable).values(Subjects).returning();
 

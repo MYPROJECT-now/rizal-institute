@@ -43,6 +43,8 @@ import { staffClerkUserTable } from "@/src/db/schema";
       return staffID.clerk_uid;
     };
 
+
+    
     export const getStaffCredentials = async () =>
     {
       const { userId } = await auth();

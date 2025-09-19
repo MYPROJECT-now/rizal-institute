@@ -10,7 +10,7 @@ const TeacherAssignment = () => {
             <Admin_header />
             <div className="w-full h-full bg-white self-center mt-2 rounded-lg ">
                 <div className=" w-full bg-lGreen font-merriweather text-white items-center flex sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl">
-                    Assign Class
+                    Assign Grade Level and Subject
                 </div>
                 <GradeSubjectLoader />
             </div> 

@@ -1,12 +1,13 @@
 "use server"
 
-import { desc, eq} from "drizzle-orm";
+import { and, desc, eq, gte, lte, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, ScheduleTable, SectionTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { clerkClient } from "@clerk/nextjs/server";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
 import { getStaffCredentials } from "./utils/staffID";
+import { getSelectedYear } from "./utils/getSelectedYear";
 
 
 export const getCurrentAcademicYear = async () => {
@@ -306,7 +307,7 @@ export const getAuditTrails = async () => {
     })
     .from(auditTrailsTable)
     .where(eq(auditTrailsTable.academicYear_id, sy))
-    .orderBy(desc(auditTrailsTable.dateOfAction))
+    .orderBy(desc(auditTrailsTable.auditTrail_id))
     .limit(7);
 
     console.log(result)
@@ -333,7 +334,7 @@ export const getAllAuditTrails = async () => {
     })
     .from(auditTrailsTable)
     .where(eq(auditTrailsTable.academicYear_id, sy))
-    .orderBy(desc(auditTrailsTable.dateOfAction))
+    .orderBy(desc(auditTrailsTable.auditTrail_id))
 
     console.log(result)
     return result;
@@ -428,28 +429,29 @@ export const deleteUser = async (clerkId: string, clerk_username: string) => {
 
 
 
-export const getGradesAndSubjects = async () => {
-  const grades = await db.select().from(GradeLevelTable);
-  const subjects = await db.select().from(SubjectTable);
-  return { grades, subjects };
-};
+  export const getGradesAndSubjects = async () => {
+    const grades = await db.select().from(GradeLevelTable);
+    const subjects = await db.select().from(SubjectTable);
+    return { grades, subjects };
+  };
 
-export const getTeachers = async () => {
-  const teachers = await db
-    .select({
-      clerk_username: staffClerkUserTable.clerk_username,
-      clerk_uid: staffClerkUserTable.clerk_uid,
+  export const getTeachers = async () => {
+    const teachers = await db
+      .select({
+        clerk_username: staffClerkUserTable.clerk_username,
+        clerk_uid: staffClerkUserTable.clerk_uid,
 
-    })
-    .from(staffClerkUserTable)
-    .where(eq(staffClerkUserTable.userType, "teacher"))
-    return teachers;
+      })
+      .from(staffClerkUserTable)
+      .where(eq(staffClerkUserTable.userType, "teacher"))
+      return teachers;
   } 
 
+
   type Assignment = {
-  gradeLevel_id: number;
-  subject_id: number;
-};
+    gradeLevel_id: number;
+    subject_id: number;
+  };
 
 export const assignSubjectsToTeacher = async ({
   clerk_uid,
@@ -569,4 +571,242 @@ export const getEnrollmentStatus = async () => {
   })
   .from(EnrollmentStatusTable)
   return enrollmentStatus;
+}
+
+
+
+export const getTeachersName = async () => {
+  const teachers = await db
+  .select({
+    clerk_uid: staffClerkUserTable.clerk_uid,
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.userType, "teacher"))
+  return teachers;
+}
+
+
+export const gradeAndSection = async () => {
+  const gradeAndSection = await db
+  .select({
+    gradeLevel_id: SectionTable.gradeLevel_id,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    section_id: SectionTable.section_id,
+    sectionName: SectionTable.sectionName
+  })
+  .from(SectionTable)
+  .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, SectionTable.gradeLevel_id))
+  return gradeAndSection;
+}
+
+export const getSubjects = async () => {
+  const subjects = await db
+  .select({
+    subject_id: SubjectTable.subject_id,
+    subject_name: SubjectTable.subjectName,
+  })
+  .from(SubjectTable)
+
+  return subjects;
+}
+
+export const getAvailableAssignments = async (teacherId: number) => {
+  // Get all assigned grade + subject for teacher
+  const assigned = await db
+    .select({
+      gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+      subject_id: TeacherAssignmentTable.subject_id,
+      clerk_uid: TeacherAssignmentTable.clerk_uid,
+    })
+    .from(TeacherAssignmentTable)
+    .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
+
+  // Get all scheduled grade + subject for teacher
+  const scheduled = await db
+    .select({
+      gradeLevel_id: ScheduleTable.gradeLevel_id,
+      subject_id: ScheduleTable.subject_id,
+    })
+    .from(ScheduleTable)
+    .where(eq(ScheduleTable.clerk_uid, teacherId));
+
+  // Filter out assignments that already exist in schedules
+  const scheduledSet = new Set(
+    scheduled.map((s) => `${s.gradeLevel_id}-${s.subject_id}`)
+  );
+
+  const available = assigned.filter(
+    (a) => !scheduledSet.has(`${a.gradeLevel_id}-${a.subject_id}`)
+  );
+
+  return available;
+};
+
+
+export const checkSchedule = async (
+  teacherId: number,
+  day: string,
+  startTime: string,
+  endTime: string
+) => {
+  const conflicts = await db
+    .select({
+      schedule_id: ScheduleTable.schedule_id,
+      startTime: ScheduleTable.startTime,
+      endTime: ScheduleTable.endTime,
+      day: ScheduleTable.dayOfWeek,
+    })
+    .from(ScheduleTable)
+    .where(
+      and(
+        eq(ScheduleTable.clerk_uid, teacherId),
+        eq(ScheduleTable.dayOfWeek, day),
+        // overlap condition:
+        or(
+          and(
+            lte(ScheduleTable.startTime, startTime),
+            gte(ScheduleTable.endTime, startTime)
+          ),
+          and(
+            lte(ScheduleTable.startTime, endTime),
+            gte(ScheduleTable.endTime, endTime)
+          ),
+          and(
+            gte(ScheduleTable.startTime, startTime),
+            lte(ScheduleTable.endTime, endTime)
+          )
+        )
+      )
+    );
+
+  return conflicts;
+};
+
+
+
+export const AddSchedule = async (
+  section_id: number,
+  gradeLevel_id: number,
+  subject_id: number,
+  clerk_uid: number,
+  dayOfWeek: string,
+  startTime: string,
+  endTime: string
+) => {
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const sched = await db
+  .insert(ScheduleTable)
+  .values({
+    academicYear_id: selectedYear,
+    section_id: section_id,
+    gradeLevel_id: gradeLevel_id,
+    subject_id: subject_id,
+    clerk_uid: clerk_uid,
+    dayOfWeek: dayOfWeek,
+    startTime: startTime,
+    endTime: endTime
+  })
+
+  await db
+  .update(TeacherAssignmentTable)
+  .set({
+      section_id: section_id,
+  })
+  .where(and(
+    eq(TeacherAssignmentTable.clerk_uid, clerk_uid),
+    eq(TeacherAssignmentTable.gradeLevel_id, gradeLevel_id),
+    eq(TeacherAssignmentTable.subject_id, subject_id)
+  ))
+
+  console.log("Schedule Added", sched);
+}
+
+export const getSchedule = async () => { 
+  const getSched = await db
+  .select({
+    schedule_id: ScheduleTable.schedule_id,
+    section_id: ScheduleTable.section_id,
+    sectionName: SectionTable.sectionName,
+    gradeLevel_id: ScheduleTable.gradeLevel_id,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    subject_id: ScheduleTable.subject_id,
+    subjectName: SubjectTable.subjectName,
+    clerk_uid: ScheduleTable.clerk_uid,
+    clerk_username: staffClerkUserTable.clerk_username,
+    dayOfWeek: ScheduleTable.dayOfWeek,
+    startTime: ScheduleTable.startTime,
+    endTime: ScheduleTable.endTime
+  })
+  .from(ScheduleTable)
+  .leftJoin(SectionTable, eq(SectionTable.section_id, ScheduleTable.section_id))
+  .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, ScheduleTable.gradeLevel_id))
+  .leftJoin(SubjectTable, eq(SubjectTable.subject_id, ScheduleTable.subject_id))
+  .leftJoin(staffClerkUserTable, eq(staffClerkUserTable.clerk_uid, ScheduleTable.clerk_uid))
+  return getSched;
+}
+
+
+
+export const getData = async (selectedTeacher: number) => {
+  const getData = db
+  .select({
+    gradeLevel_id: SectionTable.gradeLevel_id,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    section_id: SectionTable.section_id,
+    sectionName: SectionTable.sectionName,
+    subject_id: TeacherAssignmentTable.subject_id,
+    subjectName: SubjectTable.subjectName,
+  })
+  .from(SectionTable)
+  .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, SectionTable.gradeLevel_id))
+  .leftJoin(TeacherAssignmentTable, eq(TeacherAssignmentTable.gradeLevel_id, SectionTable.gradeLevel_id))
+  .leftJoin(SubjectTable, eq(SubjectTable.subject_id, TeacherAssignmentTable.subject_id))
+  .where(eq(TeacherAssignmentTable.clerk_uid, selectedTeacher))
+
+  return getData;
+}
+
+
+export const getDaySched = async (
+  setSelectedGradeLevel: number,
+  setSelectedSubject: number,
+  setSelectedSection: number
+) => {
+  const day = await db
+  .select({
+    schedule_id: ScheduleTable.schedule_id,
+    dayOfWeek: ScheduleTable.dayOfWeek,
+    startTime: ScheduleTable.startTime,
+    endTime: ScheduleTable.endTime,
+  })
+  .from(ScheduleTable)
+  .where(
+    and(
+      eq(ScheduleTable.section_id, setSelectedSection),
+      eq(ScheduleTable.gradeLevel_id, setSelectedGradeLevel),
+      eq(ScheduleTable.subject_id, setSelectedSubject)
+    )
+  );
+  console.log(day);
+  return day;
+}
+
+
+export const updateSchedule = async (
+  schedule_id: number,
+  startTime: string,
+  endTime: string
+) => {
+  const update = await db
+  .update(ScheduleTable)
+  .set({
+    startTime: startTime,
+    endTime: endTime
+  })
+  .where(eq(ScheduleTable.schedule_id, schedule_id))
+  console.log(update);
 }

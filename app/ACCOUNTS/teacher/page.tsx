@@ -6,7 +6,7 @@ const MyClassesTable = () => {
             <Teacher_header /> 
                 <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg shadow-lg overflow-hidden border border-gray-200">
                 <div className="h-[80px] w-full bg-lGreen font-merriweather text-3xl text-white items-center flex pl-5">
-                    MY CLASSES
+                    My Students
                 </div>
                 <MyClasses />
             </div>

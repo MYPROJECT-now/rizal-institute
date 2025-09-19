@@ -4,6 +4,7 @@ import { MyStudentType } from "@/src/type/TEACHER/teacher";
 import { Button } from "@/components/ui/button";
 import StudentTodo from "./studentTodo";
 import { updateFinalGrade } from "@/src/actions/teacherAction";
+import { toast } from "sonner";
 
 interface Props {
   studentTodos: MyStudentType[];
@@ -25,9 +26,10 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
 
     const changeTodoText = (grade_id: number, finalGrade: number) => {
         setMyStudents((prev) =>
-        prev.map((studentTodos) => (studentTodos.grade_id === grade_id ? { ...studentTodos, finalGrade } : studentTodos))
+        prev.map((studentTodos) => (studentTodos.grade_id === grade_id ? { ...studentTodos, finalGrade, remarks: finalGrade >= 75 ? "PASSED" : "FAILED" } : studentTodos))
         );
         updateFinalGrade(grade_id, finalGrade);
+        toast.success("Final Grade successfully updated.");
     };
 
 
@@ -99,17 +101,17 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
         {currentStudents.length === 0 ? (
             <tr>
             <td colSpan={5} className="p-4 text-black">
-              No student found.
+              No students yet.
             </td>
           </tr>
         ) : (
           currentStudents.map((student, idx) => (
-            <StudentTodo 
-              key={student.lrn} 
-              myStudent={student} 
-              changeTodoText={changeTodoText}
-              className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
-            />
+              <StudentTodo 
+                key={student.lrn} 
+                myStudent={student} 
+                changeTodoText={changeTodoText}
+                className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+              />
           ))
         )}
         </tbody>

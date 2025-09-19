@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
     // 1. Create Clerk user
     const user = await clerk.users.createUser({
-      username: `RIZAL-${username}`,
+      username: role === "student" ? `RIZAL-${username}` : username,      
       password: randomPassword,
       emailAddress: [email],
       firstName: username,
@@ -106,7 +106,7 @@ export async function POST(request: Request) {
           selected_AcademicYear_id: academicYearID,
           clerkId: user.id,
           userType: role,
-          clerk_username: `RIZAL-${username}`,
+          clerk_username: username,
           clerk_email: email,
         });
       }

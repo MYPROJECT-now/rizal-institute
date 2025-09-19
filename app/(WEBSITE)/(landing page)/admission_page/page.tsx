@@ -28,7 +28,7 @@ const AdmissionPage = () => {
         <div className="w-full h-full flex flex-col">
 
             {/* first section */}
-            <div className="w-full lg:py-10 sm:py-3 py-0  px-5 bg-gradient-to-b from-green-200 to-green-600 flex sm:flex-row flex-col ">
+            <div className="w-full min-h-[350px] lg:py-10 sm:py-3 py-0  px-5 bg-gradient-to-b from-green-200 to-green-600 flex sm:flex-row flex-col ">
                 <div className=" w-1/2 flex flex-col sm:gap-10 gap-0 items-center justify-center text-white">
                     <Image
                         src="/top.svg"
@@ -41,7 +41,7 @@ const AdmissionPage = () => {
 
                     
                     {/*   <hr className="border-1 border-solid border-dGreen w-[300px] lg:w-[600px]" /> */}
-                    <div className="hidden sm:flex flex-col text-center">                   
+                    <div className="hidden sm:flex flex-col text-center ">                   
                         <p className= "font-bold font-merriweather text-2xl lg:text-4xl">
                             Welcome, Rizalians!
                         </p>
@@ -52,7 +52,7 @@ const AdmissionPage = () => {
                     </div>
                 </div>
                 
-                <div className="sm:w-1/2 w-full flex flex-col gap-1 items-center ">
+                <div className="sm:w-1/2 w-full flex flex-col gap-4 items-center ">
                     <div>
                         <Image
                         src="/admission.svg"
@@ -78,9 +78,9 @@ const AdmissionPage = () => {
              {/* end of first section */}
 
             {/* start of second section */}
-    <div className="w-full h-auto lg:h-[450px] flex flex-col items-center py-5 sm:py-0">
-        <h1 className="mt-5 font-bold font-merriweather text-xl lg:text-4xl sm:text-3xl text-dGreen">STEP AND GUIDELINES</h1>
-        <div className=" mt-6 flex flex-row  items-center justify-center gap-6 lg:gap-10 ">
+    <div className="w-full h-auto min-lg:h-[550px] flex flex-col items-center gap-2 py-8">
+        <h1 className=" font-bold font-merriweather text-lg lg:text-4xl sm:text-3xl text-dGreen">STEP AND GUIDELINES</h1>
+        <div className=" mt-1 flex flex-row min-w-[320px] w-full  px-1 items-center justify-center gap-6 lg:gap-10 ">
 
             <div className=" hidden sm:flex flex-col h-[480px] gap-2 lg:gap-4 justify-center">
                 <Button
@@ -126,9 +126,9 @@ const AdmissionPage = () => {
 
             {/* card */}
             <div >
-                <Card className=" lg:w-[700px] sm:w-[500px] w-full h-auto py-2 bg-green-300/30 border-0 flex flex-col rounded-3xl">
+                <Card className=" lg:w-[700px] sm:w-[500px] w-full min-h-[340px] h-auto py-2 bg-green-300/30 border-0 flex flex-col rounded-3xl">
                     <CardHeader>
-                        <CardTitle className="font-bold font-merriweather lg:text-3xl mb-2 sm:text-2xl text-lg text-dGreen text-center">
+                        <CardTitle className="font-bold font-merriweather lg:text-3xl mb-2 sm:text-2xl text-base text-dGreen text-center">
                             {activeStep === 1 && 'Application Form Submission'}
                             {activeStep === 2 && 'Document Submission'}
                             {activeStep === 3 && 'Slot Reservation Payment'}
@@ -136,9 +136,9 @@ const AdmissionPage = () => {
                             {activeStep === 5 && 'ENROLLMENT PROCEDURE'}
                         </CardTitle>
                     </CardHeader> 
-                <CardContent className="text-start font-light font-oswald  flex flex-col gap-4 px-10">
+                <CardContent className="w-[290px] lg:w-[700px] sm:w-[500px] text-start font-light font-oswald  flex flex-col gap-4 px-5 sm:px-10">
                     {activeStep === 1 && (
-                        <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 text-2xl">
+                        <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 lg:text-2xl sm:text-xl text-sm">
                             <li>Click &quot;Enroll Now&quot; button</li>
                             <li>Select Student Type Category</li>
                             <li>Fill out basic personal information</li>
@@ -148,17 +148,17 @@ const AdmissionPage = () => {
 
                     {activeStep === 2 && (
                         <div>
-                            <p className="text-3xl">
+                            <p className="lg:text-3xl sm:text-2xl text-lg">
                             Upload scanned copies of:
                             </p>
-                            <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 text-2xl">
+                            <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 lg:text-2xl sm:text-xl text-sm">
                                 <li>Birth Certificate</li>
                                 <li>Report Card (Form 138)</li>
                                 <li>Form 137</li>
                                 <li>Good Moral Certificate</li>
                                 <li>CAPRISAA Student Exit Clearance Form (if from private school)</li>
                             </ol>
-                            <p className="mt-5 text-lg  ">
+                            <p className="mt-5 lg:text-lg sm:text-base text-sm  ">
                             Reminder: Originals must be submitted in person.
                             </p>
                         </div>
@@ -166,19 +166,19 @@ const AdmissionPage = () => {
 
                     {activeStep === 3 && (
                     <div>
-                        <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 text-2xl">
+                        <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 lg:text-2xl sm:text-xl text-sm">
                             <li>Pay Minimum ofPHP 500 to reserve the slot.</li>
                             <li>Accepted payment methods are online payments (gcash, bank transfer) and Over-the-counter (at school office)</li>
                             <li>An email verification will be sent along with the tracking ID</li>
                         </ol>
-                        <p className="text-lg mt-5">
+                        <p className="mt-5 lg:text-lg sm:text-base text-sm  ">
                             * Tracking ID can be used to track the status of the application
                         </p>
                     </div>
                     )}
 
                     {activeStep === 4 && (
-                    <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 text-2xl">
+                    <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 lg:text-2xl sm:text-xl text-sm">
                         <li>Registrar and Cashier will verify the application and payment  of the applicant </li>
                         <li>An email verification will be sent once the application was verified</li>
                         <li>Applicants can track their application status by entering their tracking ID in the button in the home page</li>
@@ -186,7 +186,7 @@ const AdmissionPage = () => {
                     )}
 
                     {activeStep === 5&& (
-                    <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 text-2xl">
+                    <ol className="list-disc pl-6 flex flex-col sm:gap-3 gap-2 lg:text-2xl sm:text-xl text-sm">
                         <li>An applicant will received an email confirmation of reserved slot.</li>
                         <li>The applicant can confirm their addmision by entering their tracking ID in track application button and confirm thier admission.</li>
                         <li>Once Verified, the applicant will received an email confirmation of their admission along with their account credentials</li>

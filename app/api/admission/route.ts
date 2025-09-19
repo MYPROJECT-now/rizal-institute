@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
-import { eq } from 'drizzle-orm';
-import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, StudentGradesTable, StudentInfoTable, SubjectTable } from '@/src/db/schema';
+import { and, desc, eq } from 'drizzle-orm';
+import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, SectionTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { clerkClient } from '@clerk/nextjs/server';
@@ -422,6 +422,76 @@ export async function POST(request: Request) {
 
     await db.insert(StudentGradesTable).values(gradeEntries);
 
+  
+    const sectionData = await db
+      .select({
+        section_id: SectionTable.section_id,
+        sectionName: SectionTable.sectionName,
+        limit: SectionTable.limit,
+        gradeLevel_id: SectionTable.gradeLevel_id,
+      })
+      .from(SectionTable)
+      .where(
+        and(
+          eq(SectionTable.gradeLevel_id, gradeLevel_id),
+          eq(SectionTable.academicYear_id, academicYearID)
+        )
+      )
+      .orderBy(desc(SectionTable.section_id)) // get the latest section for that grade/year
+      .limit(1);
+
+    let newSectionCount = 1;
+    const limitCount = 40; // capacity per section test
+    // let limitCount = 1;
+    const limit = limitCount - 1; // default for a new section
+    let section_id = 1;
+
+    if (sectionData.length === 0) {
+      // no section yet → create Section 1
+      const sectionData2 = await db.insert(SectionTable).values({
+        sectionName: "Section " + newSectionCount,
+        gradeLevel_id,
+        academicYear_id: academicYearID,
+        limit: limit,
+      }).returning({ section_id: SectionTable.section_id });
+
+      section_id = sectionData2[0].section_id;
+    } else {
+      const currentSection = sectionData[0];
+
+      // check if current section still has capacity
+      if (currentSection.limit > 0) {
+        // just decrement the current section's limit
+        await db.update(SectionTable)
+          .set({ limit: currentSection.limit - 1 })
+          .where(eq(SectionTable.section_id, currentSection.section_id))
+
+        section_id = currentSection.section_id;
+      } else {
+        // full → open a new section
+        const match = currentSection.sectionName.match(/Section (\d+)/);
+        newSectionCount = match ? parseInt(match[1]) + 1 : 2;
+
+        const sectionData3 = await db.insert(SectionTable).values({
+          sectionName: "Section " + newSectionCount,
+          gradeLevel_id,
+          academicYear_id: academicYearID,
+          limit: limit,
+        }).returning({ section_id: SectionTable.section_id });
+
+        section_id = sectionData3[0].section_id;
+      }
+    }
+
+    await db
+    .insert(StudentPerGradeAndSection)
+    .values({
+      student_id,
+      academicYear_id: academicYearID,
+      gradeLevel_id,
+      section_id: section_id, 
+    });
+    
     // Insert audit trail
     await db.insert(auditTrailsTable).values({
       actionTaken: "Applicant was admitted",

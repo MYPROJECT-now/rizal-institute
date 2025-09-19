@@ -189,16 +189,6 @@
         For Junior High School
       </p>
 
-      {/* Officially Open Card */}
-      {/* <div className="mt-6 bg-white shadow-2xl rounded-2xl px-10 py-8 border border-green-700 inline-block">
-        <p className="text-green-700 font-extrabold text-4xl font-merriweather uppercase">
-          Officially Open
-        </p>
-        <p className="text-black/80 font-semibold text-xl mt-3 font-oswald">
-          SY 2025 – 2026
-        </p>
-        <span> aug, 2 - oct, 31</span>
-      </div> */}
 
   <div className="w-full sm:mt-6 mt-2 bg-white shadow-2xl rounded-2xl lg:px-10 sm:px-5 px-3 lg:py-8 sm:py-4 py-2 border border-green-700 inline-block">
     {loading ? (
@@ -214,27 +204,7 @@
         <p className="text-black/80 font-semibold lg:text-xl sm:text-lg text-sm mt-3 font-oswald">
           {"SY " + noticeData?.enrollment_period || ""}
         </p>
-        {/* <span>
-          {noticeData?.enrollment_start_date || "ss"}
-          -
-          {noticeData?.enrollment_end_date || "ss"}
-        </span> */}
 
-        {/* <span className="lg:text-lg text-sm">
-          {noticeData
-            ? new Date(noticeData.enrollment_start_date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })
-            : ""}
-          {" - "}
-          {noticeData
-            ? new Date(noticeData.enrollment_end_date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })
-            : ""}
-        </span> */}
         <span className="lg:text-sm text-xs">
           {noticeData?.enrollment_start_date && noticeData?.enrollment_end_date ? (
             <>

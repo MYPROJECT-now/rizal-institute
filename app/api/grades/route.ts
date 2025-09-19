@@ -198,6 +198,7 @@ export async function POST(req: NextRequest) {
           const updateResult = await db
             .update(StudentGradesTable)
             .set({
+              remarks: grade > 75 ? "PASSED" : "FAILED",
               finalGrade: grade,
               dateSubmitted: new Date().toISOString().split("T")[0],
             })

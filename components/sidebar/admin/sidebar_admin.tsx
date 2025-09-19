@@ -61,12 +61,12 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
               
             />
 
-            <SidebarItem
+            {/* <SidebarItem
               label="Account"
               href="/ACCOUNTS/admin/account"
               iconSrc="/account.png"
               onClick={onClose}
-            />
+            /> */}
 
             <SidebarItem
               label="Users"
@@ -76,9 +76,16 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
             />
 
             <SidebarItem
-              label="Assign Class"
+              label="Assign Subject"
               href="/ACCOUNTS/admin/teacher"
               iconSrc="/role.png"
+              onClick={onClose}
+            />
+
+            <SidebarItem
+              label="Class Schedule"
+              href="/ACCOUNTS/admin/schedule"
+              iconSrc="/clock.png"
               onClick={onClose}
             />
 

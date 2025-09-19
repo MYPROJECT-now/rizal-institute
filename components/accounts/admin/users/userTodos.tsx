@@ -4,6 +4,8 @@ import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { deleteUser } from "@/src/actions/adminAction";
 import UserTodo from "./userTodo";
+import { CreateAccount } from "../account_modal/account";
+import { useAccountModal } from "@/src/store/ADMIN/account";
 
 interface Props {
   userTodos: UserType[];
@@ -13,7 +15,7 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
     const [userItems, setUserItems] = useState<UserType[]>(userTodos);
     const [filterUsername, setFilterUsername] = useState("");
     const [filterUsertype, setFilterUsertype] = useState("");
-
+    const { open } = useAccountModal();
     // 🔢 Pagination State
     const [currentPage, setCurrentPage] = useState(1);
     const userPerPage = 5;
@@ -67,9 +69,17 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
                 setFilterUsertype("");
             }}
             variant="confirmButton"
-    className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
+            className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
         >
             Clear Filter
+        </Button>
+        < CreateAccount/>
+        <Button
+          className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2 "
+          variant={"confirmButton"}
+          onClick={open}
+        >
+          Create User
         </Button>
     </div>
 

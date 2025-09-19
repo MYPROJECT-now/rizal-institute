@@ -740,7 +740,7 @@ const sections = [
                 <section className="w-full px-0 sm:px-2 py-2">
 
                     <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
-                    <div className="w-full gap-4 flexflex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-5 mb-3 sm:mb-0">
                             <div className="flex flex-col">
@@ -1048,47 +1048,47 @@ const sections = [
                 <section className="w-full px-2 py-2">
 
                     <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Previous School Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3   ">
 
                         <section className="flex flex-col gap-4">
                             <div className="flex flex-col sm:flex-row gap-5">
-                            <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">SY Graduated <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
-                                <select
-                                    name="schoolYear"
-                                    onChange={handleSchoolYear}
-                                    value={schoolYear}
-                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
-                                    ${errors.schoolYear ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
-                                    ${schoolYear === '' ? 'text-gray-500' : 'text-black'}`}
-                                >
-                                    <option className="text-gray-300" value="">
-                                        Select School Year
-                                    </option>
-                                    {years.map((year) => (
-                                        <option key={year} className="text-black" value={`${year}-${year + 1}`}>
-                                            {year}-{year + 1}
+                                <div className="flex flex-col">
+                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">SY Graduated <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                    <select
+                                        name="schoolYear"
+                                        onChange={handleSchoolYear}
+                                        value={schoolYear}
+                                        className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                        ${errors.schoolYear ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
+                                        ${schoolYear === '' ? 'text-gray-500' : 'text-black'}`}
+                                    >
+                                        <option className="text-gray-300" value="">
+                                            Select School Year
                                         </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="flex flex-col sm:flex-row">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
-                                <select 
-                                    name="Gender"
-                                    onChange={handleSchoolType}
-                                    value={schoolType}
-                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
-                                    ${errors.schoolType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
-                                    ${schoolType === '' ? 'text-gray-500' : 'text-black'}`}>
-                                        <option value="" >Select School Type</option>
-                                        <option value="Private">Private</option>
-                                        <option value="Public">Public</option>
-                                </select>
-                            </div>
+                                        {years.map((year) => (
+                                            <option key={year} className="text-black" value={`${year}-${year + 1}`}>
+                                                {year}-{year + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-2xl lg:text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                    <select 
+                                        name="Gender"
+                                        onChange={handleSchoolType}
+                                        value={schoolType}
+                                        className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                        ${errors.schoolType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
+                                        ${schoolType === '' ? 'text-gray-500' : 'text-black'}`}>
+                                            <option value="" >Select School Type</option>
+                                            <option value="Private">Private</option>
+                                            <option value="Public">Public</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row   ">
+                            <div className="flex flex-col ">
                                 <span className="text-xs lg:text-sm text-dGreen font-semibold">Previous School <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                 <input 
                                     type="text" 

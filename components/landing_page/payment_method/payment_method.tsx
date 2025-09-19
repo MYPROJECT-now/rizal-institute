@@ -11,6 +11,7 @@
     import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
     import { PreviewModal } from "../landing_page_portal/preview/preview_modal";
     import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 
@@ -42,7 +43,7 @@
         const gcashReceiptRef = useRef<HTMLInputElement>(null);
         const bankTransferReceiptRef = useRef<HTMLInputElement>(null);
 
-        const [isLoading, setIsLoading] = useState(false);
+        const [isLoading, setIsLoading] = useState(true);
         
         const { open: openPreview } = usePreviewModal();
 
@@ -81,10 +82,11 @@
                         setEscGrant(data.escGrant || 0);
                         setTuitionFee(data.tuitionFee || 0);
 
-                        setIsLoading(false);
                     
                     } catch (error) {
                         console.error("Error fetching student data:", error);
+                    } finally {
+                        setIsLoading(false);
                     }
                 };
                 fetchStudentData();
@@ -211,9 +213,8 @@
                 <main className="w-full  flex flex-col gap-10 items-center "> 
                 <div className="p-10 mt-5 shadow-lg rounded-lg flex flex-col gap-10">
                     {isLoading ? (
-                        <div className="w-full text-center">
-                            <p className="w-full text-center">Loading...</p>
-                        </div>
+                        <div className="w-full text-center text-2xl text-dGreen font-oswald flex flex-row justify-center gap-2"><strong className="font-bold">Total Tuition Fee:</strong> <Skeleton className="w-[100px] h-[30px]"/></div>
+                       
                     ) : (
                         <p className="w-full text-center text-2xl text-dGreen font-oswald"><strong className="font-bold">Total Tuition Fee:</strong> {totalTuition}</p>
                     )}

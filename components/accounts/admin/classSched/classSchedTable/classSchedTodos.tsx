@@ -1,0 +1,202 @@
+"use client";
+import { FC, useState, useMemo } from "react";
+import { SchedType } from "@/src/type/ADMIN/admin";
+import SchedTodo from "./classSchedTodo";
+import { Add_Schedule } from "../add_schedule/account";
+import { useEditScheduleModal, usescheduleModal } from "@/src/store/ADMIN/addSchedule";
+import { Button } from "@/components/ui/button";
+import { Edit_Schedule } from "../editSched/account";
+
+interface Props {
+  scheds: SchedType[];
+}
+
+const SchedTodos: FC<Props> = ({ scheds }) => {
+  const { open: openAdd } = usescheduleModal();
+  const { open: openEdit } = useEditScheduleModal();
+
+  // filter states
+  const [selectedTeacher, setSelectedTeacher] = useState<string>("all");
+  const [selectedSection, setSelectedSection] = useState<string>("all");
+
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
+  // 🟢 Pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const rowsPerPage = 4; // adjust how many rows you want per page
+
+  // 🟢 Filter logic
+  const filteredScheds = useMemo(() => {
+    return scheds.filter((s) => {
+      const teacherMatch =
+        selectedTeacher === "all" || s.clerk_username === selectedTeacher;
+      const sectionMatch =
+        selectedSection === "all" ||
+        `${s.gradeLevelName}-${s.sectionName}` === selectedSection;
+      return teacherMatch && sectionMatch;
+    });
+  }, [scheds, selectedTeacher, selectedSection]);
+
+  // 🟢 Group filtered schedules by day
+  const groupedScheds = useMemo(() => {
+    return days.reduce((acc, day) => {
+      acc[day] = filteredScheds.filter((s) => s.dayOfWeek === day);
+      return acc;
+    }, {} as Record<string, SchedType[]>);
+  }, [filteredScheds]);
+
+  // 🟢 Calculate max rows across all days
+  const maxRows = useMemo(
+    () => Math.max(...days.map((d) => groupedScheds[d].length), 0),
+    [groupedScheds]
+  );
+
+  const totalPages = Math.ceil(maxRows / rowsPerPage);
+
+  // 🟢 Paginated rows
+  const paginatedRows = Array.from(
+    { length: rowsPerPage },
+    (_, i) => currentPage * rowsPerPage + i
+  ).filter((rowIdx) => rowIdx < maxRows);
+
+  // 🟢 Dropdown options
+  const teacherOptions = useMemo(
+    () =>
+      Array.from(new Set(scheds.map((s) => s.clerk_username).filter(Boolean))),
+    [scheds]
+  );
+
+  const sectionOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          scheds
+            .map((s) =>
+              s.gradeLevelName && s.sectionName
+                ? `${s.gradeLevelName}-${s.sectionName}`
+                : null
+            )
+            .filter(Boolean)
+        )
+      ),
+    [scheds]
+  );
+
+  return (
+    <main className="min-h-[600px] lg:min-h-0 text-xs sm:text-sm w-full sm:px-8 px-4 py-6 sm:pt-6 text-center">
+      {/* 🔽 Filter Controls */}
+      <div className="flex flex-row gap-4 py-3 items-center flex-wrap">
+        <p className="font-semibold text-dGreen">Filter by:</p>
+        <select
+          value={selectedTeacher}
+          onChange={(e) => setSelectedTeacher(e.target.value)}
+          className="border-2 border-gray-300 rounded px-3 py-1  w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        >
+          <option value="all">All Teachers</option>
+          {teacherOptions.map((t) => (
+            <option key={t} value={t ?? ""}>
+              {t}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedSection}
+          onChange={(e) => setSelectedSection(e.target.value)}
+          className="border-2 border-gray-300 rounded px-3 py-1  w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        >
+          <option value="all">All Sections</option>
+          {sectionOptions.map((sec) => (
+            <option key={sec} value={sec ?? ""}>
+              {sec}
+            </option>
+          ))}
+        </select>
+
+        <Button
+          onClick={() => {
+            setSelectedTeacher("all");
+            setSelectedSection("all");
+          }}
+          variant="confirmButton"
+          className="px-4 py-2 rounded-lg"
+        >
+          Clear Filters
+        </Button>
+
+        <Add_Schedule />
+        <Button
+          onClick={openAdd}
+          variant={"confirmButton"}
+          className="px-4 py-3 rounded-lg"
+        >
+          Add Schedule
+        </Button>
+
+        <Edit_Schedule />
+        <Button 
+          onClick={openEdit}
+          variant={"acceptButton"} 
+          className="px-4 py-3 rounded-lg">
+          Edit
+        </Button>
+      </div>
+
+      {/* 🔽 Schedule Table */}
+      <div className="overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+        <table className="w-full text-xs sm:text-sm text-center">
+          <thead>
+            <tr className="bg-green-600 text-white">
+              {days.map((day) => (
+                <th key={day} className="px-4 py-2 capitalize">
+                  {day}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedRows.map((rowIdx) => (
+              <tr
+                key={rowIdx}
+                className={rowIdx % 2 === 0 ? "bg-white" : "bg-green-100"}
+              >
+                {days.map((day) => (
+                  <td key={day} className="px-4 py-2">
+                    {groupedScheds[day][rowIdx] ? (
+                      <SchedTodo sched={groupedScheds[day][rowIdx]} />
+                    ) : null}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 🔽 Pagination Controls */}
+      <div className=" flex items-center justify-center gap-2 mt-5">
+        <Button
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 0))}
+          disabled={currentPage === 0}
+          variant="prevButton"
+          className="px-4 py-2 rounded-lg"
+        >
+          Previous
+        </Button>
+        <span>
+          Page {currentPage + 1} of {totalPages}
+        </span>
+        <Button
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages - 1))}
+          disabled={currentPage === totalPages - 1}
+          variant="prevButton"
+          className="px-4 py-2 rounded-lg"
+        >
+          Next
+        </Button>
+      </div>
+    </main>
+  );
+};
+
+export default SchedTodos;

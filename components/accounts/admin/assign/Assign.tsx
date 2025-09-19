@@ -1,81 +1,3 @@
-// "use client";
-
-// import { getTeachers } from "@/src/actions/adminAction";
-// import { useEffect, useState } from "react";
-
-// type Grade = {
-//   gradeLevel_id: number;
-//   gradeLevelName: string;
-// };
-
-// type Subject = {
-//   subject_id: number;
-//   subjectName: string;
-// };
-
-// type Teacher = {
-//   clerk_username: string;
-// };
-
-// interface Props {
-//   grades: Grade[];
-//   subjects: Subject[];
-// }
-
-// export const GradeSubjectMap = ({ grades, subjects }: Props) => {
-//   const [teachers, setTeachers] = useState<Teacher[]>([]);
-
-//   useEffect(() => {
-//     const fetchTeachers = async () => {
-//       const result = await getTeachers();
-//       setTeachers(result);
-//     };
-//     fetchTeachers();
-//   }, []);
-
-//   return (
-//     <div className="flex flex-col items-center p-10 max-h-[450px] overflow-y-scroll">
-//       <section className="flex flex-row items-center gap-5 mb-6">
-//         <label className="mb-2 font-semibold">Username:</label>
-//         <select className="p-2 border rounded">
-//           <option value="">Select a teacher</option>
-//           {teachers.map((teacher, idx) => (
-//             <option key={idx} value={teacher.clerk_username}>
-//               {teacher.clerk_username}
-//             </option>
-//           ))}
-//         </select>
-//       </section>
-
-//       <section className="w-full grid grid-cols-2 gap-4">
-//         {grades.map((grade) => (
-//           <div key={grade.gradeLevel_id}>
-//             <h2 className="text-lg font-bold">Grade {grade.gradeLevelName}</h2>
-//             <ul className="pl-4 text-sm">
-//               {subjects.map((subject) => (
-//                 <li key={`${grade.gradeLevel_id}-${subject.subject_id}`}>
-//                   <label className="inline-flex items-center space-x-2">
-//                     <input
-//                       type="checkbox"
-//                       value={subject.subject_id}
-//                       name={`grade-${grade.gradeLevel_id}-subjects`}
-//                       className="checkbox"
-//                     />
-//                     <span>{subject.subjectName}</span>
-//                   </label>
-//                 </li>
-//               ))}
-//             </ul>
-//           </div>
-//         ))}
-//       </section>
-//     </div>
-//   );
-// };
-
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -98,15 +20,22 @@ type Teacher = {
   clerk_uid: number;
 };
 
+interface Assignment {
+  gradeLevel_id: number;
+  subject_id: number;
+}
+
 interface Props {
   grades: Grade[];
   subjects: Subject[];
+  existingAssignments: Assignment[];
+
 }
 
-export const GradeSubjectMap = ({ grades, subjects }: Props) => {
+export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props) => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [selectedPairs, setSelectedPairs] = useState<{ gradeLevel_id: number; subject_id: number }[]>([]);
+  const [selectedPairs, setSelectedPairs] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -116,6 +45,10 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
     };
     fetchTeachers();
   }, []);
+
+  const assignedSet = new Set(
+    existingAssignments.map((a) => `${a.gradeLevel_id}-${a.subject_id}`)
+  );
 
   const handleCheckboxChange = (gradeId: number, subjectId: number, checked: boolean) => {
     const pair = { gradeLevel_id: gradeId, subject_id: subjectId };
@@ -143,6 +76,7 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
     setSelectedTeacher("");
     setTeachers([]); // clear
     setIsLoading(false);
+    window.location.reload();
   };
 
   return (
@@ -161,16 +95,29 @@ export const GradeSubjectMap = ({ grades, subjects }: Props) => {
 
       <section className="w-full grid sm:grid-cols-2 grid-cols-1 gap-4 ">
         {grades.map((grade) => (
-          <div key={grade.gradeLevel_id}>
+          <div key={grade.gradeLevel_id} className="shadow-lg border-2 border-gray-300 rounded-lg p-4">
             <h2 className="text-lg font-bold text-dGreen">Grade {grade.gradeLevelName}</h2>
             <ul className="pl-4 text-sm">
-              {subjects.map((subject) => {
+              {/* {subjects.map((subject) => {
                 const checked = selectedPairs.some(
                   (p) => p.gradeLevel_id === grade.gradeLevel_id && p.subject_id === subject.subject_id
-                );
+                ); */}
+              {subjects.map((subject) => {
+              const pairKey = `${grade.gradeLevel_id}-${subject.subject_id}`;
+              if (assignedSet.has(pairKey)) {
+                // already assigned → skip
+                return null;
+              }
+
+              const checked = selectedPairs.some(
+                (p) =>
+                  p.gradeLevel_id === grade.gradeLevel_id &&
+                  p.subject_id === subject.subject_id
+              );
+
                 return (
                   <li key={`${grade.gradeLevel_id}-${subject.subject_id}`}>
-                    <label className="inline-flex items-center space-x-2">
+                    <label className="inline-flex items-center space-x-2 text-lGreen font-semibold">
                       <input
                         type="checkbox"
                         checked={checked}

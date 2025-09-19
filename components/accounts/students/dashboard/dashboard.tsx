@@ -5,17 +5,19 @@
   import { BadgeCheck, School } from "lucide-react";
   import { useEffect, useState } from "react";
   import { getInfoForDashboard } from "@/src/actions/studentAction";
-  
+  import { Skeleton } from "@/components/ui/skeleton"
 
   export const StudentDashboard = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any>(null);
-    
+    const [loading, setLoading] = useState(false);
     
     useEffect(() => {
+      setLoading(true);
       const fetchData = async () => {
         const res = await getInfoForDashboard();
         setData(res);
+        setLoading(false);
       };
 
       fetchData();
@@ -33,7 +35,7 @@
         >
           <h1 className=" text-xl sm:text-3xl font-bold text-dGreen flex items-center gap-2">
             <School className="w-8 h-8" />
-            Welcome, {studentInfo?.studentFirstName || "Student"}!
+            Welcome, {loading ? <Skeleton className="h-8 w-[80px] rounded-lg" /> : studentInfo?.studentFirstName} 
           </h1>
         </motion.div>
 
@@ -54,9 +56,9 @@
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Student ID</p>
-                    <p className="text-lg font-semibold">
-                      {studentInfo?.lrn || "Loading..."}
-                    </p>
+                    <div className="text-lg font-semibold">
+                      {loading ? <Skeleton className="h-8 w-[120px] rounded-lg" /> : studentInfo?.lrn}
+                    </div>
                   </div>
                 </div>
 
@@ -66,9 +68,9 @@
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Status</p>
-                    <p className="text-lg font-semibold text-green-600">
-                    {studentInfo?.admissionStatus || "Loading..."}
-                    </p>
+                    <div className="text-lg font-semibold text-green-600">
+                    {loading ? <Skeleton className="h-8 w-[100px] rounded-lg" /> : studentInfo?.admissionStatus}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -77,14 +79,14 @@
                 <div className="p-6 flex items-center space-x-4">
                   <div className="bg-green-100 p-3 rounded-full">
                     <span className="text-2xl font-bold text-dGreen">
-                      {studentInfo?.gradeLevelName || "Loading..."}
+                      {loading ? <Skeleton className="h-6 w-4 rounded-full" /> : studentInfo?.gradeLevelName}
                     </span>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Year Level</p>
-                    <p className="text-lg font-semibold">
-                    {"Grade" + studentInfo?.gradeLevelName || "Loading..."}
-                    </p>
+                    <div className="text-lg font-semibold">
+                    {loading ? <Skeleton className="h-8 w-[100px] rounded-lg" /> : "Grade" + studentInfo?.gradeLevelName    }
+                    </div>
                   </div>
                 </div>
 
@@ -94,9 +96,9 @@
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">School Year</p>
-                    <p className="text-lg font-semibold">
-                      {studentInfo?.academicYear || "Loading..."} 
-                    </p>
+                    <div className="text-lg font-semibold">
+                      {loading ? <Skeleton className="h-8 w-[100px] rounded-lg" /> : studentInfo?.academicYear} 
+                    </div>
                   </div>
                 </div>
               </div>
@@ -118,7 +120,7 @@
                   <p>
                     {studentInfo?.outstandingBalance !== undefined
                       ? `₱${studentInfo.outstandingBalance}`
-                      : "Loading..."}
+                      : "..."}
                   </p>
                 </div>
               )}
