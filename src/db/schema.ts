@@ -369,17 +369,17 @@ export const staffClerkUserTable = pgTable("staffClerkUserTable", {
 
 
 
-// static components
-export const GradeLevelTable = pgTable("GradeLevelTable", {
-  gradeLevel_id: serial("gradeLevel_id").primaryKey(),
-  gradeLevelName: varchar("gradeLevelName", { length: 100 }).notNull(), // ex: "7"
-});
+  // static components
+    export const GradeLevelTable = pgTable("GradeLevelTable", {
+      gradeLevel_id: serial("gradeLevel_id").primaryKey(),
+      gradeLevelName: varchar("gradeLevelName", { length: 100 }).notNull(), // ex: "7"
+    });
 
-export const SubjectTable = pgTable("SubjectTable", {
-  subject_id: serial("subject_id").primaryKey(),
-  subjectName: varchar("subjectName", { length: 100 }).notNull(), // ex: "Science"
-  isActive: boolean("isActive").notNull().default(true),
-});
+    export const SubjectTable = pgTable("SubjectTable", {
+      subject_id: serial("subject_id").primaryKey(),
+      subjectName: varchar("subjectName", { length: 100 }).notNull(), // ex: "Science"
+      isActive: boolean("isActive").notNull().default(true),
+    });
 
 
 

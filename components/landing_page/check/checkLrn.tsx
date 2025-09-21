@@ -28,7 +28,7 @@ export const CheckLrn = () => {
 
   const handleSubmit = async () => {
     if (!lrn.trim()) {
-      toast.error("Please enter a valid LRN.");
+      toast.error("Please enter your LRN.");
       return;
     }
 
@@ -65,9 +65,9 @@ export const CheckLrn = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[300px] h-auto lg:w-[600px] rounded-t-lg">
+      <DialogContent className="lg:w-[600px] lg:h-[300px] sm:w-[500px] w-[290px] rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center rounded-t-lg">
+          <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen sm:py-4 py-3 flex  justify-center rounded-t-lg">
             INPUT YOUR LRN
           </DialogTitle>
         </DialogHeader>

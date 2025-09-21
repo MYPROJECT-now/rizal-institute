@@ -51,7 +51,7 @@ const buttonVariants = cva(
         hButton:
           "text-3xl font-bold text-white hover:text-slate-100 transition-colors duration-200 hover:underline-offset-4 relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-white after:transition-all after:duration-300",
         CButton:
-          "bg-gray-100 text-white hover:bg-green-200 border-[3px] border-green-300 font-oswald text-green-500 py-5 font-bold",
+          "bg-gray-100 text-white hover:bg-green-200 border-[3px] border-green-300 font-oswald text-green-500 font-bold",
         
        
 

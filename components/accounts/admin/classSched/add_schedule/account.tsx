@@ -12,6 +12,7 @@ import {
 import { usescheduleModal } from "@/src/store/ADMIN/addSchedule";
 import { AddSchedule, checkSchedule, getAvailableAssignments, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
 import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export const Add_Schedule = () => {
@@ -179,8 +180,10 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
 
             {/* Grade & Section select */}
             {loader ? (
-              <div className="w-full flex items-center justify-center py-5">
-                <Loader2 className="animate-spin text-dGreen" />
+              <div className="w-full flex flex-col gap-4 items-center justify-center">
+                <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
+                <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
+
               </div>
             ): ( 
               assigned.length === 0 && selectedTeacher ? (
@@ -287,7 +290,7 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
             variant="confirmButton"
             className="sm:p-5 p-2 mt-2  rounded-lg"
             onClick={submitSchedule}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedSubject || !selectedDays.length || !startTime || !endTime}
           >
             Add Schedule
           </Button>

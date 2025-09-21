@@ -26,7 +26,6 @@ import { Skeleton } from "../ui/skeleton";
     const router = useRouter();
     const [status, setStatus] = useState<StatusType | null>(null);
 
-
     const handleClose = () => {
       close();
       router.push("/");

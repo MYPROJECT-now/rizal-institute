@@ -35,7 +35,7 @@ export const RecentAuditTrailsTable = () => {
         <tbody>
           {auditTrails.length === 0 ? (
             <tr>
-              <td colSpan={7} className="p-4 text-black">
+              <td colSpan={5} className="p-4 text-black">
                 No action taken.
               </td>
             </tr>

@@ -81,7 +81,7 @@ export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentIn
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Image src="/logo.png" style={styles.waterMark} />
+        <Image src="/logo.png"   style={styles.waterMark} />
 
         {/* HEADER */}
         <View style={styles.header}>

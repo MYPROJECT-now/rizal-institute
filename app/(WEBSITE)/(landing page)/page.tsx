@@ -239,21 +239,21 @@ import { Skeleton } from "@/components/ui/skeleton";
     <div className="grid grid-cols-1 md:grid-cols-3 sm:gap-10 gap-5 w-full">
 
       {/* Card 1 */}
-      <div className="bg-green-100/50 lg:p-8 sm:p-3 p-2 rounded-2xl shadow-md text-center flex flex-col items-cente justify-center">
+      <div className="bg-green-100/50 lg:p-8 p-3 rounded-2xl shadow-md text-center flex flex-col items-cente justify-center">
         <h4 className="font-semibold font-merriweather lg:text-xl sm:text-sm text-xs text-d2Green mb-3">
           Experience the Rizalian advantage.
         </h4>
       </div>
 
       {/* Card 2 */}
-      <div className="bg-green-100/50 lg:p-8 sm:p-3 p-2 rounded-2xl shadow-md text-center flex flex-col items-cente justify-center">
+      <div className="bg-green-100/50 lg:p-8 p-3 rounded-2xl shadow-md text-center flex flex-col items-cente justify-center">
         <h4 className="font-semibold font-merriweather lg:text-xl sm:text-sm text-xs text-d2Green mb-3">
           Develop your skills and talents in a nurturing environment.
         </h4>
       </div>
 
       {/* Card 3 */}
-      <div className="bg-green-100/50 lg:p-8 sm:p-3 p-2 rounded-2xl shadow-md text-center flex flex-col items-cente justify-center">
+      <div className="bg-green-100/50 lg:p-8 p-3 rounded-2xl shadow-md text-center flex flex-col items-cente justify-center">
         <h4 className="font-semibold font-merriweather lg:text-xl sm:text-sm text-xs text-d2Green mb-3">
           Become part of a community that values excellence and compassion.
         </h4>

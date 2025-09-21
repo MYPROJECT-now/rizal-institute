@@ -91,7 +91,7 @@ import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
         {currentStudents.length === 0 ? (
             <tr>
             <td colSpan={4} className="p-4 text-black">
-              No recent applicants found.
+              No students found.
             </td>
           </tr>
         ) : (

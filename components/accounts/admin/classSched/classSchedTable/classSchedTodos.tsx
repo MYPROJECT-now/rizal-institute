@@ -51,7 +51,7 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
     [groupedScheds]
   );
 
-  const totalPages = Math.ceil(maxRows / rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(maxRows / rowsPerPage));
 
   // 🟢 Paginated rows
   const paginatedRows = Array.from(
@@ -136,7 +136,7 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
         <Edit_Schedule />
         <Button 
           onClick={openEdit}
-          variant={"acceptButton"} 
+          variant={"confirmButton"} 
           className="px-4 py-3 rounded-lg">
           Edit
         </Button>

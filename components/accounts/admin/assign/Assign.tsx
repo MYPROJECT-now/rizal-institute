@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { assignSubjectsToTeacher, getTeachers } from "@/src/actions/adminAction";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useDeleteAssignModal, useEditAssignModal } from "@/src/store/ADMIN/assign";
+import { EditAssign } from "./edit/edit";
+import { DeleteAssign } from "./delete/delete";
 
 type Grade = {
   gradeLevel_id: number;
@@ -37,6 +40,8 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [selectedPairs, setSelectedPairs] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { open: OpenEdit } = useEditAssignModal();
+  const { open: OpenDelete } = useDeleteAssignModal();
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -79,29 +84,47 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
     window.location.reload();
   };
 
+
   return (
-    <div className="flex flex-col sm:p-10 p-4 max-h-[500px] w-full overflow-y-auto">
-      <section className="flex sm:flex-row flex-col items-start sm:items-center gap-0 sm:gap-5 mb-6">
-        <label className="mb-2 font-semibold text-xs sm:text-sm text-dGreen">Username:</label>
-        <select className="p-2 w-full sm:w-[200px] border-2 border-gray-300 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none rounded-lg" onChange={(e) => setSelectedTeacher(e.target.value)}>
-          <option value="">Select a teacher</option>
-          {teachers.map((teacher, idx) => (
-            <option key={idx} value={teacher.clerk_username}>
-              {teacher.clerk_username}
-            </option>
-          ))}
-        </select>
-      </section>
+    <div className="flex flex-col gap-6 sm:p-10 p-4 max-h-[500px] w-full overflow-y-auto">
+      <div className="flex flex-row gap-3 items-center">
+        <section className="flex sm:flex-row flex-col items-start sm:items-center gap-0 sm:gap-5 ">
+          <label className="mb-2 font-semibold text-xs sm:text-sm text-dGreen">Username:</label>
+          <select className="p-2 w-full sm:w-[200px] border-2 border-gray-300 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none rounded-lg" onChange={(e) => setSelectedTeacher(e.target.value)}>
+            <option value="">Select a teacher</option>
+            {teachers.map((teacher, idx) => (
+              <option key={idx} value={teacher.clerk_username}>
+                {teacher.clerk_username}
+              </option>
+            ))}
+          </select>
+        </section>
+
+        <EditAssign />
+        <Button
+        variant={"confirmButton"}
+        className="px-5 py-2 rounded-lg"
+        onClick={OpenEdit}
+        >
+          Edit
+        </Button>
+
+        <DeleteAssign />
+        <Button
+        variant={"rejectButton"}
+        className="px-5 py-2 rounded-lg"
+        onClick={OpenDelete}
+        >
+          Delete
+        </Button>
+      </div>
 
       <section className="w-full grid sm:grid-cols-2 grid-cols-1 gap-4 ">
         {grades.map((grade) => (
           <div key={grade.gradeLevel_id} className="shadow-lg border-2 border-gray-300 rounded-lg p-4">
             <h2 className="text-lg font-bold text-dGreen">Grade {grade.gradeLevelName}</h2>
             <ul className="pl-4 text-sm">
-              {/* {subjects.map((subject) => {
-                const checked = selectedPairs.some(
-                  (p) => p.gradeLevel_id === grade.gradeLevel_id && p.subject_id === subject.subject_id
-                ); */}
+
               {subjects.map((subject) => {
               const pairKey = `${grade.gradeLevel_id}-${subject.subject_id}`;
               if (assignedSet.has(pairKey)) {
@@ -138,7 +161,7 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
         onClick={handleSubmit} 
         variant="confirmButton"
         className="my-6 sm:px-10 sm:py-5 px-7 py-3 rounded-xl"
-        disabled={isLoading}
+        disabled={isLoading || !selectedTeacher || selectedPairs.length === 0}
       >
         {isLoading ? "Assigning..." : "Assign"}
       </Button>

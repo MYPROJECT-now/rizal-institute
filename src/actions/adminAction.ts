@@ -1,6 +1,6 @@
 "use server"
 
-import { and, desc, eq, gte, lte, or} from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, ScheduleTable, SectionTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
@@ -435,17 +435,18 @@ export const deleteUser = async (clerkId: string, clerk_username: string) => {
     return { grades, subjects };
   };
 
-  export const getTeachers = async () => {
-    const teachers = await db
-      .select({
-        clerk_username: staffClerkUserTable.clerk_username,
-        clerk_uid: staffClerkUserTable.clerk_uid,
+    export const getTeachers = async () => {
+      const teachers = await db
+        .select({
+          clerk_username: staffClerkUserTable.clerk_username,
+          clerk_uid: staffClerkUserTable.clerk_uid,
 
-      })
-      .from(staffClerkUserTable)
-      .where(eq(staffClerkUserTable.userType, "teacher"))
-      return teachers;
-  } 
+        })
+        .from(staffClerkUserTable)
+        .where(eq(staffClerkUserTable.userType, "teacher"))
+        console.log(teachers)
+        return teachers;
+    } 
 
 
   type Assignment = {
@@ -501,8 +502,131 @@ export const assignSubjectsToTeacher = async ({
     academicYear_id: await getAcademicYearID(),
   }) ;
 };
-  
 
+export const getAssignedGradeAndSubjects = async (selectedTeacher: number) => {
+  const getAssigned = await db
+  .select({
+    gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    subject_id:TeacherAssignmentTable.subject_id,
+    subjectName: SubjectTable.subjectName,
+  })
+  .from(TeacherAssignmentTable)
+  .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, TeacherAssignmentTable.gradeLevel_id))
+  .leftJoin(SubjectTable, eq(SubjectTable.subject_id, TeacherAssignmentTable.subject_id))
+  .where(eq(TeacherAssignmentTable.clerk_uid, selectedTeacher))
+
+  console.log(getAssigned);
+  return getAssigned;
+}
+  
+// export const getAllGrades = async () => {
+
+//   const getGrades = await db
+//   .select()
+//   .from(GradeLevelTable)
+//   return getGrades;
+// }
+
+export const getGradesWithUnassignedSubjects = async () => {
+  // get all grade levels
+  const allGrades = await db.select().from(GradeLevelTable);
+
+  // get all grade-subject assignments
+  const assignments = await db
+    .select({
+      gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+      subject_id: TeacherAssignmentTable.subject_id,
+    })
+    .from(TeacherAssignmentTable);
+
+  // build a map of assigned subjects by grade
+  const assignedMap = assignments.reduce((acc, row) => {
+    if (!acc[row.gradeLevel_id]) acc[row.gradeLevel_id] = new Set<number>();
+    acc[row.gradeLevel_id].add(row.subject_id);
+    return acc;
+  }, {} as Record<number, Set<number>>);
+
+  // get all subjects
+  const allSubjects = await db.select().from(SubjectTable).where(eq(SubjectTable.isActive, true));
+
+  // filter grades that still have unassigned subjects
+  const gradesWithUnassigned = allGrades.filter((grade) => {
+    const assignedSubjects = assignedMap[grade.gradeLevel_id] ?? new Set<number>();
+    const unassignedSubjects = allSubjects.filter(
+      (subj) => !assignedSubjects.has(subj.subject_id)
+    );
+    return unassignedSubjects.length > 0; // keep only grades with free subjects
+  });
+
+  return gradesWithUnassigned;
+};
+
+// export const getAllSubjects = async () => {
+
+//   const getSubjects = await db
+//   .select()
+//   .from(SubjectTable)
+//   return getSubjects;
+// }
+
+export const getUnassignedSubjectsByGrade = async (gradeLevelId: number) => {
+  return await db
+    .select({
+      subject_id: SubjectTable.subject_id,
+      subjectName: SubjectTable.subjectName,
+    })
+    .from(SubjectTable)
+    .leftJoin(
+      TeacherAssignmentTable,
+      and(
+        eq(TeacherAssignmentTable.gradeLevel_id, gradeLevelId),
+        eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id)
+      )
+    )
+    .where(
+      and(
+        eq(SubjectTable.isActive, true),
+        isNull(TeacherAssignmentTable.assignment_id)
+      )
+    );
+};
+
+export const updateAssigned = async (selectedTeacher: number, unassignedGradeLevelId: number, unassignedSubjectId: number, gradeLevelId: number, subjectId: number, ) => {
+
+  await db
+  .update(TeacherAssignmentTable)
+  .set({
+    gradeLevel_id: unassignedGradeLevelId,
+    subject_id: unassignedSubjectId,
+  })
+  .where(and(
+    eq(TeacherAssignmentTable.clerk_uid, selectedTeacher),
+    eq(TeacherAssignmentTable.gradeLevel_id, gradeLevelId),
+    eq(TeacherAssignmentTable.subject_id, subjectId),
+  ))
+}
+
+
+export const deleteAssigned = async (selectedTeacher: number, gradeLevelId: number, subjectId: number) => {
+
+  await db
+  .delete(TeacherAssignmentTable)
+  .where(and(
+    eq(TeacherAssignmentTable.clerk_uid, selectedTeacher),
+    eq(TeacherAssignmentTable.gradeLevel_id, gradeLevelId),
+    eq(TeacherAssignmentTable.subject_id, subjectId),
+  ))
+
+  await db
+  .delete(ScheduleTable)
+  .where(and(
+    eq(ScheduleTable.clerk_uid, selectedTeacher),
+    eq(ScheduleTable.gradeLevel_id, gradeLevelId),
+    eq(ScheduleTable.subject_id, subjectId),
+  ))
+
+}
 
 export const getTTotalCashier = async () => {
   
