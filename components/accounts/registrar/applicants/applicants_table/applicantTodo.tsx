@@ -40,19 +40,19 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
 
       <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       {/* <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>   */}
-      <td className="px-4 py-2">
+      <td className="px-6  py-2">
         <Button 
           variant={"confirmButton"}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={() => openEnrollees(applicant.lrn)}>
             View
           </Button>
       </td>
-      <td className=" py-3 space-x-2 flex gap-2 justify-center">
+      <td className="py-2 px-2 flex gap-2">
         <Button
           onClick={() => onAccept(applicant.id,  applicant.lastName, applicant.firstName, applicant.middleName ?? "")}
           variant={"acceptButton"}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           disabled={applicant.applicationFormReviewStatus !== "Pending" || loading || applicant.isActive === false}
         >
           {loading ? "Accepting..." : "Accept"}
@@ -62,8 +62,8 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
         <StatusModal onDecline={onDecline}/>
         <Button
           onClick={() => open(applicant.id, `${applicant.lastName} ${applicant.firstName} ${applicant.middleName}`)}
-           variant={"rejectButton"}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          variant={"rejectButton"}
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           disabled={applicant.applicationFormReviewStatus !== "Pending" || applicant.isActive === false}
         >
           Decline

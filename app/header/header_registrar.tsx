@@ -1,17 +1,17 @@
-// "use client";
+"use client";
 
+import { useUser } from "@clerk/nextjs";
 import { Profile_registrar } from "../../components/profile/profile_registrar";
-// import { useUser } from "@clerk/nextjs";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 
 const Registrar_header = () => {
-    // const { user } = useUser();
+    const { user } = useUser();
 
-    // useEffect(() => {
-    //     if (user) {
-    //         console.log("User:", user);
-    //     }
-    // }, [user]);
+    useEffect(() => {
+        if (user) {
+            console.log("User:", user);
+        }
+    }, [user]);
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
         year: 'numeric',   // Full year (e.g., 2024)
@@ -31,16 +31,9 @@ const Registrar_header = () => {
                 </p>
             </div>
             <div className="flex flex-row items-center gap-3">
-                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-                    Registrar
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl capitalize">
+                    {user?.fullName}
                 </p>
-                {/* <Image
-                src="/profile.png"
-                alt="profile"
-                width={100}
-                height={100}
-                className="bg-blue-400 h-[40px] w-[40px] rounded-full object-fill"
-                /> */}
                 <Profile_registrar />
             </div>
         </div>

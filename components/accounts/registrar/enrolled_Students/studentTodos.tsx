@@ -41,35 +41,6 @@ const Students: FC<Props> = ({ students }) => {
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
   const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
-  // const transferStudent = (status: string, lrn: string) => {
-  //   setStudentList((prev) =>
-  //     prev.map((student) => (student.lrn === lrn ? { ...student, status } : student))
-  //   );
-  //   setLoadingId(lrn);
-  //   doTransferStudent(status, lrn);
-  // }
-    
-  // const transferStudenta = async (status: string, lrn: string) => {
-
-  //   try {
-  //     setLoadingId(lrn);
-
-  //     // Call backend
-  //     await doTransferStudent( lrn);
-
-  //     // Update UI immediately
-  //     setStudentList((prev) =>
-  //       prev.map((student) => (student.lrn === lrn ? { ...student, status : "Transferred" } : student))
-  //     );
-
-  //     toast.success(`Student ${lrn} successfully transferred.`);
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Failed to transfer student.");
-  //   } finally {
-  //     setLoadingId(null);
-  //   }
-  // };
 
   const transferStudent = async ( lrn: string) => {
     toastConfirm("Transfer Student?", {
@@ -133,30 +104,8 @@ const Students: FC<Props> = ({ students }) => {
     });
   };
 
-  // const dropStudent = async (  lrn: string) => {
-  //   try {
-  //     setLoadingId(lrn);
-
-  //     // Call backend
-  //     await doDropferStudent( lrn);
-
-  //     // Update UI immediately
-  //     setStudentList((prev) =>
-  //       prev.map((student) => (student.lrn === lrn ? { ...student, status: "Dropped" } : student))
-  //     );
-
-  //     toast.success(`Student ${lrn} successfully drop.`);
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Failed to drop student.");
-  //   } finally {
-  //     setLoadingId(null);
-  //   }
-  // };
-
-
   return (
-    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
+    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  sm:px-8 px-4 sm:py-6 py-4 sm:pt-6 text-center">
         <Students_info_Modal />
 
     <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
@@ -198,18 +147,18 @@ const Students: FC<Props> = ({ students }) => {
       setFilterGrade("");
     }}
     variant="confirmButton"
-    className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
+    className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
   >
     Clear Filter
   </Button>
 </div>
 
 <div className="overflow-x-auto min-w-[100px]  shadow-lg rounded-lg border border-green-300 bg-green-50">
-  <table className="w-full  text-xs sm:text-sm text-center">
+  <table className="w-full text-xs sm:text-sm text-center">
     <thead>
       <tr className="bg-green-600 text-white">
         <th className="px-4 py-2">LRN</th>
-        <th className="px-4 py-2">Full Name</th>
+        <th className="px-4  py-2">Full Name</th>
         <th className="px-4 py-2">Grade Level</th>
         <th className="px-4 py-2">Status</th>
         <th className="px-4 py-2">Full Details</th>
@@ -245,7 +194,7 @@ const Students: FC<Props> = ({ students }) => {
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
           variant="prevButton"
-          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
         >
           Previous
         </Button>
@@ -256,7 +205,7 @@ const Students: FC<Props> = ({ students }) => {
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
           variant="prevButton"
-          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
         >
           Next
         </Button>

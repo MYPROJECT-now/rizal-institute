@@ -2,7 +2,7 @@
 
   import { desc, eq, or, and, like } from "drizzle-orm";
   import { db } from "../db/drizzle";
-  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, SubjectTable } from "../db/schema";
+  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
   import {  getSelectedAcademicYear } from "./utils/academicYear";
@@ -99,6 +99,31 @@ import { auth } from "@clerk/nextjs/server";
 
   return result;
 };
+
+
+
+  export const getEnrolledCountPerGradeLevel2 = async () => {
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) return [];
+
+    const result = await db
+      .select({
+        gradeLevel: GradeLevelTable.gradeLevelName,
+        studentCount: sql<number>`COUNT(${StudentPerGradeAndSection.spgac_id})`,
+      })
+      .from(StudentPerGradeAndSection)
+      .leftJoin(
+        GradeLevelTable,
+        eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id)
+      )
+      .where(eq(StudentPerGradeAndSection.academicYear_id, selectedYear))
+      .groupBy(GradeLevelTable.gradeLevelName);
+
+    console.log("test", result);
+
+    return result;
+  };
+
 
 
 export const getEnrollmentTrend = async () => {

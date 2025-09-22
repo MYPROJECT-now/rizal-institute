@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
@@ -14,7 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { getEnrolledCountPerGradeLevel } from "@/src/actions/registrarAction";
+import {  getEnrolledCountPerGradeLevel2 } from "@/src/actions/registrarAction";
 import { Loader2 } from "lucide-react";
 
 
@@ -25,35 +25,28 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const Ppgl = () => {
-  const [chartData, setChartData] = useState<{ gradeLevel: string | null; count: number }[]>([]);
-  const [yAxisMax, setYAxisMax] = useState(5);
+  const [rawData, setRawData] = useState<{ gradeLevel: string | null; studentCount: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
-  const fetchData = async () => {
-    const res = await getEnrolledCountPerGradeLevel();
+    const fetchData = async () => {
+      const res = await getEnrolledCountPerGradeLevel2();
+      setRawData(res);
+      setLoading(false);
+    };
 
-    const defaultGrades = ["7", "8", "9", "10"];
-    // Map received data to an object for quick lookup
-    const dataMap = new Map(res.map(item => [item.gradeLevel, Number(item.count)]));
+    fetchData();
+  }, []);
 
-    // Fill missing grades with 0
-    const filledData = defaultGrades.map(grade => ({
-      gradeLevel: grade,
-      count: dataMap.get(grade) ?? 0,
+  const chartData = useMemo(() => {
+    const defaultGrades  = ["7" , "8", "9", "10"];
+    const dataMap = new Map(rawData.map(item => [item.gradeLevel, Number(item.studentCount)]));
+
+    return defaultGrades.map(grade => ({
+      gradeLevel: "Grade" + grade,
+      student: dataMap.get(grade) ?? 0,
     }));
-
-    const maxCount = Math.max(...filledData.map((d) => d.count));
-    const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
-    setYAxisMax(paddedMax);
-
-    setChartData(filledData);
-    setLoading(false);
-  };
-
-  fetchData();
-}, []);
+  }, [rawData]);
 
 
 
@@ -69,7 +62,7 @@ export const Ppgl = () => {
             </div>
           ) : (
         <ChartContainer config={chartConfig}>
-          <BarChart data={chartData} margin={{ bottom: 30, top: 15 }}>
+          <BarChart data={chartData} margin={{ top: 15 }}>
             <CartesianGrid vertical={false} />
 
             <XAxis
@@ -77,17 +70,11 @@ export const Ppgl = () => {
               tickLine={false}
               tickMargin={5}
               axisLine={false}
-              label={{
-                value: "Grade Level",
-                position: "insideBottom",
-                dy: 25,
-                style: { fontSize: 12 },
-              }}
+
             >
             </XAxis>
 
             <YAxis
-              domain={[0, yAxisMax]} // always start from 0, end at highest value
               tick={{ fontSize: 10 }}
               interval={0}
               allowDecimals={false} // 👈 this disables .25, .5 etc.
@@ -105,7 +92,7 @@ export const Ppgl = () => {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="count" fill="#0FC64F  " radius={1} />
+            <Bar dataKey="student" fill="#0FC64F  " radius={2} />
           </BarChart>
         </ChartContainer>
           )}

@@ -215,302 +215,339 @@ const validatePage = async (): Promise<boolean> => {
 
     const sections = [
 
-         {
-                        title: (
-                            <div>
-                                <p className="text-[16px] md:text-2xl text-dGreen font-bold font-merriweather">
-                                    Section 5: Slot Reservation Fee Minimum (₱500)
-                                </p>
-                            </div>
-                            ),
-                        content: (
-                            <main className="w-full flex flex-col gap-5"> 
-        
-                                <section className=" md:flex md:grid-cols-2 grid-cols-1 justify-center gap-5 pb-10 w-full">
-        
-                                    <div className="w-full md:w-1/2 flex flex-col items-center gap-10 mt-5 px-0 xl:px-10" >
-                                        <p className="text-2xl font-bold text-dGreen font-merriweather text-center"> GCash Payment </p>
-        
-                                        <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
-                                            <CardHeader>
-                                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
-                                            </CardHeader>
-                                            <CardContent className="flex flex-col gap-5">
-                                                <section className="flex justify-center gap-2">
-                                                   <p className="font-bold text-lg text-dGreen ">
-                                                        Gcash: 091234567890
-                                                    </p>
-                                                    <button
-                                                    onClick={() => {
-                                                    navigator.clipboard.writeText("091234567890");
-                                                    toast.success("Copied to clipboard");
-                                                    }}>
-                                                        <Image
-                                                            src="/copy.png"
-                                                            alt="copy icon"
-                                                            width={20}
-                                                            height={20}
-                                                        />
-                                                    </button>
-                                                </section>
-        
-                                                <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
-                                                    <p> Click this to download the QR Code</p>
-                                                    <button
-                                                        onClick={() => {
-                                                        const link = document.createElement("a");
-                                                        link.href = "/qr.jpg";
-                                                        link.download = "qr.jpg";
-                                                        link.click();
-                                                        toast.success("QR Code downloaded");
-                                                    }}>
-                                                        <Image
-                                                            src="/dl.png"
-                                                            alt="download icon"
-                                                            width={20}
-                                                            height={20}
-                                                        />
-                                                    </button>
-                                                </section>
-                                            </CardContent>
-                                        </Card>
-                                        
-                                        <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl"> 
-                                            <CardHeader> 
-                                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle> 
-                                            </CardHeader> 
-                                            <CardContent className="flex flex-col gap-5"> 
-                                                <section className="flex flex-col items-center"> 
-                                                    <div className="text-start"> 
-                                                        <p className="font-regular text-lg text-d2Green"> Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible. </p> 
-                                                    </div> 
-                                                </section> 
-                                                <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3"> 
-                                                    <figure> 
-                                                        <Image 
-                                                            src="/image.png" 
-                                                            alt="receipt" 
-                                                            width={300} 
-                                                            height={200} 
-                                                        /> 
-                                                    </figure> 
-                                                </section> 
-                                            </CardContent> 
-                                        </Card>
-                                    </div>
-        
-                                    <div className=" my-10 md:my-0 bg-green-900 md:h-auto h-[4px] md:w-[2px] w-full" />
-        
-                                    <div className="w-full md:w-1/2 flex flex-col items-center gap-10 mt-5 px-0 xl:px-10" >
-                                        <p className="text-2xl font-bold text-dGreen font-merriweather text-center"> Bank Transfer </p>
-        
-                                        <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
-                                            <CardHeader>
-                                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
-                                            </CardHeader>
-                                            <CardContent className="flex flex-col gap-5">
-                                                <section className="flex justify-center">
-                                                    <div className="grid grid-cols-2 gap-y-2 gap-x-[80px] text-dGreen text-lg w-fit">
-                                                        <p className="font-bold">Bank Name:</p>
-                                                        <p className="font-semibold">BDO</p>
-        
-                                                        <p className="font-bold">Account Name:</p>
-                                                        <p className="font-semibold">John Doe</p>
-        
-                                                        <p className="font-bold">Account Number:</p>
-                                                        <p className="font-semibold">1234-5678-9101</p>
-                                                    </div>
-                                                </section>
-        
-                                                <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
-                                                    <p> Click this to download the QR Code</p>
-                                                    <button
-                                                        onClick={() => {
-                                                        const link = document.createElement("a");
-                                                        link.href = "/qr.jpg";
-                                                        link.download = "qr.jpg";
-                                                        link.click();
-                                                        toast.success("QR Code downloaded");
-                                                    }}>
-                                                        <Image
-                                                            src="/dl.png"
-                                                            alt="download icon"
-                                                            width={20}
-                                                            height={20}
-                                                        />
-                                                    </button>
-                                                </section>
-                                            </CardContent>
-                                        </Card>
-        
-                                        <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
-                                            <CardHeader>
-                                                <CardTitle className="text-dGreen text-center text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle>
-                                            </CardHeader>
-                                            <CardContent className="flex flex-col gap-5">
-                                                <section className="flex flex-col items-center">
-                                                    <div className="text-start">
-                                                        <p className="font-regular text-lg text-d2Green">
-                                                            Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
-                                                        </p>
-                                                    </div>
-                                                </section>
-        
-                                                <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
-                                                   <figure>
-                                                        <Image
-                                                            src="/bank.svg"
-                                                            alt="receipt"
-                                                            width={300}
-                                                            height={200}
-                                                        />
-                                                    </figure>
-                                                </section>
-                                            </CardContent>
-                                        </Card>
-                                    </div>
-        
-                                </section>
-        
-                                <section className="w-full flex flex-col gap-6 items-center justify-center">
-                                    <PreviewModal />
-                                    <Card className="w-full max-w-[700px] backdrop-blur-md bg-green-100/10 border border-green-300/30 shadow-xl rounded-2xl p-6">
-                                        <CardHeader>
-                                            <CardTitle className="text-2xl font-bold text-dGreen text-center font-merriweather">
-                                            Payment Section
-                                            </CardTitle>
-                                        </CardHeader>
-        
-                                        <CardContent className="flex flex-col gap-6 items-center justify-center">
-                                            {/* Amount */}
-                                            <div className="flex flex-row gap-4 items-center w-full max-w-[500px]">
-                                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">
-                                                Amount:
-                                            </label>
-                                            <input 
-                                                type="number" 
-                                                placeholder="500.00"
-                                                min="500"
-                                                step="0.01"
-                                                value={reservationAmount || ''}
-                                                className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
-                                                    ${errors.reservationAmount ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
-                                                onChange={handleReservationAmount}
+        {
+            title: (
+                <div>
+                    <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
+                        Section : Slot Reservation Fee Minimum (₱500)
+                    </p>
+                </div>
+                ),
+            content: (
+                <main className="w-full flex flex-col gap-5"> 
+
+                    <section className=" md:flex  grid-cols-1 justify-center gap-5 pb-10 w-full">
+
+                        <div className="w-full md:w-1/2 flex flex-col items-center gap-10 mt-5 px-0 xl:px-10" >
+                            <p className="sm:text-xl lg:text-2xl font-bold text-dGreen font-merriweather text-center"> GCash Payment </p>
+
+                            <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
+                                <CardHeader>
+                                    <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex flex-col gap-5">
+                                    <section className="flex justify-center gap-2">
+                                        <p className="font-bold text-sm lg:text-lg text-dGreen ">
+                                            Gcash: 091234567890
+                                        </p>
+                                        <button
+                                        onClick={() => {
+                                        navigator.clipboard.writeText("091234567890");
+                                        toast.success("Copied to clipboard");
+                                        }}>
+                                            <Image
+                                                src="/copy.png"
+                                                alt="copy icon"
+                                                width={1000}
+                                                height={1000}
+                                                className="lg:w-[20px] lg:h-[20px] w-[15px] h-[15px]"
                                             />
-                                            </div>
-        
-                                            {/* Payment Method */}
-                                            <div className="flex flex-row gap-4 items-center w-full max-w-[500px]">
-                                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">
-                                                Payment Method:
-                                            </label>
-                                            <select 
-                                                value={mop || ''}
-                                                className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
-                                                    ${errors.mop ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
-                                                onChange={handleMopChange}
-                                            >
-                                                <option value="">Select Payment Method</option>
-                                                <option value="Gcash">GCash</option>
-                                                <option value="Bank Transfer">Bank Transfer</option>
-                                                <option value="OTC">On the counter</option>
-                                            </select>
-                                            </div>
-        
-                                            {/* Payment Receipt */}
-                                            <div className="flex flex-row gap-4 items-center w-full max-w-[500px]">
-                                            <label className="font-semibold font-merriweather text-dGreen text-xl w-[170px]">
-                                                Payment Receipt:
-                                            </label>
-        
-                                            {reservationReceipt ? (
-                                                <div className="flex items-center gap-2 w-full">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => previewImage(reservationReceipt)}
-                                                    className="text-dGreen underline text-sm bg-white/20 backdrop-blur-sm rounded-md flex-1 text-left truncate pl-3 py-2 h-[45px] shadow-inner"
-                                                    title="Click to preview"
-                                                >
-                                                    {reservationReceipt.name}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                    setReservationReceipt(null);
-                                                    if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
-                                                    if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
-                                                    }}
-                                                    className="text-red-500 hover:text-red-700 font-bold"
-                                                    title="Remove file"
-                                                >
-                                                    ✕
-                                                </button>
-                                                </div>
-                                            ) : (
-                                                <input 
-                                                type="file" 
-                                                name="document"  
-                                                accept="image/*"
-                                                onChange={handleReceiptChange}
-                                                className={`backdrop-blur-sm text-dGreen rounded-md p-2 w-full h-[45px] shadow-inner
-                                                    ${errors.reservationReceipt ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
-                                                
-                                                />
-                                            )}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-        
-                                </section>
-        
-          
-        
-                            </main>
+                                        </button>
+                                    </section>
+
+                                    <section className="font-regular text-sm sm:text-md text-dGreen flex flex-row justify-center gap-3">
+                                        <p> Click this to download the QR Code</p>
+                                        <button
+                                            onClick={() => {
+                                            const link = document.createElement("a");
+                                            link.href = "/qr.jpg";
+                                            link.download = "qr.jpg";
+                                            link.click();
+                                            toast.success("QR Code downloaded");
+                                        }}>
+                                            <Image
+                                                src="/dl.png"
+                                                alt="download icon"
+                                                width={20}
+                                                height={20}
+                                            />
+                                        </button>
+                                    </section>
+                                </CardContent>
+                            </Card>
+                            
+                            <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl"> 
+                                <CardHeader> 
+                                    <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle> 
+                                </CardHeader> 
+                                <CardContent className="flex flex-col gap-5"> 
+                                    <section className="flex flex-col items-center"> 
+                                        <div className="text-start"> 
+                                            <p className="font-regular sm:text-md lg:text-lg text-d2Green"> Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible. </p> 
+                                        </div> 
+                                    </section> 
+                                    <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3"> 
+                                        <figure> 
+                                            <Image 
+                                                src="/image.png" 
+                                                alt="receipt" 
+                                                width={1000} 
+                                                height={1000}
+                                                className="w-[300px] h-[250px]" 
+                                            /> 
+                                        </figure> 
+                                    </section> 
+                                </CardContent> 
+                            </Card>
+                        </div>
+
+                        <div className=" my-10 md:my-0 bg-green-900 md:h-auto h-[4px] md:w-[2px] w-full" />
+
+                        <div className="w-full md:w-1/2 flex flex-col items-center gap-10 mt-5 px-0 xl:px-10" >
+                            <p className="sm:text-xl lg:text-2xl font-bold text-dGreen font-merriweather text-center"> Bank Transfer </p>
+
+                            <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
+                                <CardHeader>
+                                    <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 1: Send the reservation fee</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex flex-col gap-5">
+                                    <section className="flex justify-center">
+                                        <div className="grid grid-cols-2 gap-y-2 gap-x-[30px] lg:gap-x-[80px] text-dGreen sm:text-sm lg:text-lg w-fit">
+                                            <p className="font-bold">Bank Name:</p>
+                                            <p className="font-semibold">BDO</p>
+
+                                            <p className="font-bold">Account Name:</p>
+                                            <p className="font-semibold">John Doe</p>
+
+                                            <p className="font-bold">Account Number:</p>
+                                            <p className="font-semibold">1234-5678-9101</p>
+                                        </div>
+                                    </section>
+
+                                    <section className="font-regular sm:text-sm lg:text-md text-dGreen flex flex-row justify-center gap-3">
+                                        <p> Click this to download the QR Code</p>
+                                        <button
+                                            onClick={() => {
+                                            const link = document.createElement("a");
+                                            link.href = "/qr.jpg";
+                                            link.download = "qr.jpg";
+                                            link.click();
+                                            toast.success("QR Code downloaded");
+                                        }}>
+                                            <Image
+                                                src="/dl.png"
+                                                alt="download icon"
+                                                width={1000}
+                                                height={1000}
+                                                className="w-[20px] h-[20px]"
+                                            />
+                                        </button>
+                                    </section>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="w-full backdrop-blur-md bg-green-200/10 border border-green-300/20 shadow-lg rounded-2xl">
+                                <CardHeader>
+                                    <CardTitle className="text-dGreen text-center sm:text-lg lg:text-2xl underline font-merriweather font-extrabold">Step 2: Upload proof of payment</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex flex-col gap-5">
+                                    <section className="flex flex-col items-center">
+                                        <div className="text-start">
+                                            <p className="font-regular sm:text-md lg:text-lg text-d2Green">
+                                                Make sure the <strong className="font-bold text-d2Green">Reference No.</strong> is clearly visible.
+                                            </p>
+                                        </div>
+                                    </section>
+
+                                    <section className="font-regular text-md text-dGreen flex flex-row justify-center gap-3">
+                                        <figure>
+                                            <Image
+                                                src="/bank.svg"
+                                                alt="receipt"
+                                                width={1000} 
+                                                height={1000}
+                                                className="w-[300px] h-[250px]" 
+                                            />
+                                        </figure>
+                                    </section>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                    </section>
+
+                    <section className="w-full flex flex-col gap-6 items-center justify-center">
+                        <PreviewModal />
+                        <Card className="w-full max-w-[700px] backdrop-blur-md bg-green-100/10 border border-green-300/30 shadow-xl rounded-2xl px-0 sm:p-6">
+                            <CardHeader>
+                                <CardTitle className="text-lg sm:text-2xl font-bold text-dGreen text-center font-merriweather">
+                                Payment Section
+                                </CardTitle>
+                            </CardHeader>
+
+                            <CardContent className="flex flex-col gap-6 items-center justify-start">
+                                {/* Amount */}
+                                <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 items-start sm:items-center w-full max-w-[500px]">
+                                <label className="font-semibold font-merriweather text-dGreen  text-sm sm:text-xl w-[170px]">
+                                    Amount:
+                                </label>
+                                <input 
+                                    type="number" 
+                                    placeholder="500.00"
+                                    min="500"
+                                    step="0.01"
+                                    value={reservationAmount || ''}
+                                    className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
+                                    ${errors.reservationAmount ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
+                                    onChange={handleReservationAmount}
+                                />
+                                </div>
+
+                                {/* Payment Method */}
+                                <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 items-start sm:items-center w-full max-w-[500px]">
+                                <label className="font-semibold font-merriweather text-dGreen  text-sm sm:text-xl w-[170px]">
+                                    Payment Method:
+                                </label>
+                                <select 
+                                    value={mop || ''}
+                                    className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
+                                    ${errors.mop ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
+                                    onChange={handleMopChange}
+                                >
+                                    <option value="">Select Payment Method</option>
+                                    <option value="Gcash">GCash</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                </select>
+                                </div>
+
+                                {/* Payment Receipt */}
+                                <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 items-start sm:items-center w-full max-w-[500px]">
+                                <label className="font-semibold font-merriweather text-dGreen  text-sm sm:text-xl w-[170px]">
+                                    Payment Receipt:
+                                </label>
+
+                                {reservationReceipt ? (
+                                    <div className="flex items-center gap-2 w-full">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(reservationReceipt)}
+                                        className="text-dGreen underline text-sm bg-white/20 backdrop-blur-sm rounded-md flex-1 text-left truncate pl-3 py-2 h-[45px] shadow-inner"
+                                        title="Click to preview"
+                                    >
+                                        {reservationReceipt.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setReservationReceipt(null);
+                                        if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
+                                        if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
+                                        }}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                    >
+                                        ✕
+                                    </button>
+                                    </div>
+                                ) : (
+                                    <input 
+                                    type="file" 
+                                    name="document"  
+                                    accept="image/*"
+                                    onChange={handleReceiptChange}
+                                    className={`backdrop-blur-sm text-dGreen rounded-md p-2 w-full h-[45px] shadow-inner
+                                        ${errors.reservationReceipt ? 'border border-red-600 bg-red-100' : ' bg-white/20'}`}
+                                    
+                                    />
+                                )}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                    </section>
+
+
+
+                </main>
                                 
-                        ),
-                    },
+                ),
+            },
 
         {
             title: (
                 <div>
-                    <p className="text-2xl text-dGreen font-bold font-merriweather">
+                    <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
                         Appilication Submission
                     </p>
                 </div>
             ),
-             content: (
-                <main className="w-full mt-10 flex flex-col items-center justify-center">
-                    <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200   w-full grid grid-cols-2 items-center mb-8">
-                    <div className="mb-2 flex flex-col items-center px-10 py-10 ">
-                        <div className="flex items-center gap-2 mb-2">
-                        <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" /></svg>
-                        <span className="text-2xl font-bold text-dGreen font-merriweather">Reminder</span>
-                        </div>  
-                        <ul className="text-left text-d2Green text-lg font-medium space-y-2 pl-2">
-                        <li className="flex items-start gap-2"><span className="mt-1">•</span> Ensure that all the information you have provided is correct.</li>
-                        <li className="flex items-start gap-2"><span className="mt-1">•</span> You can only <span className="font-semibold text-yellow-700">submit the application once</span>.</li>
-                        <li className="flex items-start gap-2"><span className="mt-1">•</span> All documents must be <span className="font-semibold text-blue-700">submitted in person</span>.</li>
-                        <li className="flex items-start gap-2"><span className="mt-1">•</span> Check your <span className="font-semibold text-purple-700">email inbox</span> for updates.</li>
-                        </ul>
+            content: (
+                <main className="w-full mt-10 flex flex-col items-center justify-center px-0 sm:px-4">
+                <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200 w-full grid grid-cols-1 md:grid-cols-2 items-center mb-8">
+                    {/* Reminder Box */}
+                    <div className="mb-2 flex flex-col items-center px-4 sm:px-6 py-8 md:px-10 md:py-10">
+                    <div className="flex items-center gap-2 mb-2">
+                        <svg
+                        className="w-6 h-6 md:w-7 md:h-7 text-yellow-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
+                        />
+                        </svg>
+                        <span className="text-xl md:text-2xl font-bold text-dGreen font-merriweather">
+                        Reminder
+                        </span>
+                    </div>
+                    <ul className="text-left text-d2Green text-sm md:text-base lg:text-lg font-medium space-y-2 pl-0 sm:pl-2">
+                        <li className="flex items-start gap-2">
+                        <span className="mt-1">•</span> Ensure that all the information you have provided is correct.
+                        </li>
+                        <li className="">
+                        <span className="mt-1">•</span> You can only
+                        <span className="pl-2 font-semibold text-yellow-700">submit the application once</span>.
+                        </li>
+                        <li className="">
+                        <span className="mt-1">•</span> All documents must be{" "}
+                        <span className="pl-2 font-semibold text-blue-700">submitted in person</span>.
+                        </li>
+                        <li className="2">
+                        <span className="mt-1">•</span> Check your
+                        <span className="pl-2 font-semibold text-purple-700">email inbox</span> for updates.
+                        </li>
+                    </ul>
                     </div>
 
-                    <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-r-2xl flex flex-col items-center justify-center px-8 py-10 shadow-md">
-                        <div className="flex flex-col items-center gap-2 mb-4">
-                        <span className="text-3xl font-bold text-white font-merriweather drop-shadow">Congratulations!</span>
-                        </div>
-                        <p className="text-white text-2xl font-semibold mb-2 text-center tracking-wide">Your application is almost complete!</p>
-                        <p className="text-white text-base text-center opacity-80">Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!</p>
+                    {/* Congratulations Box */}
+                    <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-b-2xl md:rounded-r-2xl md:rounded-b-none flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10 shadow-md">
+                    <div className="flex flex-col items-center gap-2 mb-4">
+                        <span className="text-2xl md:text-3xl font-bold text-white font-merriweather drop-shadow">
+                        Congratulations!
+                        </span>
                     </div>
-                    </section>
+                    <p className="text-lg md:text-2xl font-semibold mb-2 text-center tracking-wide text-white">
+                        Your application is almost complete!
+                    </p>
+                    <p className="text-sm md:text-base lg:text-lg text-center opacity-80 text-white">
+                        Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!
+                    </p>
+                    </div>
+                </section>
 
-                    <Button
+                {/* Submit Button */}
+                <Button
                     variant="mainButton"
                     onClick={handleAdd}
                     disabled={isSubmitting}
-                    className="w-[180px] h-[50px] text-xl rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
-                    >
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
-                    </Button>
+                    className="px-10 py-3 sm:px-[50px] sm:py-5 rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
+                >
+                    {isSubmitting ? "Submitting..." : "Submit"}
+                </Button>
                 </main>
                 ),
 
@@ -535,37 +572,37 @@ const validatePage = async (): Promise<boolean> => {
 
     return (
         <main className="min-h-[600px] w-full mt-2 p-5 flex flex-col">
-            <div className="h-full ">
+            <div className="h-full w-full ">
                 <section className="w-full text-center">
                     <div className="flex justify-start" >
                         <Link href="/">
-                        <div className="flex flex-row gap-2 items-end">
+                        <div className="flex flex-row gap-2 ">
                             <Image
                                 src="/arrow.png"
                                 alt="back"
                                 height={1000} 
                                 width={1000}
-                                className="w-[30px]  h-[30px]"
+                                className="sm:w-[30px]  sm:h-[30px] w-[20px] h-[20px]"
                             />
-                            <p className="text-dGreen font-merriweather text-xl font-bold">Home</p>
+                            <p className="text-dGreen font-merriweather sm:text-xl text-base font-bold">Home</p>
                         </div>
                         </Link> 
                     </div>
                     <RemarksModal />
-                    <p className="mt-[20px] text-2xl md:text-3xl lg:text-4xl text-dGreen font-bold font-merriweather">
+                    <p className="mt-[20px] text-xl sm:text-2xl lg:text-4xl text-dGreen font-bold font-merriweather">
                         Junior High School Application
                     </p>
                 </section>
 
                 {/* content */}
-                <div className="flex-1 mt-[80px] mx-[70px] flex flex-col gap-3">
-                     {sections[page].title}
-                     <hr className="border-b-2 border-dGreen" />
+                <div className="w-full flex-1 mt-[40px] md:mt-[60px] lg:mt-[80px] px-[5px] lg:px-[70px] flex flex-col gap-3 ">
+                    {sections[page].title}
+                    <hr className="border-b-2 border-dGreen w-full" />
                     {sections[page].content}
                 </div>
 
                 {/* buttona */}
-                <div className="w-full flex justify-center gap-10 mt-[50px]">
+                <div className="w-full flex justify-center gap-5 md:gap-10 mt-[50px]">
                     <Button
                         variant="prevButton"
                         className="w-[65px] md:w-[100px] h-[40px] rounded-xl"
@@ -574,7 +611,7 @@ const validatePage = async (): Promise<boolean> => {
                     >
                         Previous
                     </Button>
-                    <span className="text-sm text-gray-600 self-center">
+                    <span className="text-xs md:text-sm text-gray-600 self-center">
                         Page {page + 1} of {sections.length}
                     </span>
                     <Button
@@ -588,5 +625,5 @@ const validatePage = async (): Promise<boolean> => {
                 </div>
             </div>
         </main>
-    )
+    );
 };

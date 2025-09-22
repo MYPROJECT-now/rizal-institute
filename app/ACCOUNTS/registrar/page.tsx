@@ -31,7 +31,7 @@ const Dashboard = () => {
 
                <div className="flex flex-col">
                     <p className="lg:text-2xl sm:text-xl text-lg font-bold text-dGreen mb-2">
-                        Recent Applicant
+                        Pending Applicants
                     </p>
                     <RecentApplicantsTable />
                </div>

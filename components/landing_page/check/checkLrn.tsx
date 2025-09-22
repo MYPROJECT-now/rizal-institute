@@ -65,36 +65,38 @@ export const CheckLrn = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="lg:w-[600px] lg:h-[300px] sm:w-[500px] w-[290px] rounded-lg">
+      <DialogContent className="lg:w-[600px] sm:w-[500px] w-[290px] rounded-lg">
         <DialogHeader>
-          <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen sm:py-4 py-3 flex  justify-center rounded-t-lg">
-            INPUT YOUR LRN
+          <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen sm:py-4 py-3 flex justify-center rounded-t-lg">
+            {notFound ? "LRN Not Found" : "INPUT YOUR LRN"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 p-4">
-          <input
-            type="text"
-            value={lrn}
-            onChange={(e) => setLrn(e.target.value)}
-            placeholder="Enter LRN"
-            className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        <div className="flex flex-col gap-4 px-8 py-6">
+          {!notFound ? (
+            <>
+              <input
+                type="text"
+                value={lrn}
+                onChange={(e) => setLrn(e.target.value)}
+                placeholder="Enter LRN"
+                className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+              />
 
-          />
-
-          <Button
-            variant="confirmButton"
-            className="w-full rounded-lg"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? "Checking..." : "Submit"}
-          </Button>
-
-          {notFound && (
-            <div className="flex flex-col gap-2 mt-4 text-center">
-              <p className="text-sm text-gray-600">
-                Your record was not yet establish in the sytem fill in information here. Click the button below to proceed.
+              <Button
+                variant="confirmButton"
+                className="w-full rounded-lg"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? "Checking..." : "Submit"}
+              </Button>
+            </>
+          ) : (
+            <div className="flex flex-col gap-4 mt-4 text-center">
+              <p className="text-sm text-gray-800">
+                Your record was not yet established in the system. Fill in information here.
+                Click the button below to proceed.
               </p>
               <Button
                 variant="confirmButton"
@@ -107,6 +109,7 @@ export const CheckLrn = () => {
           )}
         </div>
       </DialogContent>
+
     </Dialog>
   );
 };

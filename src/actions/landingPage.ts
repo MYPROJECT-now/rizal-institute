@@ -424,6 +424,7 @@ export const acceptAdmission = async (trackingId: string) => {
                 gradeLevel: educationalBackgroundTable.gradeLevel,
                 schoolYear: educationalBackgroundTable.schoolYear,
                 schoolType: educationalBackgroundTable.schoolType,
+                studentType: educationalBackgroundTable.studentType,
                 prevSchool: educationalBackgroundTable.prevSchool,
                 schoolAddress: educationalBackgroundTable.schoolAddress,
 

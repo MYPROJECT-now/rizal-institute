@@ -24,7 +24,7 @@ const Grade: FC<Props> = ({ grade, className, }) => {
       <td className="px-4 py-2">
         <Button 
           variant={"confirmButton"}
-          className="w-[95px] h-[35px] rounded-lg"
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={() => openEnrollees(grade.lrn)}>
             View
           </Button>

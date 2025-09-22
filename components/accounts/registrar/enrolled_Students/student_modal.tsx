@@ -113,123 +113,123 @@ useEffect(() => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[700px] max-h-[500px] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="lg:w-[700px] sm:w-[550px] w-[290px] max-h-[400px] overflow-hidden bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+          <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen lg:py-4 sm:py-3 py-4 flex items-center justify-center">
             Student Registration Form
           </DialogTitle>
         </DialogHeader>
-      {isLoading ? (
-        <div className="flex items-center justify-center">
+      {isLoading ? (  
+        <div className="flex items-center justify-center py-5">
           Loading...
         </div>
       ):(
-        <div className="space-y-6 px-2 py-4 text-sm text-gray-700">
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-2">📘 Section 1: Personal Information</h3>
+        <div className="space-y-6 sm:px-6 px-3 py-1  max-h-[300px] overflow-y-auto">
+          <section className="bg-white p-4 rounded-lg shadow-lg border-2 border-gray-200">
+            <h3 className="lg:text-lg sm:text-base text-sm font-bold mb-2 text-dGreen"> Section 1: Personal Information</h3>
 
-            <div className="grid grid-cols-2 gap-4 mt-7">
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> Last Name:</label>
+            <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mt-7 sm:pl-3 pl-1">
+              <section className="flex flex-col">
+                <span className="font-merriweather font-semibold text-dGreen text-[12px]"> Last Name:</span>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={studentLastName}
                   onChange={(e) => setStudentLastName(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
 
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> First Name:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]"> First Name:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={studentFirstName}
                   onChange={(e) => setStudentFirstName(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> Middle Name:</label>
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]"> Middle Name:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={studentMiddleName}
                   onChange={(e) => setStudentMiddleName(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> Suffix:</label>
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]"> Suffix:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={suffix}
                   onChange={(e) => setSuffix(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">Date of Birth:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]">Date of Birth:</label>
                 <input 
                   type="date"
                   readOnly={!editing}
                   value={dateOfBirth}
                   onChange={(e) => setDateOfBirth(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">Age:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]">Age:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={age}
                   onChange={(e) => setAge(Number(e.target.value))} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">Gender:</label>
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Gender:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={gender}
                   onChange={(e) => setGender(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">Full Address:</label>
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Full Address:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={fullAddress}
                   onChange={(e) => setFullAddress(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
@@ -237,83 +237,83 @@ useEffect(() => {
           </section>
 
           <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-2">📘 Section 2: Emergency Contact Details</h3>
+            <h3 className="lg:text-lg sm:text-base text-sm font-bold mb-2 text-dGreen"> Section 2: Emergency Contact Details</h3>
 
-            <div className="grid grid-cols-2 gap-4 mt-7">
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> Last Name:</label>
+            <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mt-7 sm:pl-3 pl-1">
+              <section className="flex flex-col">
+                <label className="w- font-merriweather font-semibold text-dGreen text-[12px]"> Last Name:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={guardiansLastName}
                   onChange={(e) => setGuardiansLastName(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> First Name:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]"> First Name:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={guardiansFirstName}
                   onChange={(e) => setGuardiansFirstName(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]"> Middle Name:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]"> Middle Name:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={guardiansMiddleName}
                   onChange={(e) => setGuardiansMiddleName(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">suffix:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]">suffix:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={guardiansSuffix}
                   onChange={(e) => setGuardiansSuffix(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">Contact No:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]">Contact No:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={emergencyContact}
                   onChange={(e) => setEmergencyContact(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
 
-              <section className="flex flex-row gap-2 items-center">
-                <label className="w-[130px] font-merriweather font-semibold text-dGreen text-[15px]">Email:</label>
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]">Email:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
                   value={emergencyEmail}
                   onChange={(e) => setEmergencyEmail(e.target.value)} 
-                  className={`font-merriweather text-dGreen text-[12px] w-[170px] ${
-                    editing ? "bg-green-100 p-1 border rounded-sm outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : ""
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>

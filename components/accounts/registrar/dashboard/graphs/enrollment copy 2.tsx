@@ -26,7 +26,8 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export const Enrollment = () => {
-    const [chartData, setChartData] = useState<{ academicYear: string | null; academic_count: number }[]>([]);
+    const [chartData, setChartData] = useState<{ academicYear: string | null; count: number }[]>([]);
+    const [yAxisMax, setYAxisMax] = useState(5);
     const [loading, setLoading] = useState(true);
 
 
@@ -37,7 +38,7 @@ useEffect(() => {
     // Convert to usable format
     const formattedData = res.map((item) => ({
       academicYear: item.academicYear,
-      academic_count: Number(item.count),
+      count: Number(item.count),
     }));
 
     // 📌 Pad with future years if less than 3
@@ -58,7 +59,7 @@ useEffect(() => {
         if (!existingYears.includes(nextYear)) {
           paddedData.unshift({
             academicYear: nextYear,
-            academic_count: 0,
+            count: 0,
           });
         }
       }
@@ -70,6 +71,11 @@ useEffect(() => {
         ? a.academicYear.localeCompare(b.academicYear)
         : 0
     );
+
+    // Determine max Y-axis
+    const maxCount = Math.max(...paddedData.map((d) => d.count));
+    const paddedMax = Math.ceil((maxCount + 2) / 5) * 5;
+    setYAxisMax(paddedMax);
 
     setChartData(paddedData);
     setLoading(false);
@@ -93,7 +99,7 @@ useEffect(() => {
             </div>
           ) : (
           <ChartContainer config={chartConfig} style={{  }}>
-            <LineChart data={chartData} margin={{ top:15, right: 35 }}>
+            <LineChart data={chartData} margin={{ top:15, bottom: 30, right: 35 }}>
               <CartesianGrid vertical={false} />
 
               <XAxis
@@ -101,9 +107,16 @@ useEffect(() => {
                 tickLine={false}
                 tickMargin={5}
                 axisLine={false}
+                label={{
+                  value: "Academic Year",
+                  position: "insideBottom",
+                  dy: 25,
+                  style: { fontSize: 12 },
+                }}
               >
               </XAxis>
             <YAxis
+              domain={[0, yAxisMax]} // always start from 0, end at highest value
               tick={{ fontSize: 10 }}
               interval={0}
               allowDecimals={false} // 👈 this disables .25, .5 etc.
@@ -119,9 +132,11 @@ useEffect(() => {
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
               <Line
                 type="monotone"
-                dataKey="academic_count"
+                dataKey="count"
                 stroke="#0FC64F  "
                 strokeWidth={2}
+                dot={{ r: 3 }}
+                activeDot={{ r: 5 }}
               />
             </LineChart>
           </ChartContainer>

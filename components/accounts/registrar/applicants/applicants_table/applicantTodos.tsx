@@ -87,7 +87,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
 
 
     return (
-    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
+    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  sm:px-8 px-4 sm:py-6 py-4 sm:pt-6 text-center">
 
     <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
       <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>
@@ -128,7 +128,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
           setFilterGrade("");
         }}
         variant="confirmButton"
-    className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
+        className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
       >
         Clear Filter
       </Button>
@@ -180,7 +180,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             variant="prevButton"
-          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
+            className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           >
             Previous
           </Button>
@@ -191,7 +191,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
             variant="prevButton"
-          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
+            className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           >
             Next
           </Button>

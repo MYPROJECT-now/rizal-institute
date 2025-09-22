@@ -24,24 +24,26 @@ const Student: FC<Props> = ({ student, transferStudent, dropStudent, loading  })
     dropStudent(student.lrn);
   }
 
+  const fullName = `${student.studentFirstName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`;
+
   return (
     <tr className="border-b">
       <td className="px-4 py-2">{student.lrn || "..."}</td>
-      <td className="px-4 py-2">{student.studentLastName}, {student.studentFirstName} {student.studentMiddleName}</td>
+      <td className=" py-2">{fullName}</td>
       <td className="px-[55px] py-2">{student.gradeLevelName}</td>
       <td className={student.status === "Enrolled" ? "text-green-700 font-semibold" : "text-red-700 font-semibold"}> {student.status}</td>
       <td className="px-4 py-2">
         <Button 
           variant="confirmButton"
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={() => openEnrollees(student.lrn)}>
             View
           </Button>
       </td>
-      <td className=" py-2 space-x-2 flex gap-2">
+      <td className="py-2 px-2 flex gap-2">
         <Button
           variant="rejectButton"
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={handleTransfer}
           disabled={loading || student.status === "Dropped" || student.status === "Transferred"}
         >
@@ -50,7 +52,7 @@ const Student: FC<Props> = ({ student, transferStudent, dropStudent, loading  })
         
         <Button
           variant="rejectButton"
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={handleDrop}
           disabled={loading || student.status === "Dropped" || student.status === "Transferred"}
         >

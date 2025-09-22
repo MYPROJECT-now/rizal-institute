@@ -29,9 +29,9 @@ export const RemarksModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="flex flex-col items-center min-h-[300px] w-[600px] rounded-t-lg">
-        <DialogHeader className="h-[70px] w-full rounded-t-lg bg-dGreen flex items-center justify-center">
-          <DialogTitle className="text-center text-white text-2xl">
+      <DialogContent className="flex flex-col items-center  lg:w-[600px] sm:w-[550px] w-[300px] rounded-lg">
+        <DialogHeader className="py-4 w-full rounded-t-lg bg-dGreen flex items-center justify-center">
+          <DialogTitle className="text-center text-white sm:text-2xl text-lg">
             Application Remarks
           </DialogTitle>
         </DialogHeader>
@@ -42,29 +42,29 @@ export const RemarksModal = () => {
               Loading...
             </div>
           ) : (
-            <div className="w-full flex flex-row gap-[50px] items-center justify-center">
+            <div className="w-full flex sm:flex-row flex-col sm:gap-[50px] gap-4 items-center justify-center">
               {regRemarks && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2 text-dGreen">
+                <div className="sm:px-6 px-8 py-4 bg-gray-50 rounded-lg shadow-lg border-2 border-gray-200">
+                  <h3 className="sm:text-lg text-sm font-semibold mb-2 text-dGreen">
                     Registrar&apos;s Remarks
                   </h3>
                   <p className="text-gray-700">{regRemarks}</p>
                   {regDate && (
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="sm:text-sm text-xs text-gray-500 mt-1">
                       Date: {format(new Date(regDate), "MMMM dd, yyyy")}
                     </p>
                   )}
-                </div>
+                </div>  
               )}
 
               {cashierRemarks && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2 text-dGreen">
+                <div className="sm:px-6 px-8 py-4 bg-gray-50 rounded-lg shadow-lg border-2 border-gray-200">
+                  <h3 className="sm:text-lg text-sm font-semibold mb-2 text-dGreen">
                     Cashier&apos;s Remarks
                   </h3>
                   <p className="text-gray-700">{cashierRemarks}</p>
                   {cashierDate && (
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="sm:text-sm text-xs text-gray-500 mt-1">
                       Date: {format(new Date(cashierDate), "MMMM dd, yyyy")}
                     </p>
                   )}

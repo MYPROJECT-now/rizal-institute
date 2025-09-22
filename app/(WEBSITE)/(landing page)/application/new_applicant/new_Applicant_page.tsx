@@ -1073,7 +1073,7 @@ const sections = [
                                     </select>
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-2xl lg:text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">School Type <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
                                     <select 
                                         name="Gender"
                                         onChange={handleSchoolType}
@@ -1781,116 +1781,83 @@ const sections = [
         title: (
             <div>
                 <p className="text-[15px] sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
-                    Section 7: Appilication Submission
+                    Section 7: Application Submission
                 </p>
             </div>
         ),
         content: (
-        // <main className="w-full mt-10 flex flex-col items-center justify-center">
-        //     <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200   w-full grid grid-cols-2 items-center mb-8">
-        //     <div className="mb-2 flex flex-col items-center px-10 py-10 ">
-        //         <div className="flex items-center gap-2 mb-2">
-        //         <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" /></svg>
-        //         <span className="text-2xl font-bold text-dGreen font-merriweather">Reminder</span>
-        //         </div>  
-        //         <ul className="text-left text-d2Green text-lg font-medium space-y-2 pl-2">
-        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> Ensure that all the information you have provided is correct.</li>
-        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> You can only <span className="font-semibold text-yellow-700">submit the application once</span>.</li>
-        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> All documents must be <span className="font-semibold text-blue-700">submitted in person</span>.</li>
-        //         <li className="flex items-start gap-2"><span className="mt-1">•</span> Check your <span className="font-semibold text-purple-700">email inbox</span> for updates.</li>
-        //         </ul>
-        //     </div>
+        <main className="w-full mt-10 flex flex-col items-center justify-center px-0 sm:px-4">
+        <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200 w-full grid grid-cols-1 md:grid-cols-2 items-center mb-8">
+            {/* Reminder Box */}
+            <div className="mb-2 flex flex-col items-center px-4 sm:px-6 py-8 md:px-10 md:py-10">
+            <div className="flex items-center gap-2 mb-2">
+                <svg
+                className="w-6 h-6 md:w-7 md:h-7 text-yellow-500"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
+                />
+                </svg>
+                <span className="text-xl md:text-2xl font-bold text-dGreen font-merriweather">
+                Reminder
+                </span>
+            </div>
+            <ul className="text-left text-d2Green text-sm md:text-base lg:text-lg font-medium space-y-2 pl-0 sm:pl-2">
+                <li className="flex items-start gap-2">
+                <span className="mt-1">•</span> Ensure that all the information you have provided is correct.
+                </li>
+                <li className="">
+                <span className="mt-1">•</span> You can only
+                <span className="pl-2 font-semibold text-yellow-700">submit the application once</span>.
+                </li>
+                <li className="">
+                <span className="mt-1">•</span> All documents must be{" "}
+                <span className="pl-2 font-semibold text-blue-700">submitted in person</span>.
+                </li>
+                <li className="2">
+                <span className="mt-1">•</span> Check your
+                <span className="pl-2 font-semibold text-purple-700">email inbox</span> for updates.
+                </li>
+            </ul>
+            </div>
 
-        //     <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-r-2xl flex flex-col items-center justify-center px-8 py-10 shadow-md">
-        //         <div className="flex flex-col items-center gap-2 mb-4">
-        //         <span className="text-3xl font-bold text-white font-merriweather drop-shadow">Congratulations!</span>
-        //         </div>
-        //         <p className="text-white text-2xl font-semibold mb-2 text-center tracking-wide">Your application is almost complete!</p>
-        //         <p className="text-white text-base text-center opacity-80">Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!</p>
-        //     </div>
-        //     </section>
+            {/* Congratulations Box */}
+            <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-b-2xl md:rounded-r-2xl md:rounded-b-none flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10 shadow-md">
+            <div className="flex flex-col items-center gap-2 mb-4">
+                <span className="text-2xl md:text-3xl font-bold text-white font-merriweather drop-shadow">
+                Congratulations!
+                </span>
+            </div>
+            <p className="text-lg md:text-2xl font-semibold mb-2 text-center tracking-wide text-white">
+                Your application is almost complete!
+            </p>
+            <p className="text-sm md:text-base lg:text-lg text-center opacity-80 text-white">
+                Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!
+            </p>
+            </div>
+        </section>
 
-        //     <Button
-        //     variant="mainButton"
-        //     onClick={handleAdd}
-        //     disabled={isSubmitting}
-        //     className="w-[180px] h-[50px] text-xl rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
-        //     >
-        //     {isSubmitting ? 'Submitting...' : 'Submit'}
-        //     </Button>
-        // </main>
-<main className="w-full mt-10 flex flex-col items-center justify-center px-0 sm:px-4">
-  <section className="bg-white/90 rounded-2xl shadow-xl border border-green-200 w-full grid grid-cols-1 md:grid-cols-2 items-center mb-8">
-    {/* Reminder Box */}
-    <div className="mb-2 flex flex-col items-center px-4 sm:px-6 py-8 md:px-10 md:py-10">
-      <div className="flex items-center gap-2 mb-2">
-        <svg
-          className="w-6 h-6 md:w-7 md:h-7 text-yellow-500"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
+        {/* Submit Button */}
+        <Button
+            variant="mainButton"
+            onClick={handleAdd}
+            disabled={isSubmitting}
+            className="px-10 py-3 sm:px-[50px] sm:py-5 rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
-          />
-        </svg>
-        <span className="text-xl md:text-2xl font-bold text-dGreen font-merriweather">
-          Reminder
-        </span>
-      </div>
-      <ul className="text-left text-d2Green text-sm md:text-base lg:text-lg font-medium space-y-2 pl-0 sm:pl-2">
-        <li className="flex items-start gap-2">
-          <span className="mt-1">•</span> Ensure that all the information you have provided is correct.
-        </li>
-        <li className="">
-          <span className="mt-1">•</span> You can only
-          <span className="pl-2 font-semibold text-yellow-700">submit the application once</span>.
-        </li>
-        <li className="">
-          <span className="mt-1">•</span> All documents must be{" "}
-          <span className="pl-2 font-semibold text-blue-700">submitted in person</span>.
-        </li>
-        <li className="2">
-          <span className="mt-1">•</span> Check your
-          <span className="pl-2 font-semibold text-purple-700">email inbox</span> for updates.
-        </li>
-      </ul>
-    </div>
-
-    {/* Congratulations Box */}
-    <div className="h-full bg-gradient-to-r from-lGreen to-dGreen rounded-b-2xl md:rounded-r-2xl md:rounded-b-none flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10 shadow-md">
-      <div className="flex flex-col items-center gap-2 mb-4">
-        <span className="text-2xl md:text-3xl font-bold text-white font-merriweather drop-shadow">
-          Congratulations!
-        </span>
-      </div>
-      <p className="text-lg md:text-2xl font-semibold mb-2 text-center tracking-wide text-white">
-        Your application is almost complete!
-      </p>
-      <p className="text-sm md:text-base lg:text-lg text-center opacity-80 text-white">
-        Thank you for choosing Rizal Institute. We look forward to seeing you thrive and grow with us!
-      </p>
-    </div>
-  </section>
-
-  {/* Submit Button */}
-  <Button
-    variant="mainButton"
-    onClick={handleAdd}
-    disabled={isSubmitting}
-    className="px-10 py-3 sm:px-[50px] sm:py-5 rounded-xl bg-gradient-to-r from-lGreen to-dGreen text-white font-bold shadow-lg hover:scale-105 hover:from-green-400 hover:to-green-700 transition-all duration-200 disabled:opacity-60"
-  >
-    {isSubmitting ? "Submitting..." : "Submit"}
-  </Button>
-</main>
+            {isSubmitting ? "Submitting..." : "Submit"}
+        </Button>
+        </main>
 
         ),
     },
 
-    ];
+];
 
     return (
         <main className="min-h-[600px] w-full mt-2 p-5 flex flex-col">

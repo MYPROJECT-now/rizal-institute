@@ -1,27 +1,9 @@
-"use client";
-
-import { useState, useEffect } from "react";
+// remove "use client"; since this will be server-only
 import { getRecentApplicants } from "@/src/actions/registrarAction";
 import { RecentApplicantsType } from "@/src/type/REGISTRAR/applicant";
 
-
-export const RecentApplicantsTable = () => {
-  const [recentApplicants, setRecentApplicants] = useState<RecentApplicantsType[]>([]);
-  const [loading, setLoading] = useState(true);
-
-
-
-  useEffect(() => {
-    const fetchRecentApplicants = async () => {
-
-      const data = await getRecentApplicants();
-      setRecentApplicants(data);
-      setLoading(false);
-    };
-    fetchRecentApplicants();
-  }, []);
-
-  if (loading) return <div className="text-center py-4">Loading...</div>;
+export const RecentApplicantsTable = async () => {
+  const recentApplicants: RecentApplicantsType[] = await getRecentApplicants();
 
   return (
     <div className="overflow-x-auto min-w-[100px] mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
@@ -51,12 +33,16 @@ export const RecentApplicantsTable = () => {
                 } hover:bg-green-300 transition duration-200`}
               >
                 <td className="p-3 font-medium text-gray-800">{applicant.lrn}</td>
-                <td className="p-3">{applicant.lastName}, {applicant.firstName} {applicant.middleName}</td>
+                <td className="p-3">
+                  {applicant.lastName}, {applicant.firstName} {applicant.middleName}
+                </td>
                 <td className="px-[55px]">{applicant.gradeLevel}</td>
                 <td className="p-3 font-semibold text-yellow-400">
                   {applicant.applicationFormReviewStatus}
                 </td>
-                <td className="p-3 text-gray-600">{applicant.dateOfApplication?.toString()}</td>
+                <td className="p-3 text-gray-600">
+                  {applicant.dateOfApplication?.toString()}
+                </td>
               </tr>
             ))
           )}
