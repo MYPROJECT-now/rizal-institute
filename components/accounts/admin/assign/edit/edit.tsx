@@ -78,8 +78,10 @@ export const EditAssign = () => {
     };
 
     const handleUpdate = async () => {
+        const teacher = teachers.find((t) => t.clerk_uid === selectedTeacher);
+        const teacherUsername = teacher ? teacher.clerk_username : "";
         setSubmit(true);
-        await updateAssigned(selectedTeacher, selectedUnassignedGrade, selectedUnassignedSubject, selectedGradeLevel, selectedSubject);
+        await updateAssigned(selectedTeacher, selectedUnassignedGrade, selectedUnassignedSubject, selectedGradeLevel, selectedSubject, teacherUsername);
         toast.success("Successfully updated");
         setSubmit(false);
         close();

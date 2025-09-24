@@ -2,7 +2,7 @@
 
 import { and, desc, eq, like, lte, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -10,6 +10,7 @@ import { getStaffCredentials } from "./utils/staffID";
 import nodemailer from 'nodemailer';
 import { getSelectedYear } from "./utils/getSelectedYear";
 import { auth } from "@clerk/nextjs/server";
+import { generateSINumber } from "./utils/SI_Number_counter";
 
 // dashboard
 
@@ -54,7 +55,7 @@ export const getPendingPaymentsCount = async (selectedYear: number) => {
 };
 
 // graph
-export const getTotalperMonth = async () => {
+export const getTotalperMontha = async () => {
 
   const selectedYear = await getSelectedYear();
   if(!selectedYear) return [];
@@ -119,6 +120,7 @@ export const getTotalperMonth = async () => {
     monthlyTotalMap.set(key, monthlyTotalMap.get(key)! + row.amountPaid);
   }
 
+
   // Sort and format
   const result = [...monthlyTotalMap.entries()]
     .map(([month, totalPaid]) => ({
@@ -132,6 +134,61 @@ export const getTotalperMonth = async () => {
   console.log("📊 Total Paid Per Month (up to current):", result);
   return result;
 };
+export const getTotalperMonth = async () => {
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return [];
+
+  // Fetch all months for the academic year
+  const allMonths = await db
+    .select({
+      month_id: MonthsInSoaTable.month_id,
+      month: MonthsInSoaTable.month,
+      amountPaid: MonthsInSoaTable.amountPaid,
+    })
+    .from(MonthsInSoaTable)
+    .where(eq(MonthsInSoaTable.academicYear_id, selectedYear));
+
+  // Aggregate totals (month → sum of amountPaid)
+  const monthlyTotalMap = new Map<string, number>();
+
+  for (const row of allMonths) {
+    const parsedDate = new Date(row.month); // e.g. "July 5, 2025"
+    if (isNaN(parsedDate.getTime())) continue;
+
+    const key = parsedDate.toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    });
+
+    monthlyTotalMap.set(key, (monthlyTotalMap.get(key) ?? 0) + (row.amountPaid ?? 0));
+  }
+
+  // Format result with ALL months (even if total = 0)
+  const result = allMonths
+    .map((row) => {
+      const parsedDate = new Date(row.month);
+      const key = parsedDate.toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      });
+
+      return {
+        month: key,
+        totalPaid: monthlyTotalMap.get(key) ?? 0,
+        sortKey: parsedDate.getTime(),
+      };
+    })
+    // remove duplicates if MonthsInSoaTable has multiple rows per month
+    .reduce((acc, curr) => {
+      if (!acc.some((m) => m.month === curr.month)) acc.push(curr);
+      return acc;
+    }, [] as { month: string; totalPaid: number; sortKey: number }[])
+    .sort((a, b) => a.sortKey - b.sortKey)
+    .map(({ month, totalPaid }) => ({ month, totalPaid }));
+
+  return result;
+};
+
 
   export const getTotal = async () => {
     // get current month and match in db to get the id
@@ -336,8 +393,7 @@ export const getSOAsStudent = async (lrn: string) => {
       studentSuffix: StudentInfoTable.studentSuffix,
       amount: downPaymentTable.amount,
       downPaymentDate: downPaymentTable.downPaymentDate,
-      SINumberDP: downPaymentTable.SINumberDP,
-      remarksDP: downPaymentTable.remarksDP,
+      SINumberDP: downPaymentTable.SINumber,
       paymentMethod: downPaymentTable.paymentMethod
     })
     .from(StudentInfoTable)
@@ -363,7 +419,7 @@ export const getSOAsStudent = async (lrn: string) => {
       monthlyDue: MonthsInSoaTable.monthlyDue,
       amountPaid: MonthsInSoaTable.amountPaid,
       dateOfPayment: MonthsInSoaTable.dateOfPayment,
-      SInumber: MonthsInSoaTable.SInumber,
+      SInumber: MonthsInSoaTable.SINumber,
       remarks: MonthsInSoaTable.remarks,
     })
     .from(MonthsInSoaTable)
@@ -387,7 +443,6 @@ export const getSOAsStudent = async (lrn: string) => {
     amount: studentData.amount || 0,
     downPaymentDate: studentData.downPaymentDate || "",
     SINumberDP: studentData.SINumberDP || "",
-    remarksDP: studentData.remarksDP || "",
     paymentMethod: studentData.paymentMethod || "",
     month: monthlyPayment.month,
     dateOfPayment: monthlyPayment.dateOfPayment,
@@ -419,7 +474,7 @@ export const paymentToVerify = async () => {
     month_id: MonthlyPayementTable.month_id,
     dateOfPayment: MonthlyPayementTable.dateOfPayment,  
     amount: MonthlyPayementTable.amount,
-    SInumber: MonthlyPayementTable.SInumber,
+    SInumber: MonthlyPayementTable.SINumber,
     proofOfPayment: MonthlyPayementTable.proofOfPayment,
     modeOfPayment: MonthlyPayementTable.modeOfPayment,
     status: MonthlyPayementTable.status,
@@ -555,6 +610,30 @@ export const getItsPayment = async (selectedID: number) => {
   return allEnrollees ;
   };
 
+export const getReceiptsCondition = async () => {
+  const [info] = await db.select({
+    id: ReceiptInfoTable.school_id,
+    isActive: ReceiptInfoTable.isActive,
+  })
+  .from(ReceiptInfoTable)
+  .limit(1);
+
+  return info || null; // return null if none
+};
+
+
+export const addInfoONReceipt = async (schoolName: string, address: string, tin: string, latestSINumber: string, atpNumber: string, dateIssued: string, dateExpired: string) => {
+  await db.insert(ReceiptInfoTable).values({
+    schoolName: schoolName,
+    address: address,
+    tin: tin,
+    latestSINumber: latestSINumber,
+    atpNumber: atpNumber,
+    dateIssued: dateIssued,
+    dateExpired: dateExpired
+  })
+}
+
 //get applicants proof of payment
   export const getApplicantsPayment = async (lrn: string) => {
     await requireStaffAuth(["cashier"]); // gatekeeper
@@ -639,19 +718,6 @@ export const getItsPayment = async (selectedID: number) => {
   }
 
 
-
-  // export const acceptStudentsReservationPayment= async (id: number, reservationPaymentStatus: string) => {
-    
-  //   await requireStaffAuth(["admin"]); // gatekeeper
-
-  //   await db
-  //   .update(applicationStatusTable)
-  //   .set({
-  //     reservationPaymentStatus: reservationPaymentStatus,
-  //   })
-  //   .where(eq(applicationStatusTable.applicants_id, id));
-  //   revalidatePath("/");
-  // };
 
 
 
@@ -757,7 +823,9 @@ export const getItsPayment = async (selectedID: number) => {
     const getDOwnPayment = await db
       .select({
         reservationAmount: reservationFeeTable.reservationAmount,
-        dateOfPayment: reservationFeeTable.dateOfPayment
+        dateOfPayment: reservationFeeTable.dateOfPayment,
+        SINumber: reservationFeeTable.SINumber,
+        mop: reservationFeeTable.mop
     })
     .from(reservationFeeTable)
     .where(eq(reservationFeeTable.applicants_id, getLrn[0].id));
@@ -769,6 +837,8 @@ export const getItsPayment = async (selectedID: number) => {
         applicants_id: getLrn[0].id,
         downPaymentDate: getDOwnPayment[0].dateOfPayment,
         academicYear_id: currentYear ?? 0,
+        SINumber: getDOwnPayment[0].SINumber,
+        paymentMethod: getDOwnPayment[0].mop
       });
       
     let totalFee = 0;
@@ -976,7 +1046,7 @@ export const getPendingPayments = async () => {
     amount: MonthlyPayementTable.amount,
     status: MonthlyPayementTable.status,
     dateOfPayment: MonthlyPayementTable.dateOfPayment,
-    SInumber: MonthlyPayementTable.SInumber,
+    SInumber: MonthlyPayementTable.SINumber,
     lrn: StudentInfoTable.lrn
   })
     .from(MonthlyPayementTable)
@@ -992,7 +1062,7 @@ export const acceptPayment = async (monthlyPaymentId: number, month_id: number, 
   await requireStaffAuth(["cashier"]);
 
   const result = await db.select({
-    SInumber: MonthlyPayementTable.SInumber,
+    SInumber: MonthlyPayementTable.SINumber,
     dateOfPayment: MonthlyPayementTable.dateOfPayment,
   })
   .from(MonthlyPayementTable)
@@ -1016,7 +1086,7 @@ export const acceptPayment = async (monthlyPaymentId: number, month_id: number, 
   await db.update(MonthsInSoaTable)
     .set({ 
       amountPaid: amount, 
-      SInumber: SINumber,
+      SINumber: SINumber,
       dateOfPayment: dateOfPayment,
     })
     .where(eq(MonthsInSoaTable.month_id, month_id));
@@ -1074,6 +1144,35 @@ export const sendReceipt = async (selectedID: number, cashiersReceipt: string, )
 }
 
 
+export const ApprovedMonth = async (month_id: number, amount: number, date: string) => {
+  await requireStaffAuth(["cashier"]); // gatekeeper
+
+  const selectedAcademicYear = await getSelectedAcademicYear();
+
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+    return 0;
+  }
+  const SINumber = await generateSINumber();
+  await db
+    .update(MonthlyPayementTable)
+    .set({ 
+      SINumber: SINumber,
+      dateOfVerification: new Date().toLocaleDateString(),
+      status: "Approved",
+     })
+    .where(eq(MonthlyPayementTable.monthlyPayment_id, month_id ));
+
+
+    await db
+    .update(MonthsInSoaTable)
+    .set({ 
+      amountPaid: amount,
+      SINumber: SINumber,
+      dateOfPayment: date,
+     })
+    .where(eq(MonthsInSoaTable.month_id, month_id ));
+}
 
 
 
@@ -1087,7 +1186,7 @@ export const sendReceipt = async (selectedID: number, cashiersReceipt: string, )
 
     if (!selectedAcademicYear) {
       console.warn("❌ No academic year selected");
-      return [];
+      return 0;
     }
 
     const grant = await db.select({

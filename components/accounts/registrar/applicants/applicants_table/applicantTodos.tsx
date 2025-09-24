@@ -40,8 +40,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
 
         if (response.ok) {
           toast.success(data.message);
-          setApplicantList((prevList) => 
-            prevList.map((student) => 
+          setApplicantList((prevList) => prevList.map((student) => 
               (student.id === id 
                 ?{...student, 
                       applicationFormReviewStatus: data.applicationFormReviewStatus, 

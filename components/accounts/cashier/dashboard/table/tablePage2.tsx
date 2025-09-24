@@ -1,26 +1,25 @@
-"use client";
 
 import { getRecentPayments } from "@/src/actions/cashierAction";
 import { RecentPaymentType } from "@/src/type/CASHIER/RECENT_PAYMENT/recentPayment";
-import { useEffect, useState } from "react";
 
 
-export const RecentPaymentsTable =  () => {
-const [recentPayment, setRecentPayments] = useState<RecentPaymentType[]>([]);
-const [loading, setLoading] = useState(true);
+export const RecentPaymentsTable = async  () => {
+// const [recentPayment, setRecentPayments] = useState<RecentPaymentType[]>([]);
+// const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchRecentPayments = async () => {
-    const data = await getRecentPayments();
-    setRecentPayments(data);
-    setLoading(false);
-  };
-  fetchRecentPayments();
-}, []);
+const recentPayment: RecentPaymentType[] = await getRecentPayments();
+// useEffect(() => {
+//   const fetchRecentPayments = async () => {
+//     const data = await getRecentPayments();
+//     setRecentPayments(data);
+//     setLoading(false);
+//   };
+//   fetchRecentPayments();
+// }, []);
 
-if (loading) {
-  return <div>Loading...</div>;
-}
+// if (loading) {
+//   return <div>Loading...</div>;
+// }
 
   return (
     <div className="overflow-x-auto min-w-[100px] mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">

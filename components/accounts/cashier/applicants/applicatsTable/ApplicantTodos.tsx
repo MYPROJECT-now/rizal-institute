@@ -5,13 +5,16 @@
   import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier";
+import { Receipts_Info } from "../info/info";
 
 
   interface Props {
     applicants: Tableapplicant_Type[];
+    activeReceipt?: { id: number; isActive: boolean } | null;
+
   }
 
-  const Students: FC<Props> = ({ applicants }) => {
+  const Students: FC<Props> = ({ applicants, activeReceipt }) => {
     const [studentList, setApplicantList] = useState<Tableapplicant_Type[]>(applicants);
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
@@ -136,6 +139,7 @@ import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier"
 
 <div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
   <Cashier_ReservationReview />
+  <Receipts_Info />
   <table className="w-full text-xs sm:text-sm text-center">
         <thead>
           <tr className="bg-green-600 text-white">
@@ -163,6 +167,8 @@ import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier"
               onDecline={handleDecline}
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
               loading={loadingId === applicants.id}
+              activeReceipt={activeReceipt} // ✅ pass it here
+
 
             />
           ))

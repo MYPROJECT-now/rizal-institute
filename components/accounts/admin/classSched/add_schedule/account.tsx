@@ -189,7 +189,7 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
               assigned.length === 0 && selectedTeacher ? (
               <div className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
                 <p className="text-red-500 font-semibold text-center">
-                  All assigned subjects for this teacher already have schedules
+                  No subject to assigned for this teacher
                 </p>
               </div>
               ) : (
@@ -258,6 +258,7 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
                     checked={selectedDays.includes(day)}
                     onChange={() => toggleDay(day)}
                     className="accent-dGreen"
+                    disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
                   />
                   {/* {day.charAt(0).toUpperCase() + day.slice(1)} */}
                     {day.charAt(0).toUpperCase() + day.slice(1, 3)}
@@ -273,6 +274,7 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
               type="time" 
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
+              disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedDays}
               className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             />
           </section>
@@ -283,6 +285,7 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
               type="time" 
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
+              disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedDays}
               className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             />
           </section>

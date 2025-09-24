@@ -14,6 +14,7 @@
     ChartTooltipContent,
   } from "@/components/ui/chart";
   import { getTotalperMonth } from "@/src/actions/cashierAction";
+import { Loader2 } from "lucide-react";
 
 
   const chartConfig = {
@@ -25,14 +26,18 @@
 
   export const Enrollment = () => {
     const [chartData, setChartData] = useState<{ month: string; totalPaid: number }[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+      setLoading(true);
       const fetchData = async () => {
         try {
-          const data = await getTotalperMonth(); // returns [{ month: "July 2025", totalPaid: 12000 }, ...]
+          const data = await getTotalperMonth(); 
           setChartData(data);
         } catch (err) {
           console.error("Failed to load chart data:", err);
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -41,11 +46,16 @@
 
     return (
       <div>
-        <Card >
+        <Card className=" w-full gap-4 sm:w-[300px]   lg:w-[400px] ]">
           <CardHeader>
             <CardTitle className="text-center font-bold text-dGreen">Monthly Collection Trend</CardTitle>
           </CardHeader>
-          <CardContent className="min-w-[500px] w-[600px] h-[240px] overflow-hidden">
+          <CardContent>
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-green-700" />
+              </div>
+            ) : (
             <ChartContainer config={chartConfig} className="h-full w-full">
               <BarChart data={chartData}>
                 <CartesianGrid vertical={false} />
@@ -71,9 +81,10 @@
                   cursor={false}
                   content={<ChartTooltipContent hideLabel />}
                 />
-                <Bar dataKey="totalPaid" fill="var(--color-totalPaid)" radius={1} maxBarSize={20} />
+                <Bar dataKey="totalPaid" fill="#0FC64F  " radius={1} maxBarSize={20} />
               </BarChart>
             </ChartContainer>
+            )}
           </CardContent>
         </Card>
       </div>

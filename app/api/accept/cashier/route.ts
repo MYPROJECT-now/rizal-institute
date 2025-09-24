@@ -1,10 +1,11 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
+import { applicantsInformationTable, applicationStatusTable, auditTrailsTable, ReceiptInfoTable, reservationFeeTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
+import { generateSINumber } from '@/src/actions/utils/SI_Number_counter';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
     }
 
-
+    const SINumber = await generateSINumber();
     // Run DB actions in parallel
     const [email, updateResult] = await Promise.all([
       getStudentEmail(studentId),
@@ -97,7 +98,16 @@ export async function POST(request: Request) {
         username: credentials.clerk_username,
         usertype: credentials.userType,
         academicYear_id: await getAcademicYearID(),
-      })
+      }),
+      db.update(reservationFeeTable)
+        .set({
+          SINumber: SINumber
+        })
+      .where(eq(applicationStatusTable.applicants_id, studentId)),
+      db.update(ReceiptInfoTable)
+        .set({
+          latestSINumber: SINumber
+        })
     ]);
 
     if (!email) {

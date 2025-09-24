@@ -1,58 +1,27 @@
-
-
-import { db } from "../../db/drizzle";
-import { eq } from "drizzle-orm";
-import { SINumberCounter } from "../../db/schema";
-
-// export const generateSINumber = async () => {
-//   const counter = await db.select().from(SINumberCounter).limit(1);
-
-//   if (!counter || counter.length === 0) throw new Error("SI counter not initialized");
-
-//   const counterRecord = counter[0];
-//   const next = counterRecord.latestNumber + 1;
-
-//   const formatted = String(next).padStart(7, "0");
-
-//   console.log("📦 Generated SI Number:", formatted); // 👈 LOG HERE
-
-//   await db
-//     .update(SINumberCounter)
-//     .set({ latestNumber: next })
-//     .where(eq(SINumberCounter.id, counterRecord.id));
-
-//   return formatted;
-// };
-
+import { db } from "@/src/db/drizzle";
+import { ReceiptInfoTable } from "@/src/db/schema";
+import { desc } from "drizzle-orm";
 
 export const generateSINumber = async () => {
-  const counter = await db.select().from(SINumberCounter).limit(1);
+  // Get the latest SINumber
+  const lastRecord = await db
+    .select({ latest: ReceiptInfoTable.latestSINumber })
+    .from(ReceiptInfoTable)
+    .orderBy(desc(ReceiptInfoTable.school_id))
+    .limit(1);
 
-  let next: number;
-  let counterId: number;
+  let newNumber = "001"; // default if no previous record
 
-  if (!counter || counter.length === 0) {
-    // Table is empty, insert default
-    next = 32401;
+  if (lastRecord.length > 0) {
+    const lastNumber = lastRecord[0].latest;
+    
+    // Convert to number, increment
+    const incremented = parseInt(lastNumber, 10) + 1;
 
-    const inserted = await db.insert(SINumberCounter).values({
-      latestNumber: next
-    }).returning();
-
-    counterId = inserted[0].id;
-
-  } else {
-    const counterRecord = counter[0];
-    next = (counterRecord.latestNumber ?? 32400) + 1;
-    counterId = counterRecord.id;
-
-    await db.update(SINumberCounter)
-      .set({ latestNumber: next })
-      .where(eq(SINumberCounter.id, counterId));
+    // Keep the same length as before (preserve leading zeros)
+    const length = lastNumber.length;
+    newNumber = incremented.toString().padStart(length, "0");
   }
 
-  const formatted = String(next).padStart(7, "0");
-  console.log("📦 Generated SI Number:", formatted);
-
-  return formatted;
+  return newNumber;
 };

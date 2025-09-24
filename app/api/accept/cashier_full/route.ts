@@ -15,27 +15,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to fetch student email from guardianAndParentsTable
-// async function getStudentEmail(studentId: number): Promise<string | null> {
-//   const result = await db
-//     .select({ email: applicantsInformationTable.email })
-//     .from(applicantsInformationTable)
-//     .where(eq(applicantsInformationTable.applicants_id, studentId))
-//     .limit(1);
-
-//   return result.length > 0 ? result[0].email : null;
-// }
-
-// Function to fetch tracking ID from applicationStatusTable
-// async function getTrackingId(studentId: number): Promise<string> {
-//   const result = await db
-//     .select({ trackingId: applicationStatusTable.trackingId })
-//     .from(applicationStatusTable)
-//     .where(eq(applicationStatusTable.applicants_id, studentId))
-//     .limit(1);
-
-//   return result.length > 0 ? result[0].trackingId : "N/A";
-// }
 
 // Function to send reservation email
 async function sendReservationEmail(email: string) {
@@ -85,7 +64,7 @@ export async function POST(request: Request) {
 
     const email = getEmail[0]?.email;
 
-
+    // const SINumber = await generateSINumber();
     await Promise.all([
       sendReservationEmail(email),
       db.update(AdmissionStatusTable)
@@ -106,7 +85,15 @@ export async function POST(request: Request) {
         username: credentials.clerk_username,
         usertype: credentials.userType,
         academicYear_id: await getAcademicYearID(),
-      })
+      }),
+      // db.update(reservationFeeTable)
+      //   .set({
+      //     SINumber: SINumber
+      //   }),
+      // db.update(ReceiptInfoTable)
+      //   .set({
+      //     latestSINumber: SINumber
+      //   })
     ]);
 
     return NextResponse.json({ 

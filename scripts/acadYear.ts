@@ -3,7 +3,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 
-import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, SubjectTable } from "../src/db/schema";
+import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, grantAvailable, ReceiptInfoTable, SubjectTable } from "../src/db/schema";
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
@@ -71,12 +71,31 @@ const insertAcademicYear = async () => {
       enrollment_start_date: "2025-06-01",
       enrollment_end_date: "2025-10-01",
       }
-
-
     ]
     const result4 = await db.insert(EnrollmentStatusTable).values(enrollment).returning();
 
-    console.log("Data inserted successfully", {result, result2, result3, result4});
+    const grant = [
+      {
+        grantAvailable: 30,
+        academicYear_id: acadId
+      },
+    ]
+    const result5 = await db.insert(grantAvailable).values(grant).returning();
+
+    const info = [
+      {
+        schoolName: "Rizal Institute Canlubang Foundation INC.",
+        address: "Canlubang, CIty of Calamba 4027, Philippines",
+        tin: "183242342342",
+        latestSINumber: "004321",
+        atpNumber: "123456789",
+        dateIssued: "2025-06-01",
+        dateExpired: "2030-10-01"
+      }
+    ]
+    const result6 = await db.insert(ReceiptInfoTable).values(info).returning();
+
+    console.log("Data inserted successfully", {result, result2, result3, result4, result5, result6});
 
 };
 

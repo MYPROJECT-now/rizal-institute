@@ -1,17 +1,20 @@
-// "use client";
+"use client";
 
+import { useUser } from "@clerk/nextjs";
 import { Profile_cashier } from "../../components/profile/profile_cashier";
+import { useEffect } from "react";
 // import { useUser } from "@clerk/nextjs";
 // import { useEffect } from "react";
 
 const Cashier_header = () => {
-    // const { user } = useUser();
+    const { user } = useUser();
 
-    // useEffect(() => {
-    //     if (user) {
-    //         console.log("User:", user);
-    //     }
-    // }, [user]);
+    useEffect(() => {
+        if (user) {
+            console.log("User:", user);
+        }
+    }, [user]);
+    
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
         year: 'numeric',   // Full year (e.g., 2024)
@@ -31,8 +34,8 @@ const Cashier_header = () => {
                 </p>
             </div>
             <div className="flex flex-row items-center gap-3">
-                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-                    CASHIER
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl capitalize">
+                    {user?.fullName}
                 </p>
                 {/* <Image
                 src="/profile.png"

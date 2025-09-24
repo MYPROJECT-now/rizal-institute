@@ -461,6 +461,8 @@ export const assignSubjectsToTeacher = async ({
   clerk_uid: number;
   assignments: Assignment[];
 }) => {
+  await requireStaffAuth(["admin"]); // Gatekeeper
+
   const currentAcademicYear = await getCurrentAcademicYear();
   if (!currentAcademicYear) {
     throw new Error("No academic year is active.");
@@ -562,13 +564,8 @@ export const getGradesWithUnassignedSubjects = async () => {
   return gradesWithUnassigned;
 };
 
-// export const getAllSubjects = async () => {
 
-//   const getSubjects = await db
-//   .select()
-//   .from(SubjectTable)
-//   return getSubjects;
-// }
+
 
 export const getUnassignedSubjectsByGrade = async (gradeLevelId: number) => {
   return await db
@@ -592,7 +589,9 @@ export const getUnassignedSubjectsByGrade = async (gradeLevelId: number) => {
     );
 };
 
-export const updateAssigned = async (selectedTeacher: number, unassignedGradeLevelId: number, unassignedSubjectId: number, gradeLevelId: number, subjectId: number, ) => {
+export const updateAssigned = async (selectedTeacher: number, unassignedGradeLevelId: number, unassignedSubjectId: number, gradeLevelId: number, subjectId: number,  teacherName: string) => {
+  await requireStaffAuth(["admin"]); 
+
 
   await db
   .update(TeacherAssignmentTable)
@@ -605,10 +604,28 @@ export const updateAssigned = async (selectedTeacher: number, unassignedGradeLev
     eq(TeacherAssignmentTable.gradeLevel_id, gradeLevelId),
     eq(TeacherAssignmentTable.subject_id, subjectId),
   ))
+
+  const credentials = await getStaffCredentials();
+     
+  if (!credentials) return null;
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: username,
+    usertype: userType,
+    actionTaken: "Re-assign Subject",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: teacherName,
+    academicYear_id: await getAcademicYearID(),
+  }) ;
 }
 
 
-export const deleteAssigned = async (selectedTeacher: number, gradeLevelId: number, subjectId: number) => {
+export const deleteAssigned = async (selectedTeacher: number, gradeLevelId: number, subjectId: number, teacherName: string) => {
 
   await db
   .delete(TeacherAssignmentTable)
@@ -625,6 +642,24 @@ export const deleteAssigned = async (selectedTeacher: number, gradeLevelId: numb
     eq(ScheduleTable.gradeLevel_id, gradeLevelId),
     eq(ScheduleTable.subject_id, subjectId),
   ))
+
+    const credentials = await getStaffCredentials();
+     
+  if (!credentials) return null;
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: username,
+    usertype: userType,
+    actionTaken: "Remove Assigned Subject",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: teacherName,
+    academicYear_id: await getAcademicYearID(),
+  }) ;
 
 }
 

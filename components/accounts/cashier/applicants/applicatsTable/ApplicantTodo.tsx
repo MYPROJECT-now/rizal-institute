@@ -3,7 +3,7 @@
 import { FC } from "react";
 import { RemarksModal } from "@/components/accounts/cashier/applicants/remarks_cashier/remark_modal";
 import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
-import { useDeclineRemarksModal, useShowReservationPayementModal } from "@/src/store/CASHIER/applicants";
+import { useDeclineRemarksModal, useShowReceiptsModal, useShowReservationPayementModal } from "@/src/store/CASHIER/applicants";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -12,12 +12,14 @@ interface Props {
   onDecline: (id: number) => void;
   className?: string;
   loading?: boolean;
+  activeReceipt?: { id: number; isActive: boolean } | null; // ✅ new prop
 
 }
 
-const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loading  }) => {
+const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loading, activeReceipt  }) => {
   const { open } = useDeclineRemarksModal();
   const { open: openEnrollees } = useShowReservationPayementModal();
+  const { open: openReceipt  } = useShowReceiptsModal();
 
     // Determine the display status based on both fields
     const getDisplayStatus = () => {
@@ -47,14 +49,26 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
         </Button>
       </td>
       <td className=" flex flex-row gap-1 items-center justify-center py-2">
-        <Button
-          onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
-          variant={"acceptButton"}
-          disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
-        >
-          {loading ? "Accepting..." : "Accept"}
-        </Button>
+        {!activeReceipt || !activeReceipt?.isActive  ? (
+          <Button
+            onClick={openReceipt}
+            className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+            variant={"acceptButton"}
+          >
+            Accept
+          </Button>        
+        ): ( 
+          <Button
+            onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
+            className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+            variant={"acceptButton"}
+            disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
+          >
+            {loading ? "Accepting..." : "Accept"}
+          </Button>
+        )}
+
+
         
         {/* Decline button only opens the modal */}
         <RemarksModal onDecline={onDecline} />

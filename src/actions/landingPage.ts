@@ -567,8 +567,8 @@ export const installments = async (trackingId: string, pm: string, DownPayment: 
     .where(eq(applicationStatusTable.trackingId, trackingId))
     .limit(1);
 
-  const getTemptID = await db
-    .select({ temp_down_id: tempdownPaymentTable.temp_down_id })
+  const getTemptDetails = await db
+    .select({ temp_down_id: tempdownPaymentTable.temp_down_id, SINumber: tempdownPaymentTable.SINumber, paymentMethod: tempdownPaymentTable.paymentMethod })
     .from(tempdownPaymentTable)
     .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
     .limit(1);
@@ -582,13 +582,12 @@ export const installments = async (trackingId: string, pm: string, DownPayment: 
   .insert(downPaymentTable)
   .values({
     applicants_id: getApplicantsID[0].applicants_id,
-    temp_down_id: getTemptID[0].temp_down_id,
+    temp_down_id: getTemptDetails[0].temp_down_id,
     amount: DownPayment,
     paymentMethod: pm,
     academicYear_id: await getAcademicYearID(),
     downPaymentDate: new Date().toISOString().slice(0, 10),
-    SINumberDP: "",
-    remarksDP: "",
+    SINumber: getTemptDetails[0].SINumber,
   })
   .returning({ donw_id: downPaymentTable.donw_id });
   
@@ -624,8 +623,8 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
     .where(eq(applicationStatusTable.trackingId, trackingId))
     .limit(1);
 
-  const getTemptID = await db
-    .select({ temp_down_id: tempdownPaymentTable.temp_down_id })
+  const getTemptDetails = await db
+    .select({ temp_down_id: tempdownPaymentTable.temp_down_id, SINumber: tempdownPaymentTable.SINumber,})
     .from(tempdownPaymentTable)
     .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
     .limit(1);
@@ -634,13 +633,12 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
   .insert(downPaymentTable)
   .values({
     applicants_id: getApplicantsID[0].applicants_id,
-    temp_down_id: getTemptID[0].temp_down_id,
+    temp_down_id: getTemptDetails[0].temp_down_id,
     amount: DownPayment,
     paymentMethod: pm,
     academicYear_id: await getAcademicYearID(),
     downPaymentDate: new Date().toISOString().slice(0, 10),
-    SINumberDP: "",
-    remarksDP: "",
+    SINumber: getTemptDetails[0].SINumber,
   });
 
   await db

@@ -38,7 +38,7 @@ type ChartConfig = Record<
 const chartConfig: ChartConfig = {
   upToDate: {
     label: "Up-to-date",
-    color: "hsl(var(--chart-1))",
+    color: "#0FC64F",
   },
   late: {
     label: "Late",

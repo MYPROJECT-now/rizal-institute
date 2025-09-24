@@ -3,8 +3,7 @@
 
 import { and, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable } from "../db/schema";
-import { generateSINumber } from './utils/SI_Number_counter';
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
 
@@ -126,7 +125,7 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
       amount: MonthlyPayementTable.amount,
       modeOfPayment: MonthlyPayementTable.modeOfPayment,
       dateOfVerification: MonthlyPayementTable.dateOfVerification,
-      siNumber: MonthlyPayementTable.SInumber,
+      siNumber: MonthlyPayementTable.SINumber,
       status: MonthlyPayementTable.status,
     })
     .from(MonthlyPayementTable)
@@ -273,7 +272,6 @@ export const addPayment = async (
         modeOfPayment: mop,
         dateOfPayment: new Date().toISOString().split('T')[0],
         status: "Pending",
-        SInumber: await generateSINumber(),
     })
     .returning();
     console.log("Payment added:", result);
@@ -415,4 +413,16 @@ export const addPayment = async (
     return paymentReceipt;
   } 
   
-  
+  export const getRInfo = async () => {
+
+    const info = await db
+    .select({
+      schoolName: ReceiptInfoTable.schoolName,
+      tin: ReceiptInfoTable.tin,
+      atpNumber: ReceiptInfoTable.atpNumber,
+      dateIssued: ReceiptInfoTable.dateIssued,
+      dateExpired: ReceiptInfoTable.dateExpired
+    }).from(ReceiptInfoTable)
+
+  return info[0] ?? null; // return only one row
+  }

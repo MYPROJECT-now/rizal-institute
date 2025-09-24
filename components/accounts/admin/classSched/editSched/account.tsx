@@ -49,7 +49,7 @@ export const Edit_Schedule = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadsgs, setLoadsgs] = useState(false);
-  const [daySelected, setDaySelected] = useState(false);
+  // const [daySelected, setDaySelected] = useState(false);
 
 
   useEffect(() => {
@@ -140,7 +140,7 @@ export const Edit_Schedule = () => {
                 // setSelectedSection(sectionID);
                 // setSelectedGradeLevel(gradeID);
                 // setSelectedSubject(subjectID);
-                setDaySelected(true);
+                // setDaySelected(true);
                 
                 if (gradeID && subjectID && sectionID) {
                   getDaySched(gradeID, subjectID, sectionID).then((result) => {
@@ -166,63 +166,58 @@ export const Edit_Schedule = () => {
             </section>  
             )}
             
-            {day.length > 0  ? (
-              <>
-                <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-                <span className="text-dGreen text-sm font-semibold">Days of the Week:</span>
-                <select
-                  value={selectedDay}
-                  onChange={(e) => {
-                    const selectedValue = e.target.value;
-                    setSelectedDay(selectedValue);
 
-                    const selectedSched = day.find((d) => d.dayOfWeek === selectedValue);
-                    if (selectedSched) {
-                      setStartTime(selectedSched.startTime);
-                      setEndTime(selectedSched.endTime);
-                      setSched_id(selectedSched.schedule_id);
+            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+            <span className="text-dGreen text-sm font-semibold">Days of the Week:</span>
+            <select
+              value={selectedDay}
+              disabled={!selectedTeacher}
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                setSelectedDay(selectedValue);
 
-                    } else {
-                      setStartTime("");
-                      setEndTime("");
-                    }
-                  }}
-                  className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                >
-                  <option value="">-- Select Day --</option>
-                  {day.map((d) => (
-                    <option key={d.schedule_id} value={d.dayOfWeek}>
-                      {d.dayOfWeek}
-                    </option>
-                  ))}
-                </select>
-              </section>
+                const selectedSched = day.find((d) => d.dayOfWeek === selectedValue);
+                if (selectedSched) {
+                  setStartTime(selectedSched.startTime);
+                  setEndTime(selectedSched.endTime);
+                  setSched_id(selectedSched.schedule_id);
 
-              <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-                <span className="text-dGreen text-sm font-semibold">Start:</span>
-                <input 
-                  type="time" 
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                />
-              </section>
+                } else {
+                  setStartTime("");
+                  setEndTime("");
+                }
+              }}
+              className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            >
+              <option value="">-- Select Day --</option>
+              {day.map((d) => (
+                <option key={d.schedule_id} value={d.dayOfWeek}>
+                  {d.dayOfWeek}
+                </option>
+              ))}
+            </select>
+          </section>
 
-              <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-                <span className="text-dGreen text-sm font-semibold">End:</span>
-                <input 
-                  type="time" 
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                />
-              </section>
-            </>
-            ) : daySelected ? (
-            <p>No Schedule set yet</p>
-            ) : (
-              null
-            )}
+          <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+            <span className="text-dGreen text-sm font-semibold">Start:</span>
+            <input 
+              type="time" 
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            />
+          </section>
+
+          <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+            <span className="text-dGreen text-sm font-semibold">End:</span>
+            <input 
+              type="time" 
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            />
+          </section>
+
 
 
           <Button

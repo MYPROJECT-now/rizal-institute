@@ -63,6 +63,7 @@ const dropAllTables = async () => {
     await db.execute(sql`DROP TABLE IF EXISTS "SINumberCounter" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "GradeLevelTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "SubjectTable" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "ReceiptInfoTable" CASCADE`);
 
 
 

@@ -40,7 +40,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
 
       <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       {/* <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>   */}
-      <td className="px-6  py-2">
+      <td className="px-2  py-2">
         <Button 
           variant={"confirmButton"}
           className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
@@ -48,7 +48,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
             View
           </Button>
       </td>
-      <td className="py-2 px-2 flex gap-2">
+      <td className="py-2 flex gap-2 justify-center">
         <Button
           onClick={() => onAccept(applicant.id,  applicant.lastName, applicant.firstName, applicant.middleName ?? "")}
           variant={"acceptButton"}

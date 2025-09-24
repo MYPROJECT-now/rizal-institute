@@ -20,15 +20,15 @@
     const [isLoading, setIsLoading] = useState(true);
     const { isOpen, close } = useUploadSoaModal();
 
-    const [grant, setGrant] = useState<number>(0);
+    const [grant, setGrant] = useState("");
 
     const [lrn, setLrn] = useState("");
-    const [tuition, setTuition] = useState<number>(0);
-    const [miscellaneous, setMiscellaneous] = useState<number>(0);
-    const [acad, setAcad] = useState<string>("");
-    const [sibling, setSibling] = useState<string>("");
-    const [other_discount, setOtherDiscount] = useState<number>(0);
-    const [other_fees, setOtherFees] = useState<number>(0);
+    const [tuition, setTuition] = useState("");
+    const [miscellaneous, setMiscellaneous] = useState("");
+    const [acad, setAcad] = useState("");
+    const [sibling, setSibling] = useState("");
+    const [other_discount, setOtherDiscount] = useState("");
+    const [other_fees, setOtherFees] = useState("");
 
     const [grandLoading, setGrandLoading] = useState(false);
     const [tuitionLoading, setTuitionLoading] = useState(false);
@@ -42,16 +42,6 @@
       setIsLoading(false);
     };
 
-    // useEffect(() => {
-    //   const result = async()  =>
-    //   {
-    //     const esc = await getESC();
-    //     setEsc(esc);
-    //     setIsLoading(false);
-    //   }
-    //   result();
-    // }, []);
-
 
     useEffect(() => { 
         fetchESC(); 
@@ -60,7 +50,7 @@
 
     const handleAddGrant = async () => {
       setGrandLoading(true);
-      const grantResult = await addGrant(grant);
+      const grantResult = await addGrant(Number(grant));
       toast.success(grantResult.message);
 
       await fetchESC(); // re-fetch after inserting
@@ -69,14 +59,14 @@
 
     const handleClose = () => {
       close();
-      setGrant(0);
+      setGrant("");
       setLrn("")
-      setTuition(0);
-      setMiscellaneous(0);
+      setTuition("");
+      setMiscellaneous("");
       setAcad("")
       setSibling("")
-      setOtherDiscount(0);
-      setOtherFees(0);
+      setOtherDiscount("");
+      setOtherFees("");
     };
 
     const handelAddTuition = async () => {
@@ -84,7 +74,7 @@
       if (!/^\d{12}$/.test(lrn) ) {
         return toast.error("Invalid LRN. Please enter a valid LRN.");
       }
-      const result = await addBreakDown(lrn, tuition, miscellaneous, acad, sibling, other_discount, other_fees)
+      const result = await addBreakDown(lrn, Number(tuition),  Number(miscellaneous), acad, sibling, Number(other_discount), Number(other_fees))
       toast.success(result.message);
       handleClose();
       setTuitionLoading(false);
@@ -120,12 +110,12 @@
                       <div className="flex flex-row gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                         <section className="flex flex-col">
                           <span className="font-bold font-merriweather text-sm text-dGreen">Tuition Fee</span>
-                          <input type="number" min={0}  value={tuition} onChange={(e) => setTuition(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                          <input type="text"  value={tuition} onChange={(e) => setTuition(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                         </section>
 
                         <section className="flex flex-col">
                           <span className="font-bold font-merriweather text-sm text-dGreen">Miscellaneous Fee</span>
-                          <input type="number" min={0} value={miscellaneous} onChange={(e) => setMiscellaneous(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                          <input type="text" value={miscellaneous} onChange={(e) => setMiscellaneous(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                         </section>
                       </div>
 
@@ -176,12 +166,12 @@
                       <div className="flex flex-row gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                         <section className="flex flex-col">
                           <span className="font-bold font-merriweather text-sm text-dGreen">Other discounts:</span>
-                          <input type="number" min={0} value={other_discount} onChange={(e) => setOtherDiscount(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                          <input type="text" value={other_discount} onChange={(e) => setOtherDiscount(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                         </section>
 
                         <section className="flex flex-col">
                           <span className="font-bold font-merriweather text-sm text-dGreen">Other fees:</span>
-                          <input type="number" min={0} value={other_fees} onChange={(e) => setOtherFees(Number(e.target.value))} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                          <input type="text" value={other_fees} onChange={(e) => setOtherFees(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                         </section>
                       </div>
 
@@ -205,10 +195,9 @@
                     <span className="font-bold font-merriweather text-lg text-dGreen">Assign Grant available:</span>
                     <input 
                       type="text" 
-                      placeholder="0"
                       className="px-2 py-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
                       value={grant}
-                      onChange={(e) => setGrant(Number(e.target.value))}
+                      onChange={(e) => setGrant(e.target.value)}
                     />
                   </section>
 

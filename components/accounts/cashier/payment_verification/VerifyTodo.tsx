@@ -1,29 +1,28 @@
 "use client";
-import { FC } from "react";
+import { FC, } from "react";
 import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import { Button } from "@/components/ui/button";
-import {  declinePayment } from "@/src/actions/cashierAction";
 import { StudentsPaymentReview } from "./payment_receipt/student_payment";
-import { useShowMonthlyPayementModal, useShowPaymentReceiptModal } from "@/src/store/CASHIER/student";
+import { useShowMonthlyPayementModal } from "@/src/store/CASHIER/student";
 
 interface Props {
-  VerifyTodo: VerifyPayment;
-//   onAccept: (month_id: number | null, monthlyPayment_id: number) => void;
-  onDecline: (month_id: number | null, monthlyPayment_id: number) => void;
+    VerifyTodo: VerifyPayment;
+    onAccept: (month_id: number, amount: number, dateOfPayment: string) => void;
+    onDecline: (month_id: number, lrn: string) => void;
+    loading?: boolean;
+
 }
 
-const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
+const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => {
     const { open:openPayment } = useShowMonthlyPayementModal();
-    const { open:sendReceipt } = useShowPaymentReceiptModal();
+    // const { open:sendReceipt } = useShowPaymentReceiptModal();
 
-    // const handleAccept = () => {
-    //     onAccept(VerifyTodo.month_id, VerifyTodo.monthlyPayment_id);
-    //     acceptPayment(VerifyTodo.monthlyPayment_id, VerifyTodo?.month_id || 0, VerifyTodo.amount, VerifyTodo.lrn || "");
-    // };
+    const handleAccept = async () => {
+        onAccept(VerifyTodo.month_id ?? 0, VerifyTodo.amount, VerifyTodo.dateOfPayment ?? "");
+    };
 
     const handleDecline = () => {
-        onDecline(VerifyTodo.month_id, VerifyTodo.monthlyPayment_id);
-        declinePayment(VerifyTodo.monthlyPayment_id, VerifyTodo.lrn || "");
+        onDecline(VerifyTodo.month_id ?? 0, VerifyTodo.lrn ?? "");
     };
 
 
@@ -47,17 +46,16 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline }) => {
                 <Button
                     variant="acceptButton"
                     className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
-                    // onClick={handleAccept}
-                    onClick={() => sendReceipt(VerifyTodo.monthlyPayment_id)}
-                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}
+                    onClick={handleAccept}
+                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false || loading}
                 >
                     Approve
                 </Button>
                 <Button
                     variant="rejectButton"
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+                    className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
                     onClick={handleDecline}
-                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false}
+                    disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false || loading}
                 >
                     Decline
                 </Button>

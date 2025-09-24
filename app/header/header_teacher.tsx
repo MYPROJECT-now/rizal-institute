@@ -1,7 +1,16 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
 import { Profile_teacher } from "../../components/profile/profile_teacher";
-
-
+import { useEffect } from "react";
 const Teacher_header = () => {
+    const { user } = useUser();
+
+    useEffect(() => {
+        if (user) {
+            console.log("User:", user);
+        }
+    }, [user]);
 
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'long',   // Day of the week (e.g., Monday)
@@ -23,8 +32,8 @@ const Teacher_header = () => {
                 </p>
             </div>
             <div className="flex flex-row items-center gap-5">
-                <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-                    TEACHER 1
+                <p className="font-Alfa text-lGreen text-sm lg:text-xl capitalize">
+                    {user?.fullName}
                 </p>
                 {/* <Image
                 src="/profile.png"

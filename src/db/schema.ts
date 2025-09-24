@@ -66,6 +66,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     mop: varchar('mop', { length:100 }),
     reservationReceipt: varchar ('reservationReceipt', { length:300 }),
     dateOfPayment: varchar('dateOfPayment').notNull(),
+    SINumber: varchar('SINumber', { length:300 }),
   })
 
 
@@ -185,9 +186,8 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     amount: integer('amount').notNull(),
     downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
-    SINumberDP: varchar('SINumberDp', { length:300 }).notNull(),
-    remarksDP: varchar('remarksDP', { length:100 }).notNull(),
-    paymentMethod: varchar('paymentMethod', { length:100 }),
+    SINumber: varchar('SINumber', { length:300 }),
+    paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
     
   })
 
@@ -197,7 +197,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     amount: integer('amount').notNull(),
     downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
-    remarksDP: varchar('remarksDP', { length:100 }),
+    SINumber: varchar('SINumber', { length:300 }),
     paymentMethod: varchar('paymentMethod', { length:100 }),
     
   })
@@ -219,6 +219,8 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     payment_receipt: varchar('payment_receipt', { length:300 }).notNull(),
     paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
     paymentStatus: varchar('paymentStatus', { length:100 }),
+    SINumber: varchar('SINumber', { length:300 }),
+
   })
 
 
@@ -236,7 +238,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     amountPaid: integer('amountPaid').notNull().default(0),
     dateOfPayment: date('dateOfPayment'),
     remarks: varchar('remarks', { length:100 }),
-    SInumber: varchar('SInumber', { length:300 }),
+    SINumber: varchar('SINumber', { length:300 }),
   })
 
 
@@ -252,7 +254,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     cashiersReceipt: varchar('cashiersReceipt', { length:300 }),
     modeOfPayment: varchar('modeOfPayment', { length:100 }).notNull(),
     dateOfVerification: varchar('dateOfVerification', { length:100 }),
-    SInumber: varchar('SInumber', { length:300 }),
+    SINumber: varchar('SINumber', { length:300 }),
     status: varchar('status', { length:100 }).notNull(),
     
   })
@@ -370,25 +372,29 @@ export const staffClerkUserTable = pgTable("staffClerkUserTable", {
 
 
   // static components
-    export const GradeLevelTable = pgTable("GradeLevelTable", {
-      gradeLevel_id: serial("gradeLevel_id").primaryKey(),
-      gradeLevelName: varchar("gradeLevelName", { length: 100 }).notNull(), // ex: "7"
-    });
-
-    export const SubjectTable = pgTable("SubjectTable", {
-      subject_id: serial("subject_id").primaryKey(),
-      subjectName: varchar("subjectName", { length: 100 }).notNull(), // ex: "Science"
-      isActive: boolean("isActive").notNull().default(true),
-    });
-
-
-
-
-
-
-
-
-  export const SINumberCounter = pgTable("SINumberCounter", {
-    id: serial("id").primaryKey(),
-    latestNumber: integer("latestNumber").notNull().default(32400),
+  export const GradeLevelTable = pgTable("GradeLevelTable", {
+    gradeLevel_id: serial("gradeLevel_id").primaryKey(),
+    gradeLevelName: varchar("gradeLevelName", { length: 100 }).notNull(), // ex: "7"
   });
+
+  export const SubjectTable = pgTable("SubjectTable", {
+    subject_id: serial("subject_id").primaryKey(),
+    subjectName: varchar("subjectName", { length: 100 }).notNull(), // ex: "Science"
+    isActive: boolean("isActive").notNull().default(true),
+  });
+
+
+
+
+export const ReceiptInfoTable = pgTable("ReceiptInfoTable", {
+  school_id: serial("school_id").primaryKey(),
+  schoolName: varchar("schoolName", { length: 100 }).notNull(),
+  address: varchar("address", { length: 100 }).notNull(),
+  tin: varchar("tin", { length: 100 }).notNull(),
+  latestSINumber: varchar("latestSINumber", { length: 100 }).notNull(),
+  atpNumber: varchar("atpNumber", { length: 100 }).notNull(),
+  dateIssued: varchar("dateIssued", { length: 100 }).notNull(),
+  dateExpired: varchar("dateExpired", { length: 100 }).notNull(),
+  isActive: boolean("isActive").notNull().default(true),
+});
+

@@ -4,17 +4,21 @@ import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import VerifyTodo from "./VerifyTodo";
 import { Button } from "@/components/ui/button";
 import { StudentsPaymentReceipt } from "./payment_receipt/cashiers_receipt";
+import { ApprovedMonth, declinePayment } from "@/src/actions/cashierAction";
+import { toast } from "sonner";
 
 interface Props {
   VerifyTodos: VerifyPayment[];
 }
 
 const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
-    const [verifyTodos] = useState<VerifyPayment[]>(VerifyTodos);
+    const [verifyTodos, setVerifyTodos] = useState<VerifyPayment[]>(VerifyTodos);
     const [filterMop, setFilterMop] = useState("");
     const [filterDate, setFilterDate] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [loadingId, setLoadingId] = useState<number | null>(null);
+
     const itemsPerPage = 5;
 
     const filteredData = verifyTodos.filter((payment) => {
@@ -30,6 +34,37 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = filteredData.slice(startIndex, endIndex);
+
+    const handleAccept = async (month_id: number, amounts: number, dateOfPayment: string) => {
+      setLoadingId(month_id);
+
+        try {
+            await ApprovedMonth(month_id, amounts, dateOfPayment );
+            setVerifyTodos((prev) => prev.map((payment) => (payment.month_id === month_id ? { ...payment, status: "Approved" } : payment)));
+            toast.success("Students Payment was Approved");
+        } catch (error) {
+            toast.error("Failed to approve payment. Please try again.");
+            console.error(error);
+        }
+        finally {
+        setLoadingId(null);
+        }
+    }
+
+    const handleDecline = async (month_id: number,  lrn: string) => {
+        setLoadingId(month_id);
+        try {
+            await declinePayment(month_id, lrn);
+            setVerifyTodos((prev) => prev.map((payment) => (payment.month_id === month_id ? { ...payment, status: "Declined" } : payment)));
+            toast.success("Students Payment was Declined");
+        } catch (error) {
+            toast.error("Failed to decline payment. Please try again.");
+            console.error(error);
+        }
+        finally {
+        setLoadingId(null);
+        }
+    }
 
     return (
     <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  px-8 py-6 sm:pt-6 text-center">
@@ -105,8 +140,10 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                 <VerifyTodo 
                     key={verifyTodo.monthlyPayment_id} 
                     VerifyTodo={verifyTodo} 
-                    // onAccept={() => {}}
-                    onDecline={() => {}}
+                    onAccept={handleAccept}
+                    onDecline={handleDecline}
+                    loading={loadingId === verifyTodo.monthlyPayment_id}
+
                 />
             ))
         )}

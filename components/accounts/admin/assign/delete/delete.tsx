@@ -64,8 +64,11 @@ export const DeleteAssign = () => {
     }
 
     const handleDelete = async () => {
+        const teacher = teachers.find((t) => t.clerk_uid === selectedTeacher);
+        const teacherUsername = teacher ? teacher.clerk_username : "";
+
         setDeleteThis(true);
-        await deleteAssigned(selectedTeacher, selectedGradeLevel, selectedSubject);
+        await deleteAssigned(selectedTeacher, selectedGradeLevel, selectedSubject, teacherUsername);
         toast.success("Successfully deleted");
         close();
         setDeleteThis(false);

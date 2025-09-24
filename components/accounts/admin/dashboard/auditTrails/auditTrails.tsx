@@ -1,24 +1,13 @@
-"use client";
+
 
 import { getAuditTrails } from "@/src/actions/adminAction";
 import { AuditTrailsType } from "@/src/type/ADMIN/admin";
-import { useState, useEffect } from "react";
 
 
-export const RecentAuditTrailsTable = () => {
-  const [auditTrails, setAuditTrails] = useState<AuditTrailsType[]>([]);
-  const [loading, setLoading] = useState(true);
+export const RecentAuditTrailsTable = async () => {
 
-  useEffect(() => {
-    const fetchRecentAudit = async () => {
-      const data = await getAuditTrails();
-      setAuditTrails(data);
-      setLoading(false);
-    };
-    fetchRecentAudit();
-  }, []);
 
-  if (loading) return <div className="text-center py-4">Loading...</div>;
+  const auditTrails: AuditTrailsType[] = await getAuditTrails();
 
   return (
     <div className="overflow-x-auto min-w-[100px] mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">
@@ -51,7 +40,7 @@ export const RecentAuditTrailsTable = () => {
                 <td className="p-3 font-medium text-gray-800">{audit.usertype}</td>
                 <td className="p-3  font-medium text-gray-800">{audit.actionTaken}</td>
                 <td className="p-3 font-medium text-gray-800">{audit.actionTakenFor}</td>
-                <td className="p-3  font-medium text-gray-800">{audit.dateOfAction}</td>
+                <td className="p-3  font-medium text-gray-800">{audit.dateOfAction?.toString()}</td>
               </tr>
             ))
           )}

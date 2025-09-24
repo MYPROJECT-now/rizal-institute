@@ -1,10 +1,10 @@
-import { getAllEnrollees_cashier } from "@/src/actions/cashierAction";
+import { getAllEnrollees_cashier, getReceiptsCondition } from "@/src/actions/cashierAction";
 import Students from "./ApplicantTodos";
 
 
 export const ApplicantsPage = async () => {
-    const applicants = await getAllEnrollees_cashier();
+  const applicants = await getAllEnrollees_cashier();
+  const activeReceipt = await getReceiptsCondition();
 
-    return <Students applicants={applicants} />
-
+  return <Students applicants={applicants} activeReceipt={activeReceipt} />;
 };
