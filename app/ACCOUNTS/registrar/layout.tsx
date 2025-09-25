@@ -2,6 +2,7 @@
     import { MobileHeader } from "@/components/sidebar/registrar/registrar_mobile_header";
     import { auth, clerkClient } from "@clerk/nextjs/server";
     import { redirect } from "next/navigation";
+import Registrar_header from "@/app/header/header_registrar";
 
     type props  = {
         children: React.ReactNode;
@@ -23,14 +24,23 @@
         }
 
         return (
-            <div className=" flex lg:flex-row flex-col">
-                <MobileHeader /> 
-                <Sidebar_registrar className="hidden lg:flex"/>
-                <main className="min-h-screen w-full ">
-                    <div className="h-full w-full bg-lGreen">
-            
-                        {children} 
-                    </div>
+            <div className=" h-screen bg-lGreen flex lg:flex-row flex-col">
+                <header>
+                    <MobileHeader /> 
+                </header>
+                <aside>
+                    <Sidebar_registrar className="hidden lg:flex "/>
+                </aside>
+                <main className="flex-1 w-full bg-lGreen flex flex-col ">
+                    <section className="bg-page rounded-lg flex flex-col flex-1 min-h-0 overflow-hidden m-3">
+                        <section className=" bg-page flex flex-col  overflow-y-auto  flex-1 min-h-0 rounded-lg">
+                            <Registrar_header />
+                            <div className=" flex-1  min-h-0">
+                    
+                                {children} 
+                            </div>
+                        </section>
+                    </section>
                 </main>
             </div>
         );

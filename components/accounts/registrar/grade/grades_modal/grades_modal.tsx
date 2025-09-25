@@ -46,10 +46,10 @@ export const Enrollees_info_Modal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[600px] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="lg:w-[600px] sm:w-[500px] w-[290px] bg-gray-50 rounded-lg ">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-            Student Grade Records (Grade 7 - 10)
+          <DialogTitle className="sm:text-xl text-lg  font-bold text-white bg-dGreen py-4 rounded-t-lg flex items-center justify-center">
+            Student Grade Records
           </DialogTitle>
         </DialogHeader>
 
@@ -58,18 +58,18 @@ export const Enrollees_info_Modal = () => {
         ) : grades.length === 0 ? (
           <div className="py-6 text-center text-gray-600">No grades available.</div>
         ) : (
-          <div className="space-y-6 px-2 py-4 text-sm text-gray-700">
+          <div className="space-y-6 px-2 py-4 text-sm text-gray-700  overflow-y-auto max-h-[400px]">
             {Object.entries(groupedGrades).map(([gradeLevel, subjects]) => (
               <section
                 key={gradeLevel}
                 className="bg-white p-4 rounded-lg shadow-sm border"
               >
-                <h3 className="text-lg text-dGreen font-bold mb-3 border-l-4 border-dGreen pl-2 rounded-lg">
+                <h3 className="sm:text-lg text-base text-dGreen font-bold mb-3 border-l-4 border-dGreen pl-2 rounded-lg">
                    {gradeLevel === "Unknown" ? "Unspecified Grade Level" : `Grade ${gradeLevel}`}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {subjects.map((subject, idx) => (
-                    <p key={idx} className="flex flex-row">
+                    <p key={idx} className="flex flex-row gap-2">
                       <strong className="text-green-800">{subject.subject ?? "Unnamed Subject"}:</strong>{" "}
                       <p className="text-green-800">{subject.finalGrade ?? "-"}</p>
                     </p>

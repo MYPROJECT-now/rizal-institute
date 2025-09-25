@@ -55,9 +55,9 @@ const showDocument = (src: string | null, title: string) => {
   return (
       <>
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[600px]   bg-gray-50 rounded-lg shadow-lg">
+      <DialogContent className="lg:w-[600px] sm:w-[550px] w-[290px]  bg-gray-50 rounded-lg shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen py-3 flex items-center justify-center rounded-t-lg">
+          <DialogTitle className="lg:text-2xl sm:text-2xl text-lg font-bold text-white bg-dGreen py-3 flex items-center justify-center rounded-t-lg">
             Student Information
           </DialogTitle>
         </DialogHeader>
@@ -67,218 +67,227 @@ const showDocument = (src: string | null, title: string) => {
             <Loader2 className="w-8 h-8 text-dGreen animate-spin" />
           </div>
         ) : (
-          <div className="space-y-6 px-4 py-2 text-sm text-gray-700 max-h-[350px]  overflow-y-auto overflow-hidden ">
+        <div className="space-y-6 sm:px-4 px-2 sm:py-2 py-1 text-sm text-gray-700 max-h-[350px]  overflow-y-auto overflow-hidden ">
 
           {!!applicant?.reg_remarks?.length && (
-            <section className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-              <h3 className=" text-xl font-bold text-green-700 mb-3 flex items-center gap-2">
-               Registrar&apos;s Remarks
-              </h3>
-              <div className="grid grid-cols-2 gap-1 text-gray-700 w-[200px]">
-                <p className="whitespace-pre-line">Past Remark:</p>
-                <p className="whitespace-pre-line">{applicant.reg_remarks}</p>
-                <p className="text-sm text-gray-500">Date:</p>
-                <p className="text-sm text-gray-500">{applicant.dateOfRemarks}</p>
+            <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
+              <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
+                Registrar&apos;s Remarks
+              </p>
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 px-2">
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Past Remark:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.reg_remarks}
+                  </p>
+                </section>
+
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Date:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.dateOfRemarks}
+                  </p>
+                </section>
               </div>
-            </section>
-          )}
+            </article>
+            )}
 
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
-              Section 1: Personal Information
-            </p>
-            <div className="grid grid-cols-2 gap-3 px-2">
+            <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
+              <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
+                Section 1: Personal Information
+              </p>
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 px-2">
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Name:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.applicantsLastName}, {applicant.applicantsFirstName} {applicant.applicantsMiddleName} {applicant.applicantsSuffix}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Name:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.applicantsLastName}, {applicant.applicantsFirstName} {applicant.applicantsMiddleName} {applicant.applicantsSuffix}
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Date of Birth:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.dateOfBirth}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Date of Birth:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.dateOfBirth}
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Age:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.age}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Age:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.age}
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Gender:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.gender}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Gender:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.gender}
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Mobile Number:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.mobileNumber}
-                </p>
-              </section>
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Email:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.email}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Mobile Number:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.mobileNumber}
+                  </p>
+                </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Email:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.email}
+                  </p>
+                </section>
 
-            </div>
-          </section>
+              </div>
+            </article>
 
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
-              Section 2: Contact & Guardian Details
-            </p>
-            <div className="grid grid-cols-2 gap-3 px-2">
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Name:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.guardiansLastName}, {applicant.guardiansFirstName} {applicant.guardiansMiddleName} {applicant.guardiansSuffix}                
-                </p>
-              </section>
+            <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
+              <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
+                Section 2: Contact & Guardian Details
+              </p>
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 px-2">
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Name:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.guardiansLastName}, {applicant.guardiansFirstName} {applicant.guardiansMiddleName} {applicant.guardiansSuffix}                
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Emergency Contact:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.emergencyContact}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Emergency Contact:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.emergencyContact}
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Email:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.emergencyEmail || "-"}
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Email:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.emergencyEmail || "-"}
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Address:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.fullAddress}
-                </p>
-              </section>
-             
-            </div>
-          </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Address:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.fullAddress}
+                  </p>
+                </section>
+              
+              </div>
+            </article>
 
 
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
-              Section 3: Educational Background
-            </p>
-            <div className="grid grid-cols-2 gap-3 px-2">
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">LRN:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.lrn}              
-                </p>
-              </section>
+            <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
+              <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
+                Section 3: Educational Background
+              </p>
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 px-2">
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">LRN:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.lrn}              
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Grade Level:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  Grade {applicant.gradeLevel}              
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Grade Level:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    Grade {applicant.gradeLevel}              
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Student Type:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.studentType}              
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Student Type:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.studentType}              
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">SY Graduated:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.schoolYear}              
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">SY Graduated:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.schoolYear}              
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">Previous School:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.prevSchool}              
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Previous School:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.prevSchool}              
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Type:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.schoolType}              
-                </p>
-              </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Type:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.schoolType}              
+                  </p>
+                </section>
 
-              <section className="flex flex-col">
-                <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Address:</p>
-                <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                  {applicant.schoolAddress}              
-                </p>
-              </section>
-            </div>
-          </section>
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Address:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.schoolAddress}              
+                  </p>
+                </section>
+              </div>
+            </article>
 
           
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
-            <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
-              Section 4: Submitted Documents
-            </p>
+            <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
+              <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
+                Section 4: Submitted Documents
+              </p>
 
-            <div className="grid grid-cols-2 gap-3 mb-2">
-              <Button
-                onClick={() => showDocument(applicant.birthCert, "Birth Certificate")}
-                variant="confirmButton"
-                className="flex items-center gap-2"
-                disabled={!applicant.birthCert?.trim()}
-              >
-                📄 Birth Certificate
-              </Button>
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 mb-2">
+                <Button
+                  onClick={() => showDocument(applicant.birthCert, "Birth Certificate")}
+                  variant="confirmButton"
+                  className="flex items-center gap-2"
+                  disabled={!applicant.birthCert?.trim()}
+                >
+                  📄 Birth Certificate
+                </Button>
 
-              <Button
-                onClick={() => showDocument(applicant.reportCard, "Report Card")}
-                variant="confirmButton"
-                className="flex items-center gap-2"
-                disabled={!applicant.reportCard?.trim()}
-              >
-                📃 Report Card
-              </Button>
+                <Button
+                  onClick={() => showDocument(applicant.reportCard, "Report Card")}
+                  variant="confirmButton"
+                  className="flex items-center gap-2"
+                  disabled={!applicant.reportCard?.trim()}
+                >
+                  📃 Report Card
+                </Button>
 
-              <Button
-                onClick={() => showDocument(applicant.goodMoral, "Good Moral Certificate")}
-                variant="confirmButton"
-                className="flex items-center gap-2"
-                disabled={!applicant.goodMoral?.trim()}
-              >
-                📑 Good Moral Certificate
-              </Button>
+                <Button
+                  onClick={() => showDocument(applicant.goodMoral, "Good Moral Certificate")}
+                  variant="confirmButton"
+                  className="flex items-center gap-2"
+                  disabled={!applicant.goodMoral?.trim()}
+                >
+                  📑 Good Moral Certificate
+                </Button>
 
-              <Button
-                onClick={() => showDocument(applicant.idPic, "ID Picture")}
-                variant="confirmButton"
-                className="flex items-center gap-2"
-                disabled={!applicant.idPic?.trim()}
-              >
-                🖼️ ID Picture
-              </Button>
+                <Button
+                  onClick={() => showDocument(applicant.idPic, "ID Picture")}
+                  variant="confirmButton"
+                  className="flex items-center gap-2"
+                  disabled={!applicant.idPic?.trim()}
+                >
+                  🖼️ ID Picture
+                </Button>
 
-              <Button
-                onClick={() => showDocument(applicant.studentExitForm, "Student Exit Form")}
-                variant="confirmButton"
-                className="flex items-center gap-2"
-                disabled={!applicant.studentExitForm?.trim()}
-              >
-                📝 Student Exit Form
-              </Button>
-            </div>
-          </section>
+                <Button
+                  onClick={() => showDocument(applicant.studentExitForm, "Student Exit Form")}
+                  variant="confirmButton"
+                  className="flex items-center gap-2"
+                  disabled={!applicant.studentExitForm?.trim()}
+                >
+                  📝 Student Exit Form
+                </Button>
+              </div>
+            </article>
           </div>
         )}
       </DialogContent>

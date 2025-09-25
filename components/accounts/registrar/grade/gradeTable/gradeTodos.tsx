@@ -1,27 +1,27 @@
-  "use client";
-  import { FC, useState } from "react";
-  import { Grade_Type, } from "@/src/type/REGISTRAR/applicant";
-  import { Button } from "@/components/ui/button";
+"use client";
+import { FC, useState } from "react";
+import { Grade_Type, } from "@/src/type/REGISTRAR/applicant";
+import { Button } from "@/components/ui/button";
 import Grade from "./gradeTodo";
 import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
 
 
 
-  interface Props {
-    grade: Grade_Type[];
-    
-  }
+interface Props {
+  grade: Grade_Type[];
+  
+}
 
-  const Applicants: FC<Props> = ({ grade }) => {
-    const [applicantList,] = useState<Grade_Type []>(grade);
-    const [filterName, setFilterName] = useState("");
-    const [filterLRN, setFilterLRN] = useState("");
+const Applicants: FC<Props> = ({ grade }) => {
+  const [applicantList,] = useState<Grade_Type []>(grade);
+  const [filterName, setFilterName] = useState("");
+  const [filterLRN, setFilterLRN] = useState("");
 
 
 
-    // 🔢 Pagination State
-    const [currentPage, setCurrentPage] = useState(1);
-    const studentsPerPage = 5;
+  // 🔢 Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const studentsPerPage = 5;
 
 
 
@@ -30,22 +30,22 @@ import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
     const matchesName = fullName.includes(filterName.toLowerCase());
     const matchesLRN = student.lrn.includes(filterLRN);
 
-    return matchesName && matchesLRN ;
+  return matchesName && matchesLRN ;
   });
 
-    // 🧮 Pagination logic
-    const indexOfLastStudent = currentPage * studentsPerPage;
-    const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-    const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
-    const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
+  // 🧮 Pagination logic
+  const indexOfLastStudent = currentPage * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+  const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
 
-    return (
-    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  sm:px-8 px-4 sm:py-6 py-4 sm:pt-6 text-center">
-        <Enrollees_info_Modal />
+  return (
+  <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
+    <Enrollees_info_Modal />
 
-    <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
-      <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>
+    <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
+      <label className="text-green-900 font-bold text-sm  sm:text-lg">Filter By:</label>
 
       <input
         type="text"
@@ -71,11 +71,11 @@ import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
           setFilterLRN("");
         }}
         variant="confirmButton"
-        className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
+        className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
       >
         Clear Filter
       </Button>
-  </div>
+    </section>
 
 <div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
   <table className="w-full text-xs sm:text-sm text-center">
@@ -131,7 +131,7 @@ import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
             Next
           </Button>
         </div>
-    </main>
+    </div>
     );
   };
 

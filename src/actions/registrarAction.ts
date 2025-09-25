@@ -213,7 +213,7 @@ export const getEnrollmentTrend = async () => {
         studentFirstName: StudentInfoTable.studentFirstName,
         studentMiddleName: StudentInfoTable.studentMiddleName,
         status: AdmissionStatusTable.admissionStatus,
-        gradeLevelName: GradeLevelTable.gradeLevelName,
+        gradeLevel: GradeLevelTable.gradeLevelName,
         isActive: AcademicYearTable.isActive,
         
       })
