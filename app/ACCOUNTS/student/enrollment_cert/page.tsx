@@ -41,7 +41,7 @@ const CertificatePage = () => {
   }, [studentInfo]);
 
   return (
-    <div className="w-full h-[680px] mt-3 mx-3 rounded-xl flex flex-col px-10 bg-page">
+    <div className="w-full lg:h-[680px] h-[500px] mt-3 mx-3 rounded-xl flex flex-col sm:px-10 px-1 bg-page">
       <Student_header />
       <div className="w-full h-full bg-white self-center mt-2 rounded-lg">
         <div className="w-full h-full flex flex-col gap-3 items-center pb-5">

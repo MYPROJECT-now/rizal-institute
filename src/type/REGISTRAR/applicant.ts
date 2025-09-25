@@ -41,6 +41,7 @@
     emergencyEmail?: string | null;
     fullAddress: string | null;
 
+    lrn: string;
     prevSchool: string  | null;
     studentType: string | null;
     gradeLevel: string | null; 

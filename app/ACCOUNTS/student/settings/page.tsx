@@ -64,18 +64,18 @@ const StudentsPassword = () => {
   };
 
   return (
-    <div className="w-full h-full sm:mt-3 mt-1 mx-3 rounded-xl flex flex-col sm:px-10 px-1 bg-page sm:text-sm md:text-base lg:text-lg">
+    <div className="w-full h-full sm:mt-3 mt-1 mx-3 rounded-xl flex flex-col sm:px-10 px-2 bg-page sm:text-sm md:text-base lg:text-lg">
       <Admin_student />
-      <div className="w-full h-[540px] bg-white self-center mt-10 rounded-lg flex flex-col items-center text-center">
-        <div className="sm:h-[80px] h-[60px] w-full bg-lGreen font-merriweather text-xl sm:text-3xl text-white items-center flex pl-5">
+      <div className="w-full sm:h-[540px] h-full bg-white self-center sm:mt-10 mt-5 rounded-lg flex flex-col items-center text-center">
+        <div className="py-5 w-full bg-lGreen font-merriweather text-lg sm:text-2xl lg:text-3xl text-white items-center flex pl-5">
           PASSWORD MANAGEMENT
         </div>
 
-        <div className="flex flex-col gap-7 items-center justify-center bg-gray shadow-gray-500 shadow-xl w-full h-[450px] rounded-lg">
+        <div className="flex flex-col gap-7 items-center justify-center bg-gray shadow-gray-500  w-full h-[450px] rounded-lg">
           
           {/* Current Password */}
-          <div className="flex flex-col text-start w-full px-10 lg:w-[500px] relative">
-            <label htmlFor="current-password" className="text-dGreen text-[17px] font-semibold">Old Password</label>
+          <div className="flex flex-col text-start w-full sm:px-10 px-5 lg:w-[500px] relative gap-2">
+            <label htmlFor="current-password" className="text-dGreen sm:text-[17px] text-sm font-semibold">Old Password</label>
             <input
               type={showCurrent ? "password" : "text"}
               placeholder="Enter current password"
@@ -86,15 +86,15 @@ const StudentsPassword = () => {
             <button
               type="button"
               onClick={() => setShowCurrent(!showCurrent)}
-              className="absolute right-12 top-11 text-gray-500"
+              className="absolute sm:right-12 right-8 top-10 text-gray-500"
             >
-              {showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showCurrent ? <EyeOff  size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
           {/* New Password */}
-          <div className="flex flex-col text-start w-full px-10 lg:w-[500px] relative">
-            <label htmlFor="current-password" className="text-dGreen text-[17px] font-semibold">New Password</label>
+          <div className="flex flex-col text-start w-full sm:px-10 px-5 lg:w-[500px] relative gap-2">
+            <label htmlFor="current-password" className="text-dGreen sm:text-[17px] text-sm font-semibold">New Password</label>
             <input
               type={showNew ? "password" : "text"}
               placeholder="Enter new password"
@@ -105,15 +105,15 @@ const StudentsPassword = () => {
             <button
               type="button"
               onClick={() => setShowNew(!showNew)}
-              className="absolute right-12 top-11 text-gray-500"
+              className="absolute sm:right-12 right-8 top-10 text-gray-500"
             >
               {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
           {/* Confirm Password */}
-          <div className="flex flex-col text-start w-full px-10 lg:w-[500px] relative">
-            <label htmlFor="current-password" className="text-dGreen text-[17px] font-semibold">Confirm Password</label>
+          <div className="flex flex-col text-start w-full sm:px-10 px-5 lg:w-[500px] relative gap-2">
+            <label htmlFor="current-password" className="text-dGreen sm:text-[17px] text-sm  font-semibold">Confirm Password</label>
             <input
               type={showConfirm ? "password" : "text"}
               placeholder="Confirm new password"
@@ -124,7 +124,7 @@ const StudentsPassword = () => {
             <button
               type="button"
               onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-12 top-11 text-gray-500"
+              className="absolute sm:right-12 right-8 top-10 text-gray-500"
             >
               {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>

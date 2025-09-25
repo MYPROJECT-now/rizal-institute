@@ -8,6 +8,26 @@ type Applicant_ModalState = {
   close: () => void;
 };
 
+  // document modal
+  type Document_ModalState = {
+    isOpen: boolean;
+     open: () => void;
+     close: () => void;
+};
+
+
+export const useShowApplicantInfoModal = create<Applicant_ModalState>((set) => ({
+  isOpen: false,
+  selectedLRN: null,
+  open: (lrn: string) => set({ isOpen: true, selectedLRN: lrn }),
+  close: () => set({ isOpen: false, selectedLRN: null }),
+}));
+
+export const useShowDocumentModal = create<Document_ModalState>((set) => ({
+    isOpen: false, //change mo maya
+    open: () => set ({ isOpen: true}),
+    close: () => set ({ isOpen: false}),
+}));
 
 
 
@@ -33,24 +53,3 @@ type RemarksModalState = {
     setRemarks: (remarks) => set({ remarks }),
   }));
   
-
-  // document modal
-  type Document_ModalState = {
-    isOpen: boolean;
-     open: () => void;
-     close: () => void;
-};
-
-
-export const useShowApplicantInfoModal = create<Applicant_ModalState>((set) => ({
-  isOpen: false,
-  selectedLRN: null,
-  open: (lrn: string) => set({ isOpen: true, selectedLRN: lrn }),
-  close: () => set({ isOpen: false, selectedLRN: null }),
-}));
-
-export const useShowDocumentModal = create<Document_ModalState>((set) => ({
-    isOpen: false, //change mo maya
-     open: () => set ({ isOpen: true}),
-     close: () => set ({ isOpen: false}),
-}));

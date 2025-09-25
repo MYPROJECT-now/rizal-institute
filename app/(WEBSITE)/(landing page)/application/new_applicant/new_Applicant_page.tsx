@@ -291,6 +291,7 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
             if (!gradeLevel.trim()) newErrors.gradeLevel = "Required";
             if (!studentType.trim()) newErrors.section = "Required";
             if (!schoolYear.trim()) newErrors.schoolYear = "Required";
+            if (!studentType.trim()) newErrors.studentType = "Required";
             if (!schoolType.trim()) newErrors.schoolType = "Required";
             if (!schoolName.trim()) newErrors.schoolName = "Required";
             if (!schoolAddress.trim()) newErrors.schoolAddress = "Required";
@@ -956,7 +957,7 @@ const sections = [
                                     onChange={handleEmergencyContact}
                                     value={emergencyContact}
                                     className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
-                                    ${errors.setEmergencyContact ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
+                                    ${errors.emergencyContact ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
@@ -966,7 +967,7 @@ const sections = [
                                     placeholder="l7B4G@example.com" 
                                     onChange={handleEmergencyEmail}
                                     value={emergencyEmail}
-                                    className="rounded-sm px-1 w-full sm-[150px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className="rounded-sm px-1 w-full sm-[150px] lg:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
 
                                 />
                             </div>
@@ -1034,9 +1035,9 @@ const sections = [
                                     ${errors.studentType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${studentType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Option</option>
-                                        <option value="New">Incoming G7</option>
+                                        <option value="New Student">Incoming G7</option>
                                         <option value="Transferee">Transferee</option>
-                                        <option value="Returnee">Old Student</option>
+                                        <option value="Old Student">Old Student</option>
                                 </select>
                             </div>
                         </section>

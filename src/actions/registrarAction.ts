@@ -524,6 +524,7 @@ export const getEnrollmentTrend = async () => {
       emergencyEmail: guardianAndParentsTable.emergencyEmail,
       fullAddress: guardianAndParentsTable.fullAddress,
 
+      lrn: applicantsInformationTable.lrn,
       gradeLevel: educationalBackgroundTable.gradeLevel,
       studentType: educationalBackgroundTable.studentType,
       schoolYear: educationalBackgroundTable.schoolYear,

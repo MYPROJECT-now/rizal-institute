@@ -109,11 +109,11 @@
         {/* Outstanding Balance Section */}
         <div className="mt-8">
           <div className="bg-red-50 sm:p-6 p-2 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
-            <span className="text-xl font-bold text-red-700">Outstanding Balance:</span>
-            <span className={studentInfo?.paymentMethod === "full_payment" ? "text-lg sm:text-2xl font-bold text-white bg-dGreen px-6 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
+            <span className="sm:text-xl text-sm font-bold text-red-700">Outstanding Balance:</span>
+            <span className={studentInfo?.paymentMethod === "full_payment" ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
               {studentInfo?.paymentMethod === "full_payment" ? (
                 <div>
-                  <p>Fully Paid</p>
+                  <p className="sm:text-xl text-sm">Fully Paid</p>
                 </div>
               ) : (
                 <div>

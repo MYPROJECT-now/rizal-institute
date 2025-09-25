@@ -44,13 +44,13 @@ export const Cashier_ReservationReview = () => {
       if (!applicant) return null
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[600px] min-h-[500px]  bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-[460px]   bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
-          <DialogTitle className="rounded-t-lg text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+          <DialogTitle className="rounded-t-lg text-xl font-bold text-white bg-dGreen py-4 flex items-center justify-center">
            Reservation Fee - Payment Review
           </DialogTitle>
         </DialogHeader>
-          <div className="bg-white flex text-center items-center justify-center h-[400px] ">
+          <div className="bg-white flex text-center items-center justify-center py-1 ">
            {isLoading ? (
             <div className="flex justify-center items-center p-8">
               <div className="text-lg">Loading...</div>
@@ -61,16 +61,18 @@ export const Cashier_ReservationReview = () => {
               </div> 
             ) : (
               <div className="flex flex-col gap-5">
-                <p className="text-start text-xl font-bold text-dGreen">Amount: P{applicant.reservationAmount}</p>
+                <div className="flex flex-col text-start">
+                  <span className="text-dGreen font-semibold text-sm">Amount: </span>
+                  <p className="bg-green-100 p-2 w-full rounded-lg text-dGreen font-oswald font-bold">
+                    P{applicant.reservationAmount}
+                  </p>
+                </div>
                 <CldImage
                   alt="Receipt Screenshot"
                   src={applicant.reservationReceipt}
-                  width="300" 
-                  height="300"
-                  crop={{
-                    type: 'auto',
-                    source: true
-                  }}
+                  width="1000" 
+                  height="1000"
+                  className="w-[250px] h-[300px]"
                 />
               </div>
               )}

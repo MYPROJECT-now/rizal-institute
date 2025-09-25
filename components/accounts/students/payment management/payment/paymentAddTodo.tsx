@@ -1,4 +1,5 @@
 "use client";
+import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
 import { Button } from "@/components/ui/button";
 import { getBalance } from "@/src/actions/studentAction";
 import { usePreviewModal } from "@/src/store/preview";
@@ -100,7 +101,8 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
 
   };
   return (
-    <section className="w-full  p-6 ">
+    <section className="w-full  sm:p-6 py-0 px-3  ">
+      <PreviewModal />
       <section className="bg-green-50 rounded-lg p-4 mb-4">
         {balance?.paymentMethod === "full_payment"  ? (
           <div>

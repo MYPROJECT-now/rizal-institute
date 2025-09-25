@@ -46,9 +46,9 @@ export const Enrollees_info_Modal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="w-[800px] max-h-[90vh] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-[600px] overflow-y-auto bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+          <DialogTitle className="text-xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
             Student Grade Records (Grade 7 - 10)
           </DialogTitle>
         </DialogHeader>
@@ -64,14 +64,14 @@ export const Enrollees_info_Modal = () => {
                 key={gradeLevel}
                 className="bg-white p-4 rounded-lg shadow-sm border"
               >
-                <h3 className="text-lg font-semibold mb-2">
-                  🎓 {gradeLevel === "Unknown" ? "Unspecified Grade Level" : `Grade ${gradeLevel}`}
+                <h3 className="text-lg text-dGreen font-bold mb-3 border-l-4 border-dGreen pl-2 rounded-lg">
+                   {gradeLevel === "Unknown" ? "Unspecified Grade Level" : `Grade ${gradeLevel}`}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {subjects.map((subject, idx) => (
-                    <p key={idx}>
-                      <strong>{subject.subject ?? "Unnamed Subject"}:</strong>{" "}
-                      {subject.finalGrade ?? "-"}
+                    <p key={idx} className="flex flex-row">
+                      <strong className="text-green-800">{subject.subject ?? "Unnamed Subject"}:</strong>{" "}
+                      <p className="text-green-800">{subject.finalGrade ?? "-"}</p>
                     </p>
                   ))}
                 </div>

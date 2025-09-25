@@ -106,7 +106,7 @@ export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentIn
 
           <Text style={styles.paragraph}>
             enrolled in Rizal Institute Canlubang Foundation Inc. as a{" "}
-            <Text style={styles.data}>Grade {studentInfo?.gradeLevelName || "___"}</Text> student for the A.Y{" "}
+            <Text style={styles.data}>Grade {studentInfo?.gradeLevelName || "___"}</Text> student for the S.Y{" "}
             <Text style={styles.data}>{studentInfo?.academicYear || "____-____"}</Text>.
           </Text>
         </View>
