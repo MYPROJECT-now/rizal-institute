@@ -3,7 +3,8 @@ import { nottice } from "@/src/actions/landingPage";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const [data] = await nottice();
+  const noticeArray = await nottice();
+  const data = noticeArray[0] || null; // if query is empty, return null
   console.log("API Returning:", data);
   return NextResponse.json(data);
 }

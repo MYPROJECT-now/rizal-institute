@@ -25,3 +25,15 @@ export const useEditScheduleModal = create<EditScheduleModalState>((set) => ({
      close: () => set ({ isOpen: false}),
 }));
 
+
+type DeleteScheduleModalState = {
+    isOpen: boolean;
+     open: () => void;
+     close: () => void;
+};
+
+export const useDeleteScheduleModal = create<DeleteScheduleModalState>((set) => ({
+    isOpen: false, //change mo maya
+     open: () => set ({ isOpen: true}),
+     close: () => set ({ isOpen: false}),
+}));

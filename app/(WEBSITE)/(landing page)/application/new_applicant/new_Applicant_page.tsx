@@ -181,7 +181,7 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
 
 
             if (!validateNotInFuture(new Date(dateOfBirth))) {
-                newErrors.applicantsLastName = "invalid";
+                newErrors.dateOfBirth = "invalid";
                 setErrors(newErrors);
                 toast.error("Date of birth cannot be in the future.");
                 return false;
@@ -189,7 +189,7 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
             
 
             if(!validateMinDate(new Date(dateOfBirth))){
-                newErrors.applicantsLastName = "invalid";
+                newErrors.dateOfBirth = "invalid";
                 setErrors(newErrors);
                 toast.error("The minimum threshold for age is 6 years.");
                 return false;
@@ -198,7 +198,7 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
             if(!validateMaxAge(new Date(dateOfBirth))){
                 newErrors.dateOfBirth = "invalid";
                 setErrors(newErrors);
-                toast.error("Are you alive still?.");
+                toast.error("Are you still alive?.");
                 return false;
             }
 

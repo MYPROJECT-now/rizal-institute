@@ -6,23 +6,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { getRInfo } from "@/src/actions/studentAction";
+import { getPaymentInfo, getRInfo } from "@/src/actions/studentAction";
 import { useShowMonthlyPayementReceiptsModal } from "@/src/store/CASHIER/student";
 import { useEffect, useState } from "react";
 
 interface Info {
   schoolName: string | null;
+  address: string | null;
   tin: string | null;
   atpNumber: string | null;
   dateIssued: string | null;
   dateExpired: string | null;
 }
 
+interface MonthsPayment {
+  studentName: string | null;
+  academicYear: string | null;
+  amount: number | null;
+  dateOfVerification: string | null;
+  modeOfPayment: string | null;
+  status: string | null;
+}
+
 export const CashierPaymentReceipt = () => {
   const { isOpen, close, selectedID } = useShowMonthlyPayementReceiptsModal();
   const [isLoading, setIsLoading] = useState(false);
   const [info, setInfo] = useState<Info | null>(null);
-
+  const [payment, setPayment] = useState<MonthsPayment | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedID) return;
@@ -30,6 +40,8 @@ export const CashierPaymentReceipt = () => {
       try {
         const data = await getRInfo();
         setInfo(data);
+        const payment = await getPaymentInfo(selectedID);
+        setPayment(payment);
       } catch (error) {
         console.error("Error fetching receipt:", error);
       } finally {
@@ -44,7 +56,7 @@ export const CashierPaymentReceipt = () => {
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="w-[600px] bg-white rounded-xl shadow-lg font-sans">
         <DialogHeader>
-          <DialogTitle className="text-center font-bold text-lg py-5">
+          <DialogTitle className="text-center text-green-600 bg-gray-300 font-bold text-lg py-3 rounded-t-lg">
               SERVICE INVOICE
           </DialogTitle>
         </DialogHeader>
@@ -53,15 +65,19 @@ export const CashierPaymentReceipt = () => {
           <div className="flex justify-center items-center p-8">
             <div className="text-lg">Loading...</div>
           </div>
-        ) : (
-          <div className="flex flex-col gap-6 px-10 -mt-5 text-gray-900">
+        ) : payment?.status !== "Approved" ?  (
+            <div className="flex justify-center items-center p-8">
+              <div className="text-lg"> Payment is not yet approved</div>
+            </div>
+          ): (
+          <div className="flex flex-col gap-6 px-10  text-gray-900">
             {/* Header */}
             <section className="text-center border-b pb-3">
               <p className="text-xl font-semibold">
                 {info?.schoolName || "Sample School Name"}
               </p>
               <p className="text-sm">
-                Address: {info?.schoolName ? "Canlubang, Laguna" : "Sample Address"}
+                {info?.address}
               </p>
               <p className="text-sm">TIN: {info?.tin || "000-000-000-000"}</p>
             </section>
@@ -71,7 +87,7 @@ export const CashierPaymentReceipt = () => {
               <p>
                 Date:{" "}
                 <span className="font-medium">
-                  {new Date().toLocaleDateString()}
+                  {payment?.dateOfVerification || "Date"}
                 </span>
               </p>
             </section>
@@ -80,7 +96,7 @@ export const CashierPaymentReceipt = () => {
             <section className="text-sm leading-relaxed">
               <p>
                 <span className="font-medium">Student:</span>{" "}
-                Justine Rhey L. Casupang
+                {payment?.studentName || "Name"}
               </p>
             </section>
 
@@ -96,9 +112,9 @@ export const CashierPaymentReceipt = () => {
                 <tbody>
                   <tr>
                     <td className="border px-2 py-1">
-                      Tuition Fee (S.Y. 2025–2026)
+                      Tuition Fee SY:{payment?.academicYear || ""}
                     </td>
-                    <td className="border px-2 py-1 text-right">₱ 500.00</td>
+                    <td className="border px-2 py-1 text-right">₱ {payment?.amount || ""}</td>
                   </tr>
                 </tbody>
               </table>
@@ -108,18 +124,19 @@ export const CashierPaymentReceipt = () => {
             <section className="text-sm">
               <div className="flex justify-between font-semibold text-base mt-1">
                 <span>TOTAL AMOUNT RECEIVED:</span>
-                <span>₱ 500.00</span>
+                <span>₱ {payment?.amount || ""}</span>
               </div>
             </section>
 
             {/* Footer */}
             <section className="text-sm">
               <p>
-                <span className="font-medium">Mode of Payment:</span> Cash
+                <span className="font-medium">Mode of Payment:</span> {payment?.modeOfPayment || ""}
               </p>
               <div className="flex justify-end mt-6">
                 <div className="text-center">
-                  <p>__________________________</p>
+                  <p>Cashier</p>
+                  <hr className="w-full border-1 border-black "/>
                   <p className="text-xs">Cashier / Authorized Representative</p>
                 </div>
               </div>

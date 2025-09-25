@@ -97,14 +97,14 @@
                 <label htmlFor="academicYear" className=" items-center flex">enrollmentStatus</label>
                 <input 
                     type="text"
-                    value={isLoading ? "Loading..." : enrollmentStatus}
+                    value={isLoading ? "Loading..." : enrollmentStatus ?? ""}
                     readOnly
                     className= "focus:outline-none w-full p-1  rounded-sm"
                 />
                 <label htmlFor="academicYear" className=" items-center flex">enrollment period:</label>
                 <input 
                     type="text" 
-                    value={isLoading ? "Loading..." : enrollment} 
+                    value={isLoading ? "Loading..." : enrollment ?? ""} 
                     readOnly={!editing}
                     className={`${
                     !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
@@ -114,7 +114,7 @@
                 <label htmlFor="academicYearStart" className=" items-center flex">enrollment start:</label>
                 <input 
                     type="date" 
-                    value={isLoading ? "Loading..." : enrollmentStart} 
+                    value={isLoading ? "Loading..." : enrollmentStart ?? ""} 
                     readOnly={!editing}
                     className={`${
                     !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
@@ -124,7 +124,7 @@
                 <label htmlFor="academicYearEnd" className=" items-center flex">enrollment end:</label>
                 <input 
                     type="date"
-                    value={isLoading ? "Loading..." : enrollmentEnd}
+                    value={isLoading ? "Loading..." : enrollmentEnd ?? ""}
                     readOnly={!editing}
                     className={`${
                     !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"

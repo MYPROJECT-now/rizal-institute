@@ -189,7 +189,7 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
               assigned.length === 0 && selectedTeacher ? (
               <div className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
                 <p className="text-red-500 font-semibold text-center">
-                  No subject to assigned for this teacher
+                  No subject asigned to this teacher
                 </p>
               </div>
               ) : (

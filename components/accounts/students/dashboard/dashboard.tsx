@@ -35,7 +35,7 @@
         >
           <h1 className=" text-xl sm:text-3xl font-bold text-dGreen flex items-center gap-2">
             <School className="w-8 h-8" />
-            Welcome, {loading ? <Skeleton className="h-8 w-[80px] rounded-lg" /> : studentInfo?.studentFirstName} 
+            Welcome, {loading ? <Skeleton className="h-10 w-[120px] rounded-lg" /> : studentInfo?.studentLastName} 
           </h1>
         </motion.div>
 

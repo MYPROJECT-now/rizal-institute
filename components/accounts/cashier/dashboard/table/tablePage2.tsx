@@ -4,22 +4,9 @@ import { RecentPaymentType } from "@/src/type/CASHIER/RECENT_PAYMENT/recentPayme
 
 
 export const RecentPaymentsTable = async  () => {
-// const [recentPayment, setRecentPayments] = useState<RecentPaymentType[]>([]);
-// const [loading, setLoading] = useState(true);
 
 const recentPayment: RecentPaymentType[] = await getRecentPayments();
-// useEffect(() => {
-//   const fetchRecentPayments = async () => {
-//     const data = await getRecentPayments();
-//     setRecentPayments(data);
-//     setLoading(false);
-//   };
-//   fetchRecentPayments();
-// }, []);
 
-// if (loading) {
-//   return <div>Loading...</div>;
-// }
 
   return (
     <div className="overflow-x-auto min-w-[100px] mb-10 shadow-lg rounded-lg border border-green-300 bg-green-50">

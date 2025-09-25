@@ -4,6 +4,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { GradeLevelTable, ScheduleTable, SectionTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { getUid } from "./utils/staffID";
+import { getSelectedYear } from "./utils/getSelectedYear";
 
 export const getAssignClass2 = async () => {
 
@@ -34,6 +35,9 @@ export const getAssignClass = async () => {
   const tid = await getUid();
   if (!tid) return null;
 
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
   const getClass = await db
     .select({
       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
@@ -49,9 +53,10 @@ export const getAssignClass = async () => {
       eq(SectionTable.section_id, TeacherAssignmentTable.section_id),
       eq(SectionTable.academicYear_id, TeacherAssignmentTable.academicYear_id)
     ))
-    .where(
+    .where(and(
       eq(TeacherAssignmentTable.clerk_uid, tid),
-    );
+      eq(TeacherAssignmentTable.academicYear_id, selectedYear)
+    ));
 
   return getClass;
 };
@@ -106,6 +111,9 @@ export const getGradeAndSubjects = async () => {
         return null;
     }
 
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+
     const gradeAndGrades = await db
     .select({
         gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
@@ -119,7 +127,10 @@ export const getGradeAndSubjects = async () => {
     .leftJoin(GradeLevelTable, eq(TeacherAssignmentTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
     .leftJoin(SubjectTable, eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id))
     .leftJoin(SectionTable, eq(TeacherAssignmentTable.section_id, SectionTable.section_id))
-    .where(eq(TeacherAssignmentTable.clerk_uid, tid))
+    .where(and(
+        eq(TeacherAssignmentTable.academicYear_id, selectedYear),
+        eq(TeacherAssignmentTable.clerk_uid, tid)
+    ))
     .orderBy(asc(TeacherAssignmentTable.assignment_id));
 
     console.log(gradeAndGrades);
@@ -130,6 +141,9 @@ export const getGradeAndSubjects = async () => {
 export const getMySched = async () => {
     const tid = await getUid();
     if (!tid) {return null;}
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
 
     const mySched = await db
     .select({
@@ -147,7 +161,10 @@ export const getMySched = async () => {
     .leftJoin(SectionTable, eq(SectionTable.section_id, ScheduleTable.section_id))
     .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, ScheduleTable.gradeLevel_id))
     .leftJoin(SubjectTable, eq(SubjectTable.subject_id, ScheduleTable.subject_id))
-    .where(eq(ScheduleTable.clerk_uid, tid))
+    .where(and(
+        eq(ScheduleTable.academicYear_id, selectedYear),
+        eq(ScheduleTable.clerk_uid, tid)
+    ))
     .orderBy(asc(ScheduleTable.dayOfWeek));
 
     return mySched;

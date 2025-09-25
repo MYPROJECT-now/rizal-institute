@@ -61,9 +61,9 @@ const Todos: FC<Props> = ({ todos }) => {
                 <thead>
                     <tr className="bg-green-600 text-white">
                         <th className="px-4 py-2">Date</th>
-                        <th className="px-4 py-2">Amount</th>
+                        {/* <th className="px-4 py-2">Amount</th> */}
                         <th className="px-4 py-2">Method</th>                        
-                        <th className="px-4 py-2">Date Verified</th>
+                        {/* <th className="px-4 py-2">Date Verified</th> */}
                         <th className="px-4 py-2">Status</th>
                         <th className="px-4 py-2">Proof of Payment</th>
                         <th className="px-4 py-2">Payment Receiept</th>
@@ -73,7 +73,7 @@ const Todos: FC<Props> = ({ todos }) => {
                 <tbody>
                     {currentItems.length === 0 ? (
                     <tr>
-                        <td colSpan={7} className="p-4 text-black">
+                        <td colSpan={5} className="p-4 text-black">
                             No history was found.
                         </td>
                     </tr> 

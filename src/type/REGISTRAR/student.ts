@@ -4,7 +4,9 @@ export type all_studentTable_Type = {
     studentFirstName: string;
     studentMiddleName: string | null;
     status : string | null;
-    gradeLevelName: string | null
+    gradeLevelName: string | null;
+    isActive: boolean | null;
+
   };
   
 

@@ -57,31 +57,6 @@ export const Reports = () => {
     } , []);
 
 
-    // const handleDownloadAdmitted = () => {
-    //     // Sample data to export
-    //     // const data = [
-    //     // { ID: 1, Name: "Alice", Grade: "A" },
-    //     // { ID: 2, Name: "Bob", Grade: "B" },
-    //     // { ID: 3, Name: "Charlie", Grade: "C" },
-    //     // ];
-
-    //     const data = admitted.map((admittedStudents: AdmittedProps) => ({
-    //         LRN : admittedStudents.lrn,
-    //         FullName: admittedStudents.lastName + ", " + admittedStudents.firstName + (admittedStudents.middleName ? " " + admittedStudents.middleName : "") + (admittedStudents.suffix ? " " + admittedStudents.suffix : ""),
-    //         GradeLevel: admittedStudents.gradeLevelName,
-    //     }))
-
-    //     // Convert JSON -> worksheet
-    //     const ws = XLSX.utils.json_to_sheet(data);
-
-    //     // Create workbook and add worksheet
-    //     const wb = XLSX.utils.book_new();
-    //     XLSX.utils.book_append_sheet(wb, ws, "Students");
-
-    //     // Trigger download
-    //     XLSX.writeFile(wb, "students.xlsx");
-    // };
-
     const handleDownloadAdmitted = () => {
     const data = admitted.map((admittedStudents: AdmittedProps) => ({
         LRN: admittedStudents.lrn,
@@ -106,30 +81,6 @@ export const Reports = () => {
     };
 
 
-
-
-    // const handleDownloadReceivables = () => {
-
-    //     const data = amountPaid.map((receivables: AmountPaidProps) => ({
-    //         FullName: receivables.lastName + ", " + receivables.firstName + (receivables.middleName ? " " + receivables.middleName : "") + (receivables.suffix ? " " + receivables.suffix : ""),
-    //         TotalDue: receivables.totalDue,
-    //         TotalPaid: receivables.totalPaid,
-    //         Receivables: receivables.totalDue - receivables.totalPaid
-    //     }))
-
-    //     // Convert JSON -> worksheet
-    //     const ws = XLSX.utils.json_to_sheet(data);
-
-    //     // ✅ Auto column width (so columns fit content)
-    //     ws["!cols"] = Object.keys(data[0]).map((key) => ({ wch: key.length + 15 }));
-
-    //     // Create workbook and add worksheet
-    //     const wb = XLSX.utils.book_new();
-    //     XLSX.utils.book_append_sheet(wb, ws, "Receivables");
-
-    //     // Trigger download
-    //     XLSX.writeFile(wb, "Receivables.xlsx");
-    // };
 
     const handleDownloadReceivables = () => {
         const data = amountPaid.map((receivables: AmountPaidProps) => ({
@@ -197,6 +148,8 @@ export const Reports = () => {
                         onClick={handleDownloadAdmitted}
                         variant="confirmButton"
                         className="py-2 rounded-lg"
+                          disabled={admitted.length === 0}
+
                     >
                         Download Admitted Students
                     </Button>
@@ -205,6 +158,8 @@ export const Reports = () => {
                         onClick={handleDownloadReceivables}
                         variant="confirmButton"
                         className="py-2 rounded-lg"
+                          disabled={amountPaid.length === 0}
+
                     >
                         Download Receivables
                     </Button>

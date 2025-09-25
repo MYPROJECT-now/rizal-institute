@@ -9,17 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useEditScheduleModal,  } from "@/src/store/ADMIN/addSchedule";
-import { getData, getDaySched, getTeachersName, updateSchedule } from "@/src/actions/adminAction";
+import { useDeleteScheduleModal,  } from "@/src/store/ADMIN/addSchedule";
+import { deleteSchedule, getData, getDaySched, getTeachersName, } from "@/src/actions/adminAction";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
 
-export const Edit_Schedule = () => {
+export const Delete_Schedule = () => {
 
-  const { isOpen, close } = useEditScheduleModal();
+  const { isOpen, close } = useDeleteScheduleModal();
   const [teachers, setTeachers] = useState<{ clerk_uid: number; clerk_username: string }[]>([]);
   const [selectedTeacher, setSelectedTeacher] = useState(0);
+  const [confirmDelete, setConfirmDelete] = useState(false); // ✅ confirmation checkbox state
 
 
 
@@ -75,11 +76,13 @@ export const Edit_Schedule = () => {
 
 
 
-  const handleEdit = async () => {
-    await updateSchedule(sched_id, startTime, endTime, selectedTeacher);
-    toast.success("Schedule updated successfully.");
+  const handleDelete = async () => {
+    await deleteSchedule(sched_id, selectedTeacher);
+    toast.success("Schedule deleted successfully.");
     close();
     window.location.reload();
+    setConfirmDelete(false); // reset checkbox
+
   };
 
   const handleClose = () => {
@@ -88,13 +91,15 @@ export const Edit_Schedule = () => {
     setStartTime("");
     setEndTime("");
     setSched_id(0);
+    setConfirmDelete(false); // reset checkbox
+
   }
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="lg:w-[600px] overflow-y-auto bg-white rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
-            Edit Schedule
+            Delete Schedule
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-5">
@@ -200,8 +205,7 @@ export const Edit_Schedule = () => {
             <input 
               type="time" 
               value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              disabled={!selectedTeacher || teacherSchedules.length === 0 || !selectedDay}
+              readOnly
               className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             />
           </section>
@@ -211,20 +215,31 @@ export const Edit_Schedule = () => {
             <input 
               type="time" 
               value={endTime}
-              disabled={!selectedTeacher || teacherSchedules.length === 0 || !selectedDay}
-              onChange={(e) => setEndTime(e.target.value)}
+              readOnly
               className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             />
           </section>
 
-
+          <section className="flex items-center gap-2 mt-4">
+            <input
+              type="checkbox"
+              id="confirmDelete"
+              checked={confirmDelete}
+              onChange={(e) => setConfirmDelete(e.target.checked)}
+              className="h-4 w-4 text-dGreen border-gray-300 rounded focus:ring-dGreen"
+            />
+            <label htmlFor="confirmDelete" className="text-sm text-gray-700">
+              This action will permanently delete this schedule.
+            </label>
+          </section>
 
           <Button
-            variant="confirmButton"
+            variant="rejectButton"
             className="sm:p-5 p-2 mt-2  rounded-lg"
-            onClick={handleEdit}
+            onClick={handleDelete}
+            disabled={!confirmDelete || !sched_id}
           >
-            Edit Schedule
+            Delete Schedule
           </Button>
 
           </div>

@@ -1,6 +1,6 @@
 "use server"
 
-import { and, desc, eq, like, lte, } from "drizzle-orm";
+import { and, desc, eq, like, lte, sql, } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
@@ -55,142 +55,168 @@ export const getPendingPaymentsCount = async (selectedYear: number) => {
 };
 
 // graph
-export const getTotalperMontha = async () => {
+// export const getTotalperMontha = async () => {
 
-  const selectedYear = await getSelectedYear();
-  if(!selectedYear) return [];
+//   const selectedYear = await getSelectedYear();
+//   if(!selectedYear) return [];
 
-  // Get current date
-  const today = new Date();
-  const currentMonth = today.toLocaleString("default", { month: "long" });
-  console.log("Current month:", currentMonth);
+//   // Get current date
+//   const today = new Date();
+//   const currentMonth = today.toLocaleString("default", { month: "long" });
+//   console.log("Current month:", currentMonth);
 
-  // Get current month_id from DB
-  const currentMonthRow = await db
-    .select({
-      month_id: MonthsInSoaTable.month_id,
-      month: MonthsInSoaTable.month,
-    })
-    .from(MonthsInSoaTable)
-    .where(
-      and(
-        like(MonthsInSoaTable.month, `${currentMonth}%`),
-        eq(MonthsInSoaTable.academicYear_id, selectedYear)
-      )
-    );
+//   // Get current month_id from DB
+//   const currentMonthRow = await db
+//     .select({
+//       month_id: MonthsInSoaTable.month_id,
+//       month: MonthsInSoaTable.month,
+//     })
+//     .from(MonthsInSoaTable)
+//     .where(
+//       and(
+//         like(MonthsInSoaTable.month, `${currentMonth}%`),
+//         eq(MonthsInSoaTable.academicYear_id, selectedYear)
+//       )
+//     );
 
-  if (currentMonthRow.length === 0) {
-    console.warn("No current month found in DB, returning empty chart data.");
-    return[];
-  }
+//   if (currentMonthRow.length === 0) {
+//     console.warn("No current month found in DB, returning empty chart data.");
+//     return[];
+//   }
 
-  const currentMonthId = currentMonthRow[0].month_id;
-  console.log("Current month ID:", currentMonthId);
+//   const currentMonthId = currentMonthRow[0].month_id;
+//   console.log("Current month ID:", currentMonthId);
 
-  // Fetch all months up to current month
-  const monthsUpToCurrent = await db
-    .select({
-      amountPaid: MonthsInSoaTable.amountPaid,
-      month: MonthsInSoaTable.month,
-    })
-    .from(MonthsInSoaTable)
-    .where(
-      and(
-        lte(MonthsInSoaTable.month_id, currentMonthId),
-        eq(MonthsInSoaTable.academicYear_id, 1)
-      )
-    );
+//   // Fetch all months up to current month
+//   const monthsUpToCurrent = await db
+//     .select({
+//       amountPaid: MonthsInSoaTable.amountPaid,
+//       month: MonthsInSoaTable.month,
+//     })
+//     .from(MonthsInSoaTable)
+//     .where(
+//       and(
+//         lte(MonthsInSoaTable.month_id, currentMonthId),
+//         eq(MonthsInSoaTable.academicYear_id, 1)
+//       )
+//     );
 
-  // Aggregate total paid per "Month Year"
-  const monthlyTotalMap = new Map<string, number>();
+//   // Aggregate total paid per "Month Year"
+//   const monthlyTotalMap = new Map<string, number>();
 
-  for (const row of monthsUpToCurrent) {
-    const parsedDate = new Date(row.month); // e.g., "July 5, 2025"
-    if (isNaN(parsedDate.getTime())) continue;
+//   for (const row of monthsUpToCurrent) {
+//     const parsedDate = new Date(row.month); // e.g., "July 5, 2025"
+//     if (isNaN(parsedDate.getTime())) continue;
 
-    const key = parsedDate.toLocaleString("default", {
-      month: "long",
-      year: "numeric",
-    }); // e.g., "July 2025"
+//     const key = parsedDate.toLocaleString("default", {
+//       month: "long",
+//       year: "numeric",
+//     }); // e.g., "July 2025"
 
-    if (!monthlyTotalMap.has(key)) {
-      monthlyTotalMap.set(key, 0);
-    }
+//     if (!monthlyTotalMap.has(key)) {
+//       monthlyTotalMap.set(key, 0);
+//     }
 
-    monthlyTotalMap.set(key, monthlyTotalMap.get(key)! + row.amountPaid);
-  }
+//     monthlyTotalMap.set(key, monthlyTotalMap.get(key)! + row.amountPaid);
+//   }
 
 
-  // Sort and format
-  const result = [...monthlyTotalMap.entries()]
-    .map(([month, totalPaid]) => ({
-      month,
-      totalPaid,
-      sortKey: new Date(`${month} 1`).getTime(),
-    }))
-    .sort((a, b) => a.sortKey - b.sortKey)
-    .map(({ month, totalPaid }) => ({ month, totalPaid }));
+//   // Sort and format
+//   const result = [...monthlyTotalMap.entries()]
+//     .map(([month, totalPaid]) => ({
+//       month,
+//       totalPaid,
+//       sortKey: new Date(`${month} 1`).getTime(),
+//     }))
+//     .sort((a, b) => a.sortKey - b.sortKey)
+//     .map(({ month, totalPaid }) => ({ month, totalPaid }));
 
-  console.log("📊 Total Paid Per Month (up to current):", result);
-  return result;
-};
+//   console.log("📊 Total Paid Per Month (up to current):", result);
+//   return result;
+// };
+
+
+// export const getTotalperMonth = async () => {
+//   const selectedYear = await getSelectedYear();
+//   if (!selectedYear) return [];
+
+//   // Fetch all months for the academic year
+//   const allMonths = await db
+//     .select({
+//       month_id: MonthsInSoaTable.month_id,
+//       month: MonthsInSoaTable.month,
+//       amountPaid: MonthsInSoaTable.amountPaid,
+//     })
+//     .from(MonthsInSoaTable)
+//     .where(eq(MonthsInSoaTable.academicYear_id, selectedYear));
+
+//   // Aggregate totals (month → sum of amountPaid)
+//   const monthlyTotalMap = new Map<string, number>();
+
+//   for (const row of allMonths) {
+//     const parsedDate = new Date(row.month); // e.g. "July 5, 2025"
+//     if (isNaN(parsedDate.getTime())) continue;
+
+//     const key = parsedDate.toLocaleString("default", {
+//       month: "long",
+//       year: "numeric",
+//     });
+
+//     monthlyTotalMap.set(key, (monthlyTotalMap.get(key) ?? 0) + (row.amountPaid ?? 0));
+//   }
+
+//   // Format result with ALL months (even if total = 0)
+//   const result = allMonths
+//     .map((row) => {
+//       const parsedDate = new Date(row.month);
+//       const key = parsedDate.toLocaleString("default", {
+//         month: "long",
+//         year: "numeric",
+//       });
+
+//       return {
+//         month: key,
+//         totalPaid: monthlyTotalMap.get(key) ?? 0,
+//         sortKey: parsedDate.getTime(),
+//       };
+//     })
+//     // remove duplicates if MonthsInSoaTable has multiple rows per month
+//     .reduce((acc, curr) => {
+//       if (!acc.some((m) => m.month === curr.month)) acc.push(curr);
+//       return acc;
+//     }, [] as { month: string; totalPaid: number; sortKey: number }[])
+//     .sort((a, b) => a.sortKey - b.sortKey)
+//     .map(({ month, totalPaid }) => ({ month, totalPaid }));
+
+//   return result;
+// };
+
+
 export const getTotalperMonth = async () => {
   const selectedYear = await getSelectedYear();
   if (!selectedYear) return [];
 
-  // Fetch all months for the academic year
-  const allMonths = await db
+  const data = await db
     .select({
       month_id: MonthsInSoaTable.month_id,
       month: MonthsInSoaTable.month,
-      amountPaid: MonthsInSoaTable.amountPaid,
+      totalPaid: sql<number>`COALESCE(SUM(${MonthsInSoaTable.amountPaid}), 0)`,
     })
     .from(MonthsInSoaTable)
-    .where(eq(MonthsInSoaTable.academicYear_id, selectedYear));
+    .where(eq(MonthsInSoaTable.academicYear_id, selectedYear))
+    .groupBy(MonthsInSoaTable.month_id, MonthsInSoaTable.month)
+    .orderBy(MonthsInSoaTable.month_id);
 
-  // Aggregate totals (month → sum of amountPaid)
-  const monthlyTotalMap = new Map<string, number>();
-
-  for (const row of allMonths) {
-    const parsedDate = new Date(row.month); // e.g. "July 5, 2025"
-    if (isNaN(parsedDate.getTime())) continue;
-
-    const key = parsedDate.toLocaleString("default", {
-      month: "long",
-      year: "numeric",
-    });
-
-    monthlyTotalMap.set(key, (monthlyTotalMap.get(key) ?? 0) + (row.amountPaid ?? 0));
-  }
-
-  // Format result with ALL months (even if total = 0)
-  const result = allMonths
-    .map((row) => {
-      const parsedDate = new Date(row.month);
-      const key = parsedDate.toLocaleString("default", {
-        month: "long",
-        year: "numeric",
-      });
-
-      return {
-        month: key,
-        totalPaid: monthlyTotalMap.get(key) ?? 0,
-        sortKey: parsedDate.getTime(),
-      };
-    })
-    // remove duplicates if MonthsInSoaTable has multiple rows per month
-    .reduce((acc, curr) => {
-      if (!acc.some((m) => m.month === curr.month)) acc.push(curr);
-      return acc;
-    }, [] as { month: string; totalPaid: number; sortKey: number }[])
-    .sort((a, b) => a.sortKey - b.sortKey)
-    .map(({ month, totalPaid }) => ({ month, totalPaid }));
-
-  return result;
+  return data.map((row) => ({
+    month: row.month,
+    totalPaid: row.totalPaid ?? 0,
+  }));
 };
 
 
   export const getTotal = async () => {
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) return [];
     // get current month and match in db to get the id
     const today = new Date();
     const currentMonth = today.toLocaleString("default", { month: "long"});
@@ -202,7 +228,7 @@ export const getTotalperMonth = async () => {
       .where(
         and(
           like(MonthsInSoaTable.month, `${currentMonth}%`),
-          eq(MonthsInSoaTable.academicYear_id, 1)
+          eq(MonthsInSoaTable.academicYear_id, selectedYear)
         )
       )
 
@@ -333,23 +359,28 @@ export const getTotalperMonth = async () => {
 
   // get recent payment
   export const getRecentPayments = async () => {
-  
-  const recentPayments = await db.select({
-    monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
-    student_id: MonthlyPayementTable.student_id,
-    lrn: StudentInfoTable.lrn,
-    studentLastName: StudentInfoTable.studentLastName,
-    studentFirstName: StudentInfoTable.studentFirstName,
-    studentMiddleName: StudentInfoTable.studentMiddleName,
-    studentSuffix: StudentInfoTable.studentSuffix,
-    amount: MonthlyPayementTable.amount,
-    dateOfPayment: MonthlyPayementTable.dateOfPayment,
-  })
-    .from(MonthlyPayementTable)
-    .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
-    .orderBy(desc(MonthlyPayementTable.dateOfPayment))
-    .limit(5);
-  return recentPayments;
+
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) return [];
+
+    const recentPayments = await db.select({
+      monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
+      student_id: MonthlyPayementTable.student_id,
+      lrn: StudentInfoTable.lrn,
+      studentLastName: StudentInfoTable.studentLastName,
+      studentFirstName: StudentInfoTable.studentFirstName,
+      studentMiddleName: StudentInfoTable.studentMiddleName,
+      studentSuffix: StudentInfoTable.studentSuffix,
+      amount: MonthlyPayementTable.amount,
+      dateOfPayment: MonthlyPayementTable.dateOfPayment,
+    })
+      .from(MonthlyPayementTable)
+      .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
+      .where(eq(MonthlyPayementTable.academicYear_id, selectedYear))
+      .orderBy(desc(MonthlyPayementTable.dateOfPayment))
+      .limit(5);
+
+    return recentPayments;
 };
 
 
@@ -381,7 +412,9 @@ return enrolledStudents;
 
 // get soa of enrolled student
 export const getSOAsStudent = async (lrn: string) => {
-  
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
   // Get student information and down payment in one query
   const studentAndDownPayment = await db
     .select({
@@ -394,12 +427,17 @@ export const getSOAsStudent = async (lrn: string) => {
       amount: downPaymentTable.amount,
       downPaymentDate: downPaymentTable.downPaymentDate,
       SINumberDP: downPaymentTable.SINumber,
-      paymentMethod: downPaymentTable.paymentMethod
+      paymentMethod: downPaymentTable.paymentMethod,
+      isActive: AcademicYearTable.isActive
     })
     .from(StudentInfoTable)
     .leftJoin(MonthsInSoaTable, eq(StudentInfoTable.applicants_id, MonthsInSoaTable.applicants_id))
     .leftJoin(downPaymentTable, eq(StudentInfoTable.applicants_id, downPaymentTable.applicants_id))
-    .where(eq(StudentInfoTable.lrn, lrn))
+    .leftJoin(AcademicYearTable, eq(MonthsInSoaTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(and(
+      eq(StudentInfoTable.lrn, lrn),
+      eq(AcademicYearTable.academicYear_id, selectedYear)
+    ))
     .limit(1);
 
   console.log("Student and down payment data:", studentAndDownPayment);
@@ -444,6 +482,7 @@ export const getSOAsStudent = async (lrn: string) => {
     downPaymentDate: studentData.downPaymentDate || "",
     SINumberDP: studentData.SINumberDP || "",
     paymentMethod: studentData.paymentMethod || "",
+    isActive: studentData.isActive ?? false,
     month: monthlyPayment.month,
     dateOfPayment: monthlyPayment.dateOfPayment,
     remarks: monthlyPayment.remarks,
@@ -1191,12 +1230,29 @@ export const ApprovedMonth = async (month_id: number, amount: number, date: stri
 
     const grant = await db.select({
       grantAvailable: grantAvailable.grantAvailable,
+      isActive: AcademicYearTable.isActive
     })
     .from(grantAvailable)
+    .leftJoin(AcademicYearTable, eq(grantAvailable.academicYear_id, AcademicYearTable.academicYear_id))
     .where(eq(grantAvailable.academicYear_id, selectedAcademicYear));
 
     return grant.length > 0 ? grant[0].grantAvailable : 0;
   }
+
+  export const isAcademicYearActive = async () => {
+
+  const selectedAcademicYear = await getSelectedAcademicYear();
+  if (!selectedAcademicYear) return false;
+
+  const result = await db
+    .select({ isActive: AcademicYearTable.isActive })
+    .from(AcademicYearTable)
+    .where(eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
+    .limit(1);
+
+  return result.length > 0 ? result[0].isActive : false;
+};
+
 
 
 

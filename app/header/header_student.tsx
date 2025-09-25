@@ -51,7 +51,7 @@ const Student_header = () => {
             </div>
             <div className="flex flex-row items-center gap-5">
                 <p className="font-Alfa text-lGreen text-sm lg:text-xl">
-                    {user?.fullName}
+                    {user?.lastName}
 
                 </p>
                 {/* <Image

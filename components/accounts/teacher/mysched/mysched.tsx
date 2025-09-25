@@ -59,7 +59,7 @@ export const MySched = () => {
           </h3>
           <hr className="border-dGreen border-1 w-full" />
 
-          <section className="w-full space-y-1">
+          {/* <section className="w-full space-y-1">
             {loading ? (
               renderSkeleton()
             ) : (
@@ -77,7 +77,32 @@ export const MySched = () => {
                 </div>
               ))
             )}
+          </section> */}
+          
+          <section className="w-full space-y-1">
+            {loading ? (
+              renderSkeleton()
+            ) : entries.length === 0 ? (
+              <div className="flex items-center justify-center px-3 py-2 border-b-2 border-gray-300 text-gray-500 italic">
+                No Schedule
+              </div>
+            ) : (
+              entries.map((s, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between px-3 py-2 border-b-2 border-gray-300"
+                >
+                  <span className="font-mono text-sm text-gray-700 w-28">
+                    {s.startTime} – {s.endTime}
+                  </span>
+                  <span className="text-gray-900 font-medium text-sm">
+                    {s.subjectName ?? "No Subject"} — Grade {s.gradeLevelName ?? "N/A"} {s.sectionName ?? "No Section"}
+                  </span>
+                </div>
+              ))
+            )}
           </section>
+
         </Card>
       ))}
     </div>

@@ -1,9 +1,11 @@
 import { addPayment } from "@/src/actions/studentAction";
 import AddTodo from "./paymentAddTodo";
 import { toast } from "sonner";
+import { usePaymentModal } from "@/src/store/payment";
 
 
 export const PaymentPage =  () => {
+    const { close } = usePaymentModal();
 
     const createTodo = async (
       amount: number,
@@ -20,6 +22,8 @@ export const PaymentPage =  () => {
       }
       
       toast.success("Payment was successfully added");
+      close();
+      window.location.reload();
 
       } catch (error: unknown) {
         if (error instanceof Error) {

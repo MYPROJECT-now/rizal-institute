@@ -29,6 +29,8 @@ export type SOAsStudent = {
   monthlyDue: number  | null;
   amountPaid: number  | null;
 
+  isActive?: boolean | null;
+
 }
   
   

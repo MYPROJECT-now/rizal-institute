@@ -103,7 +103,7 @@ export async function POST(request: Request) {
         .set({
           SINumber: SINumber
         })
-      .where(eq(applicationStatusTable.applicants_id, studentId)),
+      .where(eq(reservationFeeTable.applicants_id, studentId)),
       db.update(ReceiptInfoTable)
         .set({
           latestSINumber: SINumber

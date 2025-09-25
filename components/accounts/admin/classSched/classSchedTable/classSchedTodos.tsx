@@ -3,9 +3,10 @@ import { FC, useState, useMemo } from "react";
 import { SchedType } from "@/src/type/ADMIN/admin";
 import SchedTodo from "./classSchedTodo";
 import { Add_Schedule } from "../add_schedule/account";
-import { useEditScheduleModal, usescheduleModal } from "@/src/store/ADMIN/addSchedule";
+import { useDeleteScheduleModal, useEditScheduleModal, usescheduleModal } from "@/src/store/ADMIN/addSchedule";
 import { Button } from "@/components/ui/button";
 import { Edit_Schedule } from "../editSched/account";
+import { Delete_Schedule } from "../deleteSched/account";
 
 interface Props {
   scheds: SchedType[];
@@ -14,6 +15,7 @@ interface Props {
 const SchedTodos: FC<Props> = ({ scheds }) => {
   const { open: openAdd } = usescheduleModal();
   const { open: openEdit } = useEditScheduleModal();
+  const { open: openDelete } = useDeleteScheduleModal();  
 
   // filter states
   const [selectedTeacher, setSelectedTeacher] = useState<string>("all");
@@ -136,9 +138,17 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
         <Edit_Schedule />
         <Button 
           onClick={openEdit}
-          variant={"confirmButton"} 
+          variant={"acceptButton"} 
           className="px-4 py-3 rounded-lg">
           Edit
+        </Button>
+
+        <Delete_Schedule />
+        <Button 
+          onClick={openDelete}
+          variant={"rejectButton"} 
+          className="px-4 py-3 rounded-lg">
+          Delete
         </Button>
       </div>
 
@@ -154,7 +164,7 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {paginatedRows.map((rowIdx) => (
               <tr
                 key={rowIdx}

@@ -9,7 +9,7 @@
   } from "@/components/ui/dialog";
   import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
   import { Button } from "@/components/ui/button";
-  import { addBreakDown, addGrant, getESC } from "@/src/actions/cashierAction";
+  import { addBreakDown, addGrant, getESC, isAcademicYearActive } from "@/src/actions/cashierAction";
   import { Loader2 } from "lucide-react";
   import { toast } from "sonner";
 
@@ -33,6 +33,8 @@
     const [grandLoading, setGrandLoading] = useState(false);
     const [tuitionLoading, setTuitionLoading] = useState(false);
 
+    const [isActive, setIsActive] = useState(true);
+
     const handleLrnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setLrn(event.target.value);
     };
@@ -42,6 +44,14 @@
       setIsLoading(false);
     };
 
+    useEffect(() => {
+      const fetchIsActive = async () => {
+        const active = await isAcademicYearActive();
+        setIsActive(active);
+      };
+
+      fetchIsActive();
+    }, []);
 
     useEffect(() => { 
         fetchESC(); 
@@ -181,11 +191,12 @@
                     <Button
                       variant="confirmButton"
                       className="px-5 py-2 rounded-lg"
-                      disabled={tuitionLoading}
+                      disabled={tuitionLoading || !isActive}
                       onClick={handelAddTuition}
                     >
                       {tuitionLoading ? "Adding..." : "Add"}
                     </Button>
+
                   </div>
 
                 </div>

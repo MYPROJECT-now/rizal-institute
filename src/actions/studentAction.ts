@@ -1,7 +1,7 @@
 // app/actions/getStudentData.ts
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
@@ -397,6 +397,7 @@ export const addPayment = async (
   
     const paymentReceipt = await db.select({
       proofOfPayment: MonthlyPayementTable.proofOfPayment,
+      amount: MonthlyPayementTable.amount
     })
       .from(MonthlyPayementTable)
       .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID ));
@@ -418,11 +419,35 @@ export const addPayment = async (
     const info = await db
     .select({
       schoolName: ReceiptInfoTable.schoolName,
+      address: ReceiptInfoTable.address,
       tin: ReceiptInfoTable.tin,
       atpNumber: ReceiptInfoTable.atpNumber,
       dateIssued: ReceiptInfoTable.dateIssued,
       dateExpired: ReceiptInfoTable.dateExpired
     }).from(ReceiptInfoTable)
+
+  return info[0] ?? null; // return only one row
+  }
+
+  export const getPaymentInfo = async (selectedID: number) => {
+
+    const info = await db
+    .select({
+      student_id: MonthlyPayementTable.student_id,
+      studentName: sql<string>` ${StudentInfoTable.studentFirstName} || ' ' || ${StudentInfoTable.studentMiddleName} || ' ' || ${StudentInfoTable.studentLastName}`.as("studentName"),    
+      academic_id: MonthlyPayementTable.academicYear_id,
+      academicYear: AcademicYearTable.academicYear,
+      amount: MonthlyPayementTable.amount,
+      dateOfVerification: MonthlyPayementTable.dateOfVerification,
+      modeOfPayment: MonthlyPayementTable.modeOfPayment,
+      status: MonthlyPayementTable.status,
+
+    })
+    .from(MonthlyPayementTable)
+    .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
+    .leftJoin(AcademicYearTable, eq(MonthlyPayementTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID ));
+
 
   return info[0] ?? null; // return only one row
   }

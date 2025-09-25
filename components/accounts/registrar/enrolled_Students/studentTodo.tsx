@@ -45,7 +45,7 @@ const Student: FC<Props> = ({ student, transferStudent, dropStudent, loading  })
           variant="rejectButton"
           className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={handleTransfer}
-          disabled={loading || student.status === "Dropped" || student.status === "Transferred"}
+          disabled={loading || student.status === "Dropped" || student.status === "Transferred" || student.isActive === false}
         >
           Transfer
         </Button>
@@ -54,7 +54,7 @@ const Student: FC<Props> = ({ student, transferStudent, dropStudent, loading  })
           variant="rejectButton"
           className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           onClick={handleDrop}
-          disabled={loading || student.status === "Dropped" || student.status === "Transferred"}
+          disabled={loading || student.status === "Dropped" || student.status === "Transferred" || student.isActive === false}
         >
           Drop
         </Button>

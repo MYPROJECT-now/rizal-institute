@@ -59,7 +59,8 @@ export const getCurrentAcademicYear = async () => {
       isActive: EnrollmentStatusTable.isActive,
     })
     .from(EnrollmentStatusTable)
-    .where(eq(EnrollmentStatusTable.isActive, true))
+    .leftJoin(AcademicYearTable, eq(EnrollmentStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(eq(AcademicYearTable.isActive, true))
     .limit(1);
 
     console.log(enrollment);
@@ -665,7 +666,6 @@ export const deleteAssigned = async (selectedTeacher: number, gradeLevelId: numb
 
 export const getTTotalCashier = async () => {
   
-  await requireStaffAuth(["admin"]); // Gatekeeper
 
     
   const cashier = await db
@@ -679,7 +679,6 @@ export const getTTotalCashier = async () => {
 
 export const getTotalRegistrar = async () => {
   
-  await requireStaffAuth(["admin"]); // Gatekeeper
 
     
   const registrar = await db
@@ -693,7 +692,6 @@ export const getTotalRegistrar = async () => {
 
 export const getTotalTeacher = async () => {
   
-  await requireStaffAuth(["admin"]); // Gatekeeper
 
     
   const teacher = await db
@@ -707,7 +705,6 @@ export const getTotalTeacher = async () => {
 
 export const getTotalAdmin = async () => {
   
-  await requireStaffAuth(["admin"]); // Gatekeeper
 
     
   const admin = await db
@@ -721,14 +718,16 @@ export const getTotalAdmin = async () => {
 
 
 export const getEnrollmentStatus = async () => {
-
-  await requireStaffAuth(["admin"]); // Gatekeeper
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
 
   const enrollmentStatus = await db
   .select({
     enrollmentStatus: EnrollmentStatusTable.isActive,
   })
   .from(EnrollmentStatusTable)
+  .where(eq(EnrollmentStatusTable.academicYear_id, selectedYear))
+
   return enrollmentStatus;
 }
 
@@ -881,6 +880,32 @@ export const AddSchedule = async (
     eq(TeacherAssignmentTable.subject_id, subject_id)
   ))
 
+  const credentials = await getStaffCredentials();
+     
+  if (!credentials) return null;
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+  const getTeachersName = await db
+  .select ({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.clerk_uid, clerk_uid))
+
+  const teachersUsername = getTeachersName[0].clerk_username
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: username,
+    usertype: userType,
+    actionTaken: "Create schedule",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: teachersUsername,
+    academicYear_id: await getAcademicYearID(),
+  }) ;
   console.log("Schedule Added", sched);
 }
 
@@ -958,7 +983,8 @@ export const getDaySched = async (
 export const updateSchedule = async (
   schedule_id: number,
   startTime: string,
-  endTime: string
+  endTime: string,
+  clerk_uid: number
 ) => {
   const update = await db
   .update(ScheduleTable)
@@ -967,5 +993,66 @@ export const updateSchedule = async (
     endTime: endTime
   })
   .where(eq(ScheduleTable.schedule_id, schedule_id))
+
+  const credentials = await getStaffCredentials();
+     
+  if (!credentials) return null;
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+  const getTeachersName = await db
+  .select ({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.clerk_uid, clerk_uid))
+
+  const teachersUsername = getTeachersName[0].clerk_username
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: username,
+    usertype: userType,
+    actionTaken: "Create schedule",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: teachersUsername,
+    academicYear_id: await getAcademicYearID(),
+  }) ;
   console.log(update);
+
+}
+
+export const deleteSchedule = async (schedule_id: number, clerk_uid: number) => {
+  const deleted = await db
+  .delete(ScheduleTable)
+  .where(eq(ScheduleTable.schedule_id, schedule_id))
+  const credentials = await getStaffCredentials();
+     
+  if (!credentials) return null;
+
+  const username = credentials?.clerk_username;
+  const userType = credentials?.userType;
+
+  const getTeachersName = await db
+  .select ({
+    clerk_username: staffClerkUserTable.clerk_username,
+  })
+  .from(staffClerkUserTable)
+  .where(eq(staffClerkUserTable.clerk_uid, clerk_uid))
+
+  const teachersUsername = getTeachersName[0].clerk_username
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: username,
+    usertype: userType,
+    actionTaken: "Create schedule",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: teachersUsername,
+    academicYear_id: await getAcademicYearID(),
+  }) ;
+  console.log(deleted);
 }

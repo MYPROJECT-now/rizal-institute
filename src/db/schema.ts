@@ -43,11 +43,17 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     document_id: serial('document_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
     birthCert: varchar('birthCert', { length:300 }),
+    hasBirth: boolean('hasBirth').default(false),
     reportCard: varchar('reportCard', { length:300 }),
+    hasReportCard: boolean('hasReportCard').default(false),
     goodMoral: varchar('goodMoral', { length:300 }),
+    hasGoodMoral: boolean('hasGoodMoral').default(false),
     idPic: varchar('idPic', { length:300 }),
+    hasIdPic: boolean('hasIdPic').default(false),
     studentExitForm: varchar('studentExitForm', { length:300 }),
+    hasExitForm: boolean('hasExitForm').default(false),
     form137: varchar('form137', { length:300 }),
+    hasForm137: boolean('hasForm137').default(false),
   })
 
   export const additionalInformationTable = pgTable("additionalInformationTable", {

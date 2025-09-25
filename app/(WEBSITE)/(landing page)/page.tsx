@@ -23,7 +23,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 };
 
   export default  function Home() {
-    <StatusModal />
     const { open } = useShowStatusModal();
     const [noticeData, setNoticeData] = useState<NoticeData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -57,7 +56,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 
     return (
+
       <div className="w-full h-full">
+      <StatusModal />
 
         {/* first section */}
         <div className="xl:h-[700px] sm:h-[450px] h-[400px] w-full relative flex items-center justify-center ">
@@ -183,11 +184,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 
 
-    <div className="w-full flex flex-col items-center sm:mt-6 mt-2 bg-white shadow-2xl rounded-2xl lg:px-10 sm:px-5 px-3 lg:py-8 sm:py-4 py-2 border border-green-700">
-
-      {/* <p className="text-green-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase"> */}
-      
-      <div className={noticeData?.isActive === true ? "text-green-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase" : "text-red-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase"}>
+    <div className="w-full flex flex-col items-center sm:mt-6 mt-2 bg-white shadow-2xl rounded-2xl lg:px-10 sm:px-5 px-3 lg:py-8 sm:py-4 py-2 border border-green-700">      
+      {/* <div className={noticeData?.isActive === true ? "text-green-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase" : "text-red-700 font-extrabold lg:text-4xl sm:text-2xl text:lg font-merriweather uppercase"}>
         {loading ? <Skeleton className="sm:h-9 h-6 sm:w-[250px] w-[150px]" /> : noticeData?.isActive === true ? "Officially Open" : "Closed"}
       </div>
       <div className="text-black/80 font-semibold lg:text-xl sm:text-lg text-sm mt-3 font-oswald">
@@ -210,10 +208,55 @@ import { Skeleton } from "@/components/ui/skeleton";
             })}
           </>
         ) : null}
-      </span>
+      </span> */}
 
+      <div className={noticeData?.isActive ? "text-green-700 font-extrabold lg:text-4xl sm:text-2xl text-lg font-merriweather uppercase" : "text-red-700 font-extrabold lg:text-4xl sm:text-2xl text-lg font-merriweather uppercase"}>
+        {loading ? (
+          <Skeleton className="sm:h-9 h-6 sm:w-[250px] w-[150px]" />
+        ) : noticeData ? (
+          noticeData.isActive ? "Officially Open" : "Closed"
+        ) : (
+          <p className="text-2xl text-gray-800 font-semibold"> Enrollment is not yet open</p>
+        
+        )}
+      </div>
+
+      <div className="text-black/80 font-semibold lg:text-xl sm:text-lg text-sm mt-3 font-oswald">
+        {loading ? (
+          <Skeleton className="sm:h-6 h-4 sm:w-[150px] w-[100px]" />
+        ) : noticeData ? (
+          "SY " + noticeData.enrollment_period
+        ) : (
+          ""
+        )}
+      </div>
+
+      <span className="lg:text-sm text-xs mt-2">
+        {loading ? (
+          <Skeleton className="sm:h-6 h-4 sm:w-[150px] w-[100px]" />
+        ) : noticeData?.enrollment_start_date && noticeData?.enrollment_end_date ? (
+          <>
+            {new Date(noticeData.enrollment_start_date).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+            {" - "}
+            {new Date(noticeData.enrollment_end_date).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </>
+        ) : (
+          noticeData === null ? "" : null
+        )}
+      </span>
     </div>
     
+
+
+
     </div>
 
     {/* Bottom Banner */}

@@ -9,7 +9,7 @@ interface Props {
 
 const SchedTodoComponent: FC<Props> = ({ sched, className }) => {
   return (
-    <div className={`p-1 hover:bg-green-200 rounded transition duration-200 text-start ${className ?? ""}`}>
+    <div className={`p-1 hover:bg-green-200 rounded transition duration-200  ${className ?? ""}`}>
       Teacher: {sched.clerk_username} <br />
       {sched.subjectName} {sched.startTime} - {sched.endTime}
     </div>

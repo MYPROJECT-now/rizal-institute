@@ -135,8 +135,8 @@ import { Cashier_FullPayment } from "../fullpayment_view/Enrollees_cashier";
             <th className="px-4 py-2">LRN</th>
             <th className="px-4 py-2">Full Name</th>
             <th className="px-4 py-2">Grade Level</th>
-            <th className="px-4 py-2">Full Details</th>
             <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Full Details</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>

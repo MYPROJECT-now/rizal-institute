@@ -73,25 +73,30 @@ export const UploadGradeClient = ({
           <CardTitle className="text-xl">Upload Student Grade</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <select
-            value={`${gradeLevel_id}-${subject_id}`}
-            onChange={(e) => {
-              const [gId, sId] = e.target.value.split("-");
-              setGradeLevel(gId);
-              setSubject(sId);
-            }}
-            className="w-full border px-3 py-2 rounded"
-          >
-            <option value="">Select grade and subject</option>
-            {assignments.map((item) => (
-              <option
-                key={item.assignment_id}
-                value={`${item.gradeLevel_id}-${item.subject_id}-${item.section_id} `}
+            {assignments.length === 0 ? (
+              <p className="w-full border px-3 py-2 rounded">No Assigned grades and subjet yet.</p>
+            ) : (
+              <select
+                value={`${gradeLevel_id}-${subject_id}`}
+                onChange={(e) => {
+                  const [gId, sId] = e.target.value.split("-");
+                  setGradeLevel(gId);
+                  setSubject(sId);
+                }}
+                className="w-full border px-3 py-2 rounded"
               >
-                {"Grade " + item.gradeLevelName} - {item.sectionName ? item.sectionName : ""} {item.subjectName}
-              </option>
-            ))}
-          </select>
+                <option value="">Select grade and subject</option>
+                {assignments.map((item) => (
+                  <option
+                    key={item.assignment_id}
+                    value={`${item.gradeLevel_id}-${item.subject_id}-${item.section_id} `}
+                  >
+                    {"Grade " + item.gradeLevelName} - {item.sectionName ? item.sectionName : ""} {item.subjectName}
+                  </option>
+                ))}
+              </select>
+            )}
+
 
           <div className="flex flex-col">
             <label htmlFor="file">Excel File</label>
@@ -108,7 +113,7 @@ export const UploadGradeClient = ({
             className="w-full"
             variant="confirmButton"
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={loading || !file }
           >
             {loading ? "Uploading..." : "Upload"}
           </Button>

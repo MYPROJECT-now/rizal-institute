@@ -55,8 +55,8 @@ const SoaTodo: FC<Props> = ({ SOAtodo, currentBalance, effectiveDue, onChange, e
             </td>
             <td className="border border-gray-300 p-1">₱{SOAtodo.amountPaid || "0"}</td>
             <td className="border border-gray-300 p-1">{SOAtodo.dateOfPayment || "-"}</td>
-            {/* <td className="border border-gray-300 p-1">{SOAtodo.SInumber || "-"}</td>
-            <td className="border border-gray-300 p-1">{SOAtodo.remarks || "-"}</td> */}
+            <td className="border border-gray-300 p-1">{SOAtodo.SInumber || "-"}</td>
+            {/* <td className="border border-gray-300 p-1">{SOAtodo.remarks || "-"}</td> */}
             <td className="border border-gray-300 p-1">₱{currentBalance < 0 ? 0 : currentBalance}</td>
             <td className="border border-gray-300 p-1">₱{effectiveDue < 0 ? 0 : effectiveDue}</td>
 

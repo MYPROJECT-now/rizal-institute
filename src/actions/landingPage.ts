@@ -21,6 +21,7 @@ import {
   MonthsInSoaTable,
   fullPaymentTable,
   BreakDownTable,
+  AcademicYearTable,
 } from "../db/schema";
 import { and, eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
@@ -261,11 +262,17 @@ export const addNewApplicant = async (formData: {
       db.insert(documentsTable).values({
         applicants_id: applicantId,
         birthCert,
+        hasBirth: !!birthCert,
         reportCard,
+        hasReportCard: !!reportCard,
         goodMoral,
+        hasGoodMoral: !!goodMoral,
         idPic,
+        hasIdPic: !!idPic,
         studentExitForm,
+        hasExitForm: !!studentExitForm,
         form137,
+        hasForm137: !!form137
       }),
       db.insert(reservationFeeTable).values({
         applicants_id: applicantId,
@@ -1260,12 +1267,6 @@ await sendReservationEmail(email, trackingId);
 
 //server action for getting the status of enrollment period
 export const nottice = async () => {
-  const id = await getAcademicYearID();
-  console.log("AcademicYearID:", id);
-
-  if (!id) {
-    return [];
-  }
 
   const notice = await db
     .select({
@@ -1275,7 +1276,8 @@ export const nottice = async () => {
       isActive: EnrollmentStatusTable.isActive,
     })
     .from(EnrollmentStatusTable)
-    .where(eq(EnrollmentStatusTable.academicYear_id, id))
+    .leftJoin(AcademicYearTable, eq(EnrollmentStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(eq(AcademicYearTable.isActive, true))
     .limit(1);
 
   console.log(notice);

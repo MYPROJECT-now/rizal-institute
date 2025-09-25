@@ -123,8 +123,8 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                                 <th className="border border-gray-300 p-1">Monthly Due</th>
                                 <th className="border border-gray-300 p-1">Amount Paid</th>
                                 <th className="border border-gray-300 p-1">Date of Payment</th>
-                                {/* <th className="border border-gray-300 p-1">SI #</th>
-                                <th className="border border-gray-300 p-1">Remarks</th> */}
+                                <th className="border border-gray-300 p-1">SI #</th>
+                                {/* <th className="border border-gray-300 p-1">Remarks</th> */}
                                 <th className="border border-gray-300 p-1">Unpaid Due</th>
                                 <th className="border border-gray-300 p-1">Total Bal. to Date</th>
                             </tr>
@@ -138,7 +138,7 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                                 <th colSpan={2}/>
                             </tr>
                             <tr>
-                                <th className="bg-gray-100 border border-gray-300 p-1 pl-2 text-start" colSpan={6}>Payment Schedule</th>
+                                <th className="bg-gray-100 border border-gray-300 p-1 pl-2 text-start" colSpan={7}>Payment Schedule</th>
                             </tr>
                         </thead>
                         <tbody className="text-center">
@@ -168,6 +168,7 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
                     <Button
                         onClick={() => setEditing(true)}
                         variant="acceptButton"
+                        disabled={SOATodos[0]?.isActive === false}
                         className=" text-white px-10 py-1 rounded-xl "
                     >
                         Edit

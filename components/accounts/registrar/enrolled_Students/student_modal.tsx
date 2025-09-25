@@ -32,7 +32,7 @@ export const Students_info_Modal = () => {
   const [guardiansSuffix, setGuardiansSuffix] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [emergencyEmail, setEmergencyEmail] = useState("");
-
+  const [isActive, setIsActive] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -58,6 +58,7 @@ useEffect(() => {
       setGuardiansSuffix(data[0].guardiansSuffix || "-");
       setEmergencyContact(data[0].emergencyContact || "-");
       setEmergencyEmail(data[0].emergencyEmail || "-");
+      setIsActive(Boolean(data[0]?.isActive));
 
       setIsLoading(false);
 
@@ -323,6 +324,7 @@ useEffect(() => {
             <Button
               onClick={handleEdit}
               variant={"acceptButton"}
+              disabled={!isActive}
               className="rounded-xl px-2 w-14 py-1"
             >
               Edit

@@ -168,7 +168,7 @@ const Students: FC<Props> = ({ students }) => {
     <tbody>
       {currentStudents.length === 0 ? (
         <tr>
-          <td colSpan={5} className="py-4">
+          <td colSpan={6} className="py-4">
             No students found.
           </td>
         </tr>

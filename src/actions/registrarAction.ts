@@ -5,9 +5,8 @@
   import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
-  import {  getSelectedAcademicYear } from "./utils/academicYear";
-import { getSelectedYear } from "./utils/getSelectedYear";
-import { auth } from "@clerk/nextjs/server";
+  import { auth } from "@clerk/nextjs/server";
+  import { getSelectedYear } from "./utils/getSelectedYear";
 
 
 //dashboard functions
@@ -43,18 +42,38 @@ import { auth } from "@clerk/nextjs/server";
   export const getTotalApplicants = async (selectedYear: number) => {
     const totalApplicants = await db
       .select({ count: sql<number>`count(*)` })
-      .from(applicantsInformationTable)
-      .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
-      .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
-      .where(and(or(
+      .from(applicationStatusTable)
+      .leftJoin(AdmissionStatusTable, eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
+      .where(
+        and(
+          eq(AdmissionStatusTable.academicYear_id, selectedYear), // always match year
+          or(
             eq(applicationStatusTable.reservationPaymentStatus, "Pending"),
             eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),
-            eq(AdmissionStatusTable.academicYear_id, selectedYear),
             eq(AdmissionStatusTable.admissionStatus, "Enrolled")
-      )));
+          )
+        )
+      )
     
     return totalApplicants[0].count;
   };
+  
+
+  //   export const getTotalApplicants = async (selectedYear: number) => {
+  //   const totalApplicants = await db
+  //     .select({ count: sql<number>`count(*)` })
+  //     .from(applicantsInformationTable)
+  //     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
+  //     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+  //     .where(and(or(
+  //           eq(applicationStatusTable.reservationPaymentStatus, "Pending"),
+  //           eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),
+  //           eq(AdmissionStatusTable.academicYear_id, selectedYear),
+  //           eq(AdmissionStatusTable.admissionStatus, "Enrolled")
+  //     )));
+    
+  //   return totalApplicants[0].count;
+  // };
 
   export const getTotalReserved = async (selectedYear: number) => {
     const totalReserved = await db
@@ -195,12 +214,18 @@ export const getEnrollmentTrend = async () => {
         studentMiddleName: StudentInfoTable.studentMiddleName,
         status: AdmissionStatusTable.admissionStatus,
         gradeLevelName: GradeLevelTable.gradeLevelName,
+        isActive: AcademicYearTable.isActive,
+        
       })
       .from(StudentInfoTable)
       .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
       .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
       .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-      .where(eq(AdmissionStatusTable.academicYear_id, selectedYear));
+      .leftJoin(AcademicYearTable, eq(StudentGradesTable.academicYear_id, AcademicYearTable.academicYear_id))
+      .where(and(
+        eq(AdmissionStatusTable.academicYear_id, selectedYear),
+        eq(AcademicYearTable.academicYear_id, selectedYear)
+      ));
 
     console.log("Fetched Enrollees:", allStudent);
     return allStudent;
@@ -209,6 +234,9 @@ export const getEnrollmentTrend = async () => {
 // get info for all enrolled students
   export const getEnrolledStudentsInfo = async (lrn: string) => {
     await requireStaffAuth(["registrar"]); // gatekeeper
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
 
     const allStudentsInfo = await db.select({
       lrn: StudentInfoTable.lrn,
@@ -227,10 +255,20 @@ export const getEnrollmentTrend = async () => {
       guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
       emergencyContact: guardianAndParentsTable.emergencyContact,
       emergencyEmail: guardianAndParentsTable.emergencyEmail,
+
+      isActive: AcademicYearTable.isActive, 
+
     })
     .from(StudentInfoTable)
     .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
-    .where(eq(StudentInfoTable.lrn, lrn));
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+   .where(and(
+        eq(StudentInfoTable.lrn, lrn),
+        eq(AcademicYearTable.academicYear_id, selectedYear)
+      )
+    );
+
 
   
     console.log("Fetched Enrollees:", allStudentsInfo);
@@ -520,7 +558,6 @@ export const getEnrollmentTrend = async () => {
 
 // get reserved students
   export const get_ReservedApplicants = async () => {
-    await requireStaffAuth(["registrar"]); // gatekeeper
     
     const selectedYear = await getSelectedYear();
     if(!selectedYear) return [];
@@ -560,6 +597,9 @@ export const getEnrollmentTrend = async () => {
 //get all grades
   export const getStudentsGrade = async () => {
 
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+    
     const studentsGrade = await db
     .select({
         id: StudentInfoTable.student_id,
@@ -570,6 +610,8 @@ export const getEnrollmentTrend = async () => {
         studentSuffix: StudentInfoTable.studentSuffix
     })
     .from(StudentInfoTable)
+    .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+    .where(eq(StudentPerGradeAndSection.academicYear_id, selectedYear), );
     return studentsGrade;
   }
 
@@ -599,12 +641,8 @@ export const getStudentGradesByLRN = async (lrn: string) => {
 export const getAdmittedStudents = async () => {
   await requireStaffAuth(["registrar"]);
 
-  const year = await getSelectedAcademicYear();
-
-  if (!year) {
-    console.warn("❌ No academic year selected");
-    return null;
-  }
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
 
   const admittedStudents = await db
   .selectDistinctOn([StudentInfoTable.lrn],{
@@ -619,10 +657,12 @@ export const getAdmittedStudents = async () => {
   .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
   .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
   .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-  .where(and(eq(AdmissionStatusTable.academicYear_id, year), eq(AdmissionStatusTable.admissionStatus, "Enrolled")));
+  .where(and(eq(AdmissionStatusTable.academicYear_id, selectedYear), eq(AdmissionStatusTable.admissionStatus, "Enrolled")));
+
   if (admittedStudents.length === 0) {
     console.log("❌ No admitted students found");
   }
+  
   console.log("Admitted Students:", admittedStudents);
   return admittedStudents;
 
@@ -632,13 +672,9 @@ export const getAdmittedStudents = async () => {
 export const getAmountPaid = async () => {
   await requireStaffAuth(["registrar"]);
 
-  const year = await getSelectedAcademicYear();
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
 
-  if (!year) {
-    console.warn("❌ No academic year selected");
-    return null;
-
-  }
   // Get current date
   const today = new Date();
   const currentMonth = today.toLocaleString("default", { month: "long" });
@@ -654,7 +690,7 @@ export const getAmountPaid = async () => {
     .where(
       and(
         like(MonthsInSoaTable.month, `${currentMonth}%`),
-        eq(MonthsInSoaTable.academicYear_id, year)
+        eq(MonthsInSoaTable.academicYear_id, selectedYear)
       )
     );
 
@@ -691,7 +727,7 @@ export const getAmountPaid = async () => {
     .from(StudentInfoTable)
     .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-    .where(eq(AdmissionStatusTable.academicYear_id, year))
+    .where(eq(AdmissionStatusTable.academicYear_id, selectedYear))
     .groupBy(
       StudentInfoTable.student_id,
       StudentInfoTable.lrn,
