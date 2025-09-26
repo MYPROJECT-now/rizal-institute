@@ -1,4 +1,3 @@
-import Cashier_header from "@/app/header/header_cashier";
 import { VerifyPage } from "@/components/accounts/cashier/payment_verification/VerifyPage";
 const RegistrarsEnrolleesTable = () => {
     return(

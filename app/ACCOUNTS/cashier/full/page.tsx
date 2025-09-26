@@ -1,5 +1,4 @@
 import { FullPaymentPage } from "@/components/accounts/cashier/full/fullPaymentTable/fullPage";
-import Cashier_header from "@/app/header/header_cashier";
 
 const CashierFullPayment = () => {
     return(

@@ -1,4 +1,3 @@
-import Cashier_header from "@/app/header/header_cashier";
 import { StudentsPage } from "@/components/accounts/cashier/student/studentTable/studentPage";
 const RegistrarsStudentsTable = () => {
     return (

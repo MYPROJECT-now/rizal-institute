@@ -1,5 +1,4 @@
 import { ApplicantsPage } from "@/components/accounts/cashier/applicants/applicatsTable/applicantsPage";
-import Cashier_header from "@/app/header/header_cashier";
 const RegistrarsEnrolleesTable = () => {
     return(
         <div className="h-full flex flex-col  rounded-t-lg  lg:px-5 px-0 ">

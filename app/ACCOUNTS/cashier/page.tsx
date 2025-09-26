@@ -1,4 +1,3 @@
-import Cashier_header from "@/app/header/header_cashier";                    
 import { Top_analytics } from "@/components/accounts/cashier/dashboard/analytics/top_analyitcs";
 import { Ppgl } from "@/components/accounts/cashier/dashboard/graphs/ppgl";
 import { Enrollment } from "@/components/accounts/cashier/dashboard/graphs/enrollment";

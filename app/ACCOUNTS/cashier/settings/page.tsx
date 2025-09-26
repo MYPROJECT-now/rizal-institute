@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { handlePasswordUpdate } from "@/src/actions/utils/changePassword";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
-import Cashier_header from "@/app/header/header_cashier";
 
 const CashierPassword = () => {
   const { user } = useUser();
