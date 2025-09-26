@@ -64,85 +64,82 @@ const CashierPassword = () => {
   };
 
   return (
-      <div className="p-4 w-full min-h-screen lg:h-screen">
-        <div className=" w-full h-full rounded-xl flex flex-col py-4 sm:px-10 px-4  bg-page">
-          <Cashier_header />
-              <div className="w-full h-full bg-white self-center mt-2 rounded-lg ">
-                <div className=" w-full bg-lGreen font-merriweather text-white items-center flex sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl">
-                  PASSWORD MANAGEMENT
-                </div>
+  <div className="h-full flex flex-col  rounded-t-lg  lg:px-5 px-0 ">
+    <section className="w-full h-full bg-white self-center lg:mt-2 mt-0">
+      <header className="  rounded-t-lg bg-lGreen font-merriweather text-white sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl lg:border-0 border-x-2 border-t-2 border-white">
+        PASSWORD MANAGEMENT
+      </header>
 
-                <section className=" w-full xl:min-h-[500px] lg:min-h-[400px] min-h-[500px] flex flex-col gap-7 items-center justify-center">
-                  {/* Current Password */}
-                  <div className="flex flex-col text-start w-full px-10 lg:w-[500px] relative">
-                    <label htmlFor="current-password" className="text-dGreen text-[17px] font-semibold">Old Password</label>
-                    <input
-                      type={showCurrent ? "password" : "text"}
-                      placeholder="Enter current password"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="p-2 border rounded w-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowCurrent(!showCurrent)}
-                      className="absolute right-12 top-11 text-gray-500"
-                    >
-                      {showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  </div>
-
-                  {/* New Password */}
-                  <div className="flex flex-col text-start w-full px-10 lg:w-[500px] relative">
-                    <label htmlFor="current-password" className="text-dGreen text-[17px] font-semibold">New Password</label>
-                    <input
-                      type={showNew ? "password" : "text"}
-                      placeholder="Enter new password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className=" p-2 border rounded w-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNew(!showNew)}
-                      className="absolute right-12 top-11 text-gray-500"
-                    >
-                      {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div className="flex flex-col text-start w-full px-10 lg:w-[500px] relative">
-                    <label htmlFor="current-password" className="text-dGreen text-[17px] font-semibold">Confirm Password</label>
-                    <input
-                      type={showConfirm ? "password" : "text"}
-                      placeholder="Confirm new password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className=" p-2 border rounded w-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute right-12 top-11 text-gray-500"
-                    >
-                      {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  </div>
-
-                  <Button
-                    variant="confirmButton"
-                    size="lg"
-                    className="mt-4"
-                    onClick={handlePasswordChange}
-                    disabled={loading}
-                  >
-                    {loading ? "Updating..." : "Update Password"}
-                  </Button>
-                </section>
-              </div>
+      <article className=" flex flex-col gap-7 items-center mt-10 ">
+        {/* Current Password */}
+        <div className="flex flex-col text-start w-full px-6 sm:w-[500px] relative">
+          <label htmlFor="current-password" className="text-dGreen sm:text-[17px] font-semibold">Old Password</label>
+          <input
+            type={showCurrent ? "password" : "text"}
+            placeholder="Enter current password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            className="p-2 border rounded w-full"
+          />
+          <button
+            type="button"
+            onClick={() => setShowCurrent(!showCurrent)}
+            className="absolute right-12 top-11 text-gray-500"
+          >
+            {showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
         </div>
-    </div>
+
+        {/* New Password */}
+        <div className="flex flex-col text-start w-full px-6 sm:w-[500px] relative">
+          <label htmlFor="current-password" className="text-dGreen sm:text-[17px] text-sm font-semibold">New Password</label>
+          <input
+            type={showNew ? "password" : "text"}
+            placeholder="Enter new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className=" p-2 border rounded w-full"
+          />
+          <button
+            type="button"
+            onClick={() => setShowNew(!showNew)}
+            className="absolute right-12 top-11 text-gray-500"
+          >
+            {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+
+        {/* Confirm Password */}
+        <div className="flex flex-col text-start w-full px-6 sm:w-[500px] relative">
+          <label htmlFor="current-password" className="text-dGreen sm:text-[17px] font-semibold">Confirm Password</label>
+          <input
+            type={showConfirm ? "password" : "text"}
+            placeholder="Confirm new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className=" p-2 border rounded w-full"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirm(!showConfirm)}
+            className="absolute right-12 top-11 text-gray-500"
+          >
+            {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+
+        <Button
+          variant="confirmButton"
+          size="lg"
+          className="mt-4"
+          onClick={handlePasswordChange}
+          disabled={loading}
+        >
+          {loading ? "Updating..." : "Update Password"}
+        </Button>
+      </article>
+    </section>
+  </div>
   );
 };
 

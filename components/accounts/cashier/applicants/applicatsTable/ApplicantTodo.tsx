@@ -41,18 +41,18 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="px-4 py-2">
         <Button 
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           variant={"confirmButton"}
           onClick={() => openEnrollees(applicants.lrn)}
           >
             View
         </Button>
       </td>
-      <td className=" flex flex-row gap-1 items-center justify-center py-2">
+      <td className=" flex flex-row gap-1 items-center justify-center py-2 px-2">
         {!activeReceipt || !activeReceipt?.isActive  ? (
           <Button
             onClick={openReceipt}
-            className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+            className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
             variant={"acceptButton"}
             disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
 
@@ -62,7 +62,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
         ): ( 
           <Button
             onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
-            className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+            className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
             variant={"acceptButton"}
             disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
           >
@@ -77,7 +77,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
         <Button
           onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
           variant={"rejectButton"}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           disabled={applicants.reservationPaymentStatus !== "Pending" || applicants.isActive === false}
           
         >

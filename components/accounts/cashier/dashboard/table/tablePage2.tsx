@@ -14,10 +14,10 @@ const recentPayment: RecentPaymentType[] = await getRecentPayments();
         <thead>
           <tr className="bg-green-600 text-white">
             <th className="border p-2">LRN</th>
-            <th className="border p-2">Student Name</th>
-            <th className="border p-2">Grade Level</th>
-            <th className="border p-2">Amount Paid</th>
-            <th className="border p-2">Date Paid</th>
+            <th className="border p-2 min-w-[120px] sm:min-w-0">Student Name</th>
+            <th className="border p-2 min-w-[100px] sm:min-w-0">Grade Level</th>
+            <th className="border p-2 min-w-[120px] sm:min-w-0">Amount Paid</th>
+            <th className="border p-2 min-w-[100px] sm:min-w-0">Date Paid</th>
           </tr>
         </thead>
         <tbody>

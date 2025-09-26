@@ -3,7 +3,7 @@ import { MobileSidebar } from "./cashier_mobile_sidebar"
 import Link from "next/link"
 export const MobileHeader = () => {
     return (
-        <nav className ="lg:hidden px-4 py-3 flex items-center justify-between w-full bg-lGreen">
+        <nav className ="lg:hidden px-4 pt-3 flex items-center justify-between w-full bg-lGreen">
             <div className="flex flex-row items-center">
             <MobileSidebar />
             <div className ="flex flex-row">

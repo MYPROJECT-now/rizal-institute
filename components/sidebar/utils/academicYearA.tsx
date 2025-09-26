@@ -57,7 +57,7 @@ import { Loader2 } from "lucide-react";
 
     return (
       <Dialog open={isOpen} onOpenChange={close}>
-        <DialogContent className="w-[270px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
+        <DialogContent className="w-[290px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl lg:text-2xl py-3 font-bold text-white bg-dGreen rounded-t-lg flex items-center justify-center">
               Academic Year

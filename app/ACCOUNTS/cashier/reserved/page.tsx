@@ -2,17 +2,14 @@ import { ReservedSlotPage } from "@/components/accounts/cashier/reservedSlot/res
 import Cashier_header from "@/app/header/header_cashier";
 const RegistrarsEnrolleesTable = () => {
     return(
-    <div className="p-4 w-full min-h-screen lg:h-screen">
-        <div className=" w-full h-full rounded-xl flex flex-col pt-4 sm:px-10 px-4  bg-page">
-            <Cashier_header /> 
-            <div className="w-full h-full bg-white self-center mt-2 rounded-lg ">
-                <div className=" w-full bg-lGreen font-merriweather text-white items-center flex sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl">
+        <div className="h-full flex flex-col  rounded-t-lg  lg:px-5 px-0 ">
+            <section className="w-full h-full bg-white self-center lg:mt-2 mt-0">
+                <header className="  rounded-t-lg bg-lGreen font-merriweather text-white sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl lg:border-0 border-x-2 border-t-2 border-white">
                    Reserved Slot
-                </div>
+                </header>
                   <ReservedSlotPage />
-            </div>
+            </section>
         </div>
-    </div>
     );
 };
 

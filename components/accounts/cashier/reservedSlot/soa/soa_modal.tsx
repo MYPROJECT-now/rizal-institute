@@ -195,7 +195,7 @@
                     <Button
                       variant="confirmButton"
                       className="px-5 py-2 rounded-lg"
-                      disabled={tuitionLoading || !isActive}
+                      disabled={tuitionLoading || !isActive || !tuition || !miscellaneous}
                       onClick={handelAddTuition}
                     >
                       {tuitionLoading ? "Adding..." : "Add"}

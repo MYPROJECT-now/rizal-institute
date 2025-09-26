@@ -28,9 +28,10 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                 <Link href="/ACCOUNTS/cashier" onClick={onClose}>
                     <Image 
                         src="/school.png" 
-                        width={130}
-                        height={130} 
+                        width={1000}
+                        height={1000} 
                         alt="PWD Icon"
+                        className="sm:h-[130px] sm:w-[130px] h-[110px] w-[110px]"
                     />
                    
                 </Link>

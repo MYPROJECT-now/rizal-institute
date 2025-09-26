@@ -34,7 +34,7 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                         width={1000}
                         height={1000} 
                         alt="PWD Icon"
-                        className="sm:h-[130px] sm:w-[130px] h-[80px] w-[80px]"
+                        className="sm:h-[130px] sm:w-[130px] h-[110px] w-[110px]"
                     />
                    
                 </Link>

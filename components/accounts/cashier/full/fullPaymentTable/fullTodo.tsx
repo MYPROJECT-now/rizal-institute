@@ -27,18 +27,18 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className={applicants.payment_status === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : applicants.payment_status === "Pending" ? "px-4 py-2 text-yellow-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{applicants.payment_status}</td>
       <td className="px-4 py-2">
         <Button 
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           variant={"confirmButton"}
           onClick={() => openEnrollees(applicants.lrn)}
           >
             View
         </Button>
       </td>
-      <td className=" flex flex-row gap-1 items-center justify-center py-2">
+      <td className=" flex flex-row gap-1 items-center justify-center py-2 px-2">
         <Button
           onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
           disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || applicants.isActive === false}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           variant={"acceptButton"}
         >
           {loading ? "Accepting..." : "Accept"}
@@ -50,7 +50,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
           onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
           disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || applicants.isActive === false}
           variant={"rejectButton"}
-          className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           
         >
           Decline

@@ -11,10 +11,10 @@ export const RecentApplicantsTable = async () => {
         <thead>
           <tr className="bg-green-600 text-white">
             <th className="p-3">LRN</th>
-            <th className="p-3">Full Name</th>
-            <th className="p-3">Grade Level</th>
-            <th className="p-3">Review Status</th>
-            <th className="p-3">Date of Application</th>
+            <th className="p-3 min-w-[100px] sm:min-w-0">Full Name</th>
+            <th className="p-3 min-w-[120px] sm:min-w-0" >Grade Level</th>
+            <th className="p-3 min-w-[120px] sm:min-w-0">Review Status</th>
+            <th className="p-3 min-w-[160px] sm:min-w-0">Date of Application</th>
           </tr>
         </thead>
         <tbody>
