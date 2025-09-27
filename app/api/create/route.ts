@@ -7,6 +7,14 @@ import { auditTrailsTable, ClerkUserTable, staffClerkUserTable, StudentInfoTable
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
 
+type ClerkErrorDetail = {
+  longMessage?: string;
+  shortMessage?: string;
+};
+
+type ClerkError = {
+  errors: ClerkErrorDetail[];
+};
 
 
 // Generate a random password
@@ -14,7 +22,6 @@ function generateRandomPassword(length = 12) {
   const charset = "ABCDEFGHJKMNOPQRSTUVWXYZabcdefghjkmnopqrstuvwxyz0123456789@#$&*";
   return Array.from({ length }, () => charset[Math.floor(Math.random() * charset.length)]).join('');
 }
-
 
 // Send admission email
 async function sendAdmissionEmail(
@@ -33,7 +40,7 @@ async function sendAdmissionEmail(
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Congratulations on Your Account was created succesfully',
+    subject: 'Your account was created at Rizal Institute - Canlubang',
     text: `
     Dear ${username},
 
@@ -75,7 +82,9 @@ export async function POST(request: Request) {
     });
 
     const academicYearID = await getAcademicYearID();
-
+    if (!academicYearID) {
+      return NextResponse.json({ error: "Academic year not found" });
+    }
     // 2. Insert into DB (simulated transaction)
     try {
       if (role === "student") {
@@ -148,11 +157,51 @@ export async function POST(request: Request) {
       message: "Account was successfully created and the email was sent successfully.",
     });
 
+//   } catch (error: unknown) {
+//     let details = "Unknown error";
+//     if (
+//       typeof error === "object" &&
+//       error !== null &&
+//       "errors" in error &&
+//       Array.isArray((error as any).errors)
+//     ) {
+//       details = (error as any).errors
+//         .map((e: any) => e.longMessage || e.shortMessage)
+//         .join(" | ");
+//     } else if (error instanceof Error) {
+//       details = error.message;
+//     }
+//     return NextResponse.json({
+//       error: "Failed to account creation process.",
+//       details,
+//     }, { status: 500 });
+//   }
+// }
+  
   } catch (error: unknown) {
-    console.error("Admission process failed:", error);
-    return NextResponse.json({
-      error: "Failed to complete admission process",
-      details: error instanceof Error ? error.message : "Unknown error",
-    }, { status: 500 });
+    let details = "Unknown error";
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "errors" in error
+    ) {
+      const clerkErr = error as ClerkError;
+      if (Array.isArray(clerkErr.errors)) {
+        details = clerkErr.errors
+          .map((e) => e.longMessage || e.shortMessage || "Unknown Clerk error")
+          .join(" | ");
+      }
+    } else if (error instanceof Error) {
+      details = error.message;
+    }
+
+    return NextResponse.json(
+      {
+        error: "Failed to account creation process.",
+        details,
+      },
+      { status: 500 }
+    );
   }
 }

@@ -31,12 +31,20 @@ export const CreateAccount = () => {
       })
       
       const data = await result.json();
+
+      if (!result.ok) {
+       toast.error(data.details || data.error || "Failed to create account.");
+      console.log("Create account failed:", data);
+      } else {
       toast.success(data.message);
+
+      }
       console.log(data.message);
       setRole("");
       setUsername("");
       setEmail("");
       setLoading(false);
+      close();
     } catch (error) {
       toast.error("Failed to create account.");
       console.log(error || "something went wrong");

@@ -1,20 +1,17 @@
+"use client";
 
-
-  
-  "use client";
-
-  import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-  } from "@/components/ui/dialog";
-  import { useApplicationModal } from "@/src/store/application/application";
-  import { Button } from "../ui/button";
-  import { useRouter } from "next/navigation";
-  import Link from "next/link";
-  import { useEffect, useState } from "react";
-  import { enrollmentStatus } from "@/src/actions/utils/enrollment";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useApplicationModal } from "@/src/store/application/application";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { enrollmentStatus } from "@/src/actions/utils/enrollment";
 import { Skeleton } from "../ui/skeleton";
 
   type StatusType = {
@@ -25,7 +22,7 @@ import { Skeleton } from "../ui/skeleton";
     const { isOpen, close } = useApplicationModal();
     const router = useRouter();
     const [status, setStatus] = useState<StatusType | null>(null);
-
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => {
       close();
@@ -34,9 +31,11 @@ import { Skeleton } from "../ui/skeleton";
 
 
     useEffect(() => {
+      setLoading(true);
       const fetchStatus = async () => {
         const result = await enrollmentStatus();
         setStatus(result);
+        setLoading(false);
       };
       fetchStatus();
     }, []);
@@ -46,21 +45,19 @@ import { Skeleton } from "../ui/skeleton";
   if (status === null) {
     content = (
         <div className="flex flex-col justify-center items-center lg:py-10 py-7 px-10">
-          <p className=" lg:text-2xl sm:text-xl text-base font-bold text-dGreen font-merriweather sm:mb-4 mb-3">
-            Select from the category
+          <p className=" lg:text-2xl sm:text-xl text-base font-bold text-red-600">  
+            Enrollemtn period is not yet set.
           </p>
-          <div className="flex flex-col mx-10 w-full">
 
-            <Skeleton className="w-full sm:py-5 py-4  sm:text-base text-sm rounded-lg mt-2"/>
-            <Skeleton className="w-full sm:py-5 py-4  sm:text-base text-sm rounded-lg mt-2"/>
-          </div>
         </div>
     )
   } else if (!status.isActive) {
     content = (
+      <div className="flex flex-col justify-center items-center lg:py-10 py-7 px-10">
       <p className=" lg:text-2xl sm:text-xl text-base font-bold text-red-600">
         Enrollment is currently closed.
       </p>
+      </div>
     );
   } else {
     const today = new Date();
@@ -68,11 +65,12 @@ import { Skeleton } from "../ui/skeleton";
 
     if (today < startDate) {
       content = (
-        <p className=" lg:text-2xl sm:text-xl text-base text-center font-bold text-red-600">
-          Enrollment has not yet started.
-          <br /> <strong>Start date:{" "} {startDate.toLocaleDateString()}</strong>
-          
-        </p>
+        <div className="flex flex-row gap-2 lg:py-10 py-7 px-10">
+          <p className=" lg:text-2xl sm:text-xl text-base text-center font-bold text-red-600">
+            Enrollment has not yet started.
+            <br /> <strong>Start date:{" "} {startDate.toLocaleDateString()}</strong>
+          </p>
+        </div>
       );
     } else {
       content = (
@@ -112,8 +110,19 @@ import { Skeleton } from "../ui/skeleton";
             Enrollment Category
           </DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col justify-center items-center -mt-5">
-          {content}
+        <div className="flex flex-col justify-center items-center -mt-5 ">
+          {loading ? (
+            <div className="flex flex-col gap-4 lg:py-10 py-7">
+                <Skeleton className="sm:w-[300px] w-[250px] sm:h-[40px] h-[35px]"/>
+                <div className="flex flex-col gap-1">
+                <Skeleton className="sm:w-[300px] w-[250px] sm:h-[40px] h-[35px]"/>
+                <Skeleton className="sm:w-[300px] w-[250px] sm:h-[40px] h-[35px]"/>
+                </div>
+            </div>
+            ):(
+              content
+            )}
+       
         </div>
       </DialogContent>
     </Dialog>

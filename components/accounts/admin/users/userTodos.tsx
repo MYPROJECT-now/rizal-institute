@@ -18,7 +18,7 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
   const { open } = useAccountModal();
   // 🔢 Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const userPerPage = 5;
+  const userPerPage = 6;
 
   const currentUser = userItems.filter((user) => {
     const usernameMatch = user.clerk_username.toLowerCase().includes(filterUsername.toLowerCase());

@@ -6,20 +6,20 @@ import { getAcademicYearID } from "./academicYear";
 import { AcademicYearTable, EnrollmentStatusTable } from "@/src/db/schema";
 
   export const enrollmentStatus = async () => {
-      const id = await getAcademicYearID();
-      const enrollment = await db
-          .select(
-              {
-                enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
-                isActive: EnrollmentStatusTable.isActive
-              }
-          )
-          .from(EnrollmentStatusTable)
-          .leftJoin(AcademicYearTable, eq(EnrollmentStatusTable.academicYear_id, id))
-          .limit(1);
+    const id = await getAcademicYearID();
+    const enrollment = await db
+        .select(
+            {
+              enrollment_start_date: EnrollmentStatusTable.enrollment_start_date,
+              isActive: EnrollmentStatusTable.isActive
+            }
+        )
+        .from(EnrollmentStatusTable)
+        .leftJoin(AcademicYearTable, eq(EnrollmentStatusTable.academicYear_id, id))
+        .limit(1);
 
-          console.log(enrollment);
-        return enrollment.length > 0 ? enrollment[0] : null;
+        console.log(enrollment);
+      return enrollment.length > 0 ? enrollment[0] : null;
   }
 
 

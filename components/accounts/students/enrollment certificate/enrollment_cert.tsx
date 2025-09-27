@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
   },
   waterMark: {
     position: "absolute",
-    top: "30%",
-    left: "20%",
+    top: "20%",
+    left: "11%",
     width: 450,
     height: 450,
     opacity: 0.1,

@@ -1,6 +1,6 @@
 "use server"
 
-import { and, desc, eq, gte, isNull, lte, or} from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte, ne, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, ScheduleTable, SectionTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
@@ -112,7 +112,9 @@ export const getAuditTrails = async () => {
         isActive: staffClerkUserTable.isActive,
       })
       .from(staffClerkUserTable)
-      .where(eq(staffClerkUserTable.isActive, true))
+      .where(and(
+        eq(staffClerkUserTable.isActive, true),
+        ne(staffClerkUserTable.userType, "admin") ))
       .union(
       db.select({
         clerk_uid: ClerkUserTable.clerk_uid,
@@ -789,13 +791,13 @@ export const updateCurrentAcademicYear = async (
     academicYearStart: string, 
     academicYearEnd: string
 ) => {
+    await requireStaffAuth(["admin"]); // gatekeeper
 
     const credentials = await getStaffCredentials();
       if (!credentials) {
       return console.error("User not found.");
     }
 
-    await requireStaffAuth(["admin"]); // gatekeeper
 
     await db
         .update(AcademicYearTable)
@@ -815,6 +817,7 @@ export const updateCurrentAcademicYear = async (
         usertype: credentials.userType,
         academicYear_id: await getAcademicYearID(),
       })
+
 }
 
   export const updateEnrollmentPeriod = async (
@@ -919,29 +922,36 @@ export const createAcademicYear = async (
       return console.error("User not found.");
     }
     await db
-        .update(AcademicYearTable)
-        .set({
-            isActive: false,
-        })
-        .where(eq(AcademicYearTable.isActive, true));
+      .update(AcademicYearTable)
+      .set({
+        isActive: false,
+      })
+      .where(eq(AcademicYearTable.isActive, true));
 
     await db
-        .insert(AcademicYearTable)
-        .values({
-            academicYear: academicYear,
-            academicYearStart: academicYearStart,
-            academicYearEnd: academicYearEnd,
+      .insert(AcademicYearTable)
+      .values({
+        academicYear: academicYear,
+        academicYearStart: academicYearStart,
+        academicYearEnd: academicYearEnd,
     })
 
-    await db.insert(auditTrailsTable)
-        .values({
-        actionTaken: "Create New Academic Year",
-        actionTakenFor: "school",
-        dateOfAction: new Date().toISOString(),
-        username: credentials.clerk_username,
-        usertype: credentials.userType,
-        academicYear_id: await getAcademicYearID(),
+    await db
+      .update(EnrollmentStatusTable)
+      .set({
+        isActive: false,
       })
+      .where(eq(EnrollmentStatusTable.isActive, true));
+
+    await db.insert(auditTrailsTable)
+      .values({
+      actionTaken: "Create New Academic Year",
+      actionTakenFor: "school",
+      dateOfAction: new Date().toISOString(),
+      username: credentials.clerk_username,
+      usertype: credentials.userType,
+      academicYear_id: await getAcademicYearID(),
+    })
 }  
 
 export const createEnrollment = async (

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useDeleteAssignModal, useEditAssignModal } from "@/src/store/ADMIN/assign";
 import { EditAssign } from "./edit/edit";
 import { DeleteAssign } from "./delete/delete";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Grade = {
   gradeLevel_id: number;
@@ -42,11 +43,14 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
   const [isLoading, setIsLoading] = useState(false);
   const { open: OpenEdit } = useEditAssignModal();
   const { open: OpenDelete } = useDeleteAssignModal();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const fetchTeachers = async () => {
       const result = await getTeachers();
       setTeachers(result);
+      setLoading(false);
     };
     fetchTeachers();
   }, []);
@@ -89,16 +93,19 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
     <div className="flex flex-col gap-6 sm:p-10 p-4 max-h-[500px] w-full overflow-y-auto">
       <header className="flex sm:flex-row flex-col gap-3 sm:items-center ">
 
-        <section className="flex sm:flex-row flex-col items-start sm:items-center gap-0 sm:gap-5 ">
+        <section className="flex sm:flex-row flex-col items-start sm:items-center gap-0 sm:gap-2 ">
           <label className="mb-2 font-semibold text-xs sm:text-sm text-dGreen">Username:</label>
-          <select className="p-2 w-full sm:w-[200px] border-2 border-gray-300 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none rounded-lg" onChange={(e) => setSelectedTeacher(e.target.value)}>
-            <option value="">Select a teacher</option>
-            {teachers.map((teacher, idx) => (
-              <option key={idx} value={teacher.clerk_username}>
-                {teacher.clerk_username}
-              </option>
-            ))}
-          </select>
+          {loading ? (<Skeleton className="w-full sm:w-[200px] h-10" />) : (
+            <select className="p-2 w-full sm:w-[200px] border-2 border-gray-300 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none rounded-lg" onChange={(e) => setSelectedTeacher(e.target.value)}>
+              <option value="">Select a teacher</option>
+              {teachers.map((teacher, idx) => (
+                <option key={idx} value={teacher.clerk_username}>
+                  {teacher.clerk_username}
+                </option>
+              ))}
+            </select>
+          )}
+
         </section>
 
         <EditAssign />

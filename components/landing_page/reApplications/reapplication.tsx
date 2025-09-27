@@ -224,7 +224,7 @@ const validatePage = async (): Promise<boolean> => {
 
 
         if (!validateNotInFuture(new Date(dateOfBirth))) {
-            newErrors.applicantsLastName = "invalid";
+            newErrors.dateOfBirth = "invalid";
             setErrors(newErrors);
             toast.error("Date of birth cannot be in the future.");
             return false;
@@ -232,7 +232,7 @@ const validatePage = async (): Promise<boolean> => {
         
 
         if(!validateMinDate(new Date(dateOfBirth))){
-            newErrors.applicantsLastName = "invalid";
+            newErrors.dateOfBirth = "invalid";
             setErrors(newErrors);
             toast.error("The minimum threshold for age is 6 years.");
             return false;

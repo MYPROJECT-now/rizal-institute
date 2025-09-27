@@ -36,6 +36,20 @@ export const UpdateCurrentYear = ({ refreshTrigger }: { refreshTrigger: number }
     
 
     const handleUpdateAcademicYear = async () => {
+        const startDate = new Date(academicYearStart);
+        const endDate = new Date(academicYearEnd);
+        const today = new Date();
+
+        if (startDate < today || endDate < today) {
+            toast.error("Dates cannot be in the past.");
+            return;
+        }
+
+        if (endDate <= startDate) {
+            toast.error("End date must be after start date.");
+            return;
+        }
+
         try {
             await updateCurrentAcademicYear(
                 academicYearID,
