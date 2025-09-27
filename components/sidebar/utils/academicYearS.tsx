@@ -58,7 +58,7 @@ export const AcademicYearModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-        <DialogContent className="w-[350px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
+        <DialogContent className="w-[290px] sm:w-[500px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl lg:text-2xl py-3 font-bold text-white bg-dGreen rounded-t-lg flex items-center justify-center">
             Academic Year
@@ -71,7 +71,7 @@ export const AcademicYearModal = () => {
               </div>
             ) : (
             <select
-              className="border-2 border-gray-300 px-3 py-1 h-[40px] w-[250px] rounded-xl text-center focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+              className="border-2 border-gray-300 px-3 py-1 h-[40px] w-[170px] sm:w-[250px] rounded-xl text-center focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             value={selectedAcademicYear}
             onChange={(e) => setSelectedAcademicYear(e.target.value)}
           >
@@ -93,7 +93,7 @@ export const AcademicYearModal = () => {
             
             <Button
             variant="confirmButton"
-              className="sm:px-5 px-3 sm:py-5 py-2 rounded-xl text-xs sm:text-sm  "
+              className="px-7 sm:py-5 py-2 rounded-xl text-xs sm:text-sm  "
               onClick={handleUpdateselectedAcademicYear}>
               Set
             </Button>

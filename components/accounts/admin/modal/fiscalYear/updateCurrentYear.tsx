@@ -80,85 +80,81 @@ const handleStop = () => {
 };
 
 
+return (
+    <div className="flex sm:flex-row flex-col gap-4 sm-gap-0 justify-between px-[20px]">
+    <section className="grid grid-cols-2 gap-1 w-[250px]">
+        <label htmlFor="academicYear" className=" items-center flex">academicYear:</label>
+        <input 
+            type="text" 
+            value={isLoading ? "Loading..." : academicYear}     
+            readOnly={!editing}
+            className={`${
+            !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            } w-full p-1  rounded-sm`}
+            onChange={(e) => setAcademicYear(e.target.value)}
+        />
+        <label htmlFor="academicYearStart" className=" items-center flex">academicYearStart:</label>
+        <input 
+            type="date" 
+            value={isLoading ? "Loading..." : academicYearStart} 
+            readOnly={!editing}
+            className={`${
+            !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            } w-full p-1  rounded-sm`}
+            onChange={(e) => setAcademicYearStart(e.target.value)} 
+        />
+        <label htmlFor="academicYearEnd" className=" items-center flex">academicYearEnd:</label>
+        <input 
+            type="date"
+            value={isLoading ? "Loading..." : academicYearEnd}
+            readOnly={!editing}
+            className={`${
+            !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            } w-full p-1  rounded-sm`}
+            onChange={(e) => setAcademicYearEnd(e.target.value)}
+            
+        />
 
+    </section>
 
-
-
-    return (
-        <div className="flex zzflex-row justify-between px-[20px]">
-        <section className="grid grid-cols-2 gap-1 w-[250px]">
-            <label htmlFor="academicYear" className=" items-center flex">academicYear:</label>
-            <input 
-                type="text" 
-                value={isLoading ? "Loading..." : academicYear}     
-                readOnly={!editing}
-                className={`${
-                !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                } w-full p-1  rounded-sm`}
-                onChange={(e) => setAcademicYear(e.target.value)}
-            />
-            <label htmlFor="academicYearStart" className=" items-center flex">academicYearStart:</label>
-            <input 
-                type="date" 
-                value={isLoading ? "Loading..." : academicYearStart} 
-                readOnly={!editing}
-                className={`${
-                !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                } w-full p-1  rounded-sm`}
-                onChange={(e) => setAcademicYearStart(e.target.value)} 
-            />
-            <label htmlFor="academicYearEnd" className=" items-center flex">academicYearEnd:</label>
-            <input 
-                type="date"
-                value={isLoading ? "Loading..." : academicYearEnd}
-                readOnly={!editing}
-                className={`${
-                !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                } w-full p-1  rounded-sm`}
-                onChange={(e) => setAcademicYearEnd(e.target.value)}
-                
-            />
-
-        </section>
-
-        <section className="flex flex-col gap-2">
-            {editing ? (
+    <section className="flex flex-col gap-2">
+        {editing ? (
+        <Button
+            onClick={handleUpdateAcademicYear}
+            variant="acceptButton"
+            className="px-8 py-5 rounded-lg "
+        >
+            Save
+        </Button>
+        ) : (
             <Button
-                onClick={handleUpdateAcademicYear}
-                variant="acceptButton"
-                className="w-[130px] h-[40px] rounded-lg"
-            >
-                Save
-            </Button>
-            ) : (
-              <Button
-                onClick={handleEdit}
-                variant="confirmButton"
-                className="w-[130px] h-[40px] rounded-lg"
-            >
-                Update
-            </Button>
-            )}
+            onClick={handleEdit}
+            variant="confirmButton"
+            className="px-8 py-5 rounded-lg"
+        >
+            Update
+        </Button>
+        )}
 
-            {editing ? (
+        {editing ? (
+        <Button
+            onClick={handleCancel}
+            variant="rejectButton"
+            className="px-8 py-5 rounded-lg"
+        >
+            Cancel
+        </Button>
+        ) : (
             <Button
-                onClick={handleCancel}
-                variant="rejectButton"
-                className="w-[130px] h-[40px] rounded-lg"
-            >
-                Cancel
-            </Button>
-            ) : (
-               <Button
-                onClick={handleStop}
-                variant="rejectButton"
-                className="w-[130px] h-[40px] rounded-lg"
-            >
-                End
-            </Button>
-            )}
+            onClick={handleStop}
+            variant="rejectButton"
+            className="px-8 py-5 rounded-lg"
+        >
+            End
+        </Button>
+        )}
 
-        </section>
-        </div>
+    </section>
+    </div>
     )
 }

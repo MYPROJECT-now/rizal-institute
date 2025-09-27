@@ -21,14 +21,14 @@ export const EnrollmentManagement = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="lg:w-[600px] max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-lg">
+      <DialogContent className="lg:w-[600px] sm:w-[500px] w-[290px]  bg-white rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+          <DialogTitle className="sm:text-2xl text-lg font-bold text-white bg-dGreen py-4 flex items-center rounded-t-lg justify-center">
             Manage Enrollment Period
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 px-4 py-6 text-sm text-gray-700">
+        <div className="space-y-6 px-4 py-6 text-sm text-gray-700 max-h-[350px] overflow-y-auto">
           {/* Current Enrollment Info */}
           <section className="bg-gray-100 p-4 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold mb-2">📅 Current Academic Year</h3>

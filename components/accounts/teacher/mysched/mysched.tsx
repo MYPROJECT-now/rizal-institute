@@ -48,7 +48,7 @@ export const MySched = () => {
   );
 
   return (
-    <div className="grid grid-cols-3 p-5 gap-4">
+    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1  p-5 gap-4">
       {grouped.map(({ day, entries }) => (
         <Card
           key={day}

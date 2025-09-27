@@ -51,7 +51,7 @@ export const InsertEnrollment = ({onCreated }: { onCreated: () => void }) => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
         <div className="flex flex-col">
           <label className="mb-1 font-medium">
             Start Date

@@ -5,7 +5,6 @@ import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
 import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
 import { Loader2 } from "lucide-react";
-import Student_header from "@/app/header/header_student";
 import EnrollmentCert from "@/components/accounts/students/enrollment certificate/enrollment_cert";
 
 const CertificatePage = () => {
@@ -41,10 +40,8 @@ const CertificatePage = () => {
   }, [studentInfo]);
 
   return (
-    <div className="w-full lg:h-[680px] h-[500px] mt-3 mx-3 rounded-xl flex flex-col sm:px-10 px-1 bg-page">
-      <Student_header />
-      <div className="w-full h-full bg-white self-center mt-2 rounded-lg">
-        <div className="w-full h-full flex flex-col gap-3 items-center pb-5">
+        <div className=" h-full max-h-[80vh]  flex-1 flex flex-col  rounded-t-lg  lg:px-5 px-0 ">
+          <section className="w-full h-full pb-4  bg-white self-center lg:mt-2 mt-0">
           {loading ? (
             <div className="flex justify-center items-center h-full">
               <Loader2 className="animate-spin text-dGreen" />
@@ -54,7 +51,7 @@ const CertificatePage = () => {
               {pdfDocument && (
                 <PDFViewer className="w-[100%] h-full">{pdfDocument}</PDFViewer>
               )}
-                <div className="flex justify-center">
+                <div className="flex flex-col gap-5 items-center justify-center">
                   {pdfDocument ? (
                     <PDFDownloadLink
                       fileName={`Certificate_of_Enrollment_${fullName}`}
@@ -84,9 +81,9 @@ const CertificatePage = () => {
           )}
 
 
-        </div>
+        </section>
       </div>
-    </div>
+
   );
 };
 

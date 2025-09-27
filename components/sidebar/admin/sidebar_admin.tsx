@@ -46,9 +46,10 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
           <Link href="/ACCOUNTS/admin" onClick={onClose}>
             <Image
               src="/school.png"
-              width={130}
-              height={130}
-              alt="PWD Icon"
+              width={1000}
+              height={1000} 
+              alt="rizal logo"
+              className="sm:h-[130px] sm:w-[130px] h-[110px] w-[110px]"
             />
           </Link>
 

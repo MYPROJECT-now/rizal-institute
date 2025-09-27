@@ -91,88 +91,88 @@
 
 
 
-        return (
-            <div className="flex flex-row justify-between px-[20px]">
-            <section className="grid grid-cols-2 gap-1 w-[250px]">
-                <label htmlFor="academicYear" className=" items-center flex">enrollmentStatus</label>
-                <input 
-                    type="text"
-                    value={isLoading ? "Loading..." : enrollmentStatus ?? ""}
-                    readOnly
-                    className= "focus:outline-none w-full p-1  rounded-sm"
-                />
-                <label htmlFor="academicYear" className=" items-center flex">enrollment period:</label>
-                <input 
-                    type="text" 
-                    value={isLoading ? "Loading..." : enrollment ?? ""} 
-                    readOnly={!editing}
-                    className={`${
-                    !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                    } w-full p-1  rounded-sm`}
-                    onChange={(e) => setEnrollement(e.target.value)}
-                />
-                <label htmlFor="academicYearStart" className=" items-center flex">enrollment start:</label>
-                <input 
-                    type="date" 
-                    value={isLoading ? "Loading..." : enrollmentStart ?? ""} 
-                    readOnly={!editing}
-                    className={`${
-                    !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                    } w-full p-1  rounded-sm`}
-                    onChange={(e) => setEnrollmentStart(e.target.value)} 
-                />
-                <label htmlFor="academicYearEnd" className=" items-center flex">enrollment end:</label>
-                <input 
-                    type="date"
-                    value={isLoading ? "Loading..." : enrollmentEnd ?? ""}
-                    readOnly={!editing}
-                    className={`${
-                    !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                    } w-full p-1  rounded-sm`}
-                    onChange={(e) => setEnrollmentEnd(e.target.value)}
-                    
-                />
+return (
+    <div className="flex sm:flex-row flex-col gap-4 sm-gap-0 justify-between px-[20px]">
+        <section className="grid grid-cols-2 gap-1 w-[250px]">
+            <label htmlFor="academicYear" className=" items-center flex">enrollmentStatus</label>
+            <input 
+                type="text"
+                value={isLoading ? "Loading..." : enrollmentStatus ?? ""}
+                readOnly
+                className= "focus:outline-none w-full p-1  rounded-sm"
+            />
+            <label htmlFor="academicYear" className=" items-center flex">enrollment period:</label>
+            <input 
+                type="text" 
+                value={isLoading ? "Loading..." : enrollment ?? ""} 
+                readOnly={!editing}
+                className={`${
+                !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                } w-full p-1  rounded-sm`}
+                onChange={(e) => setEnrollement(e.target.value)}
+            />
+            <label htmlFor="academicYearStart" className=" items-center flex">enrollment start:</label>
+            <input 
+                type="date" 
+                value={isLoading ? "Loading..." : enrollmentStart ?? ""} 
+                readOnly={!editing}
+                className={`${
+                !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                } w-full p-1  rounded-sm`}
+                onChange={(e) => setEnrollmentStart(e.target.value)} 
+            />
+            <label htmlFor="academicYearEnd" className=" items-center flex">enrollment end:</label>
+            <input 
+                type="date"
+                value={isLoading ? "Loading..." : enrollmentEnd ?? ""}
+                readOnly={!editing}
+                className={`${
+                !editing ? "focus:outline-none" : "focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                } w-full p-1  rounded-sm`}
+                onChange={(e) => setEnrollmentEnd(e.target.value)}
+                
+            />
 
-            </section>
+        </section>
 
-            <section className="flex flex-col gap-2">
-                {editing ? (
-                <Button
-                    onClick={handleUpdateEnrollment}
-                    variant="acceptButton"
-                    className="w-[130px] h-[40px] rounded-lg"
-                >
-                    Save
-                </Button>
-                ) : (
-                <Button
-                    onClick={handleEdit}
-                    variant="confirmButton"
-                    className="w-[130px] h-[40px] rounded-lg"
-                >
-                    Update
-                </Button>
-                )}
+        <section className="flex flex-col gap-2">
+            {editing ? (
+            <Button
+                onClick={handleUpdateEnrollment}
+                variant="acceptButton"
+                className="px-8 py-5 rounded-lg"
+            >
+                Save
+            </Button>
+            ) : (
+            <Button
+                onClick={handleEdit}
+                variant="confirmButton"
+                className="px-8 py-5 rounded-lg"
+            >
+                Update
+            </Button>
+            )}
 
-                {editing ? (
-                <Button
-                    onClick={handleCancel}
-                    variant="rejectButton"
-                    className="w-[130px] h-[40px] rounded-lg"
-                >
-                    Cancel
-                </Button>
-                ) : (
-                <Button
-                    onClick={handleStop}
-                    variant="rejectButton"
-                    className="w-[130px] h-[40px] rounded-lg"
-                >
-                    End
-                </Button>
-                )}
+            {editing ? (
+            <Button
+                onClick={handleCancel}
+                variant="rejectButton"
+                className="px-8 py-5 rounded-lg"
+            >
+                Cancel
+            </Button>
+            ) : (
+            <Button
+                onClick={handleStop}
+                variant="rejectButton"
+                className="px-8 py-5 rounded-lg"
+            >
+                End
+            </Button>
+            )}
 
-            </section>
-            </div>
-        )
-    }
+        </section>
+    </div>
+)
+}

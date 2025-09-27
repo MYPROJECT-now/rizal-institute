@@ -23,8 +23,8 @@ const Admin_header = () => {
       
 
     return (
-        <div className="lg:flex hidden flex-row items-center justify-between h-[60px] mt-10 lg:mt-4">
-                <div className="flex flex-col">
+        <div className="lg:flex hidden flex-row items-center justify-between h-[60px] mt-10 lg:mt-4 px-5">
+            <div className="flex flex-col">
                 <p className=" font-Alfa text-lGreen text-2xl">
                     RIZAL INSTITUTE
                 </p>

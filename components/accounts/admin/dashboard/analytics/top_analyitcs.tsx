@@ -97,10 +97,8 @@ export const Top_analytics = async () => {
                         Enrollment Status
                     </p>
                     <p className="font-bold text-[15px]">
-                    <p className="font-bold text-[15px]">
                         {enrollment.length > 0  ? enrollment[0].enrollmentStatus ? "Ongoing"  : "Close" : "Not Set"}
                     </p>                    
-                    </p>
                 </div>
                 <div>
                     <Image

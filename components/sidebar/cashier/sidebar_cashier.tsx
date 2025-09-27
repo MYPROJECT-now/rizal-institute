@@ -30,7 +30,7 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                         src="/school.png" 
                         width={1000}
                         height={1000} 
-                        alt="PWD Icon"
+                        alt="rizal logo"
                         className="sm:h-[130px] sm:w-[130px] h-[110px] w-[110px]"
                     />
                    

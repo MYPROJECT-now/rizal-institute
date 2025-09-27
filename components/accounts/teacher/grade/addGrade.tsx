@@ -70,11 +70,11 @@ export const UploadGradeClient = ({
     <main className="w-full flex items-center justify-center mt-10">
       <Card className="w-full max-w-lg shadow-md flex flex-col">
         <CardHeader className="flex items-center justify-between">
-          <CardTitle className="text-xl">Upload Student Grade</CardTitle>
+          <CardTitle className="sm:text-xl text-lg">Upload Student Grade</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
             {assignments.length === 0 ? (
-              <p className="w-full border px-3 py-2 rounded">No Assigned grades and subjet yet.</p>
+              <p className="w-full border px-3 py-2 rounded text-sm sm:text-base">No Assigned grades and subjet yet.</p>
             ) : (
               <select
                 value={`${gradeLevel_id}-${subject_id}`}

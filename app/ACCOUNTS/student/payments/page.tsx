@@ -1,21 +1,23 @@
 
-import Admin_student from "@/app/header/header_student";
-import { PaymentPage } from "./paymentPage";
+import { Balance } from "@/components/accounts/students/payment management/outstandingBalance/balance";
+import { PaymentMainPage } from "@/components/accounts/students/payment management/payment/paymentMainPage";
+import { PaymentHistoryPage } from "@/components/accounts/students/payment management/paymentHistory/paymentHistoryPage";
 
 
 const Payments = () => {
     return (
-            <div className="w-full sm:max-w-full sm:px-8 px-2  min-w-[300px] min-h-[680px] mt-3 mx-3 mb-3 rounded-xl flex flex-col  bg-page">
-            <Admin_student />
-            <div className="w-full h-auto lg:h-[540px] bg-white self-center  mt-10 rounded-lg ">
-                <div className="sm:h-[80px] h-[60px] w-full bg-lGreen font-merriweather text-md sm:text-xl lg::text-3xl text-white items-center flex pl-5">
+    <div className="h-full flex flex-col  rounded-t-lg  lg:px-5 px-0 ">
+        <section className="w-full h-full bg-white self-center lg:mt-2 mt-0">
+            <header className="  rounded-t-lg bg-lGreen font-merriweather text-white sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-2xl lg:border-0 border-x-2 border-t-2 border-white">
                 Payment Management
-                </div>
-                <div>
-                    <PaymentPage />
-                </div>
+            </header>
+            <div className="bg-green-100  rounded-lg flex flex-col sm:flex-row  sm:items-center items-start  sm:mx-8 mx-2 mt-4 p-3 justify-between gap-2">
+                <Balance />
+                <PaymentMainPage />
             </div>
-        </div>
+            <PaymentHistoryPage />
+        </section>
+    </div>
     );
 };
 

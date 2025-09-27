@@ -19,7 +19,7 @@ export const Balance = () => {
   
     const studentInfo = data;
     return (
-        <div className="text-sm sm:text-lg font-semibold flex sm:gap-2 gap-0 flex-wrap">
+        <div className="text-sm sm:text-lg font-semibold flex sm:gap-2 gap-0 w-full">
         <p>Outstanding Balance:</p>  
         <div className={studentInfo?.paymentMethod === "full_payment" ? "text-dGreen font-semibold" : "text-red-500 font-semibold"}>
           {studentInfo?.paymentMethod === "full_payment" ? (

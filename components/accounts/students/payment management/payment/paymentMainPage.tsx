@@ -13,8 +13,8 @@ export const PaymentMainPage = () => {
              <PaymentModalPage />
                 <Button 
                 onClick={open}
-                variant="mainButton" 
-                className="sm:px-6 px-3 py-3 text-white rounded-xl">
+                variant="confirmButton" 
+                className="sm:px-6  py-3  text-white rounded-xl">
                     Pay Now
                 </Button>
         </div>

@@ -10,7 +10,7 @@ export const MyClasses = async () => {
   }
 
   return (
-    <div className="w-full px-10 pt-5 grid grid-cols-2 gap-5">
+    <div className="px-10 pt-5 grid grid-cols-2 gap-5">
       {myClass.map((cls, index) => (
         <Link
           href={`/ACCOUNTS/teacher/class?filterID=${cls.gradeLevel_id}-${cls.subject_id}`}

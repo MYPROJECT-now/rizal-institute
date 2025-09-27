@@ -76,15 +76,15 @@ export const DeleteAssign = () => {
     }
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="lg:w-[600px] overflow-y-auto bg-white rounded-xl shadow-lg">
+        <DialogContent className="lg:w-[600px] sm:w-[500px] w-[290px]  bg-white rounded-lg ">
             <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+            <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen h-[60px] flex items-center justify-center rounded-t-lg">
                     Delete Assigned
                 </DialogTitle>
                 </DialogHeader>
-                <div className=" flex flex-col items-center gap-7 py-4">
+                <div className=" flex flex-col items-center gap-7 py-4 overflow-y-auto max-h-[400px]">
 
-                    <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] lg:w-[400px]">
+                    <section className="flex flex-col gap-1 px-6 w-full sm:w-[300px] lg:w-[400px]">
                         <span className="text-dGreen text-sm font-semibold">Teacher:</span>
                         <select 
                         value={selectedTeacher}
@@ -101,13 +101,13 @@ export const DeleteAssign = () => {
                     </section>
 
                     {loadingGS ? (
-                        <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
+                        <Skeleton className="h-[30px] w-full sm:w-[300px] lg:w-[400px] " />
                     ) : assigned.length === 0 && selectedTeacher ? (
                         <div>
                             no assigned subjects yet
                         </div>
                     ): (
-                        <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] lg:w-[400px]">
+                    <section className="flex flex-col gap-1 px-6 w-full sm:w-[300px] lg:w-[400px]">
                             <span className="text-dGreen text-sm font-semibold">Assigned Grade & Subject:</span>
                             <select
                             className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
@@ -130,13 +130,13 @@ export const DeleteAssign = () => {
                         </section>
                     )}
                     
-                    <section className="flex flex-row gap-1 w-[200px] sm:w-[300px] lg:w-[400px] items-center text-start">
+                    <section className="flex flex-row sm:gap-1 gap-0 w-full sm:w-[300px] lg:w-[400px] items-center sm:text-start text-center  px-8">
                         <input 
                             type="checkbox"
                             checked={isConfirmed}
                             onChange={(e) => setIsConfirmed(e.target.checked)}
                         />   
-                        <p>This action cannot be undone</p>   
+                        <p className="text-sm sm:text-base">This action cannot be undone</p>   
                     </section>
 
             

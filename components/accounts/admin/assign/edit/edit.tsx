@@ -99,17 +99,17 @@ export const EditAssign = () => {
     }
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="lg:w-[600px] overflow-y-auto bg-white rounded-xl shadow-lg">
+        <DialogContent className="lg:w-[600px] sm:w-[500px] w-[290px] bg-white rounded-xl shadow-lg">
             <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
+            <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen py-4 flex items-center justify-center">
                     Edit Assigned
                 </DialogTitle>
                 </DialogHeader>
-                <div className=" flex flex-col items-center gap-7 py-4">
+                <div className=" flex flex-col items-center sm:gap-7 gap-3 py-4 px-6  overflow-y-auto max-h-[400px]">
 
-                    <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] lg:w-[400px]">
+                    <section className="flex flex-col gap-1 w-full sm:w-[300px] lg:w-[400px]">
                         {loadingteacher ? (
-                            <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
+                            <Skeleton className="h-[30px] w-full sm:w-[300px] lg:w-[400px] " />
                         ) :(
                         <>
                             <span className="text-dGreen text-sm font-semibold">Teacher:</span>
@@ -132,13 +132,13 @@ export const EditAssign = () => {
                     </section>
 
                     {loadingGS ? (
-                            <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
+                            <Skeleton className="h-[30px] w-full sm:w-[300px] lg:w-[400px] " />
                     ) : assigned.length === 0 && selectedTeacher ? (
                         <div>
                             no assigned subjects yet
                         </div>
                     ): (
-                        <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] lg:w-[400px]">
+                    <section className="flex flex-col gap-1 w-full sm:w-[300px] lg:w-[400px]">
                             <span className="text-dGreen text-sm font-semibold">Assigned Grade & Subject:</span>
                             <select
                             className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
@@ -162,7 +162,7 @@ export const EditAssign = () => {
                     )}
 
 
-                    <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] lg:w-[400px]">
+                    <section className="flex flex-col gap-1 w-full sm:w-[300px] lg:w-[400px]">
                         <span className="text-dGreen text-sm font-semibold">Grade:</span>
                         <select
                             value={selectedUnassignedGrade}
@@ -179,9 +179,9 @@ export const EditAssign = () => {
                         </select>
                     </section>      
 
-                    <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] lg:w-[400px]">
+                    <section className="flex flex-col gap-1 w-full sm:w-[300px] lg:w-[400px]">
                         {loadingS ? (
-                            <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
+                            <Skeleton className="h-[30px] w-full sm:w-[300px] lg:w-[400px] " />
                         ) :(
                         <>
                             <span className="text-dGreen text-sm font-semibold">Subject:</span>

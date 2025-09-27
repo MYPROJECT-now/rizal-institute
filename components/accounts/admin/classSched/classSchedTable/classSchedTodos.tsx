@@ -85,14 +85,17 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
   );
 
   return (
-    <main className="min-h-[600px] lg:min-h-0 text-xs sm:text-sm w-full sm:px-8 px-4 py-6 sm:pt-6 text-center">
-      {/* 🔽 Filter Controls */}
-      <div className="flex flex-row gap-4 py-3 items-center flex-wrap">
-        <p className="font-semibold text-dGreen">Filter by:</p>
+    <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
+      <Add_Schedule />
+      <Edit_Schedule />
+      <Delete_Schedule />
+
+      <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-2 lg:gap-4 mb-4">
+        <label className="text-green-900 font-bold text-sm">Filter By:</label>
         <select
           value={selectedTeacher}
           onChange={(e) => setSelectedTeacher(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         >
           <option value="all">All Teachers</option>
           {teacherOptions.map((t) => (
@@ -105,7 +108,7 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
         <select
           value={selectedSection}
           onChange={(e) => setSelectedSection(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         >
           <option value="all">All Sections</option>
           {sectionOptions.map((sec) => (
@@ -121,39 +124,38 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
             setSelectedSection("all");
           }}
           variant="confirmButton"
-          className="px-4 py-2 rounded-lg"
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
         >
           Clear Filters
         </Button>
 
-        <Add_Schedule />
         <Button
           onClick={openAdd}
           variant={"confirmButton"}
-          className="px-4 py-3 rounded-lg"
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
         >
           Add Schedule
         </Button>
 
-        <Edit_Schedule />
         <Button 
           onClick={openEdit}
           variant={"acceptButton"} 
-          className="px-4 py-3 rounded-lg">
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
+        >
           Edit
         </Button>
 
-        <Delete_Schedule />
         <Button 
           onClick={openDelete}
           variant={"rejectButton"} 
-          className="px-4 py-3 rounded-lg">
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
+        >
           Delete
         </Button>
-      </div>
+      </section>
 
       {/* 🔽 Schedule Table */}
-      <div className="overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+      <section className="overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
         <table className="w-full text-xs sm:text-sm text-center">
           <thead>
             <tr className="bg-green-600 text-white">
@@ -181,10 +183,10 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
             ))}
           </tbody>
         </table>
-      </div>
+      </section>
 
       {/* 🔽 Pagination Controls */}
-      <div className=" flex items-center justify-center gap-2 mt-5">
+      <section className=" flex items-center justify-center gap-2 mt-5">
         <Button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 0))}
           disabled={currentPage === 0}
@@ -204,8 +206,8 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
         >
           Next
         </Button>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 };
 

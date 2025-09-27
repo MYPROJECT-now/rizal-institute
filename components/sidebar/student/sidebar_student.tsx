@@ -19,7 +19,7 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex flex-col h-screen sm:w-[300px] w-[200px] items-center pt-5 bg-lGreen lg:fixed left-0 top-0 px-4 ", 
+                "flex-col min-h-screen xl:w-[330px] lg:w-[250px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
                 className
             )}
         >

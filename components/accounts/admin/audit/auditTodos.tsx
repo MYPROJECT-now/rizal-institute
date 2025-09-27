@@ -17,9 +17,9 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const auditsPerPage = 8;
     const currentAction = auditItems.filter((audit) => {
-        const usernameMatch = audit.username.toLowerCase().includes(filterUsername.toLowerCase());
-        const usertypeMatch = filterUsertype === "" || audit.usertype === filterUsertype;
-        return usernameMatch && usertypeMatch;
+      const usernameMatch = audit.username.toLowerCase().includes(filterUsername.toLowerCase());
+      const usertypeMatch = filterUsertype === "" || audit.usertype === filterUsertype;
+    return usernameMatch && usertypeMatch;
     });
 
     // pagination
@@ -31,23 +31,23 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
 
     
   return (
-    <main className=" min-h-[600px] lg:min-h-0 text-xs sm:text-sm   w-full  sm:px-8 px-4 py-6 sm:pt-6 text-center">
+  <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
 
-    <div className="flex  flex-col sm:flex-row  items-start sm:items-center gap-1 sm:gap-3 lg:gap-4 mb-4">
-      <label className="text-green-900 font-bold text-xs  sm:text-lg">Filter By:</label>
+    <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 mb-4">
+      <label className="text-green-900 font-bold text-sm  sm:text-lg">Filter By:</label>
 
         <input
-            type="text"
-            placeholder="Username"
-            value={filterUsername}
-            onChange={(e) => setFilterUsername(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={filterUsername}
+          onChange={(e) => setFilterUsername(e.target.value)}
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         />
 
         <select 
-            value={filterUsertype} 
-            onChange={(e) => setFilterUsertype(e.target.value)}
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+          value={filterUsertype} 
+          onChange={(e) => setFilterUsertype(e.target.value)}
+          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         >
             <option value="">All Usertypes</option>
             <option value="admin">Admin</option>
@@ -57,72 +57,72 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
         </select>
 
         <Button
-            onClick={() => {
-                setFilterUsername("");
-                setFilterUsertype("");
-            }}
-            variant="confirmButton"
-    className=" rounded-lg text-xs sm:text-sm  xl:px-5 px-3 lg:py-5 py-4 sm:mt-0 mt-2   "
+          onClick={() => {
+          setFilterUsername("");
+          setFilterUsertype("");
+          }}
+          variant="confirmButton"
+          className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
         >
-            Clear Filter
+          Clear Filter
         </Button>
-    </div>
+      </section>
 
-<div className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
-  <table className="w-full text-xs sm:text-sm text-center">
-            <thead>
-            <tr className="bg-green-600 text-white ">
-                <th className="px-4 py-2">Username</th>
-                <th className="px-4 py-2">User Type</th>
-                <th className="px-4 py-2">Action Taken</th>
-                <th className="px-4 py-2">Action For</th>
-                <th className="px-4 py-2">Date Of Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            {currentAudits.length === 0 ? (
-                <tr>
-                <td colSpan={5} className="p-4 text-black">
-                No action found.
-                </td>
-            </tr>
-            ) : (
-            currentAudits.map((auditTodo, idx) => (
-                <AuditTodo 
-                key={auditTodo.auditTrail_id} 
-                auditTodo={auditTodo} 
-                className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
-                />
-            ))
-            )}
-            </tbody>
+      <section className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">
+        <table className="w-full text-xs sm:text-sm text-center">
+          <thead>
+          <tr className="bg-green-600 text-white ">
+              <th className="px-4 py-2">Username</th>
+              <th className="px-4 py-2 min-w-[100px]">User Type</th>
+              <th className="px-4 py-2 min-w-[120px]">Action Taken</th>
+              <th className="px-4 py-2">Action For</th>
+              <th className="px-4 py-2 min-w-[120px]">Date Of Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          {currentAudits.length === 0 ? (
+              <tr>
+              <td colSpan={5} className="p-4 text-black">
+              No action found.
+              </td>
+          </tr>
+          ) : (
+          currentAudits.map((auditTodo, idx) => (
+              <AuditTodo 
+              key={auditTodo.auditTrail_id} 
+              auditTodo={auditTodo} 
+              className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
+              />
+          ))
+          )}
+          </tbody>
         </table>
-    </div>
+      </section>
 
-    {/* Pagination Controls */}
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <Button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            variant="prevButton"
-          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
-          >
-            Previous
-          </Button>
+      {/* Pagination Controls */}
+      <section className="flex justify-center items-center mt-4 gap-4">
+        <Button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          variant="prevButton"
+        className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
+        >
+          Previous
+        </Button>
         <span className="font-semibold flex items-center">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            variant="prevButton"
-          className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
-          >
-            Next
-          </Button>
-        </div>
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          variant="prevButton"
+        className="sm:px-5 px-3 sm:py-5 py-2 rounded-lg text-xs sm:text-sm  "
+        >
+          Next
+        </Button>
+      </section>
 
-    </main>
+  </div>
   );
 };
 

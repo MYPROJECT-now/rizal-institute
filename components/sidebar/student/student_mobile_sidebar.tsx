@@ -8,17 +8,23 @@ import { Sheet,
 
 import { Menu } from "lucide-react";
 import { Sidebar_student } from "./sidebar_student";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAcadModal } from "@/src/store/academicYear";
 
 export const MobileSidebar = () => {
     const [open, setOpen] = useState(false);
-
+    const { isOpen: acadOpen } = useAcadModal();
+    useEffect(() => {
+        if (acadOpen) {
+            setOpen(false);
+        }
+    }, [acadOpen]);
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Menu className="text-white cursor-pointer" />
             </SheetTrigger>
-                        <SheetTitle/>
+            <SheetTitle/>
 
             
             <SheetContent className ="p-0 z-[100] bg-lGreen" side="left">

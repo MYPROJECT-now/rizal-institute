@@ -87,7 +87,8 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
 
   return (
     <div className="flex flex-col gap-6 sm:p-10 p-4 max-h-[500px] w-full overflow-y-auto">
-      <div className="flex flex-row gap-3 items-center">
+      <header className="flex sm:flex-row flex-col gap-3 sm:items-center ">
+
         <section className="flex sm:flex-row flex-col items-start sm:items-center gap-0 sm:gap-5 ">
           <label className="mb-2 font-semibold text-xs sm:text-sm text-dGreen">Username:</label>
           <select className="p-2 w-full sm:w-[200px] border-2 border-gray-300 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none rounded-lg" onChange={(e) => setSelectedTeacher(e.target.value)}>
@@ -117,7 +118,7 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
         >
           Delete
         </Button>
-      </div>
+      </header>
 
       <section className="w-full grid sm:grid-cols-2 grid-cols-1 gap-4 ">
         {grades.map((grade) => (
@@ -156,15 +157,15 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
         ))}
       </section>
 
-    <section className="w-full flex justify-center">
-      <Button 
-        onClick={handleSubmit} 
-        variant="confirmButton"
-        className="my-6 sm:px-10 sm:py-5 px-7 py-3 rounded-xl"
-        disabled={isLoading || !selectedTeacher || selectedPairs.length === 0}
-      >
-        {isLoading ? "Assigning..." : "Assign"}
-      </Button>
+      <section className="w-full flex justify-center">
+        <Button 
+          onClick={handleSubmit} 
+          variant="confirmButton"
+          className="my-6 sm:px-10 sm:py-5 px-7 py-3 rounded-xl"
+          disabled={isLoading || !selectedTeacher || selectedPairs.length === 0}
+        >
+          {isLoading ? "Assigning..." : "Assign"}
+        </Button>
       </section>
     </div>
   );
