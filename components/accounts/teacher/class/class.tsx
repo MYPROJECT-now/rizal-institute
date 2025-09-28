@@ -10,14 +10,14 @@ export const MyClasses = async () => {
   }
 
   return (
-    <div className="px-10 pt-5 grid grid-cols-2 gap-5">
+    <div className="sm:px-10 px-3 pt-5 grid sm:grid-cols-2 grid-cols-1 gap-5">
       {myClass.map((cls, index) => (
         <Link
           href={`/ACCOUNTS/teacher/class?filterID=${cls.gradeLevel_id}-${cls.subject_id}`}
           key={index}
         >
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-4 text-sm sm:text-lg">
               Grade {cls.gradeLevelName} {cls.sectionName ? ` ${cls.sectionName}` : ""} - {cls.subjectName}
             </CardContent>
           </Card>

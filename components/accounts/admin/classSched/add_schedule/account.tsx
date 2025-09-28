@@ -23,7 +23,11 @@ export const Add_Schedule = () => {
   const [teachers, setTeachers] = useState<{ clerk_uid: number; clerk_username: string }[]>([]);
   const [gradeSections, setGradeSections] = useState<{ gradeLevel_id: number; gradeLevelName: string | null; section_id: number; sectionName: string }[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [assigned, setAssigned] = useState<{ gradeLevel_id: number; subject_id: number }[]>([]);
+  const [assignmentData, setAssignmentData] = useState<{
+    available: { gradeLevel_id: number; subject_id: number }[];
+    scheduledAll: boolean;
+    noAssigned: boolean;
+  }>({ available: [], scheduledAll: false, noAssigned: false });
 
 
   const [selectedSubject, setSelectedSubject] = useState(0);
@@ -42,7 +46,7 @@ export const Add_Schedule = () => {
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
   };
-  // fetch subjects on mount
+
   useEffect(() => {
     setIsLoading(true);
     const fetchSubjects = async () => {
@@ -57,25 +61,25 @@ export const Add_Schedule = () => {
     fetchSubjects();
   }, []);
 
-const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const teacherId = Number(e.target.value);
-  setSelectedTeacher(teacherId);
-  setLoader(true);
 
-  if (teacherId) {
-    const result = await getAvailableAssignments(teacherId);
-    setAssigned(result);   // only assignments not yet scheduled
-    setLoader(false);
-  } else {
-    setAssigned([]);
-  }
+  const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const teacherId = Number(e.target.value);
+    setSelectedTeacher(teacherId);
+    setLoader(true);
 
-  // reset when teacher changes
-  setSelectedGradeLevel(0);
-  setSelectedSection(0);
-  setSelectedSubject(0);
-};
+    if (teacherId) {
+      const result = await getAvailableAssignments(teacherId);
+      setAssignmentData(result);
+      setLoader(false);
+    } else {
+      setAssignmentData({ available: [], scheduledAll: false, noAssigned: false });
+    }
 
+    // reset fields
+    setSelectedGradeLevel(0);
+    setSelectedSection(0);
+    setSelectedSubject(0);
+  };
 
 
   const handleGradeSectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -85,6 +89,10 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
   };
 
 
+  const getGradeLevelName = (id: number) => {
+    const found = gradeSections.find(gs => gs.gradeLevel_id === id);
+    return found ? found.gradeLevelName : `Grade ${id}`;
+  };
 
   const submitSchedule = async () => {
     if (!selectedSection || !selectedGradeLevel || !selectedSubject || !selectedTeacher || !selectedDays || !startTime || !endTime) {
@@ -105,9 +113,19 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     setIsSubmitting(true);
     try {
       for (const day of selectedDays) {
-        const conflicts = await checkSchedule(selectedTeacher, day, startTime, endTime);
-        if (conflicts.length > 0) {
+        const result = await checkSchedule(selectedTeacher, day, startTime, endTime, selectedGradeLevel, selectedSubject);
+
+        if (result.type === "teacherConflict") {
           toast.error(`Teacher already has a class on ${day} during this time.`);
+          setIsSubmitting(false);
+          return;
+        }
+
+
+
+        if (result.type === "subjectConflict") {
+          const gradeName = getGradeLevelName(selectedGradeLevel);
+          toast.error(`This subject is already scheduled in Grade ${gradeName} on ${day}.`);
           setIsSubmitting(false);
           return;
         }
@@ -177,126 +195,127 @@ const handleTeacherChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
               </select>
             </section>  
 
-
-            {/* Grade & Section select */}
             {loader ? (
               <div className="w-full flex flex-col gap-4 items-center justify-center">
-                <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
-                <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px] " />
-
+                <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px]" />
+                <Skeleton className="h-[30px] w-[200px] sm:w-[300px] lg:w-[400px]" />
               </div>
-            ): ( 
-              assigned.length === 0 && selectedTeacher ? (
-              <div className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-                <p className="text-red-500 font-semibold text-center">
-                  No subject asigned to this teacher
-                </p>
-              </div>
-              ) : (
-                <>
-                  <select
-                    onChange={handleGradeSectionChange}
-                    disabled={!selectedTeacher}
-                    value={
-                      selectedGradeLevel && selectedSection
-                        ? `${selectedGradeLevel}|${selectedSection}`
-                        : ""
-                    }
-                    className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                  >
-                    <option value="">-- Select Grade & Section --</option>
-                    {gradeSections
-                      .filter((gs) =>
-                        assigned.some((a) => a.gradeLevel_id === gs.gradeLevel_id)
-                      )
-                      .map((gs) => (
-                        <option
-                          key={gs.section_id}
-                          value={`${gs.gradeLevel_id}|${gs.section_id}`}
-                        >
-                          Grade {gs.gradeLevelName} - {gs.sectionName}
-                        </option>
-                      ))}
-                  </select>
-
-                  <select
-                    value={selectedSubject}
-                    disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
-                    onChange={(e) => setSelectedSubject(Number(e.target.value))}
-                    className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-                  >
-                    <option value="">-- Select Subject --</option>
-                    {subjects
-                      .filter((subj) =>
-                        assigned.some(
-                          (a) =>
-                            a.subject_id === subj.subject_id &&
-                            a.gradeLevel_id === selectedGradeLevel
+            ) : (
+              <>
+                {assignmentData.noAssigned && (
+                  <p className="text-red-500 font-semibold text-center text-sm">
+                    This teacher has no assigned subjects.
+                  </p>
+                )}
+                {assignmentData.scheduledAll && !assignmentData.noAssigned && (
+                  <p className="text-orange-500 font-semibold text-center text-sm">
+                    All assigned subjects for this teacher already have schedules.
+                  </p>
+                )}
+                {!assignmentData.noAssigned && !assignmentData.scheduledAll && (
+                  <>
+                    <select
+                      onChange={handleGradeSectionChange}
+                      disabled={!selectedTeacher}
+                      value={
+                        selectedGradeLevel && selectedSection
+                          ? `${selectedGradeLevel}|${selectedSection}`
+                          : ""
+                      }
+                      className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                    >
+                      <option value="">-- Select Grade & Section --</option>
+                      {gradeSections
+                        .filter((gs) =>
+                          assignmentData.available.some((a) => a.gradeLevel_id === gs.gradeLevel_id)
                         )
-                      )
-                      .map((subj) => (
-                        <option key={subj.subject_id} value={subj.subject_id}>
-                          {subj.subject_name}
-                        </option>
-                      ))}
-                  </select>
-                </>
-              )
+                        .map((gs) => (
+                          <option
+                            key={gs.section_id}
+                            value={`${gs.gradeLevel_id}|${gs.section_id}`}
+                          >
+                            Grade {gs.gradeLevelName} - {gs.sectionName}
+                          </option>
+                        ))}
+                    </select>
+
+                    <select
+                      value={selectedSubject}
+                      disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
+                      onChange={(e) => setSelectedSubject(Number(e.target.value))}
+                      className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+                    >
+                      <option value="">-- Select Subject --</option>
+                      {subjects
+                        .filter((subj) =>
+                          assignmentData.available.some(
+                            (a) =>
+                              a.subject_id === subj.subject_id &&
+                              a.gradeLevel_id === selectedGradeLevel
+                          )
+                        )
+                        .map((subj) => (
+                          <option key={subj.subject_id} value={subj.subject_id}>
+                            {subj.subject_name}
+                          </option>
+                        ))}
+                    </select>
+                  </>
+                )}
+              </>
             )}
-            
-
-
-            
-          <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-            <span className="text-dGreen text-sm font-semibold">Days of the Week:</span>
-            <div className="flex flex-wrap gap-2">
-              {["monday", "tuesday", "wednesday", "thursday", "friday"].map((day) => (
-                <label key={day} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    value={day}
-                    checked={selectedDays.includes(day)}
-                    onChange={() => toggleDay(day)}
-                    className="accent-dGreen"
-                    disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
-                  />
-                  {/* {day.charAt(0).toUpperCase() + day.slice(1)} */}
-                    {day.charAt(0).toUpperCase() + day.slice(1, 3)}
-                </label>
-              ))}
-            </div>
-          </section>
+    
+            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+              <span className="text-dGreen text-sm font-semibold">Days of the Week:</span>
+              <div className="flex flex-wrap gap-2">
+                {["monday", "tuesday", "wednesday", "thursday", "friday"].map((day) => (
+                  <label key={day} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      value={day}
+                      checked={selectedDays.includes(day)}
+                      onChange={() => toggleDay(day)}
+                      className="accent-dGreen"
+                      disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
+                    />
+                    {/* {day.charAt(0).toUpperCase() + day.slice(1)} */}
+                      {day.charAt(0).toUpperCase() + day.slice(1, 3)}
+                  </label>
+                ))}
+              </div>
+            </section>
  
 
-          <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-            <span className="text-dGreen text-sm font-semibold">Start:</span>
-            <input 
-              type="time" 
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedDays}
-              className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-            />
-          </section>
+            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+              <span className="text-dGreen text-sm font-semibold">Start:</span>
+              <input 
+                type="time" 
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedDays}
+                className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+              />
+            </section>
           
-          <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-            <span className="text-dGreen text-sm font-semibold">End:</span>
-            <input 
-              type="time" 
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedDays}
-              className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-            />
-          </section>
-          <Button
-            variant="confirmButton"
-            className="sm:p-5 p-2 mt-2  rounded-lg"
-            onClick={submitSchedule}
-            disabled={isSubmitting || !selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedSubject || !selectedDays.length || !startTime || !endTime}
-          >
-            Add Schedule
-          </Button>
+            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+              <span className="text-dGreen text-sm font-semibold">End:</span>
+              <input 
+                type="time" 
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedDays}
+                className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+              />
+            </section>
+
+            <Button
+              variant="confirmButton"
+              className="sm:p-5 p-2 mt-2  rounded-lg"
+              onClick={submitSchedule}
+              disabled={isSubmitting || !selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedSubject || !selectedDays.length || !startTime || !endTime}
+            >
+              Add Schedule
+            </Button>
           </div>
           )}
 

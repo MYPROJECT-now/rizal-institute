@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { createAcademicYear } from "@/src/actions/adminAction";
+import { useFiscalYearModal } from "@/src/store/ADMIN/fiscal_year";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -8,6 +9,7 @@ export const InsertNewYear = ({onCreated }: { onCreated: () => void }) => {
   const [academicYearStart, setAcademicYearStart] = useState("");
   const [academicYearEnd, setAcademicYearEnd] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { close } = useFiscalYearModal();
 
   // Automatically update academicYear when start or end date changes
   useEffect(() => {
@@ -44,6 +46,8 @@ export const InsertNewYear = ({onCreated }: { onCreated: () => void }) => {
       setAcademicYearStart("");
       setAcademicYearEnd("");
       setIsLoading(false);
+      close();
+      window.location.reload();
     } catch (error) {
       console.error("Error creating academic year:", error);
     }

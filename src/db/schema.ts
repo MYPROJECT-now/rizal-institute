@@ -169,17 +169,17 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
   })
 
-  export const ScheduleTable = pgTable("ScheduleTable", {
-    schedule_id: serial("schedule_id").primaryKey(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
-    section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
-    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
-    subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
-    clerk_uid: integer("clerk_uid"), // teacher.references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
-    dayOfWeek: varchar("dayOfWeek", { length: 20 }).notNull(), // "Monday", "Tue"
-    startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
-    endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30"
-  });
+    export const ScheduleTable = pgTable("ScheduleTable", {
+      schedule_id: serial("schedule_id").primaryKey(),
+      academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+      section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
+      gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+      subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
+      clerk_uid: integer("clerk_uid"), // teacher.references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
+      dayOfWeek: varchar("dayOfWeek", { length: 20 }).notNull(), // "Monday", "Tue"
+      startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
+      endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30"
+    });
 
 
 

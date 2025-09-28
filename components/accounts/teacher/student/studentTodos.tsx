@@ -15,30 +15,28 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
 
-
-      // ✅ This makes sure studentTodos (prop) is copied into myStudents (state)
     useEffect(() => {
       setMyStudents(studentTodos);
     }, [studentTodos]);
-        // 🔢 Pagination State
+
     const [currentPage, setCurrentPage] = useState(1);
     const studentsPerPage = 5;
 
     const changeTodoText = (grade_id: number, finalGrade: number) => {
-        setMyStudents((prev) =>
-        prev.map((studentTodos) => (studentTodos.grade_id === grade_id ? { ...studentTodos, finalGrade, remarks: finalGrade >= 75 ? "PASSED" : "FAILED" } : studentTodos))
-        );
-        updateFinalGrade(grade_id, finalGrade);
-        toast.success("Final Grade successfully updated.");
+      setMyStudents((prev) =>
+      prev.map((studentTodos) => (studentTodos.grade_id === grade_id ? { ...studentTodos, finalGrade, remarks: finalGrade >= 75 ? "PASSED" : "FAILED" } : studentTodos))
+      );
+      updateFinalGrade(grade_id, finalGrade);
+      toast.success("Final Grade successfully updated.");
     };
 
 
     const filteredStudents = myStudents.filter((student) => {
-        const fullName = `${student.studentFirstName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`.toLowerCase();
-        const matchesName = fullName.includes(filterName.toLowerCase());
-        const matchesLRN = student.lrn.includes(filterLRN);
+      const fullName = `${student.studentFirstName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`.toLowerCase();
+      const matchesName = fullName.includes(filterName.toLowerCase());
+      const matchesLRN = student.lrn.includes(filterLRN);
 
-        return matchesName && matchesLRN;
+      return matchesName && matchesLRN;
     });
 
     // 🧮 Pagination logic
@@ -50,18 +48,17 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
 
 
 
-    return (
-    <main className="mx-auto max-w-8xl w-full  p-8  text-center">
-
-    <div className="flex flex-wrap items-center gap-4 mb-6">
-      <label className="text-green-900 font-bold text-lg">Filter By:</label>
+  return (
+  <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
+    <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 mb-4">
+      <label className="text-green-900 font-bold text-sm  sm:text-lg">Filter By:</label>
 
       <input
         type="text"
         placeholder="Name"
         value={filterName}
         onChange={(e) => setFilterName(e.target.value)}
-        className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
       <input
@@ -69,7 +66,7 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
         placeholder="LRN"
         value={filterLRN}
         onChange={(e) => setFilterLRN(e.target.value)}
-      className="border-2 border-gray-300 rounded px-3 py-1 focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
 
@@ -80,19 +77,19 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
           setFilterLRN("");
         }}
         variant="confirmButton"
-        className="w-[100px] h-[40px] rounded-lg"
+        className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
       >
         Clear Filter
       </Button>
-  </div>
+    </section>
 
-  <div className="overflow-x-auto shadow-lg rounded-lg border border-green-300 bg-green-50">
-  <table className="w-full text-sm text-center">
+    <section className="overflow-x-auto min-w-[100px]  shadow-lg rounded-lg border border-green-300 bg-green-50">
+      <table className="w-full text-sm text-center">
         <thead>
           <tr className="bg-green-600 text-white ">
             <th className="px-4 py-2">LRN</th>
             <th className="px-4 py-2">Full Name</th>
-            <th className="px-4 py-2">Final Grade</th>  
+            <th className="px-4 py-2 min-w-[140px] sm:min-w-0">Final Grade</th>  
             <th className="px-4 py-2">Remarks</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
@@ -116,7 +113,7 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
         )}
         </tbody>
       </table>
-    </div>
+    </section>
 
       
 
@@ -126,25 +123,25 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             variant="prevButton"
-            className="w-[100px] h-[40px] rounded-lg"
+            className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           >
             Previous
           </Button>
-          <span className="font-semibold">
+          <span className="font-semibold flex items-center">
             Page {currentPage} of {totalPages}
           </span>
           <Button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
             variant="prevButton"
-            className="w-[100px] h-[40px] rounded-lg"
+            className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
           >
             Next
           </Button>
         </div>
-    </main>
-    );
-  };
+  </div>
+  );
+};
 
   export default StudentTodos;
 

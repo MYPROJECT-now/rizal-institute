@@ -91,7 +91,7 @@ export const getAuditTrails = async () => {
     .from(auditTrailsTable)
     .where(eq(auditTrailsTable.academicYear_id, sy))
     .orderBy(desc(auditTrailsTable.auditTrail_id))
-    .limit(8);
+    .limit(7);
 
     console.log(result)
     return result;
@@ -465,13 +465,55 @@ export const AddSchedule = async (
 }
 
 
+// export const checkSchedule = async (
+//   teacherId: number,
+//   day: string,
+//   startTime: string,
+//   endTime: string
+// ) => {
+//   const conflicts = await db
+//     .select({
+//       schedule_id: ScheduleTable.schedule_id,
+//       startTime: ScheduleTable.startTime,
+//       endTime: ScheduleTable.endTime,
+//       day: ScheduleTable.dayOfWeek,
+//     })
+//     .from(ScheduleTable)
+//     .where(
+//       and(
+//         eq(ScheduleTable.clerk_uid, teacherId),
+//         eq(ScheduleTable.dayOfWeek, day),
+//         // overlap condition:
+//         or(
+//           and(
+//             lte(ScheduleTable.startTime, startTime),
+//             gte(ScheduleTable.endTime, startTime)
+//           ),
+//           and(
+//             lte(ScheduleTable.startTime, endTime),
+//             gte(ScheduleTable.endTime, endTime)
+//           ),
+//           and(
+//             gte(ScheduleTable.startTime, startTime),
+//             lte(ScheduleTable.endTime, endTime)
+//           )
+//         )
+//       )
+//     );
+
+//   return conflicts;
+// };
+
 export const checkSchedule = async (
   teacherId: number,
   day: string,
   startTime: string,
-  endTime: string
+  endTime: string,
+  gradeLevelId: number,
+  subjectId: number
 ) => {
-  const conflicts = await db
+  // 1. Check teacher conflict (your existing overlap logic)
+  const teacherConflicts = await db
     .select({
       schedule_id: ScheduleTable.schedule_id,
       startTime: ScheduleTable.startTime,
@@ -483,7 +525,6 @@ export const checkSchedule = async (
       and(
         eq(ScheduleTable.clerk_uid, teacherId),
         eq(ScheduleTable.dayOfWeek, day),
-        // overlap condition:
         or(
           and(
             lte(ScheduleTable.startTime, startTime),
@@ -501,8 +542,105 @@ export const checkSchedule = async (
       )
     );
 
-  return conflicts;
+  if (teacherConflicts.length > 0) {
+    return { type: "teacherConflict", rows: teacherConflicts };
+  }
+
+  // 2. Check if the subject is already scheduled in this grade level on the same day
+  const subjectConflicts = await db
+    .select({
+      schedule_id: ScheduleTable.schedule_id,
+      subject_id: ScheduleTable.subject_id,
+      day: ScheduleTable.dayOfWeek,
+    })
+    .from(ScheduleTable)
+    .where(
+      and(
+        eq(ScheduleTable.gradeLevel_id, gradeLevelId),
+        eq(ScheduleTable.subject_id, subjectId),
+        eq(ScheduleTable.dayOfWeek, day)
+      )
+    );
+
+  if (subjectConflicts.length > 0) {
+    return { type: "subjectConflict", rows: subjectConflicts };
+  }
+
+  return { type: "ok", rows: [] };
 };
+
+
+  
+// export const  getAvailableAssignments = async (teacherId: number) => {
+//   // Get all assigned grade + subject for teacher
+//   const assigned = await db
+//     .select({
+//       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+//       subject_id: TeacherAssignmentTable.subject_id,
+//       clerk_uid: TeacherAssignmentTable.clerk_uid,
+//     })
+//     .from(TeacherAssignmentTable)
+//     .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
+
+//   // Get all scheduled grade + subject for teacher
+//   const scheduled = await db
+//     .select({
+//       gradeLevel_id: ScheduleTable.gradeLevel_id,
+//       subject_id: ScheduleTable.subject_id,
+//     })
+//     .from(ScheduleTable)
+//     .where(eq(ScheduleTable.clerk_uid, teacherId));
+
+//   // Filter out assignments that already exist in schedules
+//   const scheduledSet = new Set(
+//     scheduled.map((s) => `${s.gradeLevel_id}-${s.subject_id}`)
+//   );
+
+//   const available = assigned.filter(
+//     (a) => !scheduledSet.has(`${a.gradeLevel_id}-${a.subject_id}`)
+//   );
+
+//   return available;
+// };
+
+// export const getAvailableAssignments = async (teacherId: number) => {
+//   // Get all assigned grade + subject for teacher
+//   const assigned = await db
+//     .select({
+//       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
+//       subject_id: TeacherAssignmentTable.subject_id,
+//       clerk_uid: TeacherAssignmentTable.clerk_uid,
+//     })
+//     .from(TeacherAssignmentTable)
+//     .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
+
+//   if (assigned.length === 0) {
+//     return { available: [], scheduledAll: false, noAssigned: true };
+//   }
+
+//   // Get all scheduled grade + subject for teacher
+//   const scheduled = await db
+//     .select({
+//       gradeLevel_id: ScheduleTable.gradeLevel_id,
+//       subject_id: ScheduleTable.subject_id,
+//     })
+//     .from(ScheduleTable)
+//     .where(eq(ScheduleTable.clerk_uid, teacherId));
+
+//   const scheduledSet = new Set(
+//     scheduled.map((s) => `${s.gradeLevel_id}-${s.subject_id}`)
+//   );
+
+//   const available = assigned.filter(
+//     (a) => !scheduledSet.has(`${a.gradeLevel_id}-${a.subject_id}`)
+//   );
+
+//   return {
+//     available,
+//     scheduledAll: available.length === 0, // means all assignments already scheduled
+//     noAssigned: false,
+//   };
+// };
 
 export const getAvailableAssignments = async (teacherId: number) => {
   // Get all assigned grade + subject for teacher
@@ -515,27 +653,43 @@ export const getAvailableAssignments = async (teacherId: number) => {
     .from(TeacherAssignmentTable)
     .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
 
-  // Get all scheduled grade + subject for teacher
+  if (assigned.length === 0) {
+    return { available: [], scheduledAll: false, noAssigned: true };
+  }
+
+  // Get all schedules grouped by grade + subject + teacher
   const scheduled = await db
     .select({
       gradeLevel_id: ScheduleTable.gradeLevel_id,
       subject_id: ScheduleTable.subject_id,
+      day: ScheduleTable.dayOfWeek,
     })
     .from(ScheduleTable)
     .where(eq(ScheduleTable.clerk_uid, teacherId));
 
-  // Filter out assignments that already exist in schedules
-  const scheduledSet = new Set(
-    scheduled.map((s) => `${s.gradeLevel_id}-${s.subject_id}`)
-  );
+  // Build a map of scheduled days
+  const scheduleMap = new Map<string, Set<string>>();
+  for (const s of scheduled) {
+    const key = `${s.gradeLevel_id}-${s.subject_id}`;
+    if (!scheduleMap.has(key)) scheduleMap.set(key, new Set());
+    scheduleMap.get(key)!.add(s.day.toLowerCase());
+  }
 
-  const available = assigned.filter(
-    (a) => !scheduledSet.has(`${a.gradeLevel_id}-${a.subject_id}`)
-  );
+  const weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
-  return available;
+  // Keep subject available if not fully scheduled Mon–Fri
+  const available = assigned.filter((a) => {
+    const key = `${a.gradeLevel_id}-${a.subject_id}`;
+    const days = scheduleMap.get(key) ?? new Set();
+    return weekdays.some((d) => !days.has(d)); // at least 1 weekday not covered
+  });
+
+  return {
+    available,
+    scheduledAll: available.length === 0,
+    noAssigned: false,
+  };
 };
-
 
 
 export const getSubjects = async () => {

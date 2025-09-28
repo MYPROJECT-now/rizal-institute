@@ -45,8 +45,8 @@ import { Skeleton } from "../ui/skeleton";
   if (status === null) {
     content = (
         <div className="flex flex-col justify-center items-center lg:py-10 py-7 px-10">
-          <p className=" lg:text-2xl sm:text-xl text-base font-bold text-red-600">  
-            Enrollemtn period is not yet set.
+          <p className=" lg:text-2xl sm:text-xl text-base font-semibold text-red-600">  
+            Enrollment period is not yet set.
           </p>
 
         </div>
@@ -54,7 +54,7 @@ import { Skeleton } from "../ui/skeleton";
   } else if (!status.isActive) {
     content = (
       <div className="flex flex-col justify-center items-center lg:py-10 py-7 px-10">
-      <p className=" lg:text-2xl sm:text-xl text-base font-bold text-red-600">
+      <p className=" lg:text-2xl sm:text-xl text-base font-semibold text-red-600">
         Enrollment is currently closed.
       </p>
       </div>

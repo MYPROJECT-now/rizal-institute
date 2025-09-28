@@ -7,6 +7,7 @@ import { AcademicYearTable, EnrollmentStatusTable } from "@/src/db/schema";
 
   export const enrollmentStatus = async () => {
     const id = await getAcademicYearID();
+    console.log(id);
     const enrollment = await db
         .select(
             {
@@ -16,6 +17,7 @@ import { AcademicYearTable, EnrollmentStatusTable } from "@/src/db/schema";
         )
         .from(EnrollmentStatusTable)
         .leftJoin(AcademicYearTable, eq(EnrollmentStatusTable.academicYear_id, id))
+        .where(eq(AcademicYearTable.academicYear_id, id)) // ✅ filter using ID
         .limit(1);
 
         console.log(enrollment);
