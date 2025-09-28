@@ -1,18 +1,18 @@
-    "use client";
+"use client";
 
-    import { ChangeEvent, FC, useRef, useState } from "react";
-    import { Button } from "@/components/ui/button";
-    import { toast } from "sonner";
-    import Image from "next/image";
-    import { usePreviewModal } from "@/src/store/preview";
-    import { verifyEmail, verifyLrn } from "@/src/actions/landingPage";
+import { ChangeEvent, FC, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import Image from "next/image";
+import { usePreviewModal } from "@/src/store/preview";
+import { verifyEmail, verifyLrn } from "@/src/actions/landingPage";
 
-    import {
-        Card,
-        CardContent,    
-        CardHeader,
-        CardTitle,
-    } from "@/components/ui/card"
+import {
+    Card,
+    CardContent,    
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
 import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
 
 

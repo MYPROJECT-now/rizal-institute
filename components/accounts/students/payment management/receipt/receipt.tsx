@@ -65,7 +65,6 @@ export const PaymentReceipt = () => {
                 width={1000}
                 height={1000}
                 className="w-[250px] h-[250px]"
-                crop={{ type: "auto", source: true }}
               />
 
             </div>

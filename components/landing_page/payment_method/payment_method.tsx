@@ -438,7 +438,7 @@ import { Skeleton } from "@/components/ui/skeleton";
                             </tr>
                             <tr>
                             <td className="py-2">Downpayment</td>
-                            <td className="text-right text-green-600 font-semibold">₱{downPayment}</td>
+                            <td className="text-right text-red-600 font-semibold">-₱{downPayment}</td>
                             </tr>
 
                             <tr className="border-t">

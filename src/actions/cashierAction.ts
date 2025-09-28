@@ -763,7 +763,7 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
 
 
   // submit breakdown and monthly fees to pay
-  export const addBreakDown = async (
+  export const  addBreakDown = async (
     lrn: string,
     tuition: number,
     miscellaneous: number,
@@ -784,7 +784,7 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     .from(applicantsInformationTable)
     .where(eq(applicantsInformationTable.lrn, lrn));
 
-  if (!getLrn) {
+  if (getLrn.length === 0) {
     console.warn("❌ No lrn found");
     return {message: "no lrn found"};
   }
@@ -798,7 +798,7 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     ))
     .limit(1);
 
-  if (getHasTuition) {
+  if (getHasTuition.length > 0) {
     console.warn("❌ This student has already been issued with their tuition fees.");
     return {message: "This student has already been issued with their tuition fees."};
   }
