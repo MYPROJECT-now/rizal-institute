@@ -190,7 +190,7 @@ import { Skeleton } from "@/components/ui/skeleton";
                     };
 
                     const uploadReservationReceipt = reservationReceipt ? await uploadImage(reservationReceipt, 'reservationPayments') : "";
-                    const data = await full_payment(trackingId, pm, downPayment, totalTuition ,mop,  uploadReservationReceipt);
+                    const data = await full_payment(trackingId, pm, downPayment, totalTuition ,mop,  uploadReservationReceipt, monthlyDues);
                     toast.success(data.message);
                     router.push("/");
                 }

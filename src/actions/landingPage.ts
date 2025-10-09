@@ -22,8 +22,10 @@ import {
   fullPaymentTable,
   BreakDownTable,
   AcademicYearTable,
+  studentTypeTable,
+  StudentGradesTable,
 } from "../db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
@@ -37,7 +39,7 @@ function generateRandomTrackingId(length = 12) {
 // Send email with tracking ID
 
 
-async function sendEmail(to: string, trackingId: string, hasReservationReceipt: boolean, hasDocuments: boolean) {
+async function sendEmail(to: string, trackingId: string, hasReservationReceipt: boolean,) {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -54,7 +56,7 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
 
     To track the status of your application, please use the following tracking ID: ${trackingId}
     You can use this ID to check on the progress of your application on our website or by contacting our 
-    admissions office.
+    registrar office.
   `;
 
   let additionalContent = '';
@@ -80,24 +82,49 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
   }
 
   // Add document reminder regardless of payment status
-  if (!hasDocuments) {
-    additionalContent += `
+  // if (!hasDocuments) {
+  //   additionalContent += `
     
-    REMINDER: Required Documents
-    Please submit the following documents in person at our registrar's office:
-    - PSA Birth Certificate
-    - Report Card
-    - Good Moral Certificate
-    - 2x2 ID Picture
-    - form 137
+  //   REMINDER: Required Documents
+  //   Please submit the following documents in person at our registrar's office:
+  //   - PSA Birth Certificate
+  //   - Report Card
+  //   - Good Moral Certificate
+  //   - 2x2 ID Picture
+  //   - form 137
 
-    Additionally, please submit the following documents if from private school:
-    - CACPRISAA Student Exit Clearance
+  //   Additionally, 
+  //   please submit the following documents if from private school:
+  //   - CACPRISAA Student Exit Clearance
 
-    `;
-  }
+  //   please submit the following documents if you are incoming Grade 7 student:
+  //   - Income Tax Return
+
+  //   `;
+  // }
 
   const closingContent = `
+    REMINDER: Required Documents
+      Please submit the following documents in person at our registrar's office:
+      - PSA Birth Certificate
+      - Report Card
+      - Good Moral Certificate
+      - 2x2 ID Picture
+      - form 137
+
+      Additionally, Please submit the following documents 
+      
+      if from private school:
+      - CACPRISAA Student Exit Clearance
+
+      if you are incoming Grade 7 student:
+      - Income Tax Return
+
+      if you are a transferee that is already ESC Grantee:
+      - Parent's Income Tax Return
+
+    Disregard this reminder if you have already submitted the required documents.
+
     If you have any questions or concerns, please do not hesitate to reach out to us. 
     We look forward to reviewing your application.
 
@@ -149,14 +176,17 @@ export const addNewApplicant = async (formData: {
   idPic: string;
   studentExitForm: string;
   form137: string;
+  itr: string;
+  escCert: string;
 
   mop: string;
   reservationReceipt: string;
   reservationAmount: number;
 
   attainmentUponGraduation: string;
-  consistentGPA: string;
+  // consistentGPA: string;
   hasEnrolledSibling: string;
+  siblingName: string;
 }) => {
   const {
     applicantsLastName,
@@ -192,14 +222,17 @@ export const addNewApplicant = async (formData: {
     idPic,
     studentExitForm,
     form137,
+    itr,
+    escCert,
 
     mop,
     reservationReceipt,
     reservationAmount,
 
     attainmentUponGraduation,
-    consistentGPA,
+    // consistentGPA,
     hasEnrolledSibling,
+    siblingName,
   } = formData;
 
 
@@ -272,7 +305,11 @@ export const addNewApplicant = async (formData: {
         studentExitForm,
         hasExitForm: !!studentExitForm,
         form137,
-        hasForm137: !!form137
+        hasForm137: !!form137,
+        itr,
+        hasTIR: !!itr,
+        escCert,
+        hasEscCertificate: !!escCert
       }),
       db.insert(reservationFeeTable).values({
         applicants_id: applicantId,
@@ -285,8 +322,9 @@ export const addNewApplicant = async (formData: {
       db.insert(additionalInformationTable).values({
         applicants_id: applicantId,
         AttainmentUponGraduation: attainmentUponGraduation,
-        ConsistentGPA: consistentGPA,
-        HasEnrolledSibling: hasEnrolledSibling
+        // ConsistentGPA: consistentGPA,
+        HasEnrolledSibling: hasEnrolledSibling,
+        siblingName: siblingName,
       })
     ]);
 
@@ -308,10 +346,18 @@ export const addNewApplicant = async (formData: {
       dateOfAdmission: new Date().toISOString().slice(0, 10),
     });
 
+    await db.insert(studentTypeTable).values({
+      applicants_id: applicantId,
+      academicYear_id: academicYearID,
+      studentType,
+      gradeToEnroll: gradeLevel,
+      student_case: 'REGULAR'
+    });
+
     // Check if reservation receipt and documents are provided
     const hasReservationReceipt = !!reservationReceipt;
-    const hasDocuments = !!(birthCert && reportCard && goodMoral && idPic && studentExitForm);
-    await sendEmail(email, trackingId, hasReservationReceipt, hasDocuments);
+    // const hasDocuments = !!(birthCert && reportCard && goodMoral && idPic && studentExitForm);
+    await sendEmail(email, trackingId, hasReservationReceipt);
 
     revalidatePath("/");
     revalidatePath("/enrollment");
@@ -333,58 +379,125 @@ export const verifyEmail = async (email: string) => {
 };
 
 export const verifyLrn = async (lrn: string) => {
-  const existing = await db.select().from(applicantsInformationTable).where(eq(applicantsInformationTable.lrn, lrn)).limit(1);
+  const existing = await db.select().from(StudentInfoTable).where(eq(StudentInfoTable.lrn, lrn)).limit(1);
   if (existing.length > 0) {
-    throw new Error("This LRN is already in use. Please use another LRN.");
+    throw new Error("You have already enrolled.");
   }
 };
 
 
 
-    export const getStatusByTrackingId = async (trackingId: string) => {
-      try {
-        const result = await db
-          .select({
-            applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
-            reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
-            regRemarks: Registrar_remaks_table.reg_remarks,
-            cashierRemarks: Cashier_remaks_table.cashier_remarks,
-            regDate: Registrar_remaks_table.dateOfRemarks,
-            cashierDate: Cashier_remaks_table.dateOfRemarks,
-            resolved_reg_remarks: Registrar_remaks_table.resolved_reg_remarks,
-            resolved_cashier_remarks: Cashier_remaks_table.resolved_cashier_remarks,
-            confirmationStatus: AdmissionStatusTable.confirmationStatus,
-            admissionStatus: AdmissionStatusTable.admissionStatus,
-            hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
-            hasTemptMonthly: TempMonthsInSoaTable.temp_month_id,
-            paymentStatus: fullPaymentTable.paymentStatus,
+export const getStatusByTrackingId = async (trackingId: string) => {
+  const academicYearID = await getAcademicYearID();
+  if (!academicYearID) return null;
+  try {
+    const result = await db
+      .select({
+        applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
+        reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
+        regRemarks: Registrar_remaks_table.reg_remarks,
+        cashierRemarks: Cashier_remaks_table.cashier_remarks,
+        regDate: Registrar_remaks_table.dateOfRemarks,
+        cashierDate: Cashier_remaks_table.dateOfRemarks,
+        resolved_reg_remarks: Registrar_remaks_table.resolved_reg_remarks,
+        resolved_cashier_remarks: Cashier_remaks_table.resolved_cashier_remarks,
+        confirmationStatus: AdmissionStatusTable.confirmationStatus,
+        admissionStatus: AdmissionStatusTable.admissionStatus,
+        hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
+        hasTemptMonthly: TempMonthsInSoaTable.temp_month_id,
+        paymentStatus: fullPaymentTable.paymentStatus,
 
 
-          })
-          .from(applicationStatusTable)
-          .leftJoin(Registrar_remaks_table,eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
-          .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
-          .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
-          .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
-          .leftJoin(TempMonthsInSoaTable,eq(applicationStatusTable.applicants_id, TempMonthsInSoaTable.applicants_id))
-          .leftJoin(fullPaymentTable,eq(applicationStatusTable.applicants_id, fullPaymentTable.applicants_id))
-          .where(
-              eq(applicationStatusTable.trackingId, trackingId),
-            )
-          .limit(1);
+      })
+      .from(applicationStatusTable)
+      .leftJoin(Registrar_remaks_table,eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
+      .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
+      .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
+      .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
+      .leftJoin(TempMonthsInSoaTable,eq(applicationStatusTable.applicants_id, TempMonthsInSoaTable.applicants_id))
+      .leftJoin(fullPaymentTable,eq(applicationStatusTable.applicants_id, fullPaymentTable.applicants_id))
+      .where(and(
+        eq(applicationStatusTable.trackingId, trackingId),
+        eq(applicationStatusTable.academicYear_id, academicYearID),
+        eq(AdmissionStatusTable.academicYear_id, academicYearID),
+        eq(reservationFeeTable.academicYear_id, academicYearID),
 
-        if (result.length > 0) {
-                console.log("Reservation ID:", result[0].hasPaidReservation);
-          return result[0];
-        } else {
-          return null; // No match found
-        }
-      } catch (error) {
-        console.error("Failed to get status:", error);
-        throw new Error("Failed to fetch application status");
-      }
-    };
+      ))
+      .limit(1);
 
+    if (result.length > 0) {
+      console.log("Reservation ID:", result[0].hasPaidReservation);
+      return result[0];
+    } else {
+      console.log("No status found for tracking ID:", trackingId);
+      return null; 
+    }
+  } catch (error) {
+    console.error("Failed to get status:", error);
+    throw new Error("Failed to fetch application status");
+  }
+};
+
+
+export const getAdmissionStatus = async (trackingId: string) => {
+  const academicYearID = await getAcademicYearID();
+  if (!academicYearID) return null;
+
+  const status = await db
+    .select({
+      applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
+      reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
+      hasPaidReservation: reservationFeeTable.reservationReceipt,
+      hasTemptMonthly: TempMonthsInSoaTable.temp_month_id,
+      confirmationStatus: AdmissionStatusTable.confirmationStatus,
+      paymentStatus: fullPaymentTable.paymentStatus,
+
+    })
+    .from(applicationStatusTable)
+    .leftJoin(reservationFeeTable, eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
+    .leftJoin(TempMonthsInSoaTable, eq(applicationStatusTable.applicants_id, TempMonthsInSoaTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(fullPaymentTable, eq(applicationStatusTable.applicants_id, fullPaymentTable.applicants_id))
+    .where(and(
+      eq(applicationStatusTable.trackingId, trackingId),
+      eq(applicationStatusTable.academicYear_id, academicYearID),
+      eq(reservationFeeTable.academicYear_id, academicYearID),
+      eq(TempMonthsInSoaTable.academicYear_id, academicYearID),
+      eq(AdmissionStatusTable.academicYear_id, academicYearID),
+      eq(fullPaymentTable.academicYear_id, academicYearID)
+    ))
+    .limit(1);
+
+  console.log(status);
+  return status;
+}
+
+
+export const getApplicationRemarks = async (trackingId: string) => {
+  const academicYearID = await getAcademicYearID();
+  if (!academicYearID) return null;
+
+  const remarks = await db
+    .select({
+      regRemarks: Registrar_remaks_table.reg_remarks,
+      cashierRemarks: Cashier_remaks_table.cashier_remarks,
+      regDate: Registrar_remaks_table.dateOfRemarks,
+      cashierDate: Cashier_remaks_table.dateOfRemarks,
+  })
+  .from(applicationStatusTable)
+  .leftJoin(Registrar_remaks_table, eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id) )
+  .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
+  .where(and(
+    eq(applicationStatusTable.trackingId, trackingId),
+    eq(Registrar_remaks_table.resolved_reg_remarks, false),
+    eq(Cashier_remaks_table.resolved_cashier_remarks, false),
+    eq(Registrar_remaks_table.academicYear_id, academicYearID),
+    eq(Cashier_remaks_table.academicYear_id, academicYearID),
+    eq(applicationStatusTable.academicYear_id, academicYearID),
+  ))
+
+  return remarks;
+}
 export const acceptAdmission = async (trackingId: string) => {
   const applicant = await db
     .select({ applicants_id: applicationStatusTable.applicants_id })
@@ -403,6 +516,8 @@ export const acceptAdmission = async (trackingId: string) => {
 
   return {success: result.rowCount > 0,};
 };
+
+
 
   // reapplication
   export const getStudentDataByTrackingId = async (trackingId: string) => {
@@ -623,7 +738,7 @@ export const installments = async (trackingId: string, pm: string, DownPayment: 
 }
 
 
-export const full_payment = async (trackingId: string, pm: string, DownPayment: number, totalTuition: number, mop: string, uploadReservationReceipt: string) => {
+export const full_payment = async (trackingId: string, pm: string, DownPayment: number, totalTuition: number, mop: string, uploadReservationReceipt: string, monthlyDues: { month: string; monthlyDues: number }[] ) => {
   const getApplicantsID = await db
     .select({ applicants_id: applicationStatusTable.applicants_id })
     .from(applicationStatusTable)
@@ -636,7 +751,12 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
     .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
     .limit(1);
 
-  await db
+  const tempMonthID = await db
+    .select({ temp_month_id: TempMonthsInSoaTable.temp_month_id })
+    .from(TempMonthsInSoaTable)
+    .where(eq(TempMonthsInSoaTable.applicants_id, getApplicantsID[0].applicants_id))
+
+  const downPayment = await db
   .insert(downPaymentTable)
   .values({
     applicants_id: getApplicantsID[0].applicants_id,
@@ -646,7 +766,23 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
     academicYear_id: await getAcademicYearID(),
     downPaymentDate: new Date().toISOString().slice(0, 10),
     SINumber: getTemptDetails[0].SINumber,
-  });
+  })
+  .returning({ donw_id: downPaymentTable.donw_id });
+
+  const downId =  downPayment[0].donw_id;
+  for (const due of monthlyDues) {
+    await db
+    .insert(MonthsInSoaTable)
+    .values({
+      temp_month_id: tempMonthID[0].temp_month_id,
+      downPaymentId: downId,
+      applicants_id: getApplicantsID[0].applicants_id,
+      academicYear_id: await getAcademicYearID(),
+      month: due.month,
+      monthlyDue: due.monthlyDues,
+    });
+  }
+
 
   await db
   .insert(fullPaymentTable)
@@ -656,10 +792,11 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
     payment_receipt: uploadReservationReceipt,
     paymentMethod: mop,
     paymentStatus: "Pending",
+    academicYear_id: await getAcademicYearID(),
   })
 
   return { success: true, message: "Payment method updated successfully" }
-
+  
 }
 
 
@@ -1152,115 +1289,281 @@ export const checkLRN = async (lrn: string) => {
   }
 };
 
+export const getPromotion = async (lrn: string) => {
+  const academicYear = await db
+  .select({
+    academicYear_id: studentTypeTable.academicYear_id
+  })
+  .from(applicantsInformationTable)
+  .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
+  .where(eq(applicantsInformationTable.lrn, lrn))
+  .limit(1);
+
+if (!academicYear[0]?.academicYear_id) {
+  return [];
+}
+  const allGrades = await db
+  .select({
+    remarks: StudentGradesTable.remarks,
+  })
+  .from(StudentGradesTable)
+  .leftJoin(StudentInfoTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+  .where(and(
+    eq(StudentGradesTable.academicYear_id, academicYear[0]?.academicYear_id),
+    eq(StudentInfoTable.lrn, lrn))
+  );
+    
+  const failedCount = allGrades.filter(g => g.remarks === "FAILED").length;
+
+  let promotionStatus = "";
+
+  if (failedCount === 0) {
+    promotionStatus = "PROMOTED";
+  } else if (failedCount <= 2) {
+    promotionStatus = "SUMMER";
+  } else {
+    promotionStatus = "RETAINED";
+  }
+
+  await db
+    .update(studentTypeTable)
+    .set({
+      promotion: promotionStatus,
+    })
+    .where(eq(studentTypeTable.academicYear_id, academicYear[0]?.academicYear_id));
+
+  return;
+}
+
+export const oldStudentEnrollment = async (lrn: string) => {
+  const getGrade = await db
+  .select({
+    gradeToEnroll: studentTypeTable.gradeToEnroll,
+    promotion: studentTypeTable.promotion
+  })
+  .from(applicantsInformationTable)
+  .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
+  .where(eq(applicantsInformationTable.lrn, lrn))
+  .orderBy(desc(applicantsInformationTable.applicants_id)) 
+  .limit(1);
+
+  return getGrade[0];
+}
 
 
-export const enrollOldStudent = async (
-    lrn: string,
-    gradeLevel: string,
-    mop: string,
-    reservationReceipt: string,
-    reservationAmount: number,
+export const OldStudentEnrollment = async (
+  lrn: string,
+  mop: string, 
+  reservationReceipt: string, 
+  reservationAmount: number,
+  gradeLevel: string,
+  promotion: string,
 ) => {
-  const getStudentID = await db
+  
+  const getapplicantId = await db
   .select({
     applicants_id: applicantsInformationTable.applicants_id
   })
   .from(applicantsInformationTable)
-  .where(eq(applicantsInformationTable.lrn, lrn)).limit(1); 
+  .where(eq(applicantsInformationTable.lrn, lrn)).limit(1);
 
-  const studentID = getStudentID[0]?.applicants_id;
-  const trackingId = generateRandomTrackingId();
+
+
+  const applicantId = getapplicantId[0]?.applicants_id;
   const academicYearID = await getAcademicYearID();
 
+  
   const getEmail = await db
   .select({
     email: applicantsInformationTable.email
   })
   .from(applicantsInformationTable)
-  .where(eq(applicantsInformationTable.applicants_id, studentID)).limit(1); 
+  .where(eq(applicantsInformationTable.applicants_id, applicantId))
+  .limit(1); 
 
   const email = getEmail[0]?.email;
+  async function OldStudentEmail(email: string, trackingId: string) {
 
-  await db
-  .insert(reservationFeeTable)
-  .values({
-    applicants_id: studentID,
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USER!,
+        pass: process.env.EMAIL_PASS!,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Application Confirmation at Rizal Institute - Canlubang',
+      text: `
+      Dear Applicant,
+
+      We appreciate your interest in returning to our institution.
+      This is a confirmation that we have received your application for re-admission to Rizal Institute - Canlubang.
+
+      Tracking ID: ${trackingId}
+
+      To track the status of your application, please use the following tracking ID: ${trackingId}
+      You can use this ID to check on the progress of your application on our website or by contacting our 
+      admissions office.
+
+      If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+
+      Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+
+      Best regards,
+      Rizal Institute - Canlubang
+      `,
+    };
+
+    return transporter.sendMail(mailOptions);
+  }
+
+  await db.insert(reservationFeeTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
     mop,
     reservationReceipt,
     reservationAmount,
     dateOfPayment: new Date().toISOString().slice(0, 10),
+  })
+  const trackingId = generateRandomTrackingId();
+  await db.insert(applicationStatusTable).values({
+    applicants_id: applicantId,
     academicYear_id: academicYearID,
+    trackingId,
+    applicationFormReviewStatus: 'Reserved',
+    reservationPaymentStatus: 'Pending',
+    dateOfApplication: new Date().toISOString().slice(0, 10),
+  });
+  await db.insert(AdmissionStatusTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
+    admissionStatus: 'Pending',
+    confirmationStatus: 'Pending',
+    dateOfAdmission: new Date().toISOString().slice(0, 10),
+  });
+  await db.insert(studentTypeTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
+    studentType : "Old Student",
+    gradeToEnroll: gradeLevel,
+    student_case: promotion === "REGULAR" ? null : "REPEATER",
   });
 
+  await OldStudentEmail(email, trackingId);
+
+}
 
 
-      await db
-      .insert(applicationStatusTable)
-      .values({
-      applicants_id: studentID,
-      academicYear_id: academicYearID,
-      trackingId: trackingId,
-      applicationFormReviewStatus: 'Pending',
-      reservationPaymentStatus: 'Pending',
-      dateOfApplication: new Date().toISOString().slice(0, 10),
-    });
 
-    await db.insert(AdmissionStatusTable).values({
-      applicants_id: studentID,
-      academicYear_id: academicYearID,
-      admissionStatus: 'Pending',
-      confirmationStatus: 'Pending',
-      dateOfAdmission: new Date().toISOString().slice(0, 10),
-    });
+// export const enrollOldStudent = async (
+//     lrn: string,
+//     gradeLevel: string,
+//     mop: string,
+//     reservationReceipt: string,
+//     reservationAmount: number,
+// ) => {
+//   const getStudentID = await db
+//   .select({
+//     applicants_id: applicantsInformationTable.applicants_id
+//   })
+//   .from(applicantsInformationTable)
+//   .where(eq(applicantsInformationTable.lrn, lrn)).limit(1); 
 
-    await db.update(educationalBackgroundTable)
-    .set({
-      gradeLevel: gradeLevel,
-      studentType: 'Old Student',
-    })
-    .where(eq(educationalBackgroundTable.applicants_id, studentID));
+//   const studentID = getStudentID[0]?.applicants_id;
+//   const trackingId = generateRandomTrackingId();
+//   const academicYearID = await getAcademicYearID();
+
+//   const getEmail = await db
+//   .select({
+//     email: applicantsInformationTable.email
+//   })
+//   .from(applicantsInformationTable)
+//   .where(eq(applicantsInformationTable.applicants_id, studentID)).limit(1); 
+
+//   const email = getEmail[0]?.email;
+
+//   await db
+//   .insert(reservationFeeTable)
+//   .values({
+//     applicants_id: studentID,
+//     mop,
+//     reservationReceipt,
+//     reservationAmount,
+//     dateOfPayment: new Date().toISOString().slice(0, 10),
+//     academicYear_id: academicYearID,
+//   });
+
+
+//   await db
+//     .insert(applicationStatusTable)
+//     .values({
+//     applicants_id: studentID,
+//     academicYear_id: academicYearID,
+//     trackingId: trackingId,
+//     applicationFormReviewStatus: 'Pending',
+//     reservationPaymentStatus: 'Pending',
+//     dateOfApplication: new Date().toISOString().slice(0, 10),
+//   });
+
+//   await db.insert(AdmissionStatusTable).values({
+//     applicants_id: studentID,
+//     academicYear_id: academicYearID,
+//     admissionStatus: 'Pending',
+//     confirmationStatus: 'Pending',
+//     dateOfAdmission: new Date().toISOString().slice(0, 10),
+//   });
+
+//   await db.update(educationalBackgroundTable)
+//   .set({
+//     gradeLevel: gradeLevel,
+//     studentType: 'Old Student',
+//   })
+//   .where(eq(educationalBackgroundTable.applicants_id, studentID));
 
         
-// Function to send reservation email
-async function sendReservationEmail(email: string, trackingId: string) {
+// // Function to send reservation email
+// async function sendReservationEmail(email: string, trackingId: string) {
 
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: process.env.EMAIL_USER!,
-      pass: process.env.EMAIL_PASS!,
-    },
-  });
+//   const transporter = nodemailer.createTransport({
+//     service: 'Gmail',
+//     auth: {
+//       user: process.env.EMAIL_USER!,
+//       pass: process.env.EMAIL_PASS!,
+//     },
+//   });
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Application Confirmation at Rizal Institute - Canlubang',
-    text: `
-    Dear Applicant,
+//   const mailOptions = {
+//     from: process.env.EMAIL_USER,
+//     to: email,
+//     subject: 'Application Confirmation at Rizal Institute - Canlubang',
+//     text: `
+//     Dear Applicant,
 
-    We appreciate your interest in returning to our institution.
-    This is a confirmation that we have received your application for re-admission to Rizal Institute - Canlubang.
+//     We appreciate your interest in returning to our institution.
+//     This is a confirmation that we have received your application for re-admission to Rizal Institute - Canlubang.
 
-    Tracking ID: ${trackingId}
+//     Tracking ID: ${trackingId}
 
-    To track the status of your application, please use the following tracking ID: ${trackingId}
-    You can use this ID to check on the progress of your application on our website or by contacting our 
-    admissions office.
+//     To track the status of your application, please use the following tracking ID: ${trackingId}
+//     You can use this ID to check on the progress of your application on our website or by contacting our 
+//     admissions office.
 
-    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+//     If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
 
-    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+//     Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
 
-    Best regards,
-    Rizal Institute - Canlubang
-    `,
-  };
+//     Best regards,
+//     Rizal Institute - Canlubang
+//     `,
+//   };
 
-  return transporter.sendMail(mailOptions);
-}
-await sendReservationEmail(email, trackingId);
-}
+//   return transporter.sendMail(mailOptions);
+// }
+// await sendReservationEmail(email, trackingId);
+// }
 
 
 

@@ -40,4 +40,5 @@ export type SchedType = {
   dayOfWeek: string;
   startTime: string;
   endTime: string;
+  roomName: string | null;
 }

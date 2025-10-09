@@ -63,16 +63,16 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
     }, [SOATodos, SOATodoItems]);
 
     // Handle empty data
-    if (!SOATodos || SOATodos.length === 0 || SOATodos[0]?.paymentMethod === "full_payment") {
-        return (
-            <main className="py-7 px-7 my-10 shadow-lg mx-auto rounded-lg">
-                <div className="text-center text-dGreen font-bold text-xl">
-                    <p> Student is fully paid.</p>
-                </div>
-            </main>
-        );
-    }
-    else if (!SOATodoItems || SOATodoItems.length === 0) {
+    // if (!SOATodos || SOATodos.length === 0 || SOATodos[0]?.paymentMethod === "full_payment") {
+    //     return (
+    //         <main className="py-7 px-7 my-10 shadow-lg mx-auto rounded-lg">
+    //             <div className="text-center text-dGreen font-bold text-xl">
+    //                 <p> Student is fully paid.</p>
+    //             </div>
+    //         </main>
+    //     );
+    // }
+    if (!SOATodoItems || SOATodoItems.length === 0) {
         return (
             <main className="p-3">
                 <div className="text-center text-gray-500">

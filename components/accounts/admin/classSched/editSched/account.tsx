@@ -38,11 +38,15 @@ export const Edit_Schedule = () => {
         dayOfWeek: string; 
         startTime: string; 
         endTime: string;
+        room_id: number;
+        roomName: string | null;
       }[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [sched_id, setSched_id] = useState(0);
+  const [selectedRoom, setSelectedRoom] = useState(0);
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadsgs, setLoadsgs] = useState(false);
@@ -217,7 +221,22 @@ export const Edit_Schedule = () => {
             />
           </section>
 
-
+            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+              <span className="text-dGreen text-sm font-semibold">Rooms:</span>
+              <select
+                value={selectedRoom}
+                onChange={(e) => setSelectedRoom(Number(e.target.value))}
+                disabled={!startTime || !endTime}
+                className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+              >
+                <option value="">-- Select Room --</option>
+                {day.map((rooms) => (
+                  <option key={rooms.room_id} value={rooms.room_id}>
+                    {rooms.roomName}
+                  </option>
+                ))}
+              </select>
+            </section>  
 
           <Button
             variant="confirmButton"

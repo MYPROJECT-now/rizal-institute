@@ -12,6 +12,7 @@ type MySchedType = {
   dayOfWeek: string;
   startTime: string;
   endTime: string;
+  roomName: string | null;
 };
 
 const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday"];
@@ -48,7 +49,7 @@ export const MySched = () => {
   );
 
   return (
-    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1  p-5 gap-4">
+    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1  p-5 gap-4 py-10">
       {grouped.map(({ day, entries }) => (
         <Card
           key={day}
@@ -87,19 +88,32 @@ export const MySched = () => {
                 No Schedule
               </div>
             ) : (
-              entries.map((s, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between px-3 py-2 border-b-2 border-gray-300"
-                >
-                  <span className="font-mono text-sm text-gray-700 w-28">
-                    {s.startTime} – {s.endTime}
-                  </span>
-                  <span className="text-gray-900 font-medium text-sm">
-                    {s.subjectName ?? "No Subject"} — Grade {s.gradeLevelName ?? "N/A"} {s.sectionName ?? "No Section"}
-                  </span>
-                </div>
-              ))
+entries.map((s, idx) => (
+  <div
+    key={idx}
+    className="flex flex-col py-2 px-6 border-b-2 border-gray-300"
+  >
+    {/* Top row: time + subject */}
+    <div className="grid grid-cols-2 gap-9">
+      <span className="text-gray-900 font-medium text-sm">
+        {s.subjectName ?? "No Subject"} — Grade {s.gradeLevelName ?? "N/A"}
+      </span>
+      <span className="font-mono text-sm text-gray-700 w-28">
+        {s.startTime} – {s.endTime}
+      </span>
+    </div>
+
+    <div className="grid grid-cols-2 gap-9">
+    <span className="text-gray-900 font-medium text-sm mt-1">
+      {s.sectionName ?? "No Section"} 
+    </span>
+    <span className="text-gray-900 font-medium text-sm mt-1">
+      {`(${s.roomName ?? "No Room"})`}
+    </span>
+    </div>
+  </div>
+))
+
             )}
           </section>
 

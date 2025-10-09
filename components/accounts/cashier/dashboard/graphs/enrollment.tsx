@@ -54,13 +54,13 @@ export const Enrollment = () => {
 
   return (
     <div>
-      <Card className="w-full gap-4 sm:w-[300px] lg:w-[400px]">
+      <Card className="w-full sm:w-[300px] lg:w-[370px] ">
         <CardHeader>
           <CardTitle className="text-center font-bold text-dGreen">
             Monthly Collection Trend
           </CardTitle>
         </CardHeader>
-        <CardContent>
+      <CardContent className=" lg:w-[400px] m-[-12px] ">
           {loading ? (
             <div className="flex items-center justify-center">
               <Loader2 className="h-8 w-8 animate-spin text-green-700" />
@@ -71,7 +71,7 @@ export const Enrollment = () => {
             </div>
           ) : (
             <ChartContainer config={chartConfig} className="h-full w-full">
-              <BarChart data={chartData}>
+              <BarChart data={chartData} margin={{  left: -5, right: 10, top: 15,    }}>
               {/* <BarChart data={chartData.length > 0 ? chartData : defaultMonths}> */}
 
                 <CartesianGrid vertical={false} />
@@ -88,7 +88,7 @@ export const Enrollment = () => {
                     angle: -90,
                     position: "insideLeft",
                     textAnchor: "middle",
-                    dy: 80,
+                    dy: 60,
                     dx: 10,
                   }}
                   style={{ fontSize: "10px" }}

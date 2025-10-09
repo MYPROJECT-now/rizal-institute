@@ -25,7 +25,7 @@ interface Props {
 
 
 
-  const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string) => {
+  const handleAccept = async (id: number, lastName: string, firstName: string, middleName: string, payment_amount: number) => {
     setLoadingId(id);
     try {
       const response = await fetch('/api/accept/cashier_full', {
@@ -33,7 +33,7 @@ interface Props {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ studentId: id, name: lastName + " " + firstName + " " + middleName }),
+        body: JSON.stringify({ studentId: id, name: lastName + " " + firstName + " " + middleName, payment_amount: payment_amount }),
       });
 
       const data = await response.json();

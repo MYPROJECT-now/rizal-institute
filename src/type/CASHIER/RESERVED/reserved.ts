@@ -1,5 +1,5 @@
 export type reservedSlotType = {
-    id: number;
+    id: number | null;
     lrn: string;
     firstName: string;
     lastName: string;

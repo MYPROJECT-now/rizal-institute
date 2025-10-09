@@ -181,7 +181,7 @@ const showDocument = (src: string | null, title: string) => {
 
             <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
               <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
-                Section 3: Educational Background
+                Section 3: Educational Information
               </p>
               <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 px-2">
                 <section className="flex flex-col">
@@ -192,7 +192,7 @@ const showDocument = (src: string | null, title: string) => {
                 </section>
 
                 <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Grade Level:</p>
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Grade Level to enroll:</p>
                   <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
                     Grade {applicant.gradeLevel}              
                   </p>
@@ -205,33 +205,38 @@ const showDocument = (src: string | null, title: string) => {
                   </p>
                 </section>
 
-                <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">SY Graduated:</p>
-                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.schoolYear}              
-                  </p>
-                </section>
+                {applicant.studentType === "Old Student" ? ("") : (
+                  <>
+                    <section className="flex flex-col">
+                      <p className="text-green-900 font-semibold text-xs font-sans pl-1">SY Graduated:</p>
+                      <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                        {applicant.schoolYear}              
+                      </p>
+                    </section>
 
-                <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Previous School:</p>
-                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.prevSchool}              
-                  </p>
-                </section>
+                    <section className="flex flex-col">
+                      <p className="text-green-900 font-semibold text-xs font-sans pl-1">Previous School:</p>
+                      <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                        {applicant.prevSchool}              
+                      </p>
+                    </section>
 
-                <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Type:</p>
-                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.schoolType}              
-                  </p>
-                </section>
+                    <section className="flex flex-col">
+                      <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Type:</p>
+                      <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                        {applicant.schoolType}              
+                      </p>
+                    </section>
 
-                <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Address:</p>
-                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.schoolAddress}              
-                  </p>
-                </section>
+                    <section className="flex flex-col">
+                      <p className="text-green-900 font-semibold text-xs font-sans pl-1">School Address:</p>
+                      <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                        {applicant.schoolAddress}              
+                      </p>
+                    </section>
+                  </>
+                )}
+
               </div>
             </article>
 

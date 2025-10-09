@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
   },
   greetings: {
     fontSize: 12,
-    marginTop: 100,
+    marginTop: 70,
     marginLeft: 40,
     marginBottom: 35,
   },
   indent: {
     fontSize: 12,
-    marginTop: 50,
+    marginTop: 20,
     marginLeft: 100,
   },
   paragraph: {
@@ -58,14 +58,15 @@ const styles = StyleSheet.create({
 
 export interface StudentInfo {
   lrn: string | null;
-  admissionStatus: string | null;
   gradeLevelName: string | null;
   academicYear: string | null;
-  outstandingBalance?: number;
   studentFirstName: string | null;
   studentMiddleName: string | null;
   studentLastName: string | null;
   studentSuffix: string | null;
+  sectionName: string | null;
+  subjects?: string[]; 
+
 }
 
 export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentInfo }) {
@@ -109,7 +110,56 @@ export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentIn
             <Text style={styles.data}>Grade {studentInfo?.gradeLevelName || "___"}</Text> student for the S.Y{" "}
             <Text style={styles.data}>{studentInfo?.academicYear || "____-____"}</Text>.
           </Text>
+
+          <View style={{ marginTop: 20, alignItems: "center" }}>
+            <Text style={{ fontSize: 13 }}>
+              <Text style={styles.data}>{studentInfo?.sectionName || "________"}</Text>
+            </Text>
+          </View>
         </View>
+
+        {studentInfo?.subjects && studentInfo.subjects.length > 0 && (
+          <View
+            style={{
+              marginTop: 25,
+              alignSelf: "center",
+              width: "70%",
+              borderWidth: 1,
+              borderColor: "#000",
+              borderRadius: 5,
+              padding: 10,
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: "center",
+                marginBottom: 25,
+                fontWeight: "bold",
+                textDecoration: "underline",
+              }}
+            >
+              Subjects
+            </Text>
+
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                marginHorizontal: 10,
+              }}
+            >
+              {studentInfo.subjects.map((subj, index) => (
+                <View key={index} style={{ width: "45%", marginBottom: 5 }}>
+                  <Text style={{ fontSize: 11 }}>• {subj}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
 
         <View
           style={{

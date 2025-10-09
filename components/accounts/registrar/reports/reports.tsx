@@ -1,13 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { getAdmittedStudents, getAmountPaid } from "@/src/actions/registrarAction";
+import { getAdmittedStudents, getAmountPaid, getRecentGrantees } from "@/src/actions/registrarAction";
 import { useReportModal } from "@/src/store/REGISTRAR/reports";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -30,12 +29,21 @@ type AmountPaidProps = {
     totalDue: number;
     totalPaid: number;
 }
+
+type GranteeProps = {
+  fullName: string;
+  studentType: string;
+};
+
 export const Reports = () => {
     const { isOpen, close } = useReportModal();
     const [admitted, SetAdmitted] = useState<AdmittedProps[]>([]);
     const [amountPaid, SetAmountPaid] = useState<AmountPaidProps[]>([]);
+    const [grantees, setGrantees] = useState<GranteeProps[]>([]);
+
     const [loading1, setLoading1] = useState(true);
     const [loading2, setLoading2] = useState(true);
+    const [loading3, setLoading3] = useState(true);
 
     useEffect(() => {
         const fetchAdmitted = async () => {
@@ -56,7 +64,15 @@ export const Reports = () => {
         fetchAdmitted();
     } , []);
 
-
+    useEffect(() => {
+        const fetchGrantees = async () => {
+        const result = await getRecentGrantees();
+        setGrantees(result ?? []);
+        setLoading3(false);
+        };
+        fetchGrantees();
+    }, []);
+    
     const handleDownloadAdmitted = () => {
     const data = admitted.map((admittedStudents: AdmittedProps) => ({
         LRN: admittedStudents.lrn,
@@ -129,43 +145,80 @@ export const Reports = () => {
         XLSX.writeFile(wb, "Receivables.xlsx");
         };
 
+  const handleDownloadGrantees = () => {
+    const data = grantees.map((g) => ({
+      FullName: g.fullName,
+      Type: g.studentType,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws["!cols"] = Object.keys(data[0]).map((key) => ({ wch: key.length + 15 }));
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Grantees");
+
+    XLSX.writeFile(wb, "Recent_Grantees.xlsx");
+  };
 
     return (
         <Dialog open={isOpen} onOpenChange={close}>
         <DialogContent className="w-[290px] sm:w-[450px] lg:w-[600px]  bg-white rounded-lg shadow-lg">
             <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-white bg-dGreen py-3 rounded-t-lg  flex items-center justify-center">
-                    Generate Report
+                    Reports and Summaries
                 </DialogTitle>
-                <div className="flex flex-col px-auto mx-auto gap-5 py-10 w-[240px]">
-                    {loading1 && loading2 ? (
+                <>
+                    {loading1 && loading2 && loading3 ? (
                         <div className="flex items-center justify-center">
                             <Loader2 className="text-dGreen animate-spin" />
                         </div>
                     ) : (
-                    <>
-                    <Button
-                        onClick={handleDownloadAdmitted}
-                        variant="confirmButton"
-                        className="py-2 rounded-lg"
-                          disabled={admitted.length === 0}
+                    <div className="grid grid-cols-2 gap-6  px-5 py-5">
+                        <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
+                            <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg ">Admitted Students</p>
+                            <p className="text-xs   px-5">Download list of officially admitted students this year</p>
+                            <button
+                                onClick={handleDownloadAdmitted}
+                                className="text-sm bg-transparent text-dGreen font-semibold self-end underline  hover:text-green-600"
+                                disabled={admitted.length === 0}
 
-                    >
-                        Download Admitted Students
-                    </Button>
+                            >
+                                Download
+                            </button>
+                        </section>
 
-                    <Button
-                        onClick={handleDownloadReceivables}
-                        variant="confirmButton"
-                        className="py-2 rounded-lg"
-                          disabled={amountPaid.length === 0}
+                        <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
+                            <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg ">Amount Recievables</p>
+                            <p className="text-xs   px-5">Download list of current receivables and payments</p>
+                            <button
+                                onClick={handleDownloadReceivables}
+                                className="text-sm bg-transparent text-dGreen font-semibold self-end underline  hover:text-green-600"
+                                disabled={amountPaid.length === 0}
 
-                    >
-                        Download Receivables
-                    </Button>
-                    </>
+                            >
+                                Download
+                            </button>
+                        </section>
+
+                        <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
+                            <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg">
+                                New Grantees
+                            </p>
+                            <p className="text-xs px-5">
+                                Download list of new ESC grantees this year
+                            </p>
+                            <button
+                                onClick={handleDownloadGrantees}
+                                className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
+                                disabled={grantees.length === 0}
+                            >
+                                Download
+                            </button>
+                        </section>
+
+                    </div>
                     )}
-                </div>
+                </>
             </DialogHeader>
         </DialogContent>
         </Dialog>

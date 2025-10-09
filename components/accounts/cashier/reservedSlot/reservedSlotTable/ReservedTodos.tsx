@@ -106,7 +106,7 @@ interface Props {
             <th className="px-4 py-2">LRN</th>
             <th className="px-4 py-2">Full Name</th>
             <th className="px-4 py-2">Grade Level</th>
-            <th className="px-4 py-2 min-w-[120px]">Discount Class</th>
+            {/* <th className="px-4 py-2 min-w-[120px]">Discount Class</th> */}
             <th className="px-4 py-2 min-w-[120px]">Tuition Status</th>
           </tr>
         </thead>
@@ -120,7 +120,7 @@ interface Props {
           ) : (
             currentStudents.map((applicants, idx) => (
             <Applicant 
-              key={applicants.lrn} 
+              key={applicants.id} 
               applicants={applicants} 
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
 

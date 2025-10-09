@@ -69,10 +69,10 @@ export const Enrollees_info_Modal = () => {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {subjects.map((subject, idx) => (
-                    <p key={idx} className="flex flex-row gap-2">
+                    <div key={idx} className="flex flex-row gap-2">
                       <strong className="text-green-800">{subject.subject ?? "Unnamed Subject"}:</strong>{" "}
                       <p className="text-green-800">{subject.finalGrade ?? "-"}</p>
-                    </p>
+                    </div>
                   ))}
                 </div>
               </section>

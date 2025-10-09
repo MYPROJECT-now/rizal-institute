@@ -8,7 +8,7 @@ import { RemarksModal } from "../remarks_cashier/remark_modal";
 
 interface Props {
   applicants: Tablefull_Type;
-  onAccept: (id: number, lastName: string, firstName: string, middleName: string) => void;
+  onAccept: (id: number, lastName: string, firstName: string, middleName: string, payment_amount: number) => void;
   onDecline: (id: number) => void;
   className?: string;
   loading?: boolean;
@@ -36,7 +36,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       </td>
       <td className=" flex flex-row gap-1 items-center justify-center py-2 px-2">
         <Button
-          onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
+          onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "", applicants.payment_amount ?? 0)}
           disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || applicants.isActive === false}
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           variant={"acceptButton"}

@@ -42,14 +42,17 @@ const NewApplicant = () => {
     idPic: string,
     studentExitForm: string,
     form137: string,
+    itr: string,
+    escCert: string,
 
     mop: string,
     reservationReceipt: string,
     reservationAmount: number,
 
     attainmentUponGraduation: string,
-    consistentGPA: string,
+    // consistentGPA: string,
     hasEnrolledSibling: string,
+    siblingName: string,
   ) => {
   try { 
     await addNewApplicant
@@ -86,14 +89,17 @@ const NewApplicant = () => {
     idPic,
     studentExitForm,
     form137,
+    itr,
+    escCert,
 
     mop,
     reservationReceipt,
     reservationAmount,
 
     attainmentUponGraduation,
-    consistentGPA,
+    // consistentGPA,
     hasEnrolledSibling,
+    siblingName,
   });
       toast.success("Application was submitted successfully. Check your email for more details"); 
       router.push("/");

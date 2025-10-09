@@ -3,7 +3,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 
-import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, grantAvailable, ReceiptInfoTable, SubjectTable } from "../src/db/schema";
+import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, grantAvailable, ReceiptInfoTable, RoomTable, SubjectTable } from "../src/db/schema";
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
@@ -12,9 +12,9 @@ const insertAcademicYear = async () => {
 
     const AcademicYear = [
     {
-      academicYear: "2025-2026",
-      academicYearStart: new Date("2025-10-1").toISOString(), //yyyy-mm-dd
-      academicYearEnd: new Date("2026-03-30").toISOString(),
+      academicYear: "2024-2025",
+      academicYearStart: new Date("2024-10-1").toISOString(), //yyyy-mm-dd
+      academicYearEnd: new Date("2025-03-30").toISOString(),
       isActive: true,
     },
 
@@ -69,7 +69,7 @@ const insertAcademicYear = async () => {
       academicYear_id: acadId,
       enrollment_period: "2025-2026",
       enrollment_start_date: "2025-06-01",
-      enrollment_end_date: "2025-10-01",
+      enrollment_end_date: "2025-10-30",
       }
     ]
     const result4 = await db.insert(EnrollmentStatusTable).values(enrollment).returning();
@@ -95,8 +95,30 @@ const insertAcademicYear = async () => {
     ]
     const result6 = await db.insert(ReceiptInfoTable).values(info).returning();
 
-    console.log("Data inserted successfully", {result, result2, result3, result4, result5, result6});
+    const room = [
+      {
+        roomName: "Main 101",
+      },
+      {
+        roomName: "Main 102",
+      },
+      {
+        roomName: "Main 103",
+      },
+      {
+        roomName: "Main 104",
+      },
+      {
+        roomName: "Main 105",
+      },
+      {
+        roomName: "Main 106",
+      },
+    ]
+    const result7 = await db.insert(RoomTable).values(room).returning();
+    console.log("Data inserted successfully", {result, result2, result3, result4, result5, result6, result7});
 
+  
 };
 
 insertAcademicYear();

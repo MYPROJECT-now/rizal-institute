@@ -44,7 +44,7 @@ export const CheckLrn = () => {
 
       if (exists) {
         close();
-        router.push("/application/old_student");
+        router.push(`/application/old_student/?lrn=${lrn}`);
       } else {
         setNotFound(true);
       }

@@ -2,7 +2,7 @@
 
 import { and, desc, eq, gte, isNull, lte, ne, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, ScheduleTable, SectionTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, RoomTable, ScheduleTable, SectionTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { clerkClient } from "@clerk/nextjs/server";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -387,13 +387,15 @@ export const getSchedule = async () => {
     clerk_username: staffClerkUserTable.clerk_username,
     dayOfWeek: ScheduleTable.dayOfWeek,
     startTime: ScheduleTable.startTime,
-    endTime: ScheduleTable.endTime
+    endTime: ScheduleTable.endTime,
+    roomName: RoomTable.roomName,
   })
   .from(ScheduleTable)
   .leftJoin(SectionTable, eq(SectionTable.section_id, ScheduleTable.section_id))
   .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, ScheduleTable.gradeLevel_id))
   .leftJoin(SubjectTable, eq(SubjectTable.subject_id, ScheduleTable.subject_id))
   .leftJoin(staffClerkUserTable, eq(staffClerkUserTable.clerk_uid, ScheduleTable.clerk_uid))
+  .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
   return getSched;
 }
 
@@ -405,7 +407,8 @@ export const AddSchedule = async (
   clerk_uid: number,
   dayOfWeek: string,
   startTime: string,
-  endTime: string
+  endTime: string,
+  room_id: number
 ) => {
 
   const selectedYear = await getSelectedYear();
@@ -421,7 +424,8 @@ export const AddSchedule = async (
     clerk_uid: clerk_uid,
     dayOfWeek: dayOfWeek,
     startTime: startTime,
-    endTime: endTime
+    endTime: endTime,
+    room_id: room_id
   })
 
   await db
@@ -503,6 +507,16 @@ export const AddSchedule = async (
 
 //   return conflicts;
 // };
+export const getAvailableRooms = async () => {
+  const rooms = await db
+    .select({
+    roomName: RoomTable.roomName,
+    room_id: RoomTable.room_id
+  })
+  .from(RoomTable)
+
+  return rooms;
+}
 
 export const checkSchedule = async (
   teacherId: number,
@@ -728,6 +742,7 @@ export const getData = async (selectedTeacher: number) => {
     sectionName: SectionTable.sectionName,
     subject_id: TeacherAssignmentTable.subject_id,
     subjectName: SubjectTable.subjectName,
+
   })
   .from(SectionTable)
   .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, SectionTable.gradeLevel_id))
@@ -750,8 +765,11 @@ export const getDaySched = async (
     dayOfWeek: ScheduleTable.dayOfWeek,
     startTime: ScheduleTable.startTime,
     endTime: ScheduleTable.endTime,
+    room_id: ScheduleTable.room_id,
+    roomName: RoomTable.roomName,
   })
   .from(ScheduleTable)
+  .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
   .where(
     and(
       eq(ScheduleTable.section_id, setSelectedSection),

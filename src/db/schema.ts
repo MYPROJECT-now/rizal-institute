@@ -39,6 +39,16 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
 
   })
 
+  export const studentTypeTable = pgTable("studentTypeTable", {
+    studentType_id: serial("studentType_id").primaryKey(),
+    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+    studentType: varchar('studentType', { length:100 }).notNull(),
+    gradeToEnroll: varchar('gradeToEnroll', { length:100 }).notNull(),
+    promotion: varchar('promotion', { length:100 }),
+    student_case: varchar('student_case', { length:100 }),
+  })
+
   export const documentsTable = pgTable("documentsTable", {
     document_id: serial('document_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
@@ -54,6 +64,10 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     hasExitForm: boolean('hasExitForm').default(false),
     form137: varchar('form137', { length:300 }),
     hasForm137: boolean('hasForm137').default(false),
+    itr: varchar('itr', { length:300 }),
+    hasTIR: boolean('hasTIR').default(false),
+    escCert: varchar('escCert', { length:300 }),
+    hasEscCertificate: boolean('hasEscCertificate').default(false),
   })
 
   export const additionalInformationTable = pgTable("additionalInformationTable", {
@@ -62,6 +76,8 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     AttainmentUponGraduation: varchar('AttainmentUponGraduation', { length:100 }),
     ConsistentGPA: varchar('ConsistentGPA', { length:100 }),
     HasEnrolledSibling: varchar('HasEnrolledSibling', { length:100 }),
+    siblingName: varchar('siblingName', { length:100 }),
+    escGrantee: varchar('escGrantee', { length:100 }),
   })
 
   export const reservationFeeTable = pgTable("reservationFeeTable" ,{
@@ -74,7 +90,6 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     dateOfPayment: varchar('dateOfPayment').notNull(),
     SINumber: varchar('SINumber', { length:300 }),
   })
-
 
 
 
@@ -161,27 +176,39 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
   })
 
-  export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
-    spgac_id: serial("spgac_id").primaryKey(),
-    student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
-    section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
-    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+  export const RoomTable = pgTable("RoomTable", {
+    room_id: serial("room_id").primaryKey(),
+    roomName: varchar("roomName", { length: 100 }).notNull(),
   })
 
-    export const ScheduleTable = pgTable("ScheduleTable", {
-      schedule_id: serial("schedule_id").primaryKey(),
-      academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
-      section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
-      gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
-      subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
-      clerk_uid: integer("clerk_uid"), // teacher.references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
-      dayOfWeek: varchar("dayOfWeek", { length: 20 }).notNull(), // "Monday", "Tue"
-      startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
-      endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30"
-    });
+export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
+  spgac_id: serial("spgac_id").primaryKey(),
+  student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
+  section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
+  gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+})
 
+  export const ScheduleTable = pgTable("ScheduleTable", {
+    schedule_id: serial("schedule_id").primaryKey(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+    section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
+    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
+    clerk_uid: integer("clerk_uid"), // teacher.references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
+    dayOfWeek: varchar("dayOfWeek", { length: 20 }).notNull(), // "Monday", "Tue"
+    startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
+    endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30"
+    room_id: integer("room_id").references(() => RoomTable.room_id, { onDelete: "cascade" }).notNull(),
+  });
 
+  export const ESCGranteeTable = pgTable("ESCGranteeTable", {
+    ESCGrantee_id: serial("ESCGrantee_id").primaryKey(),
+    applicants_id: integer("applicants_id").references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+    ESCGrantee: boolean("ESCGrantee").notNull().default(true),
+    studentType: varchar("studentType", { length: 100 }).notNull(),
+  })
 
 
 // student intital tuition details
@@ -221,6 +248,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
   export const fullPaymentTable = pgTable("fullPaymentTable", {
     payment_id: serial('payment_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     payment_amount: integer('payment_amount').notNull(),
     payment_receipt: varchar('payment_receipt', { length:300 }).notNull(),
     paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
@@ -288,6 +316,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     other_fees: integer('other_fees'),
     other_discount: integer('other_discount'),
     totalTuitionFee: integer('totalTuitionFee'),
+    escGrantee: varchar('escGrantee', { length:100 }),
     escGrant: integer('escGrant'),
   })
 
@@ -299,13 +328,13 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
 
 
 // admin components
-export const AcademicYearTable = pgTable("AcademicYearTable", {
-    academicYear_id: serial('academicYear_id').primaryKey(),
-    academicYear: varchar('academicYear', { length:100 }).notNull(),
-    academicYearStart: date('academicYearStart').notNull(),
-    academicYearEnd: date('academicYearEnd').notNull(),
-    isActive: boolean('isActive').notNull().default(true),
-  })
+  export const AcademicYearTable = pgTable("AcademicYearTable", {
+      academicYear_id: serial('academicYear_id').primaryKey(),
+      academicYear: varchar('academicYear', { length:100 }).notNull(),
+      academicYearStart: date('academicYearStart').notNull(),
+      academicYearEnd: date('academicYearEnd').notNull(),
+      isActive: boolean('isActive').notNull().default(true),
+    })
 
 export const EnrollmentStatusTable = pgTable("EnrollmentStatusTable", {
     enrollment_status_id: serial('enrollment_status_id').primaryKey(),

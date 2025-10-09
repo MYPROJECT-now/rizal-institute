@@ -2,35 +2,37 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import {  PDFViewer } from "@react-pdf/renderer";
-import { getInfoForDashboard, StudentInfo } from "@/src/actions/studentAction";
+import {  getStudentInfo } from "@/src/actions/studentAction";
 import { Loader2 } from "lucide-react";
 import EnrollmentCert from "@/components/accounts/students/enrollment certificate/enrollment_cert";
 
+
+interface StudentInfo {
+  lrn: string | null;
+  gradeLevelName: string | null;
+  academicYear: string | null;
+  studentFirstName: string | null;
+  studentMiddleName: string | null;
+  studentLastName: string | null;
+  studentSuffix: string | null;
+  sectionName: string | null;
+  subjects?: string[];
+
+}
 const CertificatePage = () => {
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getInfoForDashboard();
+      const res = await getStudentInfo();
       setStudentInfo(res);
       setLoading(false);
     };
     fetchData();
   }, []);
 
-  // const fullName = useMemo(
-  //   () =>
-  //     [
-  //       studentInfo?.studentFirstName,
-  //       studentInfo?.studentMiddleName,
-  //       studentInfo?.studentLastName,
-  //       studentInfo?.studentSuffix,
-  //     ]
-  //       .filter(Boolean)
-  //       .join(" "),
-  //   [studentInfo]
-  // );
+
 
   // ✅ Memoize the PDF Document so it doesn’t re-render unnecessarily
   const pdfDocument = useMemo(() => {

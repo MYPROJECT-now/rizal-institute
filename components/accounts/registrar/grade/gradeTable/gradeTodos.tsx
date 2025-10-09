@@ -9,10 +9,11 @@ import { Enrollees_info_Modal } from "../grades_modal/grades_modal";
 
 interface Props {
   grade: Grade_Type[];
-  
+  statuses: { student_id: number; status: string; }[]; // adjust type to your query result
+
 }
 
-const Applicants: FC<Props> = ({ grade }) => {
+const Applicants: FC<Props> = ({ grade, statuses}) => {
   const [applicantList,] = useState<Grade_Type []>(grade);
   const [filterName, setFilterName] = useState("");
   const [filterLRN, setFilterLRN] = useState("");
@@ -99,6 +100,7 @@ const Applicants: FC<Props> = ({ grade }) => {
             <Grade 
               key={student.lrn} 
               grade={student} 
+              status={statuses.find(s => s.student_id === student.id)?.status ?? "N/A"}
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
             />
           ))

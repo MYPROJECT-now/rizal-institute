@@ -22,7 +22,7 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
     return (
         <div
             className={cn(
-                "flex-col min-h-screen xl:w-[330px] lg:w-[250px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
+                "flex-col min-h-screen w-[250px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
                 className
             )}
         >
@@ -34,7 +34,7 @@ export const Sidebar_registrar = ({ className, onClose }: Props) => {
                         width={1000}
                         height={1000} 
                         alt="rizal logo"
-                        className="sm:h-[130px] sm:w-[130px] h-[110px] w-[110px]"
+                        className="sm:h-[120px] sm:w-[120px] h-[110px] w-[110px]"
                     />
                    
                 </Link>

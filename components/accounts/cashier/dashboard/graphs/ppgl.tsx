@@ -54,8 +54,8 @@ const chartConfig: ChartConfig = {
 
 
 export const Ppgl = () => {
-    const [chartData, setChartData] = useState<ChartRow[]>([]);
-    const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<ChartRow[]>([]);
+  const [loading, setLoading] = useState(true);
   
 
   useEffect(() => {
@@ -87,21 +87,20 @@ export const Ppgl = () => {
   }, []);
 
   return (
-  <div className="min-w-[100px] overflow-x-auto">
-    <Card className=" w-full sm:w-[300px] gap-4  lg:w-[300px] xl:w-[400px] 2xl:[550px]">
+    <Card className="w-full sm:w-[300px] lg:w-[400px] ">
       <CardHeader>
         <CardTitle className="text-center font-bold text-dGreen">
           Payment Completion Status per Grade Level
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className=" lg:w-[400px] m-[-12px] ">
           {loading ? (
             <div className="flex items-center justify-center">
               <Loader2 className="h-8 w-8 animate-spin text-green-700" />
             </div>
           ) : (
         <ChartContainer config={chartConfig} className="h-full w-full">
-          <BarChart data={chartData} >
+          <BarChart data={chartData} margin={{  left: -14, right: 10, top: 15, bottom: 0  }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="gradeLevel"
@@ -117,7 +116,8 @@ export const Ppgl = () => {
                 angle: -90,
                 position: "insideLeft",
                 textAnchor: "middle",
-                dy: 60,
+                dy: 50,
+                dx: 25,
               }}
               style={{ fontSize: 12 }}
             />
@@ -138,6 +138,5 @@ export const Ppgl = () => {
          )}
       </CardContent>
     </Card>
-    </div>
   );
 };

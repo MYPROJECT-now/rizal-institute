@@ -20,7 +20,6 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         // link: "text-white text-xl font-bold font-merriweather w-full hover:bg-white/10 rounded-md border-l-4 border-transparent hover:border-white px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:translate-x-1",
         link: "text-white text-xl font-bold font-merriweather w-full px-4 py-3 transition-all duration-200 justify-start text-left flex items-center gap-3 hover:text-slate-100 relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white/60 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300",
-
         mainButton:
           "bg-gradient-to-r from-green-500 to-green-800 text-white hover:bg-green-500 sm:border-b-[7px] border-b-[5px] active:border-0 border-b-dGreen shadow-lg hover:scale-105  transition-all duration-200 disabled:opacity-60 font-oswald",
         subMainButton:

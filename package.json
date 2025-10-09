@@ -12,7 +12,9 @@
     "db:seed": "tsx ./scripts/seed.ts",
     "db:drop": "tsx ./scripts/drop.ts",
     "db:acad": "tsx ./scripts/acadYear.ts",
-    "db:staff": "tsx ./scripts/staff.ts"
+    "db:staff": "tsx ./scripts/staff.ts",
+    "db:prod": "tsx ./scripts/prod.ts",
+    "db:month": "tsx ./scripts/month.ts"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",

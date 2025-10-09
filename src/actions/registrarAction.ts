@@ -1,8 +1,8 @@
   "use server"
 
-  import { desc, eq, or, and, like } from "drizzle-orm";
+  import { desc, eq, or, and, inArray } from "drizzle-orm";
   import { db } from "../db/drizzle";
-  import { AcademicYearTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, documentsTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable } from "../db/schema";
+  import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
   import { auth } from "@clerk/nextjs/server";
@@ -39,19 +39,15 @@
     return genderCounts;
   };
 
-  export const getTotalApplicants = async (selectedYear: number) => {
+  export const getTotalPendingApplicants = async (selectedYear: number) => {
     const totalApplicants = await db
       .select({ count: sql<number>`count(*)` })
       .from(applicationStatusTable)
       .leftJoin(AdmissionStatusTable, eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
       .where(
         and(
-          eq(AdmissionStatusTable.academicYear_id, selectedYear), // always match year
-          or(
-            eq(applicationStatusTable.reservationPaymentStatus, "Pending"),
-            eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),
-            eq(AdmissionStatusTable.admissionStatus, "Enrolled")
-          )
+          eq(AdmissionStatusTable.academicYear_id, selectedYear),
+          eq(applicationStatusTable.applicationFormReviewStatus, "Pending"),
         )
       )
     
@@ -75,7 +71,7 @@
   //   return totalApplicants[0].count;
   // };
 
-  export const getTotalReserved = async (selectedYear: number) => {
+  export const getTotalPendingAdmission = async (selectedYear: number) => {
     const totalReserved = await db
       .select({ count: sql<number>`count(*)` })
       .from(applicantsInformationTable)
@@ -85,7 +81,7 @@
           eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
           eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
           eq(AdmissionStatusTable.academicYear_id, selectedYear),
-          eq(AdmissionStatusTable.admissionStatus, "Enrolled"),
+          eq(AdmissionStatusTable.admissionStatus, "Pending"),
       ));
     return totalReserved[0].count;
   };
@@ -129,12 +125,12 @@
       .select({
         gradeLevel: GradeLevelTable.gradeLevelName,
         studentCount: sql<number>`COUNT(${StudentPerGradeAndSection.spgac_id})`,
+        totalBoys: sql<number>` COUNT(CASE WHEN ${StudentInfoTable.studentGender} = 'Male' THEN 1 END) `,
+        totalGirls: sql<number>` COUNT(CASE WHEN ${StudentInfoTable.studentGender} = 'Female' THEN 1 END)`,      
       })
       .from(StudentPerGradeAndSection)
-      .leftJoin(
-        GradeLevelTable,
-        eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id)
-      )
+      .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+      .leftJoin(StudentInfoTable, eq(StudentPerGradeAndSection.student_id, StudentInfoTable.student_id))
       .where(eq(StudentPerGradeAndSection.academicYear_id, selectedYear))
       .groupBy(GradeLevelTable.gradeLevelName);
 
@@ -143,25 +139,129 @@
     return result;
   };
 
+export const getDiscountDIstribution = async () => {
 
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const result = await db
+    .select({
+      New_ESC_Grantee: sql<number>`COUNT(CASE WHEN ${ESCGranteeTable.studentType} = 'Incoming G7' THEN 1 END)`,
+      All_Grantees: sql<number>`COUNT(${ESCGranteeTable.applicants_id})`,
+      With_Honor : sql<number>`COUNT(CASE WHEN ${BreakDownTable.academic_discount} = 'With Honor' THEN 1 END)`,
+      With_High_Honor : sql<number>`COUNT(CASE WHEN ${BreakDownTable.academic_discount} = 'With High Honor' THEN 1 END)`,
+      With_Highest_Honor : sql<number>`COUNT(CASE WHEN ${BreakDownTable.academic_discount} = 'With Highest Honor' THEN 1 END)`,
+      sibling_discount: sql<number>`COUNT(CASE WHEN ${BreakDownTable.withSibling} = 'Yes' THEN 1 END)`,
+    })
+    .from(ESCGranteeTable)
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, ESCGranteeTable.academicYear_id))
+    .leftJoin(BreakDownTable, eq(BreakDownTable.applicants_id, ESCGranteeTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(BreakDownTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(and(
+      eq(AcademicYearTable.academicYear_id, selectedYear),
+      eq(AdmissionStatusTable.admissionStatus, "Enrolled")
+    ));
+
+
+    console.log("📊 Discount Distribution:", result);
+    return result;
+}
+
+
+// export const getEnrollmentTrend = async () => {
+
+//    const Trend = await db
+//    .select({
+//       count: sql<number>`COUNT (${AdmissionStatusTable.admission_id})`,
+//       academicYear: AcademicYearTable.academicYear,
+//     })
+//     .from(AdmissionStatusTable)
+//     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
+//     .where(eq(AdmissionStatusTable.admissionStatus, "Enrolled"))
+//     .groupBy(AcademicYearTable.academicYear)
+//     .orderBy(desc(AcademicYearTable.academicYear))
+//     .limit(4); 
+
+//     console.log("📊 Enrollment Trend:", Trend);
+//     return Trend;
+// };
 
 export const getEnrollmentTrend = async () => {
-
-   const Trend = await db
-   .select({
-      count: sql<number>`COUNT (${AdmissionStatusTable.admission_id})`,
-      academicYear: AcademicYearTable.academicYear,
+  // 1️⃣ Get all years first
+  const years = await db
+    .select({
+      id: AcademicYearTable.academicYear_id,
+      name: AcademicYearTable.academicYear,
     })
-    .from(AdmissionStatusTable)
-    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
-    .where(eq(AdmissionStatusTable.admissionStatus, "Enrolled"))
-    .groupBy(AcademicYearTable.academicYear)
-    .orderBy(desc(AcademicYearTable.academicYear))
-    .limit(4); // get latest 4
+    .from(AcademicYearTable)
+    .orderBy(AcademicYearTable.academicYear_id);
 
-    console.log("📊 Enrollment Trend:", Trend);
-    return Trend;
+  const result = [];
+
+  // 2️⃣ Loop each year and compute counts using small SQLs
+  for (let i = 0; i < years.length; i++) {
+    const year = years[i];
+    const prevYear = years[i - 1];
+
+    // new students → in this year only
+    const newStudents = await db.execute(sql`
+      SELECT COUNT(DISTINCT a1."applicants_id") AS count
+      FROM "AdmissionStatusTable" a1
+      WHERE a1."academicYear_id" = ${year.id}
+      AND a1."admissionStatus" = 'Enrolled'
+      AND NOT EXISTS (
+        SELECT 1 FROM "AdmissionStatusTable" a2
+        WHERE a2."applicants_id" = a1."applicants_id"
+        AND a2."academicYear_id" < ${year.id}
+        AND a2."admissionStatus" = 'Enrolled'
+      )
+    `);
+
+    // returnees → enrolled this year AND last year
+    const returnees =
+      prevYear
+        ? await db.execute(sql`
+            SELECT COUNT(DISTINCT a1."applicants_id") AS count
+            FROM "AdmissionStatusTable" a1
+            WHERE a1."academicYear_id" = ${year.id}
+            AND a1."admissionStatus" = 'Enrolled'
+            AND EXISTS (
+              SELECT 1 FROM "AdmissionStatusTable" a2
+              WHERE a2."applicants_id" = a1."applicants_id"
+              AND a2."academicYear_id" = ${prevYear.id}
+              AND a2."admissionStatus" = 'Enrolled'
+            )
+          `)
+        : { rows: [{ count: 0 }] };
+
+    // not returnees → enrolled last year but not this year
+    const notReturnees =
+      prevYear
+        ? await db.execute(sql`
+            SELECT COUNT(DISTINCT a1."applicants_id") AS count
+            FROM "AdmissionStatusTable" a1
+            WHERE a1."academicYear_id" = ${prevYear.id}
+            AND a1."admissionStatus" = 'Enrolled'
+            AND NOT EXISTS (
+              SELECT 1 FROM "AdmissionStatusTable" a2
+              WHERE a2."applicants_id" = a1."applicants_id"
+              AND a2."academicYear_id" = ${year.id}
+              AND a2."admissionStatus" = 'Enrolled'
+            )
+          `)
+        : { rows: [{ count: 0 }] };
+
+    result.push({
+      academicYear: year.name,
+      new_enrollees: Number(newStudents.rows[0].count),
+      returnees: Number(returnees.rows[0].count),
+      not_returnees: Number(notReturnees.rows[0].count),
+    });
+  }
+
+  return result;
 };
+
 
 
   // recent applicants
@@ -207,7 +307,7 @@ export const getEnrollmentTrend = async () => {
     if(!selectedYear) return [];
   
     const allStudent = await db
-      .selectDistinctOn([StudentInfoTable.lrn], {
+      .select({ 
         lrn: StudentInfoTable.lrn,
         studentLastName: StudentInfoTable.studentLastName,
         studentFirstName: StudentInfoTable.studentFirstName,
@@ -215,13 +315,26 @@ export const getEnrollmentTrend = async () => {
         status: AdmissionStatusTable.admissionStatus,
         gradeLevel: GradeLevelTable.gradeLevelName,
         isActive: AcademicYearTable.isActive,
-        
+        hasBirth: documentsTable.hasBirth,
+        hasReportCard: documentsTable.hasReportCard,
+        hasGoodMoral: documentsTable.hasGoodMoral,
+        hasIdPic: documentsTable.hasIdPic,
+        hasExitForm: documentsTable.hasExitForm,
+        hasForm137: documentsTable.hasForm137,
+        hasITR: documentsTable.hasTIR,
+        hasEscCert: documentsTable.hasEscCertificate,
+        studentType: educationalBackgroundTable.studentType,
+        schoolType: educationalBackgroundTable.schoolType,
+        escGrantee: additionalInformationTable.escGrantee,
       })
       .from(StudentInfoTable)
+      .leftJoin(additionalInformationTable, eq(StudentInfoTable.applicants_id, additionalInformationTable.applicants_id))
+      .leftJoin(educationalBackgroundTable, eq(StudentInfoTable.applicants_id, educationalBackgroundTable.applicants_id))
       .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-      .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
-      .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-      .leftJoin(AcademicYearTable, eq(StudentGradesTable.academicYear_id, AcademicYearTable.academicYear_id))
+      .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+      .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+      .leftJoin(AcademicYearTable, eq(StudentPerGradeAndSection.academicYear_id, AcademicYearTable.academicYear_id))
+      .leftJoin(documentsTable, eq(StudentInfoTable.applicants_id, documentsTable.applicants_id))
       .where(and(
         eq(AdmissionStatusTable.academicYear_id, selectedYear),
         eq(AcademicYearTable.academicYear_id, selectedYear)
@@ -256,10 +369,26 @@ export const getEnrollmentTrend = async () => {
       emergencyContact: guardianAndParentsTable.emergencyContact,
       emergencyEmail: guardianAndParentsTable.emergencyEmail,
 
+      birthcert: documentsTable.hasBirth,
+      reportCard: documentsTable.hasReportCard,
+      goodMoral: documentsTable.hasGoodMoral,
+      idPic: documentsTable.hasIdPic,
+      studentExitForm: documentsTable.hasExitForm,
+      form137: documentsTable.hasForm137,
+      itr: documentsTable.hasTIR,
+      escCert: documentsTable.hasEscCertificate,
+
+      studentType: educationalBackgroundTable.studentType,
+      schoolType: educationalBackgroundTable.schoolType,
+      escGrantee: additionalInformationTable.escGrantee,
+
       isActive: AcademicYearTable.isActive, 
 
     })
     .from(StudentInfoTable)
+    .leftJoin(documentsTable, eq(StudentInfoTable.applicants_id, documentsTable.applicants_id))
+    .leftJoin(educationalBackgroundTable, eq(StudentInfoTable.applicants_id, educationalBackgroundTable.applicants_id))
+    .leftJoin(additionalInformationTable, eq(StudentInfoTable.applicants_id, additionalInformationTable.applicants_id))
     .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
@@ -296,6 +425,15 @@ export const getEnrollmentTrend = async () => {
     guardiansSuffix: string;
     emergencyContact: string;
     emergencyEmail: string;
+
+    birthcert: boolean;
+    reportcard: boolean;
+    goodmoral: boolean;
+    idpic: boolean;
+    exitform: boolean;
+    form137: boolean;
+    itr: boolean;
+    esc: boolean;
   }
 ) => {
   await requireStaffAuth(["registrar"]);
@@ -333,7 +471,23 @@ export const getEnrollmentTrend = async () => {
         emergencyEmail: values.emergencyEmail,
       })
       .where(eq(guardianAndParentsTable.applicants_id, id)),
+
+    db.update(documentsTable)
+      .set({
+        hasBirth: values.birthcert,
+        hasReportCard: values.reportcard,
+        hasGoodMoral: values.goodmoral,
+        hasIdPic: values.idpic,
+        hasExitForm: values.exitform,
+        hasForm137: values.form137,
+        hasTIR: values.itr,
+        hasEscCertificate: values.esc,
+      })
+      .where(eq(documentsTable.applicants_id, id)),
     ]);
+
+
+  
 
   return { success: true };};
 
@@ -526,7 +680,7 @@ export const getEnrollmentTrend = async () => {
 
       lrn: applicantsInformationTable.lrn,
       gradeLevel: educationalBackgroundTable.gradeLevel,
-      studentType: educationalBackgroundTable.studentType,
+      studentType: studentTypeTable.studentType,
       schoolYear: educationalBackgroundTable.schoolYear,
       schoolType: educationalBackgroundTable.schoolType,
       prevSchool: educationalBackgroundTable.prevSchool,
@@ -544,6 +698,7 @@ export const getEnrollmentTrend = async () => {
     })
     .from(applicantsInformationTable)
     .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
+    .leftJoin(studentTypeTable, eq(educationalBackgroundTable.applicants_id, studentTypeTable.applicants_id))
     .leftJoin(guardianAndParentsTable, eq(applicantsInformationTable.applicants_id, guardianAndParentsTable.applicants_id))
     .leftJoin(documentsTable, eq(applicantsInformationTable.applicants_id, documentsTable.applicants_id))
     .leftJoin(latestRemark, eq(applicantsInformationTable.applicants_id, latestRemark.applicants_id))
@@ -616,6 +771,27 @@ export const getEnrollmentTrend = async () => {
     return studentsGrade;
   }
 
+  export const getStudentsStatus = async () => {
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) return [];
+
+    const results = await db
+      .select({
+        student_id: StudentGradesTable.student_id,
+        failedSubjects: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.remarks} = 'FAILED' THEN 1 END)`,
+      })
+      .from(StudentGradesTable)
+      .where(eq(StudentGradesTable.academicYear_id, selectedYear))
+      .groupBy(StudentGradesTable.student_id);
+
+    return results.map((r) => {
+      let status = "Passed";
+      if (r.failedSubjects > 0 && r.failedSubjects < 3) status = "Summer";
+      if (r.failedSubjects >= 3) status = "Retained";
+
+      return { student_id: r.student_id, status };
+    });
+  };
 
 //get grade per student
 export const getStudentGradesByLRN = async (lrn: string) => {
@@ -670,39 +846,84 @@ export const getAdmittedStudents = async () => {
 }
 
 
+// export const getAmountPaid = async () => {
+//   await requireStaffAuth(["registrar"]);
+
+//   const selectedYear = await getSelectedYear();
+//   if(!selectedYear) return [];
+
+//   // Get current date
+//   const today = new Date();
+//   const currentMonth = today.toLocaleString("default", { month: "long" });
+//   console.log("Current month:", currentMonth);
+
+//   // Get current month_id from DB
+//   const currentMonthRow = await db
+//     .select({
+//       month_id: MonthsInSoaTable.month_id,
+//       month: MonthsInSoaTable.month,
+//     })
+//     .from(MonthsInSoaTable)
+//     .where(
+//       and(
+//         like(MonthsInSoaTable.month, `${currentMonth}%`),
+//         eq(MonthsInSoaTable.academicYear_id, selectedYear)
+//       )
+//     );
+
+//   if (currentMonthRow.length === 0) {
+//     console.warn("No current month found in DB, returning empty chart data.");
+//     return[];
+//   }
+
+//   const currentMonthId = currentMonthRow[0].month_id;
+//   console.log("Current month ID:", currentMonthId);
+
+
+//   const amountPaid = await db
+//     .select({
+//       lastName: StudentInfoTable.studentLastName,
+//       firstName: StudentInfoTable.studentFirstName,
+//       middleName: StudentInfoTable.studentMiddleName,
+//       suffix: StudentInfoTable.studentSuffix,
+//       totalDue: sql<number>`
+//         SUM(CASE 
+//           WHEN ${MonthsInSoaTable.month_id} <= ${currentMonthId} 
+//           THEN ${MonthsInSoaTable.monthlyDue} 
+//           ELSE 0 
+//         END)
+//       `,
+//       totalPaid: sql<number>`
+//         SUM(CASE 
+//           WHEN ${MonthsInSoaTable.month_id} <= ${currentMonthId} 
+//           THEN ${MonthsInSoaTable.amountPaid} 
+//           ELSE 0 
+//         END)
+//       `,
+//     })
+//     .from(StudentInfoTable)
+//     .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.applicants_id))
+//     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+//     .where(eq(AdmissionStatusTable.academicYear_id, selectedYear))
+//     .groupBy(
+//       StudentInfoTable.student_id,
+//       StudentInfoTable.lrn,
+//       StudentInfoTable.studentLastName,
+//       StudentInfoTable.studentFirstName,
+//       StudentInfoTable.studentMiddleName,
+//       StudentInfoTable.studentSuffix
+//     );
+
+//   console.log("Totals:", amountPaid);
+//   return amountPaid;
+// };
+
+
 export const getAmountPaid = async () => {
   await requireStaffAuth(["registrar"]);
 
   const selectedYear = await getSelectedYear();
-  if(!selectedYear) return [];
-
-  // Get current date
-  const today = new Date();
-  const currentMonth = today.toLocaleString("default", { month: "long" });
-  console.log("Current month:", currentMonth);
-
-  // Get current month_id from DB
-  const currentMonthRow = await db
-    .select({
-      month_id: MonthsInSoaTable.month_id,
-      month: MonthsInSoaTable.month,
-    })
-    .from(MonthsInSoaTable)
-    .where(
-      and(
-        like(MonthsInSoaTable.month, `${currentMonth}%`),
-        eq(MonthsInSoaTable.academicYear_id, selectedYear)
-      )
-    );
-
-  if (currentMonthRow.length === 0) {
-    console.warn("No current month found in DB, returning empty chart data.");
-    return[];
-  }
-
-  const currentMonthId = currentMonthRow[0].month_id;
-  console.log("Current month ID:", currentMonthId);
-
+  if (!selectedYear) return [];
 
   const amountPaid = await db
     .select({
@@ -711,23 +932,33 @@ export const getAmountPaid = async () => {
       middleName: StudentInfoTable.studentMiddleName,
       suffix: StudentInfoTable.studentSuffix,
       totalDue: sql<number>`
-        SUM(CASE 
-          WHEN ${MonthsInSoaTable.month_id} <= ${currentMonthId} 
-          THEN ${MonthsInSoaTable.monthlyDue} 
-          ELSE 0 
-        END)
+        SUM(
+          CASE 
+            WHEN TO_DATE('01 ' || ${MonthsInSoaTable.month}, 'DD Month YYYY') <= CURRENT_DATE
+            THEN ${MonthsInSoaTable.monthlyDue}
+            ELSE 0
+          END
+        )
       `,
       totalPaid: sql<number>`
-        SUM(CASE 
-          WHEN ${MonthsInSoaTable.month_id} <= ${currentMonthId} 
-          THEN ${MonthsInSoaTable.amountPaid} 
-          ELSE 0 
-        END)
+        SUM(
+          CASE 
+            WHEN TO_DATE('01 ' || ${MonthsInSoaTable.month}, 'DD Month YYYY') <= CURRENT_DATE
+            THEN ${MonthsInSoaTable.amountPaid}
+            ELSE 0
+          END
+        )
       `,
     })
     .from(StudentInfoTable)
-    .leftJoin(MonthsInSoaTable,eq(StudentInfoTable.student_id, MonthsInSoaTable.applicants_id))
-    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(
+      MonthsInSoaTable,
+      eq(StudentInfoTable.applicants_id, MonthsInSoaTable.applicants_id)
+    )
+    .leftJoin(
+      AdmissionStatusTable,
+      eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id)
+    )
     .where(eq(AdmissionStatusTable.academicYear_id, selectedYear))
     .groupBy(
       StudentInfoTable.student_id,
@@ -738,6 +969,28 @@ export const getAmountPaid = async () => {
       StudentInfoTable.studentSuffix
     );
 
-  console.log("Totals:", amountPaid);
+  console.log("Totals (auto up to current date):", amountPaid);
   return amountPaid;
 };
+
+
+export const getRecentGrantees = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const grantees = await db
+  .select({
+    fullName: sql<string>`CONCAT(${StudentInfoTable.studentLastName}, ', ', ${StudentInfoTable.studentFirstName}, ' ', ${StudentInfoTable.studentMiddleName})`,
+    studentType: ESCGranteeTable.studentType,
+  }).from(ESCGranteeTable)
+  .leftJoin(StudentInfoTable, eq(ESCGranteeTable.applicants_id, StudentInfoTable.applicants_id))
+  .where(and(
+    eq(ESCGranteeTable.academicYear_id, selectedYear),
+    inArray(ESCGranteeTable.studentType, ["Incoming G7", "Transferee"])
+
+  ))
+
+  return grantees;
+}

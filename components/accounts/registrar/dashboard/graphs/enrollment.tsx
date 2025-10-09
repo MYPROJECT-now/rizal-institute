@@ -26,8 +26,13 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export const Enrollment = () => {
-    const [chartData, setChartData] = useState<{ academicYear: string | null; academic_count: number }[]>([]);
-    const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<{ 
+    academicYear: string; 
+    new_enrollees: number; 
+    returnees: number; 
+    not_returnees: number 
+  }[] >([]);
+  const [loading, setLoading] = useState(true);
 
 
 useEffect(() => {
@@ -37,7 +42,9 @@ useEffect(() => {
     // Convert to usable format
     const formattedData = res.map((item) => ({
       academicYear: item.academicYear,
-      academic_count: Number(item.count),
+      new_enrollees: Number(item.new_enrollees || 0),
+      returnees: Number(item.returnees || 0),
+      not_returnees: Number(item.not_returnees || 0),
     }));
 
     // 📌 Pad with future years if less than 3
@@ -58,7 +65,9 @@ useEffect(() => {
         if (!existingYears.includes(nextYear)) {
           paddedData.unshift({
             academicYear: nextYear,
-            academic_count: 0,
+            new_enrollees: 0,
+            returnees: 0,
+            not_returnees: 0,
           });
         }
       }
@@ -82,18 +91,18 @@ useEffect(() => {
 
   return (
     <div>
-      <Card className="w-full sm:w-[300px] gap-4  lg:w-[300px] xl:w-[400px] 2xl:[550px]">
+    <Card className=" w-full sm:w-[300px]  gap-4  lg:w-[370px] ">
         <CardHeader>
           <CardTitle className="text-center font-bold text-dGreen">Enrollment Trend</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className=" lg:w-[390px] m-[-12px]">
           {loading ? (
             <div className="flex items-center justify-center">
               <Loader2 className="h-8 w-8 animate-spin text-green-700" />
             </div>
           ) : (
           <ChartContainer config={chartConfig} style={{  }}>
-            <LineChart data={chartData} margin={{ top:15, right: 35 }}>
+            <LineChart data={chartData} margin={{  left: -14, right: 10, top: 15, bottom: 5   }}>
               <CartesianGrid vertical={false} />
 
               <XAxis
@@ -103,25 +112,42 @@ useEffect(() => {
                 axisLine={false}
               >
               </XAxis>
-            <YAxis
-              tick={{ fontSize: 10 }}
-              interval={0}
-              allowDecimals={false} // 👈 this disables .25, .5 etc.
-              label={{
-                value: "Number of Students",
-                angle: -90,
-                position: "insideLeft",
-                dy: 50,
-                dx: 10,
-              }}
-              style={{ fontSize: "10px" }}
-            />
+              <YAxis
+                tick={{ fontSize: 10 }}
+                interval={0}
+                allowDecimals={false} // 👈 this disables .25, .5 etc.
+                label={{
+                  value: "Number of Students",
+                  angle: -90,
+                  position: "insideLeft",
+                  dy: 50,
+                  dx: 25,
+                }}
+                style={{ fontSize: "10px" }}
+              />
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+
               <Line
                 type="monotone"
-                dataKey="academic_count"
-                stroke="#0FC64F  "
+                dataKey="not_returnees"
+                stroke="#F44336"
                 strokeWidth={2}
+                name="Not Returnees"
+              />
+              <Line
+                type="monotone"
+                dataKey="returnees"
+                stroke="#2196F3"
+                strokeWidth={2}
+                name="Returnees"
+              />              
+              <Line
+                type="monotone"
+                dataKey="new_enrollees"
+                stroke="#0FC64F "
+                strokeWidth={2}
+                name="New Students"
+
               />
             </LineChart>
           </ChartContainer>

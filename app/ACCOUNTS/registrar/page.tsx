@@ -2,6 +2,7 @@ import { Top_analytics } from "@/components/accounts/registrar/dashboard/analyti
 import { Ppgl } from "@/components/accounts/registrar/dashboard/graphs/ppgl";
 import { Enrollment } from "@/components/accounts/registrar/dashboard/graphs/enrollment";
 import { RecentApplicantsTable } from "@/components/accounts/registrar/dashboard/recentApplicants/recentApplicants";
+import { Discounts_graph } from "@/components/accounts/registrar/dashboard/graphs/discounts_graph";
 
 
 const Dashboard = () => {
@@ -19,15 +20,16 @@ const Dashboard = () => {
                     Population Insight
                 </p>
 
-                <div className="flex sm:flex-row flex-col gap-10">
+                <div className="flex sm:flex-row flex-col gap-4">
                 <Ppgl />
                 <Enrollment />
+                <Discounts_graph />
                 </div>
             </section>
 
             <section className="flex flex-col">
                 <p className="lg:text-2xl sm:text-xl text-lg font-bold text-dGreen mb-2">
-                    Pending Applicants
+                   Recent Pending Applicants
                 </p>
                 <RecentApplicantsTable />
             </section>

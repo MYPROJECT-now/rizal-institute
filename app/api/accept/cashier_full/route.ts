@@ -1,10 +1,11 @@
 import { db } from '@/src/db/drizzle';
-import { eq } from 'drizzle-orm';
-import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, fullPaymentTable } from '@/src/db/schema';
+import { and, eq } from 'drizzle-orm';
+import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, fullPaymentTable, MonthsInSoaTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
+import { generateSINumber } from '@/src/actions/utils/SI_Number_counter';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -45,7 +46,7 @@ async function sendReservationEmail(email: string) {
 // API handler for sending reservation confirmation email
 export async function POST(request: Request) {
   try {
-    const { studentId,  name } = await request.json();
+    const { studentId,  name, payment_amount } = await request.json();
 
     if (!studentId) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
@@ -63,6 +64,8 @@ export async function POST(request: Request) {
       .limit(1);
 
     const email = getEmail[0]?.email;
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' }); 
+    const SINumber = await generateSINumber();
 
     // const SINumber = await generateSINumber();
     await Promise.all([
@@ -86,6 +89,17 @@ export async function POST(request: Request) {
         usertype: credentials.userType,
         academicYear_id: await getAcademicYearID(),
       }),
+      db.update(MonthsInSoaTable)
+        .set({
+          amountPaid: payment_amount,
+          dateOfPayment: new Date().toISOString().slice(0, 10),
+          SINumber: SINumber
+        })
+        .where(and(
+          eq(MonthsInSoaTable.applicants_id, studentId),
+          eq(MonthsInSoaTable.academicYear_id, await getAcademicYearID()),
+          eq(MonthsInSoaTable.month,currentMonth ),
+      )),
       // db.update(reservationFeeTable)
       //   .set({
       //     SINumber: SINumber

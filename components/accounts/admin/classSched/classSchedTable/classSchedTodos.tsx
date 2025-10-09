@@ -25,7 +25,7 @@ const SchedTodos: FC<Props> = ({ scheds }) => {
 
   // 🟢 Pagination states
   const [currentPage, setCurrentPage] = useState(0);
-  const rowsPerPage = 4; // adjust how many rows you want per page
+  const rowsPerPage = 3; // adjust how many rows you want per page
 
   // 🟢 Filter logic
   const filteredScheds = useMemo(() => {

@@ -34,6 +34,20 @@ export const Students_info_Modal = () => {
   const [emergencyEmail, setEmergencyEmail] = useState("");
   const [isActive, setIsActive] = useState(false);
 
+  const [birthcert, setBirthcert] = useState(false);
+  const [reportcard, setReportcard] = useState(false);
+  const [goodmoral, setGoodmoral] = useState(false);
+  const [idpic, setIdpic] = useState(false);
+  const [exitform, setExitform] = useState(false);
+  const [form137, setForm137] = useState(false);
+  const [itr, setItr] = useState(false);
+  const [esc, setEsc] = useState(false);
+
+  const [escGrantee, setEscGrantee] = useState("");
+  const [studentType, setStudentType] = useState("");
+  const [schoolType, setSchoolType] = useState("");
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -58,6 +72,20 @@ useEffect(() => {
       setGuardiansSuffix(data[0].guardiansSuffix || "-");
       setEmergencyContact(data[0].emergencyContact || "-");
       setEmergencyEmail(data[0].emergencyEmail || "-");
+
+      setBirthcert(Boolean(data[0].birthcert));
+      setReportcard(Boolean(data[0].reportCard));
+      setGoodmoral(Boolean(data[0].goodMoral));
+      setIdpic(Boolean(data[0].idPic));
+      setExitform(Boolean(data[0].studentExitForm));
+      setForm137(Boolean(data[0].form137));
+      setItr(Boolean(data[0].itr));
+      setEsc(Boolean(data[0].escCert));
+
+      setStudentType(data[0].studentType || "-");
+      setSchoolType(data[0].schoolType || "-");
+      setEscGrantee(data[0].escGrantee || "-");
+
       setIsActive(Boolean(data[0]?.isActive));
 
       setIsLoading(false);
@@ -94,7 +122,16 @@ useEffect(() => {
           guardiansMiddleName,
           guardiansSuffix,
           emergencyContact,
-          emergencyEmail
+          emergencyEmail,
+
+          birthcert,
+          reportcard,
+          goodmoral,
+          idpic,
+          exitform,
+          form137,
+          itr,
+          esc,
         }
       );
       toast.success("Student information updated successfully!");
@@ -126,7 +163,7 @@ useEffect(() => {
         </div>
       ):(
         <div className="space-y-6 sm:px-6 px-3 py-1  max-h-[300px] overflow-y-auto">
-          <section className="bg-white p-4 rounded-lg shadow-lg border-2 border-gray-200">
+          <article className="bg-white p-4 rounded-lg shadow-lg border-2 border-gray-200">
             <h3 className="lg:text-lg sm:text-base text-sm font-bold mb-2 text-dGreen"> Section 1: Personal Information</h3>
 
             <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mt-7 sm:pl-3 pl-1">
@@ -235,9 +272,9 @@ useEffect(() => {
                 />
               </section>
             </div>
-          </section>
+          </article>
 
-          <section className="bg-white p-4 rounded-lg shadow-sm border">
+          <article className="bg-white p-4 rounded-lg shadow-sm border">
             <h3 className="lg:text-lg sm:text-base text-sm font-bold mb-2 text-dGreen"> Section 2: Emergency Contact Details</h3>
 
             <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mt-7 sm:pl-3 pl-1">
@@ -318,8 +355,111 @@ useEffect(() => {
                   }`}
                 />
               </section>
+
+              
             </div>
-          </section>
+          </article>
+
+          <article className="bg-white p-4 rounded-lg shadow-lg border-2 border-gray-200">
+            <h3 className="lg:text-lg sm:text-base text-sm font-bold mb-2 text-dGreen"> Section 3: Document Checklist</h3>
+
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mt-7 sm:pl-3 pl-1">
+                  <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={birthcert}
+                  disabled={!editing}
+                  onChange={() => setBirthcert(!birthcert)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                Birth Certificate
+              </label>
+
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={reportcard}
+                  disabled={!editing}
+                  onChange={() => setReportcard(!reportcard)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                Report Card 
+              </label>
+
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={goodmoral}
+                  disabled={!editing}
+                  onChange={() => setGoodmoral(!goodmoral)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                Good Moral
+              </label>
+
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={idpic}
+                  disabled={!editing}
+                  onChange={() => setIdpic(!idpic)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                1x1 ID Picture
+              </label>
+
+              {schoolType === "Private" && (
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={exitform}
+                  disabled={!editing}
+                  onChange={() => setExitform(!exitform)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                Student Exit Form
+              </label>
+              )}
+
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={form137}
+                  disabled={!editing}
+                  onChange={() => setForm137(!form137)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                Form 137 (Permanent Record)
+              </label>
+
+              {studentType === "Incoming G7" && (
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={itr}
+                  disabled={!editing}
+                  onChange={() => setItr(!itr)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                Income Tax Return (ITR)
+              </label>
+              )}
+
+              {escGrantee === "Yes" && schoolType === "Private" && (
+              <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
+                <input
+                  type="checkbox"
+                  checked={esc}
+                  disabled={!editing}
+                  onChange={() => setEsc(!esc)}
+                  className="accent-dGreen w-4 h-4"
+                />
+                ESC Certificate
+              </label>
+              )}
+            </div>
+          </article>
+
           <div className="flex flex-row w-full justify-center gap-2 ">
             <Button
               onClick={handleEdit}

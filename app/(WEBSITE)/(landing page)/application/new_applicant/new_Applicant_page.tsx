@@ -8,10 +8,10 @@ import { usePreviewModal } from "@/src/store/preview";
 import { verifyEmail, verifyLrn } from "@/src/actions/landingPage";
 
 import {
-    Card,
-    CardContent,    
-    CardHeader,
-    CardTitle,
+Card,
+CardContent,    
+CardHeader,
+CardTitle,
 } from "@/components/ui/card"
 import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
 
@@ -52,14 +52,18 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
         idPic: string,
         studentExitForm: string,
         form137: string,
+        tir: string,
+        escCert: string,
 
         mop: string,
         reservationReceipt: string,
         reservationAmount: number,
 
         attainmentUponGraduation: string,
-        consistentGPA: string,
+        // consistentGPA: string,
         hasEnrolledSibling: string,
+        siblingName: string,
+        escGrantee: string,
         
     ) => void;
     }
@@ -103,7 +107,8 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
         const [idPic, setIdPic] = useState<File | null>(null);
         const [studentExitForm, setStudentExitForm] = useState<File | null>(null);
         const [form137, setForm137] = useState<File | null>(null);
-        
+        const [itr, setITR] = useState<File | null>(null);
+        const [escCert, setEscCert] = useState<File | null>(null);
 
 
         const [mop, setMop] = useState("");
@@ -116,8 +121,10 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
         const [isGcashSelected, setIsGcashSelected] = useState(false);
 
         const [attainmentUponGraduation, setAttainmentUponGraduation] = useState("");
-        const [consistentGPA, setConsistentGPA] = useState("");
+        // const [consistentGPA, setConsistentGPA] = useState("");
         const [hasEnrolledSibling, setHasEnrolledSibling] = useState("");
+        const [siblingName, setSiblingName] = useState("");
+        const [escGrantee, setEscGrantee] = useState("");
 
         const { open: openPreview } = usePreviewModal();
 
@@ -176,6 +183,23 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                 newErrors.applicantsFirstName = "invalid";
                 setErrors(newErrors);
                 toast.error("Invalid student's first name. Please enter a valid first name.");
+                return false;
+            }
+
+            if (applicantsMiddleName && !/^[a-zA-Z\s'-]+$/.test(applicantsMiddleName)) {
+                newErrors.applicantsMiddleName = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid middle name. Please enter a valid middle name.");
+                return false;
+            }
+
+
+            if (
+                applicantsSuffix && !/^[a-zA-Z\s'-]+$/.test(applicantsSuffix) 
+            ) {
+                newErrors.applicantsSuffix = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid suffix. Please enter a valid suffix.");
                 return false;
             }
 
@@ -262,6 +286,25 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                 toast.error("Invalid guardian's first name. Please enter a valid first name.");
                 return false;
             }
+
+            if (
+                guardiansMiddleName && !/^[a-zA-Z\s'-]+$/.test(guardiansMiddleName) 
+            ) {
+                newErrors.guardiansMiddleName = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid middle name. Please enter a valid middle name.");
+                return false;
+            }
+            
+            if (
+                guardiansSuffix && !/^[a-zA-Z\s'-]+$/.test(guardiansSuffix) 
+            ) {
+                newErrors.guardiansSuffix = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid suffix. Please enter a valid suffix.");
+                return false;
+            }
+            
             
             if (
                 !/^[0-9]+$/.test(emergencyContact) || 
@@ -270,6 +313,15 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                 newErrors.emergencyContact = "invalid";
                 setErrors(newErrors);
                 toast.error("Invalid mobile number. Please enter a valid mobile number.");
+                return false;
+            }
+
+            if (
+                emergencyEmail && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emergencyEmail) 
+            ) {
+                newErrors.emergencyEmail = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid email. Please enter a valid email.");
                 return false;
             }
         
@@ -282,6 +334,8 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                 toast.error("Invalid address. Please enter a valid address.");
                 return false;
             }
+
+
 
 
         return true;
@@ -360,17 +414,44 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                 toast.error("Keep all fields blank or complete all payment details.");
                 return false;
             }
+
+            if (reservationAmount < 500)
+            {
+                newErrors.reservationAmount = "Reservation amount must be greater than 500.";
+                setErrors(newErrors);
+                toast.error("The minimum reservation amount is P500.");
+                return false;
+            }
         return true;
             
             
         case 5: // Additional Information
             if (!attainmentUponGraduation.trim()) newErrors.attainmentUponGraduation = "Required";
-            if (!consistentGPA.trim()) newErrors.consistentGPA = "Required";
+            // if (!consistentGPA.trim()) newErrors.consistentGPA = "Required";
             if (!hasEnrolledSibling.trim()) newErrors.hasEnrolledSibling = "Required";
+            if (!escGrantee.trim()) newErrors.escGrantee = "Required";
 
             if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
                 toast.error("Please fill in all required fields.");
+                return false;
+            }
+
+            if (
+                siblingName && !/^[a-zA-Z\s'-]+$/.test(siblingName)     
+            ) {
+                newErrors.siblingName = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid name. Please enter a valid name.");
+                return false;
+            }
+
+            if (
+                hasEnrolledSibling === "Yes" && !/^[a-zA-Z\s'-]+$/.test(siblingName)
+            ) {
+                newErrors.siblingName = "invalid";
+                setErrors(newErrors);
+                toast.error("Enter your valid sibling name.");
                 return false;
             }
         return true;
@@ -489,13 +570,19 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
         const handleAttainmentUponGraduation = (e: ChangeEvent<HTMLSelectElement>) => {
             setAttainmentUponGraduation(e.target.value);
         };
-        const handleConsistentGPA = (e: ChangeEvent<HTMLSelectElement>) => {
-            setConsistentGPA(e.target.value);
-        };
+        // const handleConsistentGPA = (e: ChangeEvent<HTMLSelectElement>) => {
+        //     setConsistentGPA(e.target.value);
+        // };
         const handleHasEnrolledSibling = (e: ChangeEvent<HTMLSelectElement>) => {
             setHasEnrolledSibling(e.target.value);
         };
+        const handleEscGrantee = (e: ChangeEvent<HTMLSelectElement>) => {
+            setEscGrantee(e.target.value);
+        }
 
+        const handleSiblingNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+            setSiblingName(e.target.value);
+        }
 
 
 
@@ -536,6 +623,20 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
             setForm137(file);
             }
         };
+
+        const handleITRChange = (e: ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (file) {
+            setITR(file);
+            }
+        };
+
+        const handleEscCert = (e: ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (file) {
+            setEscCert(file);
+            }
+        }
         
 
         // Refs for input elements
@@ -545,6 +646,8 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
             const idPicRef = useRef<HTMLInputElement>(null);
             const studentExitFormRef = useRef<HTMLInputElement>(null);
             const form137Ref = useRef<HTMLInputElement>(null);
+            const itrRef = useRef<HTMLInputElement>(null);
+            const escCertRef = useRef<HTMLInputElement>(null);
 
         const handleMopChange = (e: ChangeEvent<HTMLSelectElement>) => {
             setMop(e.target.value);
@@ -607,6 +710,8 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                 const uploadIdPic = idPic ? await uploadImage(idPic, 'documents') : "";
                 const uploadStudentExitForm = studentExitForm ? await uploadImage(studentExitForm, 'documents') : "";
                 const uploadForm137 = form137 ? await uploadImage(form137, 'documents') : "";
+                const uploadITR = itr ? await uploadImage(itr, 'documents') : "";
+                const uploadEscCert = escCert ? await uploadImage(escCert, 'documents') : "";
 
                 const uploadReservationReceipt = reservationReceipt ? await uploadImage(reservationReceipt, 'reservationPayments') : ""; 
 
@@ -646,14 +751,18 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                     uploadIdPic,
                     uploadStudentExitForm,
                     uploadForm137,
+                    uploadITR,
+                    uploadEscCert,
 
                     mop,
                     uploadReservationReceipt,
                     reservationAmount,
 
                     attainmentUponGraduation,
-                    consistentGPA,
+                    // consistentGPA,
                     hasEnrolledSibling,
+                    siblingName,
+                    escGrantee,
 
                 );
             
@@ -688,8 +797,10 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                     setReservationReceipt(null);
 
                     setAttainmentUponGraduation("");
-                    setConsistentGPA("");
+                    // setConsistentGPA("");
                     setHasEnrolledSibling("");
+                    setSiblingName("");
+                    setEscGrantee("");
                     
                     // Reset file input fields
                     if (birthCertRef.current) birthCertRef.current.value = "";
@@ -698,6 +809,8 @@ import { PreviewModal } from "@/components/landing_page/landing_page_portal/prev
                     if (idPicRef.current) idPicRef.current.value = "";
                     if (studentExitFormRef.current) studentExitFormRef.current.value = "";
                     if (form137Ref.current) form137Ref.current.value = "";
+                    if (itrRef.current) itrRef.current.value = "";
+                    if (escCertRef.current) escCertRef.current.value = "";
 
 
                     if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
@@ -772,7 +885,8 @@ const sections = [
                                     placeholder="Doe" 
                                     onChange={handleApplicantMiddleName}
                                     value={applicantsMiddleName}
-                                    className="rounded-sm px-1 w-full sm:w-[170px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.applicantsMiddleName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 
                                 />
                             </div>
                             <div className="flex flex-col">
@@ -782,8 +896,8 @@ const sections = [
                                     placeholder="Jr." 
                                     onChange={handleApplicantSuffix}
                                     value={applicantsSuffix}
-                                    className="rounded-sm px-1  w-full sm:w-[70px] lg:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                />
+                                    className={`rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.applicantsSuffix ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                />
                             </div>
                         </section>
                         <section className="flex flex-col sm:flex-row gap-5">
@@ -911,8 +1025,8 @@ const sections = [
                                     placeholder="Doe"
                                     onChange={handleGuardiansMiddleName}
                                     value={guardiansMiddleName}
-                                    className="rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                />
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.guardiansMiddleName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 />
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xs lg:text-sm text-dGreen font-semibold">Suffix</span>
@@ -921,8 +1035,8 @@ const sections = [
                                     placeholder="Doe"
                                     onChange={handleGuardiansSuffix}
                                     value={guardiansSuffix}
-                                    className="rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                />
+                                    className={`rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.guardiansSuffix ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 />
                             </div>
                         </section>
 
@@ -967,8 +1081,8 @@ const sections = [
                                     placeholder="l7B4G@example.com" 
                                     onChange={handleEmergencyEmail}
                                     value={emergencyEmail}
-                                    className="rounded-sm px-1 w-full sm-[150px] lg:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.emergencyEmail ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                         </section>
@@ -1035,9 +1149,9 @@ const sections = [
                                     ${errors.studentType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${studentType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Option</option>
-                                        <option value="New Student">Incoming G7</option>
+                                        <option value="Incoming G7">Incoming G7</option>
                                         <option value="Transferee">Transferee</option>
-                                        <option value="Old Student">Old Student</option>
+                                        {/* <option value="Old Student">Old Student</option> */}
                                 </select>
                             </div>
                         </section>
@@ -1117,6 +1231,8 @@ const sections = [
 
                     </div>
                 </section>
+
+
             </main>
         ),
     },
@@ -1135,7 +1251,7 @@ const sections = [
 
                 <section className="w-full px-0 sm:px-2 py-2">
 
-                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Identity Documents:</span>
+                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Identity & Financial Documents   :</span>
                     <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-8">
@@ -1225,6 +1341,52 @@ const sections = [
                                         ref={idPicRef}
                                         accept="image/*"
                                         onChange={handleIdPIcChange}
+                                        name="document"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    />
+                                </div>
+                                )}
+                            </div>
+                                
+                            <div className="flex flex-col">
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Parent&apos;s Income Tax Return (for incoming G7)</span>
+                                {itr ? (
+                                <div 
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                    key="itr_preview"
+                                >
+                                    <div className="flex flex-row items-center gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => previewImage(itr)}
+                                            className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            title="Click to preview"
+                                            >
+                                            {itr.name}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                            setIdPic(null);
+                                            if (itrRef.current) itrRef.current.value = "";}}
+                                            className="text-red-500 hover:text-red-700 font-bold"
+                                            title="Remove file"
+                                            >
+                                                ✕
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                ) : (
+                                <div 
+                                    className="flex flex-col gap-1 "
+                                    key="itr_preview"
+                                >
+                                    <input
+                                        type="file"
+                                        ref={itrRef}
+                                        accept="image/*"
+                                        onChange={handleITRChange}
                                         name="document"
                                         className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                     />
@@ -1383,6 +1545,7 @@ const sections = [
                             </div>
                             </div>
 
+                            <div className="flex flex-col sm:flex-row gap-8">
                             <div className="flex flex-col">
                                 <span className="text-xs lg:text-sm text-dGreen font-semibold">CAPRISSA (if private) </span>
                                 {studentExitForm ? (
@@ -1428,13 +1591,62 @@ const sections = [
                                 </div>
                                 )}
                             </div>
+
+                            <div className="flex flex-col">
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">ESC Certificate (if transferee & prev ESC grantee) </span>
+                                {escCert ? (
+                                <div 
+                                    className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                    key="student_exit_preview"
+                                >
+                                    <div className="flex flex-row items-center gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => previewImage(escCert)}
+                                            className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                            title="Click to preview"
+                                            >
+                                            {escCert.name}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                            setEscCert(null);
+                                            if (escCertRef.current) escCertRef.current.value = "";}}
+                                            className="text-red-500 hover:text-red-700 font-bold"
+                                            title="Remove file"
+                                            >
+                                                ✕
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                ) : (
+                                <div 
+                                    className="flex flex-col gap-1 "
+                                    key="student_exit_upload"
+                                >
+                                    <input
+                                        type="file"
+                                        ref={escCertRef}
+                                        accept="image/*"
+                                        onChange={handleEscCert}
+                                        name="document"
+                                        className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    />
+                                </div>
+                                )}
+                            </div>
+                            </div>
                             
                         </section>
-
                     </div>
+
                 </section>
 
-
+                <section className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-red-100/50 border-2 border-red-100 text-red-900 rounded-lg mt-3">
+                    <p><strong>NOTE:</strong> Please submit a scanned copy of your Report Card if you wish to be evaluated for academic discounts and submit a scanned copy of your ESC Certificate if you are a transferee that is already an ESC Grantee</p>
+                </section>
                 
             </main>
         ),
@@ -1716,11 +1928,11 @@ const sections = [
                 <section className="w-full px-0 sm:px-2 py-2">
 
                     <span className="pl-2 ml-0 sm:ml-2   text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Discount Class:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <div className="w-full gap-8 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-10">
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Attainment Upon Graduation</span>
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Attainment Upon Graduation / Last Grade</span>
                                 <select 
                                     name="additionalInformation" 
                                     className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
@@ -1730,13 +1942,13 @@ const sections = [
                                 >
                                     <option value="">Select Option</option>
                                     <option value="N/a">N/a</option>
-                                    <option value="Graduated with Honors">Graduated with Honors</option>
-                                    <option value="Graduated with High Honor">Graduated with High Honor</option>
-                                    <option value="Graduated with Highest Honor">Graduated with Highest Honor</option>
+                                    <option value="With Honor">Graduated with Honors</option>
+                                    <option value="With High Honor">Graduated with High Honor</option>
+                                    <option value="With Highest Honor">Graduated with Highest Honor</option>
                                 </select>
                             </div>
 
-                            <div className="flex flex-col">
+                            {/* <div className="flex flex-col">
                                 <span className="text-xs lg:text-sm text-dGreen font-semibold">Consistent GWA of</span>
                                 <select 
                                     name="additionalInformation" 
@@ -1752,7 +1964,7 @@ const sections = [
                                     <option value="91-95%">91-95%</option>
                                     <option value="96-100%">96-100%</option>
                                 </select>
-                            </div>
+                            </div> */}
 
                             <div className="flex flex-col">
                                 <span className="text-xs lg:text-sm text-dGreen font-semibold">Has enrolled sibling</span>
@@ -1769,6 +1981,39 @@ const sections = [
                                         
                                 </select>
                             </div>
+
+                            <div className="flex flex-col">
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Sibling&apos;s Full Name:</span>
+                                <input 
+                                    type="text" 
+                                    placeholder="Blue Kirigaya"
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.siblingName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
+                                    disabled={hasEnrolledSibling !== 'Yes'}
+                                    value={siblingName}
+                                    onChange={handleSiblingNameChange}
+                                />
+                            </div>
+                        </section>
+
+                        <section className="flex flex-col sm:flex-row gap-10">
+
+                            <div className="flex flex-col">
+                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Already an ESC Grantee?</span>
+                                <select 
+                                    name="escGrantee    " 
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.escGrantee ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}
+                                    value={escGrantee}
+                                    onChange={handleEscGrantee}
+                                    >
+                                        <option value="">Select Option</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                        
+                                </select>
+                            </div>
+
                         </section>
 
                     </div>

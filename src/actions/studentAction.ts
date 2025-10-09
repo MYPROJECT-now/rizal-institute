@@ -3,7 +3,7 @@
 
 import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
 
@@ -103,6 +103,85 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
   };
 }
 
+
+// export const getStudentInfo = async () => {
+//   const applicantId = await getApplicantID();
+//   if (!applicantId) return null;
+//   console.log("Applicant ID:", applicantId);
+
+//   const selectedAcademicYear = await getSelectedAcademicYear();
+//   if (!selectedAcademicYear) {
+//     console.warn("❌ No academic year selected");
+//     return null;
+//   }
+
+//     const studentInfo = await db
+//     .select({
+//       lrn: StudentInfoTable.lrn,
+//       student_id: StudentInfoTable.applicants_id,
+//       gradeLevelName: studentTypeTable.gradeToEnroll,
+//       academicYear: AcademicYearTable.academicYear,
+//       studentFirstName: StudentInfoTable.studentFirstName,
+//       studentMiddleName: StudentInfoTable.studentMiddleName,
+//       studentLastName: StudentInfoTable.studentLastName,
+//       studentSuffix: StudentInfoTable.studentSuffix,
+//       sectionName: SectionTable.sectionName,
+//     })
+//     .from(StudentInfoTable)
+//     .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+//     .leftJoin(SectionTable, eq(SectionTable.section_id, StudentPerGradeAndSection.section_id))
+//     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+//     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
+//     .leftJoin(studentTypeTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
+//     .where(eq(StudentInfoTable.applicants_id, applicantId));
+
+//     return studentInfo[0];
+// }
+
+export const getStudentInfo = async () => {
+  const applicantId = await getApplicantID();
+  if (!applicantId) return null;
+
+  const selectedAcademicYear = await getSelectedAcademicYear();
+  if (!selectedAcademicYear) return null;
+
+  const studentInfo = await db
+    .select({
+      lrn: StudentInfoTable.lrn,
+      student_id: StudentInfoTable.applicants_id,
+      gradeLevelName: studentTypeTable.gradeToEnroll,
+      academicYear: AcademicYearTable.academicYear,
+      studentFirstName: StudentInfoTable.studentFirstName,
+      studentMiddleName: StudentInfoTable.studentMiddleName,
+      studentLastName: StudentInfoTable.studentLastName,
+      studentSuffix: StudentInfoTable.studentSuffix,
+      sectionName: SectionTable.sectionName,
+      section_id: SectionTable.section_id,
+    })
+    .from(StudentInfoTable)
+    .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+    .leftJoin(SectionTable, eq(SectionTable.section_id, StudentPerGradeAndSection.section_id))
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
+    .leftJoin(studentTypeTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
+    .where(eq(StudentInfoTable.applicants_id, applicantId));
+
+  if (!studentInfo[0]) return null;
+
+  // Fetch subjects for this section (or by grade if you prefer)
+  const subjects = await db
+    .select({
+      subjectName: SubjectTable.subjectName,
+    })
+    .from(SubjectTable)
+    .leftJoin(StudentGradesTable, eq(StudentGradesTable.subject_id, SubjectTable.subject_id)) // assuming you have this mapping table
+    .where(eq(StudentGradesTable.student_id, applicantId));
+
+  return {
+    ...studentInfo[0],
+    subjects: subjects.map((s) => s.subjectName),
+  };
+};
 
 
   export const getPaymentHistory = async () => {

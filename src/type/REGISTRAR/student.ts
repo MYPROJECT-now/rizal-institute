@@ -6,7 +6,17 @@ export type all_studentTable_Type = {
     status : string | null;
     gradeLevel: string | null;
     isActive: boolean | null;
-
+    hasBirth: boolean | null;
+    hasReportCard: boolean | null;
+    hasGoodMoral: boolean | null;
+    hasIdPic: boolean | null;
+    hasExitForm: boolean | null;
+    hasForm137: boolean | null;
+    hasITR: boolean | null;
+    hasEscCert: boolean | null; 
+    studentType: string | null;
+    schoolType: string | null;
+    escGrantee: string | null;
   };
   
 

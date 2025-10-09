@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { usescheduleModal } from "@/src/store/ADMIN/addSchedule";
-import { AddSchedule, checkSchedule, getAvailableAssignments, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
+import { AddSchedule, checkSchedule, getAvailableAssignments, getAvailableRooms, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -28,7 +28,7 @@ export const Add_Schedule = () => {
     scheduledAll: boolean;
     noAssigned: boolean;
   }>({ available: [], scheduledAll: false, noAssigned: false });
-
+  const [room, setRoom] = useState<{ room_id: number; roomName: string }[]>([]);
 
   const [selectedSubject, setSelectedSubject] = useState(0);
   const [selectedTeacher, setSelectedTeacher] = useState(0);
@@ -36,6 +36,7 @@ export const Add_Schedule = () => {
   const [selectedSection, setSelectedSection] = useState(0);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -53,9 +54,11 @@ export const Add_Schedule = () => {
       const result = await getSubjects();
       const result2 = await getTeachersName();
       const result3 = await gradeAndSection();
+      const result4 = await getAvailableRooms();
       setSubjects(result);
       setTeachers(result2);
       setGradeSections(result3);
+      setRoom(result4);
       setIsLoading(false);
     };
     fetchSubjects();
@@ -137,7 +140,8 @@ export const Add_Schedule = () => {
           selectedTeacher,
           day,
           startTime,
-          endTime
+          endTime,
+          selectedRoom
         );
       }
         toast.success("Schedule added successfully.");
@@ -160,6 +164,7 @@ export const Add_Schedule = () => {
     setSelectedSection(0);
     setStartTime("");
     setEndTime("");
+    setSelectedRoom(0);
 
   };
 
@@ -307,6 +312,23 @@ export const Add_Schedule = () => {
                 className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
               />
             </section>
+
+            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+              <span className="text-dGreen text-sm font-semibold">Rooms:</span>
+              <select
+                value={selectedRoom}
+                onChange={(e) => setSelectedRoom(Number(e.target.value))}
+                disabled={!startTime || !endTime}
+                className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+              >
+                <option value="">-- Select Room --</option>
+                {room.map((rooms) => (
+                  <option key={rooms.room_id} value={rooms.room_id}>
+                    {rooms.roomName}
+                  </option>
+                ))}
+              </select>
+            </section>  
 
             <Button
               variant="confirmButton"

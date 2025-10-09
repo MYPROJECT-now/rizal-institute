@@ -2,7 +2,7 @@
 
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { GradeLevelTable, ScheduleTable, SectionTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { GradeLevelTable, RoomTable, ScheduleTable, SectionTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { getUid } from "./utils/staffID";
 import { getSelectedYear } from "./utils/getSelectedYear";
 
@@ -155,17 +155,20 @@ export const getMySched = async () => {
         subjectName: SubjectTable.subjectName,
         dayOfWeek: ScheduleTable.dayOfWeek,
         startTime: ScheduleTable.startTime,
-        endTime: ScheduleTable.endTime
+        endTime: ScheduleTable.endTime,
+        roomName: RoomTable.roomName,
     })
     .from(ScheduleTable)
     .leftJoin(SectionTable, eq(SectionTable.section_id, ScheduleTable.section_id))
     .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, ScheduleTable.gradeLevel_id))
     .leftJoin(SubjectTable, eq(SubjectTable.subject_id, ScheduleTable.subject_id))
+    .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
     .where(and(
         eq(ScheduleTable.academicYear_id, selectedYear),
         eq(ScheduleTable.clerk_uid, tid)
     ))
     .orderBy(asc(ScheduleTable.dayOfWeek));
 
+    console.log(mySched);
     return mySched;
 }

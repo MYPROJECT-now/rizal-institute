@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getTotalStudents, getGenderCounts, getTotalApplicants, getTotalReserved } from "@/src/actions/registrarAction";
+import { getTotalStudents, getGenderCounts, getTotalPendingApplicants, getTotalPendingAdmission } from "@/src/actions/registrarAction";
 import { getSelectedYear } from "@/src/actions/utils/getSelectedYear";
 import { toast } from "sonner";
 
@@ -8,11 +8,11 @@ export const Top_analytics = async () => {
     const selectedYear = await getSelectedYear();
     if(!selectedYear) return toast.error("No selectedacademic year.");
 
-    const [totalStudents, genderCounts, totalApplicants, totalReserved] = await Promise.all([
+    const [totalStudents, genderCounts, totalPendingApplicants, totalPendingAdmission] = await Promise.all([
         getTotalStudents(selectedYear),
         getGenderCounts(selectedYear),
-        getTotalApplicants(selectedYear),
-        getTotalReserved(selectedYear),
+        getTotalPendingApplicants(selectedYear),
+        getTotalPendingAdmission(selectedYear),
     ])
     // const totalStudents = await getTotalStudents();
     // const genderCounts = await getGenderCounts();   
@@ -48,7 +48,7 @@ export const Top_analytics = async () => {
             <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold xl:text-[15px] lg:text-[12px]">
-                        Total Boys
+                        Total Male
                     </p>
                     <p className="font-bold text-[15px]">
                         {boysCount}
@@ -68,7 +68,7 @@ export const Top_analytics = async () => {
             <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold xl:text-[15px] lg:text-[12px]">
-                        Total Girls
+                        Total Female
                     </p>
                     <p className="font-bold text-[15px]">
                         {girlsCount}
@@ -88,10 +88,10 @@ export const Top_analytics = async () => {
             <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold xl:text-[15px] lg:text-[12px]">
-                       Applicants
+                       Pending Applicants
                     </p>
                     <p className="font-bold text-[15px]">
-                        {totalApplicants}
+                        {totalPendingApplicants}
                     </p>
                 </div>
                 <div>
@@ -108,10 +108,10 @@ export const Top_analytics = async () => {
             <div className=" py-2 gap-2 bg-Green text-white rounded-lg flex flex-row justify-center items-center">
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold xl:text-[15px] lg:text-[12px]">
-                        Reserved Slot
+                        Pending Admission
                     </p>
                     <p className="font-bold text-[15px]">
-                        {totalReserved}
+                        {totalPendingAdmission}
                     </p>
                 </div>
                 <div>

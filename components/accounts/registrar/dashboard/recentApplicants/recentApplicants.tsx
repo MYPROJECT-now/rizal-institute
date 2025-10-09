@@ -21,7 +21,7 @@ export const RecentApplicantsTable = async () => {
           {recentApplicants.length === 0 ? (
             <tr>
               <td colSpan={7} className="p-4 text-black">
-                No applicants found.
+                No pending applicants found.
               </td>
             </tr>
           ) : (
@@ -32,7 +32,7 @@ export const RecentApplicantsTable = async () => {
                   index % 2 === 0 ? "bg-white" : "bg-green-100"
                 } hover:bg-green-300 transition duration-200`}
               >
-                <td className="p-3 font-medium text-gray-800">{applicant.lrn}</td>
+                <td className="p-3 ">{applicant.lrn}</td>
                 <td className="p-3">
                   {applicant.lastName}, {applicant.firstName} {applicant.middleName}
                 </td>
@@ -40,7 +40,7 @@ export const RecentApplicantsTable = async () => {
                 <td className="p-3 font-semibold text-yellow-400">
                   {applicant.applicationFormReviewStatus}
                 </td>
-                <td className="p-3 text-gray-600">
+                <td className="p-3 ">
                   {applicant.dateOfApplication?.toString()}
                 </td>
               </tr>

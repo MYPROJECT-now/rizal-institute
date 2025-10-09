@@ -17,6 +17,8 @@ const Students: FC<Props> = ({ students }) => {
   const [filterName, setFilterName] = useState("");
   const [filterLRN, setFilterLRN] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
+  const [filterDocument, setFilterDocument] = useState("");
+
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
 
@@ -24,14 +26,56 @@ const Students: FC<Props> = ({ students }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 5;
 
+const getDocumentStatus = (s: all_studentTable_Type) => {
+  // define all possible document fields to avoid typos
+  const docs = {
+    birth: s.hasBirth,
+    reportCard: s.hasReportCard,
+    goodMoral: s.hasGoodMoral,
+    idPic: s.hasIdPic,
+    form137: s.hasForm137,
+    exitForm: s.hasExitForm,
+    itr: s.hasITR,        
+    escCert: s.hasEscCert,  
+  };
+
+  // figure out which docs are required
+  let requiredDocs: (keyof typeof docs)[] = [];
+
+  if (s.studentType === "Incoming G7" && s.schoolType === "Public") {
+    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr"];
+  } 
+  else if (s.studentType === "Incoming G7" &&  s.schoolType === "Private") {
+    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr", "exitForm"];
+  } 
+  else if (s.schoolType === "Private" && s.escGrantee === "Yes") {
+    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr", "exitForm", "escCert"];
+  } 
+  else if (s.schoolType === "Private" && s.studentType === "Transferee") {
+    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "exitForm"];
+  }
+
+  // check completeness
+  const hasAll = requiredDocs.every((key) => docs[key]);
+  if (hasAll) return "Complete";
+
+  // check if some docs are submitted
+  const hasSome = requiredDocs.some((key) => docs[key]);
+  if (hasSome) return "Incomplete";
+
+  return "None";
+};
+
+
     
   const filteredStudents = studentList.filter((student) => {
     const fullName = `${student.studentFirstName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`.toLowerCase();
     const matchesName = fullName.includes(filterName.toLowerCase());
     const matchesLRN = student.lrn.includes(filterLRN);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
+    const matchesDocument = filterDocument === "" || getDocumentStatus(student) === filterDocument;
 
-    return matchesName && matchesLRN && matchesGrade;
+    return matchesName && matchesLRN && matchesGrade && matchesDocument;
     // return matchesName && matchesLRN;
   });
 
@@ -41,6 +85,16 @@ const Students: FC<Props> = ({ students }) => {
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
   const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
 
+
+  // inside Students component
+  const statusCounts = studentList.reduce(
+    (acc, student) => {
+      const status = getDocumentStatus(student);
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    },
+    { Complete: 0, Incomplete: 0, None: 0 }
+  );
 
   const transferStudent = async ( lrn: string) => {
     toastConfirm("Transfer Student?", {
@@ -140,11 +194,25 @@ const Students: FC<Props> = ({ students }) => {
         {/* Add other grades as needed */}
       </select>
 
+      <select
+        value={filterDocument}
+        onChange={(e) => setFilterDocument(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      >
+        <option value="">Document Status</option>
+        <option value="Complete">🟢 Complete: {statusCounts.Complete}</option>
+        <option value="Incomplete">🟡 Incomplete: {statusCounts.Incomplete}</option>
+        <option value="None">🔴 None: {statusCounts.None}</option>
+      </select>
+
+      
+
       <Button
         onClick={() => {
           setFilterName("");
           setFilterLRN("");
           setFilterGrade("");
+          setFilterDocument("");
         }}
         variant="confirmButton"
         className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
@@ -160,9 +228,9 @@ const Students: FC<Props> = ({ students }) => {
             <th className="px-4 py-2">LRN</th>
             <th className="px-4  py-2 min-w-[100px] sm:min-w-0">Full Name</th>
             <th className="px-4  py-2 min-w-[100px] lg:min-w-0">Grade Level</th>
-            <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Document</th>
             <th className="px-4 py-2 min-w-[100px] sm:min-w-0">Full Details</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-2 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
