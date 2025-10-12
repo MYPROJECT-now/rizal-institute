@@ -14,10 +14,21 @@ onChange: (month_id: number, field: "month" | "monthlyDue", value: string | numb
 const SoaTodo: FC<Props> = ({ SOAtodo, currentBalance, effectiveDue, onChange, editing }) => {
 
     // highlight the current month
-    const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
-    const monthString = (SOAtodo.month ?? '').toLowerCase();
-    const isCurrentMonth = monthString.includes(currentMonth);
+    // const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
+    // const monthString = (SOAtodo.month ?? '').toLowerCase();
+    // const isCurrentMonth = monthString.includes(currentMonth);
 
+  const now = new Date();
+  const currentMonth = now.toLocaleString("default", { month: "long" }).toLowerCase();
+  const currentYear = now.getFullYear().toString();
+
+  const monthString = (SOAtodo.month ?? "").toLowerCase();
+  const yearString = (SOAtodo.dateOfPayment ?? "").toLowerCase();
+
+  // Match if the row’s month matches current month and year
+  const isCurrentMonthYear =
+    monthString.includes(currentMonth) &&
+    (yearString.includes(currentYear) || SOAtodo.month?.includes(currentYear));
 
 
 
@@ -33,7 +44,7 @@ const SoaTodo: FC<Props> = ({ SOAtodo, currentBalance, effectiveDue, onChange, e
 
 
     return (
-        <tr className={isCurrentMonth ? "bg-green-400" : "hover:bg-green-200 "}>
+        <tr className={isCurrentMonthYear  ? "bg-green-400" : "hover:bg-green-200 "}>
             <td className="border border-gray-300 p-1">
                 <input 
                     type="text" 

@@ -10,7 +10,7 @@ interface Props {
 const SchedTodoComponent: FC<Props> = ({ sched, className }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center text-center p-3 rounded-lg border shadow-sm bg-white hover:bg-green-50 transition-all ${className ?? ""}`}
+      className={`flex flex-col items-center justify-center text-center p-3 rounded-lg   hover:bg-green-300 transition-all ${className ?? ""}`}
     >
       {/* Teacher name */}
       <div className="font-semibold text-sm text-gray-800">

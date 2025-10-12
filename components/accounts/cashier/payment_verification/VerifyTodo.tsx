@@ -2,7 +2,6 @@
 import { FC, } from "react";
 import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import { Button } from "@/components/ui/button";
-import { StudentsPaymentReview } from "./payment_receipt/student_payment";
 import { useShowMonthlyPayementModal } from "@/src/store/CASHIER/student";
 
 interface Props {
@@ -30,7 +29,6 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => 
         <tr className="border-b">
             {/* <td className="px-4 py-2">{VerifyTodo.SInumber}</td> */}
             <td className="px-4 py-2">
-                <StudentsPaymentReview />
                 <Button 
                     className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
                     variant={"confirmButton"}

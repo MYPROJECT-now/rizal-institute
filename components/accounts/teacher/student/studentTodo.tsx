@@ -43,7 +43,7 @@ const StudentTodo: FC<Props> = ({
   return (
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
         <td className="px-4 py-2">{myStudent.lrn}</td>
-        <td className="px-4 py-2">{myStudent.studentLastName + ", " + myStudent.studentFirstName + " " + myStudent.studentMiddleName + " " + myStudent.studentSuffix }</td>
+        <td className="px-4 py-2">{myStudent.studentLastName + ", " + myStudent.studentFirstName + " " + (myStudent.studentMiddleName || " ") + " " + (myStudent.studentSuffix || " ")}</td>
         <td className="px-4 py-2">
           {/* {myStudent?.finalGrade || "-"} */}
           <input 

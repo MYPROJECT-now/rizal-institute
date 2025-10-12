@@ -16,7 +16,7 @@ const Todos: FC<Props> = ({ todos }) => {
     const [filterDate, setFilterDate] = useState("");
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const itemsPerPage = 5;
 
     // Filtering logic
     const filteredItems = paymentHistoryItems.filter((item) => {
@@ -89,25 +89,27 @@ const Todos: FC<Props> = ({ todos }) => {
             </table>
             </div>
             {/* Pagination Controls */}
-            <div className="flex justify-center mt-4 gap-4">
-                <button
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-                >
-                    Previous
-                </button>
-                <span className="font-semibold">
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages || totalPages === 0}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
+            <section className="flex justify-center mt-4 gap-4">
+            <Button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                variant="prevButton"
+                className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
+            >
+                Previous
+            </Button>
+            <span className="font-semibold flex items-center">
+                Page {currentPage} of {totalPages}
+            </span>
+            <Button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                variant="prevButton"
+                className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  "
+            >
+                Next
+            </Button>
+            </section>
         </div>
     );
 }
