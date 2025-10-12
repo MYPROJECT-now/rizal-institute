@@ -16,6 +16,7 @@ interface Props {
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
     const [filterGrade, setFilterGrade] = useState("");
+    const [filterStatus, setFilterStatus] = useState("");
     const [loadingId, setLoadingId] = useState<number | null>(null);
 
 
@@ -67,8 +68,9 @@ interface Props {
     const matchesName = fullName.includes(filterName.toLowerCase());
     const matchesLRN = student.lrn.includes(filterLRN);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
+    const matchesStatus = filterStatus === "" || student.payment_status === filterStatus;
 
-  return matchesName && matchesLRN && matchesGrade;
+  return matchesName && matchesLRN && matchesGrade && matchesStatus;
   });
 
   // 🧮 Pagination logic
@@ -113,12 +115,23 @@ interface Props {
         <option value="10">Grade 10</option>
         {/* Add other grades as needed */}
       </select>
-
+        
+      <select
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+        >
+            <option value="">Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Declined">Declined</option>
+            <option value="Approved">Approved</option>
+        </select>
       <Button
         onClick={() => {
           setFilterName("");
           setFilterLRN("");
           setFilterGrade("");
+          setFilterStatus("");
         }}
         variant="confirmButton"
         className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "

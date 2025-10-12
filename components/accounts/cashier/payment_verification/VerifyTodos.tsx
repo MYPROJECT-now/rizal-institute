@@ -101,6 +101,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         >
             <option value="">Status</option>
             <option value="Pending">Pending</option>
+            <option value="Declined">Declined</option>
             <option value="Approved">Approved</option>
         </select>
 

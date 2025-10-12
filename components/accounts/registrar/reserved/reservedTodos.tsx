@@ -15,6 +15,7 @@ const Reserved: FC<Props> = ({ reserved }) => {
   const [filterName, setFilterName] = useState("");
   const [filterLRN, setFilterLRN] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   // Pagination State
@@ -26,7 +27,8 @@ const Reserved: FC<Props> = ({ reserved }) => {
     const matchesName = fullName.includes(filterName.toLowerCase());
     const matchesLRN = student.lrn.includes(filterLRN);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
-  return matchesName && matchesLRN && matchesGrade;
+    const matchesStatus = filterStatus === "" || student.admissionStatus === filterStatus;
+  return matchesName && matchesLRN && matchesGrade && matchesStatus;
   });
 
   const indexOfLastStudent = currentPage * studentsPerPage;
@@ -90,11 +92,22 @@ const Reserved: FC<Props> = ({ reserved }) => {
           <option value="9">Grade 9</option>
           <option value="10">Grade 10</option>
         </select>
+
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        >
+          <option value="">Admission Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Enrolled">Enrolled</option>
+        </select>
         <Button
           onClick={() => {
             setFilterName("");
             setFilterLRN("");
             setFilterGrade("");
+            setFilterStatus("");
           }}
           variant="confirmButton"
           className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "

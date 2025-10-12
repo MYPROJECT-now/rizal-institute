@@ -13,9 +13,10 @@ interface Props {
 
   const Applicants: FC<Props> = ({ applicants }) => {
     const [studentList] = useState<reservedSlotType[]>(applicants);
-    const [filterName, setFilterName] = useState("");
-    const [filterLRN, setFilterLRN] = useState("");
+    const [filterSearch, setFilterSearch] = useState("");
+
     const [filterGrade, setFilterGrade] = useState("");
+    const [filterTuition, setFilterTuition] = useState("");
 
     const {open} = useUploadSoaModal();
 
@@ -26,11 +27,14 @@ interface Props {
 
     const filteredStudents = studentList.filter((student) => {
     const fullName = `${student.firstName} ${student.middleName ?? ""} ${student.lastName}`.toLowerCase();
-    const matchesName = fullName.includes(filterName.toLowerCase());
-    const matchesLRN = student.lrn.includes(filterLRN);
+    const matchesSearch =
+      fullName.includes(filterSearch.toLowerCase()) ||
+      student.lrn.toLowerCase().includes(filterSearch.toLowerCase());
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
 
-  return matchesName && matchesLRN && matchesGrade;
+    const tuitionStatus = student.soaMonthId ? "Done" : "Pending";
+    const matchesTuition = filterTuition === "" || tuitionStatus === filterTuition;
+  return matchesSearch && matchesGrade && matchesTuition;
   });
 
     // 🧮 Pagination logic
@@ -50,24 +54,17 @@ interface Props {
 
       <input
         type="text"
-        placeholder="Name"
-        value={filterName}
-        onChange={(e) => setFilterName(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        placeholder="Search Name or LRN"
+        value={filterSearch}
+        onChange={(e) => setFilterSearch(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
-      <input
-        type="text"
-        placeholder="LRN"
-        value={filterLRN}
-        onChange={(e) => setFilterLRN(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-      />
 
       <select
         value={filterGrade}
         onChange={(e) => setFilterGrade(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       >
         <option value="">All Grades</option>
         <option value="Grade 7">Grade 7</option>
@@ -77,11 +74,21 @@ interface Props {
         {/* Add other grades as needed */}
       </select>
 
+      <select
+        value={filterTuition}
+        onChange={(e) => setFilterTuition(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1 w-full sm:w-[140px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      >
+        <option value="">All Status</option>
+        <option value="Done">Done</option>
+        <option value="Pending">Pending</option>
+      </select>
+
       <Button
         onClick={() => {
-          setFilterName("");
-          setFilterLRN("");
+          setFilterSearch("");
           setFilterGrade("");
+          setFilterTuition("");
         }}
         variant="confirmButton"
         className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "

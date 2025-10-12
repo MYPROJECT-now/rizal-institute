@@ -17,6 +17,7 @@ const Applicants: FC<Props> = ({ grade, statuses}) => {
   const [applicantList,] = useState<Grade_Type []>(grade);
   const [filterName, setFilterName] = useState("");
   const [filterLRN, setFilterLRN] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
 
 
 
@@ -31,7 +32,10 @@ const Applicants: FC<Props> = ({ grade, statuses}) => {
     const matchesName = fullName.includes(filterName.toLowerCase());
     const matchesLRN = student.lrn.includes(filterLRN);
 
-  return matchesName && matchesLRN ;
+    const studentStatus = statuses.find((s) => s.student_id === student.id)?.status ?? "";
+    const matcheStatus = filterStatus === "" || studentStatus  === filterStatus;
+
+  return matchesName && matchesLRN && matcheStatus;
   });
 
   // 🧮 Pagination logic
@@ -64,12 +68,22 @@ const Applicants: FC<Props> = ({ grade, statuses}) => {
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
-
+      <select
+        value={filterStatus}
+        onChange={(e) => setFilterStatus(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      >
+        <option value="">Status</option>
+        <option value="Passed">Passed</option>
+        <option value="Summer">Summer</option>
+        <option value="Retained">Retained</option>
+      </select>
 
       <Button
         onClick={() => {
           setFilterName("");
           setFilterLRN("");
+          setFilterStatus("");
         }}
         variant="confirmButton"
         className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "

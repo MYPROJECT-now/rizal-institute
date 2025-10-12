@@ -19,6 +19,8 @@ import { Receipts_Info } from "../info/info";
     const [filterName, setFilterName] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
     const [filterGrade, setFilterGrade] = useState("");
+    const [filterStatus, setFilterStatus] = useState("");
+
     const [loadingId, setLoadingId] = useState<number | null>(null);
 
 
@@ -77,8 +79,9 @@ import { Receipts_Info } from "../info/info";
     const matchesName = fullName.includes(filterName.toLowerCase());
     const matchesLRN = student.lrn.includes(filterLRN);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
+    const matchesStatus = filterStatus === "" || student.reservationPaymentStatus === filterStatus;
 
-    return matchesName && matchesLRN && matchesGrade;
+    return matchesName && matchesLRN && matchesGrade && matchesStatus;
   });
 
     // 🧮 Pagination logic
@@ -125,11 +128,24 @@ import { Receipts_Info } from "../info/info";
         {/* Add other grades as needed */}
       </select>
 
+      <select
+        value={filterStatus}
+        onChange={(e) => setFilterStatus(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      >
+        <option value="">Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Ongoing">Ongoing</option>
+        <option value="Declined">Declined</option>
+        <option value="Reserved">Reserved</option>
+      </select>
+
       <Button
         onClick={() => {
           setFilterName("");
           setFilterLRN("");
           setFilterGrade("");
+          setFilterStatus("");
         }}
         variant="confirmButton"
         className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
@@ -156,7 +172,7 @@ import { Receipts_Info } from "../info/info";
             {currentStudents.length === 0 ? (
               <tr>
               <td colSpan={6} className="p-4 text-black">
-                No recent applicants found.
+                No applicants found.
               </td>
             </tr>
           ) : (
