@@ -20,6 +20,7 @@ const Student: FC<Props> = ({ student, className  }) => {
       <td className="px-4 py-2">{student.lrn}</td>
       <td className="px-4 py-2">{student.studentLastName}, {student.studentFirstName} {student.studentMiddleName} {student.studentSuffix}</td>
       <td className="px-[55px] py-2">{student.gradeLevelName}</td>
+      <td className="px-4 py-2">{student.paymentMethod === "Installments" ? "Installments" : student.paymentMethod === "full_payment" ? "Full Payment" : "-"}</td>
       <td className="px-4 py-2">
         <Button 
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "

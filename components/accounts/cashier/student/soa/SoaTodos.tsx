@@ -107,12 +107,12 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
     return (
         <main className="p-3">
             <div>
-                <section className="mb-3 text-sm">
-                    <p><strong>Student Name:</strong> {SOATodos[0]?.studentLastName ?? ""}, {SOATodos[0]?.studentFirstName ?? ""} {SOATodos[0]?.studentMiddleName ?? ""} {SOATodos[0]?.studentSuffix ?? ""}</p>
-                    <p><strong>LRN:</strong> {SOATodos[0]?.lrn}</p>
-                    <p><strong>School Year:</strong> 2025 - 2026</p>
+                <section className="mb-3 text-sm font-semibold ">
+                    <p><strong className="pr-2">Student Name:</strong> {SOATodos[0]?.studentLastName ?? ""}, {SOATodos[0]?.studentFirstName ?? ""} {SOATodos[0]?.studentMiddleName ?? ""} {SOATodos[0]?.studentSuffix ?? ""}</p>
+                    <p><strong className="pr-[77px]">LRN:</strong> {SOATodos[0]?.lrn}</p>
+                    <p><strong className="pr-[25px]">School Year:</strong> {SOATodos[0]?.academicYear}</p>
                 </section>
-                
+
 
                 <section className="overflow-x-auto">
                     <table className="w-full border-collapse border border-gray-300 text-[11px]">

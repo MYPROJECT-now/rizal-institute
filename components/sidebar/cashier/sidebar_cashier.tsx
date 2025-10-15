@@ -59,6 +59,13 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     />
 
                     <SidebarItem 
+                        label="Full Payments" 
+                        href="/ACCOUNTS/cashier/full"
+                        iconSrc="/money.png" 
+                        onClick={onClose}
+                    />
+                    
+                    <SidebarItem 
                         label="Applicants" 
                         href="/ACCOUNTS/cashier/applicants"
                         iconSrc="/enrollment.png"
@@ -72,12 +79,7 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                         onClick={onClose}
                     />
 
-                    <SidebarItem 
-                        label="Full Payments" 
-                        href="/ACCOUNTS/cashier/full"
-                        iconSrc="/money.png" 
-                        onClick={onClose}
-                    />
+
             
                     <AcademicYearModal />
                     <SidebarAcad 

@@ -5,6 +5,7 @@ export type all_student_Type = {
     studentMiddleName?: string | null;
     studentSuffix?: string | null;
     gradeLevelName: string | null;
+    paymentMethod: string | null;
   };
   
 export type SOAsStudent = {
@@ -30,6 +31,7 @@ export type SOAsStudent = {
   amountPaid: number  | null;
 
   isActive?: boolean | null;
+  academicYear?: string | null;
 
 }
   

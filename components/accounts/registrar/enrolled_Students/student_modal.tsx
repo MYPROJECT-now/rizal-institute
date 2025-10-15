@@ -408,7 +408,7 @@ useEffect(() => {
                 1x1 ID Picture
               </label>
 
-              {schoolType === "Private" && (
+              {studentType === "Transferee" && (
               <label className="flex items-center gap-2 text-sm text-dGreen font-merriweather">
                 <input
                   type="checkbox"

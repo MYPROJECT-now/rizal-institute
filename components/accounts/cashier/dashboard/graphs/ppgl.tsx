@@ -87,7 +87,7 @@ export const Ppgl = () => {
   }, []);
 
   return (
-    <Card className="w-full sm:w-[300px] lg:w-[400px] ">
+    <Card className="w-full sm:w-[300px] lg:w-[370px] ">
       <CardHeader>
         <CardTitle className="text-center font-bold text-dGreen">
           Payment Completion Status per Grade Level

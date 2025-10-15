@@ -53,7 +53,42 @@
     
     return totalApplicants[0].count;
   };
+
+  export const getTotalDocuments = async () => {
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
   
+    const documents = await db
+      .select({ 
+        lrn: StudentInfoTable.lrn,
+        isActive: AcademicYearTable.isActive,
+        hasBirth: documentsTable.hasBirth,
+        hasReportCard: documentsTable.hasReportCard,
+        hasGoodMoral: documentsTable.hasGoodMoral,
+        hasIdPic: documentsTable.hasIdPic,
+        hasExitForm: documentsTable.hasExitForm,
+        hasForm137: documentsTable.hasForm137,
+        hasITR: documentsTable.hasTIR,
+        hasEscCert: documentsTable.hasEscCertificate,
+        studentType: educationalBackgroundTable.studentType,
+        schoolType: educationalBackgroundTable.schoolType,
+        escGrantee: additionalInformationTable.escGrantee,
+      })
+      .from(StudentInfoTable)
+      .leftJoin(additionalInformationTable, eq(StudentInfoTable.applicants_id, additionalInformationTable.applicants_id))
+      .leftJoin(educationalBackgroundTable, eq(StudentInfoTable.applicants_id, educationalBackgroundTable.applicants_id))
+      .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+      .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+      .leftJoin(documentsTable, eq(StudentInfoTable.applicants_id, documentsTable.applicants_id))
+      .where(and(
+        eq(AdmissionStatusTable.academicYear_id, selectedYear),
+        eq(AcademicYearTable.academicYear_id, selectedYear)
+      ));
+
+    console.log("Fetched documents:", documents);
+    return documents;
+  };
 
   //   export const getTotalApplicants = async (selectedYear: number) => {
   //   const totalApplicants = await db

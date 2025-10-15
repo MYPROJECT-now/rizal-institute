@@ -357,6 +357,22 @@ export const getTotalperMonth = async () => {
   }
 
 
+  export const paymentScheme = async () => {
+
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) return [];
+
+    const paymentScheme = await db
+    .select({
+        paymentMethod: downPaymentTable.paymentMethod,
+      })
+      .from(downPaymentTable)
+      .where(eq(downPaymentTable.academicYear_id, selectedYear))
+
+    return paymentScheme;
+  }
+
+
   // get recent payment
   export const getRecentPayments = async () => {
 
@@ -398,11 +414,13 @@ export const getEnrolledStudents = async () => {
     studentMiddleName: StudentInfoTable.studentMiddleName,
     studentSuffix: StudentInfoTable.studentSuffix,
     gradeLevelName: GradeLevelTable.gradeLevelName,
+    paymentMethod: downPaymentTable.paymentMethod
   })
   .from(StudentInfoTable)
   .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
   .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
   .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .leftJoin(downPaymentTable, eq(StudentInfoTable.applicants_id, downPaymentTable.applicants_id))
   .where(eq(AdmissionStatusTable.academicYear_id, selectedYear));
 
 console.log("Fetched Enrolled Students:", enrolledStudents);
@@ -428,6 +446,7 @@ export const getSOAsStudent = async (lrn: string) => {
       downPaymentDate: downPaymentTable.downPaymentDate,
       SINumberDP: downPaymentTable.SINumber,
       paymentMethod: downPaymentTable.paymentMethod,
+      academicYear: AcademicYearTable.academicYear,
       isActive: AcademicYearTable.isActive
     })
     .from(StudentInfoTable)
@@ -483,6 +502,7 @@ export const getSOAsStudent = async (lrn: string) => {
     SINumberDP: studentData.SINumberDP || "",
     paymentMethod: studentData.paymentMethod || "",
     isActive: studentData.isActive ?? false,
+    academicYear: studentData.academicYear || "",
     month: monthlyPayment.month,
     dateOfPayment: monthlyPayment.dateOfPayment,
     remarks: monthlyPayment.remarks,
@@ -510,6 +530,7 @@ export const paymentToVerify = async () => {
 
   const paymentToVerify = await db.select({
     monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
+    lrn: StudentInfoTable.lrn,
     month_id: MonthlyPayementTable.month_id,
     dateOfPayment: MonthlyPayementTable.dateOfPayment,  
     amount: MonthlyPayementTable.amount,
@@ -518,8 +539,6 @@ export const paymentToVerify = async () => {
     modeOfPayment: MonthlyPayementTable.modeOfPayment,
     status: MonthlyPayementTable.status,
     isActive: AcademicYearTable.isActive,
-    lrn: StudentInfoTable.lrn,
-
   })
   .from(MonthlyPayementTable)
   .leftJoin(MonthsInSoaTable, eq(MonthlyPayementTable.month_id, MonthsInSoaTable.month_id))

@@ -17,6 +17,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const [filterMop, setFilterMop] = useState("");
     const [filterDate, setFilterDate] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
+    const [filterLRN, setFilterLRN] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [loadingId, setLoadingId] = useState<number | null>(null);
 
@@ -26,8 +27,8 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         const MatchMop = (payment.modeOfPayment ?? "").includes(filterMop);
         const MatchDate = (payment.dateOfPayment ?? "").includes(filterDate);
         const MatchStatus = (payment.status ?? "").includes(filterStatus);
-
-    return  MatchMop && MatchDate && MatchStatus;
+        const MatchLrn = (payment.lrn ?? "").includes(filterLRN);
+    return  MatchMop && MatchDate && MatchStatus && MatchLrn;
     });
 
     // Pagination
@@ -75,11 +76,18 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 mb-4">
         <label className="text-green-900 font-bold text-sm  sm:text-lg">Filter By:</label>
 
-
+        <input
+        type="text"
+        placeholder="LRN"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        value={filterLRN}
+        onChange={(e) => setFilterLRN(e.target.value)}
+        />
+        
         <select
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-            value={filterMop}
-            onChange={(e) => setFilterMop(e.target.value)}
+        value={filterMop}
+        onChange={(e) => setFilterMop(e.target.value)}
         >
             <option value="">Mode of Payment</option>
             <option value="GCash">GCash</option>
@@ -88,16 +96,16 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         </select>
 
         <input
-            type="date"
+        type="date"
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
+        value={filterDate}
+        onChange={(e) => setFilterDate(e.target.value)}
         />
         
         <select
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+        value={filterStatus}
+        onChange={(e) => setFilterStatus(e.target.value)}
         >
             <option value="">Status</option>
             <option value="Pending">Pending</option>
@@ -110,6 +118,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                 setFilterMop("");
                 setFilterDate("");
                 setFilterStatus("");
+                setFilterLRN("");
             }}
             className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
             variant={"confirmButton"}
@@ -124,6 +133,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
                 <tr className="bg-green-600 text-white">
                     {/* <th className="px-4 py-2">SI Number</th> */}
                     <th className="px-4 py-2 min-w-[140px] sm:min-w-0">Proof of Payment</th>
+                    <th className="px-4 py-2 min-w-[140px] sm:min-w-0">LRN</th>
                     <th className="px-4 py-2 min-w-[140px] sm:min-w-0">Mode of Payment</th>
                     <th className="px-4 py-2 min-w-[130px] sm:min-w-0">Date of Payment</th>
                     <th className="px-4 py-2">Status</th>

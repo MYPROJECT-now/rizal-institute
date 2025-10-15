@@ -14,10 +14,7 @@ export const Top_analytics = async () => {
         getTotalPendingApplicants(selectedYear),
         getTotalPendingAdmission(selectedYear),
     ])
-    // const totalStudents = await getTotalStudents();
-    // const genderCounts = await getGenderCounts();   
-    // const totalApplicants = await getTotalApplicants();
-    // const totalReserved = await getTotalReserved();
+
 
     const boysCount = genderCounts.find(count => count.gender === "Male")?.count || 0;
     const girlsCount = genderCounts.find(count => count.gender === "Female")?.count || 0;

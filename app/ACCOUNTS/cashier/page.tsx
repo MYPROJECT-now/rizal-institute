@@ -2,6 +2,7 @@ import { Top_analytics } from "@/components/accounts/cashier/dashboard/analytics
 import { Ppgl } from "@/components/accounts/cashier/dashboard/graphs/ppgl";
 import { Enrollment } from "@/components/accounts/cashier/dashboard/graphs/enrollment";
 import { RecentPaymentsTable } from "@/components/accounts/cashier/dashboard/table/tablePage2";
+import { PaymentScheme } from "@/components/accounts/cashier/dashboard/graphs/scheme";
 
 
 const Dashboard = () => {
@@ -21,6 +22,7 @@ const Dashboard = () => {
                 <div className="flex lg:flex-row flex-col gap-10">
                     <Enrollment />
                     <Ppgl />
+                    <PaymentScheme />
 
                 </div>
             </section>

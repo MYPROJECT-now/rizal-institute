@@ -48,10 +48,10 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
   else if (s.studentType === "Incoming G7" &&  s.schoolType === "Private") {
     requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr", "exitForm"];
   } 
-  else if (s.schoolType === "Private" && s.escGrantee === "Yes") {
-    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr", "exitForm", "escCert"];
+  else if (s.schoolType === "Private" && s.studentType === "Transferee" && s.escGrantee === "Yes") {
+    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "exitForm", "escCert"];
   } 
-  else if (s.schoolType === "Private" && s.studentType === "Transferee") {
+  else if ((s.schoolType === "Private" || s.schoolType === "Public") && s.studentType === "Transferee") {
     requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "exitForm"];
   }
 
@@ -87,14 +87,14 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
 
 
   // inside Students component
-  const statusCounts = studentList.reduce(
-    (acc, student) => {
-      const status = getDocumentStatus(student);
-      acc[status] = (acc[status] || 0) + 1;
-      return acc;
-    },
-    { Complete: 0, Incomplete: 0, None: 0 }
-  );
+  // const statusCounts = studentList.reduce(
+  //   (acc, student) => {
+  //     const status = getDocumentStatus(student);
+  //     acc[status] = (acc[status] || 0) + 1;
+  //     return acc;
+  //   },
+  //   { Complete: 0, Incomplete: 0, None: 0 }
+  // );
 
   const transferStudent = async ( lrn: string) => {
     toastConfirm("Transfer Student?", {
@@ -200,9 +200,9 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       >
         <option value="">Document Status</option>
-        <option value="Complete">🟢 Complete: {statusCounts.Complete}</option>
-        <option value="Incomplete">🟡 Incomplete: {statusCounts.Incomplete}</option>
-        <option value="None">🔴 None: {statusCounts.None}</option>
+        <option value="Complete">🟢 Complete</option>
+        <option value="Incomplete">🟡 Incomplete</option>
+        <option value="None">🔴 None</option>
       </select>
 
       

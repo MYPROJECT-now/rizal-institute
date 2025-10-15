@@ -61,6 +61,31 @@ export const getAssignClass = async () => {
   return getClass;
 };
 
+export const getSchedPerClass = async () => {
+  const tid = await getUid();
+  if (!tid) return null;
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const getSched = await db
+    .select({
+      gradeLevel_id: ScheduleTable.gradeLevel_id,
+      subject_id: ScheduleTable.subject_id,
+      dayOfWeek: ScheduleTable.dayOfWeek,
+      startTime: ScheduleTable.startTime,
+      endTime: ScheduleTable.endTime,
+      roomName: RoomTable.roomName
+    })
+    .from(ScheduleTable)
+    .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
+    .where(and(
+      eq(ScheduleTable.clerk_uid, tid),
+      eq(ScheduleTable.academicYear_id, selectedYear)
+    ));
+
+  return getSched;
+};
 
 
 

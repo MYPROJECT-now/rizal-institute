@@ -60,10 +60,10 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
   else if (s.studentType === "Incoming G7" &&  s.schoolType === "Private") {
     requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr", "exitForm"];
   } 
-  else if (s.schoolType === "Private" && s.escGrantee === "Yes") {
-    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "itr", "exitForm", "escCert"];
+  else if (s.schoolType === "Private" && s.studentType === "Transferee" && s.escGrantee === "Yes") {
+    requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "exitForm", "escCert"];
   } 
-  else if (s.schoolType === "Private" && s.studentType === "Transferee") {
+  else if ((s.schoolType === "Private" || s.schoolType === "Public") && s.studentType === "Transferee") {
     requiredDocs = ["birth", "reportCard", "goodMoral", "idPic", "form137", "exitForm"];
   }
 

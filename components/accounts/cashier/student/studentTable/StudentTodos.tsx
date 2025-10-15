@@ -15,6 +15,7 @@ const Students: FC<Props> = ({ students }) => {
   const [filterName, setFilterName] = useState("");
   const [filterLRN, setFilterLRN] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
+  const [filterMethod, setFilterMethod] = useState("");
 
   // 🔢 Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,8 +29,9 @@ const filteredStudents = studentList.filter((student) => {
   const matchesName = fullName.includes(filterName.toLowerCase());
   const matchesLRN = student.lrn.includes(filterLRN);
   const matchesGrade = filterGrade === "" || student.gradeLevelName === filterGrade;
+  const matchesMethod = filterMethod === "" || student.paymentMethod === filterMethod;
 
-  return matchesName && matchesLRN && matchesGrade;
+  return matchesName && matchesLRN && matchesGrade && matchesMethod;
   // return matchesName && matchesLRN;
 });
 
@@ -76,11 +78,21 @@ const filteredStudents = studentList.filter((student) => {
         {/* Add other grades as needed */}
       </select>
 
+      <select
+        value={filterMethod}
+        onChange={(e) => setFilterMethod(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+      >
+        <option value="">Payment Scheme</option>
+        <option value="Installments">Installments</option>
+        <option value="full_payment">Full Payment</option>
+      </select>
       <Button
         onClick={() => {
           setFilterName("");
           setFilterLRN("");
           setFilterGrade("");
+          setFilterMethod("");
         }}
         variant="confirmButton"
         className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
@@ -97,6 +109,7 @@ const filteredStudents = studentList.filter((student) => {
             <th className="px-4 py-2">LRN</th>
             <th className="px-4 py-2">Full Name</th>
             <th className="px-4 py-2">Grade Level</th>
+            <th className="px-4 py-2">Payment Scheme</th>
             <th className="px-4 py-2">SOA</th>
           </tr>
         </thead>
