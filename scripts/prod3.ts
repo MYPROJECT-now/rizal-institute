@@ -14,7 +14,7 @@ const insertMockApplicants = async () => {
   const academicYearID = 3; // Replace with actual AcademicYearTable ID
 
   const mockApplicants = [
-    // Grade 7 (2)
+    // Grade 7 (3)
     {
       applicantsLastName: "Santos", applicantsFirstName: "Jim", applicantsMiddleName: "Dy", applicantsSuffix: "",
       dateOfBirth: new Date("2010-03-17"), age:13, gender: "Male", mobileNumber: "09593430011", email: "jim2@example.com", lrn: "501193300001",
@@ -26,20 +26,28 @@ const insertMockApplicants = async () => {
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
-   {
-      applicantsLastName: "Santos", applicantsFirstName: "Jim", applicantsMiddleName: "Dy", applicantsSuffix: "",
-      dateOfBirth: new Date("2010-03-17"), age:13, gender: "Male", mobileNumber: "09593430011", email: "jim2@example.com", lrn: "501193300001",
-      guardiansLastName: "Santos", guardiansFirstName: "John", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430022", emergencyEmail: "", fullAddress: "1738 Apo Drive, Calamba",
-      gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2022-2023", schoolType: "", prevSchool: "DEF School", schoolAddress: "Calamba",
-      birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
-      mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
+    {
+      applicantsLastName: "Reyes", applicantsFirstName: "Angela", applicantsMiddleName: "Lopez", applicantsSuffix: "",
+      dateOfBirth: new Date("2010-07-22"), age: 13, gender: "Female", mobileNumber: "09593430012", email: "angela.reyes@example.com", lrn: "501193300002",
+      guardiansLastName: "Reyes", guardiansFirstName: "Maria", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430023", emergencyEmail: "maria.reyes@example.com", fullAddress: "Brgy. Halang, Calamba",
+      gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "San Bartolome Academy", schoolAddress: "Calamba",
+      birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample1.jpg", hasBirth: true,
+      reportCard: "", hasReportCard: false, goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false, mop: "GCash",
+      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample02.jpg", reservationAmount: 500,
+      attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Jim Santos"
+    },
+    {
+      applicantsLastName: "Domingo", applicantsFirstName: "Kyle", applicantsMiddleName: "Fernandez", applicantsSuffix: "",
+      dateOfBirth: new Date("2010-11-19"), age: 13, gender: "Male", mobileNumber: "09593430013", email: "kyle.domingo@example.com", lrn: "501193300003",
+      guardiansLastName: "Domingo", guardiansFirstName: "Arnold", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430024", emergencyEmail: "arnold.domingo@example.com", fullAddress: "Brgy. Uno, Calamba",
+      gradeLevel: "7", studentType: "Transferee", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "Calamba Elementary School", schoolAddress: "Calamba City",
+      birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample2.jpg", hasBirth: true,
+      reportCard: "", hasReportCard: false, goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample03.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
-    
-    
-    // Grade 8 (2)
+   
+    // Grade 8 (3)
     {
     applicantsLastName: "Ramirez", applicantsFirstName: "Joshua", applicantsMiddleName: "Tan", applicantsSuffix: "",
     dateOfBirth: new Date("2009-01-25"), age: 14, gender: "Male", mobileNumber: "09191230003", email: "joshua.ramirez09@gmail.com", lrn: "123456789014",
@@ -62,7 +70,18 @@ const insertMockApplicants = async () => {
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
-    // Grade 9 (2)
+    {
+    applicantsLastName: "Lopez", applicantsFirstName: "Jerome", applicantsMiddleName: "Mata", applicantsSuffix: "",
+    dateOfBirth: new Date("2009-08-03"), age: 14, gender: "Male", mobileNumber: "09593430016", email: "jerome.lopez@example.com", lrn: "501193300008",
+    guardiansLastName: "Lopez", guardiansFirstName: "Benjamin", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430027", emergencyEmail: "ben.lopez@example.com", fullAddress: "Sto. Tomas, Batangas",
+    gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "Sto. Tomas Academy", schoolAddress: "Batangas",
+    birthCert: "", hasBirth: false, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample08.jpg", reservationAmount: 500,
+    attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
+    },
+   
+    // Grade 9 (3)
     {
     applicantsLastName: "Mendoza", applicantsFirstName: "Ralph", applicantsMiddleName: "Gutierrez", applicantsSuffix: "",
     dateOfBirth: new Date("2008-02-18"), age: 15, gender: "Male", mobileNumber: "09211230005", email: "ralph.mendoza08@gmail.com", lrn: "123456789016",
@@ -85,8 +104,19 @@ const insertMockApplicants = async () => {
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
+    {
+    applicantsLastName: "Rivera", applicantsFirstName: "Daniel", applicantsMiddleName: "Cruz", applicantsSuffix: "",
+    dateOfBirth: new Date("2008-07-09"), age: 15, gender: "Male", mobileNumber: "09231230009", email: "daniel.rivera@example.com", lrn: "501193300013",
+    guardiansLastName: "Rivera", guardiansFirstName: "Evelyn", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09231230029", emergencyEmail: "evelyn.rivera@example.com", fullAddress: "Tarlac City, Tarlac",
+    gradeLevel: "9", studentType: "Incoming G9", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "Tarlac NHS", schoolAddress: "Tarlac City",
+    birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true, 
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
+    attainmentUponGraduation: "With Honor", hasEnrolledSibling: "No", siblingName: ""
+    },
 
-    // Grade 10 (2)
+    // Grade 10 (3)
     {
     applicantsLastName: "Villanueva", applicantsFirstName: "Christian", applicantsMiddleName: "Ramos", applicantsSuffix: "",
     dateOfBirth: new Date("2007-05-15"), age: 16, gender: "Male", mobileNumber: "09231230007", email: "christian.villanueva07@gmail.com", lrn: "123456789018",
@@ -108,7 +138,18 @@ const insertMockApplicants = async () => {
     goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
-    }
+    },
+    {
+    applicantsLastName: "Santiago", applicantsFirstName: "Erika", applicantsMiddleName: "Marquez", applicantsSuffix: "",
+    dateOfBirth: new Date("2007-02-19"), age: 16, gender: "Female", mobileNumber: "09353456789", email: "erika.santiago@example.com", lrn: "501193300018",
+    guardiansLastName: "Santiago", guardiansFirstName: "Rosalie", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09353456799", emergencyEmail: "rosalie.santiago@example.com", fullAddress: "Los Baños, Laguna",
+    gradeLevel: "10", studentType: "Incoming G10", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "LB Integrated HS", schoolAddress: "Laguna",
+    birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample18.jpg", reservationAmount: 500,
+    attainmentUponGraduation: "With Honor", hasEnrolledSibling: "No", siblingName: ""
+    },
   ];
 
   for (const applicant of mockApplicants) {
@@ -213,7 +254,7 @@ const insertMockApplicants = async () => {
     });
   }
 
-  console.log("8 mock applicants inserted successfully!");
+  console.log("12 mock applicants inserted successfully!");
 };
 
 insertMockApplicants();
