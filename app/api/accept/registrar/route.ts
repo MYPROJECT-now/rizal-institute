@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
 import { eq } from 'drizzle-orm';
-import {  applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
+import {  applicantsInformationTable, applicationStatusTable, auditTrailsTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
@@ -15,27 +15,18 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to fetch student email from guardianAndParentsTable
-// async function getStudentEmail(studentId: number): Promise<string | null> {
-//   const result = await db
-//     .select({ email: applicantsInformationTable.email })
-//     .from(applicantsInformationTable)
-//     .where(eq(applicantsInformationTable.applicants_id, studentId))
-//     .limit(1);
-
-//   return result.length > 0 ? result[0].email : null;
-// }
 
 // Function to fetch tracking ID from applicationStatusTable
-async function getTrackingId(studentId: number): Promise<string> {
+async function getStudentEmail(studentId: number): Promise<string | null> {
   const result = await db
-    .select({ trackingId: applicationStatusTable.trackingId })
-    .from(applicationStatusTable)
-    .where(eq(applicationStatusTable.applicants_id, studentId))
+    .select({ email: applicantsInformationTable.email })
+    .from(applicantsInformationTable)
+    .where(eq(applicantsInformationTable.applicants_id, studentId))
     .limit(1);
 
-  return result.length > 0 ? result[0].trackingId : "N/A";
+  return result.length > 0 ? result[0].email : null;
 }
+
 
 
 // Function to send reservation email
@@ -92,8 +83,8 @@ export async function POST(request: Request) {
 
     // Run DB actions in parallel
     const [email, updateResult] = await Promise.all([
-      // getStudentEmail(studentId),
-      getTrackingId(studentId),
+      getStudentEmail(studentId),
+      // getTrackingId(studentId),
       db.update(applicationStatusTable)
         .set({ 
           applicationFormReviewStatus: "Reserved",

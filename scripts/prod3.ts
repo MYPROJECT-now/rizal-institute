@@ -21,8 +21,8 @@ const insertMockApplicants = async () => {
       guardiansLastName: "Santos", guardiansFirstName: "John", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430022", emergencyEmail: "", fullAddress: "1738 Apo Drive, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2022-2023", schoolType: "", prevSchool: "DEF School", schoolAddress: "Calamba",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      reportCard: "", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -32,7 +32,7 @@ const insertMockApplicants = async () => {
       guardiansLastName: "Reyes", guardiansFirstName: "Maria", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430023", emergencyEmail: "maria.reyes@example.com", fullAddress: "Brgy. Halang, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "San Bartolome Academy", schoolAddress: "Calamba",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample1.jpg", hasBirth: true,
-      reportCard: "", hasReportCard: false, goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false, mop: "GCash",
+      reportCard: "", hasReportCard: true, goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true, mop: "GCash",
       reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample02.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Jim Santos"
     },
@@ -42,7 +42,7 @@ const insertMockApplicants = async () => {
       guardiansLastName: "Domingo", guardiansFirstName: "Arnold", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430024", emergencyEmail: "arnold.domingo@example.com", fullAddress: "Brgy. Uno, Calamba",
       gradeLevel: "7", studentType: "Transferee", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "Calamba Elementary School", schoolAddress: "Calamba City",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample2.jpg", hasBirth: true,
-      reportCard: "", hasReportCard: false, goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      reportCard: "", hasReportCard: true, goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample03.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -54,8 +54,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Ramirez", guardiansFirstName: "Lorna", guardiansMiddleName: "Castro", guardiansSuffix: "", emergencyContact: "09283456789", emergencyEmail: "lorna.ramirez@yahoo.com", fullAddress: "San Fernando City, Pampanga",
     gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "Santo Niño National High School", schoolAddress: "San Fernando City, Pampanga",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -65,8 +65,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Torres", guardiansFirstName: "Jaime", guardiansMiddleName: "Ramos", guardiansSuffix: "", emergencyContact: "09194567890", emergencyEmail: "", fullAddress: "Guagua, Pampanga",
     gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "Holy Child Academy", schoolAddress: "Guagua, Pampanga",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -75,8 +75,8 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2009-08-03"), age: 14, gender: "Male", mobileNumber: "09593430016", email: "jerome.lopez@example.com", lrn: "501193300008",
     guardiansLastName: "Lopez", guardiansFirstName: "Benjamin", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09593430027", emergencyEmail: "ben.lopez@example.com", fullAddress: "Sto. Tomas, Batangas",
     gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "Sto. Tomas Academy", schoolAddress: "Batangas",
-    birthCert: "", hasBirth: false, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    birthCert: "", hasBirth: true, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample08.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -88,8 +88,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Mendoza", guardiansFirstName: "Carmelita", guardiansMiddleName: "David", guardiansSuffix: "", emergencyContact: "09081234567", emergencyEmail: "carmelita.mendoza@gmail.com", fullAddress: "San Jose, Nueva Ecija",
     gradeLevel: "9", studentType: "Incoming G9", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "San Jose National High School", schoolAddress: "San Jose, Nueva Ecija",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -99,8 +99,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Bautista", guardiansFirstName: "Antonio", guardiansMiddleName: "Lim", guardiansSuffix: "", emergencyContact: "09193456781", emergencyEmail: "", fullAddress: "Malolos City, Bulacan",
     gradeLevel: "9", studentType: "Incoming G9", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "St. Mary’s Academy", schoolAddress: "Malolos City, Bulacan",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -110,8 +110,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Rivera", guardiansFirstName: "Evelyn", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09231230029", emergencyEmail: "evelyn.rivera@example.com", fullAddress: "Tarlac City, Tarlac",
     gradeLevel: "9", studentType: "Incoming G9", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "Tarlac NHS", schoolAddress: "Tarlac City",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true, 
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -123,8 +123,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Villanueva", guardiansFirstName: "Elena", guardiansMiddleName: "Morales", guardiansSuffix: "", emergencyContact: "09204567891", emergencyEmail: "elena.villanueva@gmail.com", fullAddress: "Quezon City, Metro Manila",
     gradeLevel: "10", studentType: "Transferee", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "Holy Cross High School", schoolAddress: "Quezon City, Metro Manila",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -134,8 +134,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Cruz", guardiansFirstName: "Benjamin", guardiansMiddleName: "Flores", guardiansSuffix: "", emergencyContact: "09187654321", emergencyEmail: "", fullAddress: "Caloocan City, Metro Manila",
     gradeLevel: "10", studentType: "Incoming G10", schoolYear: "2022-2023", schoolType: "Public", prevSchool: "Bagong Silang National High School", schoolAddress: "Caloocan City, Metro Manila",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -145,8 +145,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Santiago", guardiansFirstName: "Rosalie", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09353456799", emergencyEmail: "rosalie.santiago@example.com", fullAddress: "Los Baños, Laguna",
     gradeLevel: "10", studentType: "Incoming G10", schoolYear: "2022-2023", schoolType: "Private", prevSchool: "LB Integrated HS", schoolAddress: "Laguna",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample18.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -194,21 +194,21 @@ const insertMockApplicants = async () => {
     await db.insert(documentsTable).values({
       applicants_id: applicantID,
       birthCert: applicant.birthCert || null,
-      hasBirth: applicant.hasBirth || false,
+      hasBirth: applicant.hasBirth || true,
       reportCard: applicant.reportCard || null,
-      hasReportCard: applicant.hasReportCard || false,
+      hasReportCard: applicant.hasReportCard || true,
       goodMoral: applicant.goodMoral || null,
-      hasGoodMoral: applicant.hasGoodMoral || false,
+      hasGoodMoral: applicant.hasGoodMoral || true,
       idPic: applicant.idPic || null,
-      hasIdPic: applicant.hasIdPic || false,
+      hasIdPic: applicant.hasIdPic || true,
       studentExitForm: applicant.studentExitForm || null,
-      hasExitForm: applicant.hasExitForm || false,
+      hasExitForm: applicant.hasExitForm || true,
       form137: applicant.form137 || null,
-      hasForm137: applicant.hasForm137 || false,
+      hasForm137: applicant.hasForm137 || true,
       itr: applicant.itr || null,
-      hasTIR: applicant.hasTIR || false,
+      hasTIR: applicant.hasTIR || true,
       escCert: applicant.escCert || null,
-      hasEscCertificate: applicant.hasEscCertificate || false
+      hasEscCertificate: applicant.hasEscCertificate || true
     });
 
     await db.insert(reservationFeeTable).values({

@@ -23,7 +23,7 @@ const Dashboard = () => {
             
             <section className="flex flex-col">
                 <p className=" sm:text-xl text-lg font-bold text-dGreen mb-2">
-                    Document Status ( {year()} )
+                    Document Status
                 </p>
             <DocumentStatus />
             </section>

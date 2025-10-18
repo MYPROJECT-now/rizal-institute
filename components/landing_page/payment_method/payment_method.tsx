@@ -738,7 +738,6 @@ import { Skeleton } from "@/components/ui/skeleton";
                                 <option value="">Select Payment Method</option>
                                 <option value="Gcash">GCash</option>
                                 <option value="Bank Transfer">Bank Transfer</option>
-                                <option value="OTC">On the counter</option>
                             </select>
                             </div>
 

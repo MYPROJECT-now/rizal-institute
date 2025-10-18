@@ -3,7 +3,6 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { applicantsInformationTable, guardianAndParentsTable, educationalBackgroundTable, documentsTable, reservationFeeTable, additionalInformationTable, applicationStatusTable, AdmissionStatusTable, studentTypeTable } from "../src/db/schema";
-import { eq } from "drizzle-orm";
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
@@ -21,8 +20,8 @@ const insertMockApplicants = async () => {
       guardiansLastName: "Dela Cruz", guardiansFirstName: "Maria", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876543", emergencyEmail: "maria.guardian1@example.com", fullAddress: "123 Main St, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Ana Dela Cruz"
     },
@@ -31,9 +30,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2011-07-02"), age: 14, gender: "Female", mobileNumber: "091712345679", email: "ella1@example.com", lrn: "123456789013",
       guardiansLastName: "Lopez", guardiansFirstName: "Pedro", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876544", emergencyEmail: "pedro.guardian1@example.com", fullAddress: "456 Main St, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Holy Child School", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -42,9 +41,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2011-09-11"), age: 14, gender: "Male", mobileNumber: "091712345680", email: "leo1@example.com", lrn: "123456789014",
       guardiansLastName: "Garcia", guardiansFirstName: "Ana", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876545", emergencyEmail: "ana.guardian1@example.com", fullAddress: "789 Main St, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "Yes", siblingName: "Mia Garcia"
     },
@@ -54,8 +53,8 @@ const insertMockApplicants = async () => {
       guardiansLastName: "Reyes", guardiansFirstName: "Jose", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876546", emergencyEmail: "jose.guardian1@example.com", fullAddress: "321 Main St, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "St. Mary School", schoolAddress: "Calamba",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      reportCard: "", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -64,9 +63,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2011-03-30"), age: 14, gender: "Male", mobileNumber: "091712345682", email: "ian1@example.com", lrn: "123456789016",
       guardiansLastName: "Torres", guardiansFirstName: "Liza", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876547", emergencyEmail: "liza.guardian1@example.com", fullAddress: "654 Main St, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -76,9 +75,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2010-06-15"), age: 15, gender: "Male", mobileNumber: "091712345683", email: "mark1@example.com", lrn: "123456789017",
       guardiansLastName: "Santos", guardiansFirstName: "Rosa", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876548", emergencyEmail: "rosa.guardian1@example.com", fullAddress: "987 Main St, Calamba",
       gradeLevel: "8", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Holy Child School", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Anna Santos"
     },
@@ -88,8 +87,8 @@ const insertMockApplicants = async () => {
       guardiansLastName: "Mendoza", guardiansFirstName: "Carlos", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876549", emergencyEmail: "carlos.guardian1@example.com", fullAddress: "321 Main St, Calamba",
       gradeLevel: "8", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      reportCard: "", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -98,9 +97,9 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2010-09-12"), age: 15, gender: "Male", mobileNumber: "091712345689", email: "kian1@example.com", lrn: "123456789023",
     guardiansLastName: "Ramos", guardiansFirstName: "Ella", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876554", emergencyEmail: "ella.guardian1@example.com", fullAddress: "123 Purok 2, Calamba",
     gradeLevel: "8", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "St. John Academy", schoolAddress: "Calamba",
-    birthCert: "", hasBirth: false,
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false,
+    birthCert: "", hasBirth: true,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true,
     mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample1.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "No", siblingName: ""
   },
@@ -111,7 +110,7 @@ const insertMockApplicants = async () => {
     gradeLevel: "8", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
     hasBirth: true, birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample.jpg",
     hasReportCard: true, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/samplecard.webp",
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample2.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Marco Balagtas"
   },
@@ -120,9 +119,9 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2010-11-25"), age: 15, gender: "Female", mobileNumber: "091712345691", email: "faith1@example.com", lrn: "123456789025",
     guardiansLastName: "Domingo", guardiansFirstName: "Ryan", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876556", emergencyEmail: "ryan.guardian1@example.com", fullAddress: "789 Calamba Blvd",
     gradeLevel: "8", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Faith Christian School", schoolAddress: "Calamba",
-    birthCert: "", hasBirth: false,
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false,
+    birthCert: "", hasBirth: true,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample3.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
    },
@@ -132,9 +131,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2009-02-14"), age: 16, gender: "Male", mobileNumber: "091712345685", email: "ben1@example.com", lrn: "123456789019",
       guardiansLastName: "Cruz", guardiansFirstName: "Linda", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876550", emergencyEmail: "linda.guardian1@example.com", fullAddress: "123 Elm St, Calamba",
       gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Holy Child School", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Ella Cruz"
     },
@@ -143,9 +142,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2009-05-30"), age: 16, gender: "Female", mobileNumber: "091712345686", email: "mia1@example.com", lrn: "123456789020",
       guardiansLastName: "Navarro", guardiansFirstName: "Rafael", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876551", emergencyEmail: "rafael.guardian1@example.com", fullAddress: "456 Elm St, Calamba",
       gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -154,8 +153,8 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2009-04-05"), age: 16, gender: "Male", mobileNumber: "091712345692", email: "dylan1@example.com", lrn: "123456789026",
     guardiansLastName: "Francisco", guardiansFirstName: "Tina", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876557", emergencyEmail: "tina.guardian1@example.com", fullAddress: "999 Elm St, Calamba",
     gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "St. John Academy", schoolAddress: "Calamba",
-    birthCert: "", hasBirth: false, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/reportcardrevised-160114063058-thumbnail_padwb0.webp", hasReportCard: true,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    birthCert: "", hasBirth: true, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample5.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Ella Francisco"
   },
@@ -165,7 +164,7 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Gomez", guardiansFirstName: "Carla", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876558", emergencyEmail: "carla.guardian1@example.com", fullAddress: "654 Elm St, Calamba",
     gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample6.jpg", hasBirth: true,
-    reportCard: "", hasReportCard: false,  goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,  goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample6.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
   },
@@ -174,9 +173,9 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2009-07-18"), age: 16, gender: "Male", mobileNumber: "091712345694", email: "noah1@example.com", lrn: "123456789028",
     guardiansLastName: "Tan", guardiansFirstName: "Rico", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876559", emergencyEmail: "rico.guardian1@example.com", fullAddress: "222 Pine St, Calamba",
     gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Faith Christian School", schoolAddress: "Calamba",
-    birthCert: "", hasBirth: false,
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    birthCert: "", hasBirth: true,
+    reportCard: "", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample7.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
   },
@@ -187,9 +186,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2008-11-05"), age: 17, gender: "Male", mobileNumber: "091712345687", email: "jake1@example.com", lrn: "123456789021",
       guardiansLastName: "Villanueva", guardiansFirstName: "Cecilia", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876552", emergencyEmail: "cecilia.guardian1@example.com", fullAddress: "789 Elm St, Calamba",
       gradeLevel: "10", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Holy Child School", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Leo Villanueva"
     },
@@ -198,9 +197,9 @@ const insertMockApplicants = async () => {
       dateOfBirth: new Date("2008-01-19"), age: 17, gender: "Female", mobileNumber: "091712345688", email: "lia1@example.com", lrn: "123456789022",
       guardiansLastName: "Serrano", guardiansFirstName: "Miguel", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876553", emergencyEmail: "miguel.guardian1@example.com", fullAddress: "321 Elm St, Calamba",
       gradeLevel: "10", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
-      birthCert: "", hasBirth: false,
-      reportCard: "", hasReportCard: false,
-      goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+      birthCert: "", hasBirth: true,
+      reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "No", siblingName: ""
     },
@@ -209,9 +208,9 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2008-04-10"), age: 17, gender: "Male", mobileNumber: "091712345695", email: "renz1@example.com", lrn: "123456789029",
     guardiansLastName: "Castro", guardiansFirstName: "Diana", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876560", emergencyEmail: "diana.guardian1@example.com", fullAddress: "987 Pine St, Calamba",
     gradeLevel: "10", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Faith Christian School", schoolAddress: "Calamba",
-    birthCert: "", hasBirth: false,
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    birthCert: "", hasBirth: true,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample10.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Kai Castro"
   },
@@ -221,8 +220,8 @@ const insertMockApplicants = async () => {
     guardiansLastName: "Marquez", guardiansFirstName: "Paul", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876561", emergencyEmail: "paul.guardian1@example.com", fullAddress: "765 Rizal St, Calamba",
     gradeLevel: "10", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
     hasBirth: true, birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample11.jpg",
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    reportCard: "", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample11.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
   },
@@ -231,9 +230,9 @@ const insertMockApplicants = async () => {
     dateOfBirth: new Date("2008-05-17"), age: 17, gender: "Male", mobileNumber: "091712345697", email: "karl1@example.com", lrn: "123456789031",
     guardiansLastName: "Dizon", guardiansFirstName: "Rowena", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876562", emergencyEmail: "rowena.guardian1@example.com", fullAddress: "111 Mabini St, Calamba",
     gradeLevel: "10", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "St. John Academy", schoolAddress: "Calamba",
-    birthCert: "", hasBirth: false,
-    reportCard: "", hasReportCard: false,
-    goodMoral: "", hasGoodMoral: false, idPic: "", hasIdPic: false, studentExitForm: "", hasExitForm: false, form137: "", hasForm137: false, itr: "", hasTIR: false, escCert: "", hasEscCertificate: false,
+    birthCert: "", hasBirth: true,
+    reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
+    goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
     mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample12.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
   }
@@ -281,21 +280,21 @@ const insertMockApplicants = async () => {
     await db.insert(documentsTable).values({
       applicants_id: applicantID,
       birthCert: applicant.birthCert || null,
-      hasBirth: applicant.hasBirth || false,
+      hasBirth: applicant.hasBirth || true,
       reportCard: applicant.reportCard || null,
-      hasReportCard: applicant.hasReportCard || false,
+      hasReportCard: applicant.hasReportCard || true,
       goodMoral: applicant.goodMoral || null,
-      hasGoodMoral: applicant.hasGoodMoral || false,
+      hasGoodMoral: applicant.hasGoodMoral || true,
       idPic: applicant.idPic || null,
-      hasIdPic: applicant.hasIdPic || false,
+      hasIdPic: applicant.hasIdPic || true,
       studentExitForm: applicant.studentExitForm || null,
-      hasExitForm: applicant.hasExitForm || false,
+      hasExitForm: applicant.hasExitForm || true,
       form137: applicant.form137 || null,
-      hasForm137: applicant.hasForm137 || false,
+      hasForm137: applicant.hasForm137 || true,
       itr: applicant.itr || null,
-      hasTIR: applicant.hasTIR || false,
+      hasTIR: applicant.hasTIR || true,
       escCert: applicant.escCert || null,
-      hasEscCertificate: applicant.hasEscCertificate || false
+      hasEscCertificate: applicant.hasEscCertificate || true
     });
 
     await db.insert(reservationFeeTable).values({

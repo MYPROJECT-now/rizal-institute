@@ -222,7 +222,6 @@ export const UploadSoaModal = () => {
                   placeholder="Enter LRN"
                   value={lrn}
                   onChange={(e) => setLrn(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleGetInfoByLrn()}
                   className="w-full sm:w-[210px] py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen  transition rounded-lg"
                 />
               </section>
@@ -268,11 +267,15 @@ export const UploadSoaModal = () => {
                   </div>
                 </section>
 
+                {disInfo.studentType === "Incoming G7" && (
+                  disInfo.AttainmentUponGraduation !== "N/a" ||
+                  (disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null) ||
+                  escGrantee === "Yes"
+                ) && (
                 <section className="flex flex-col ">
-                  <span className="font-semibold text-sm text-dGreen mb-1">Discount Classification</span>
-                  {disInfo.studentType === "Incoming G7" ? (
+                <span className="font-semibold text-sm text-dGreen mb-1">Discount Classification</span>
                     <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
-                      {disInfo.AttainmentUponGraduation !== "N/a" && disInfo.reportCard !== null && disInfo.reportCard !== "" && (
+                      {(disInfo.AttainmentUponGraduation !== "N/a" || disInfo.reportCard !== null) && (
                         <div className="grid grid-cols-2 gap-7 ">
                           <section className="flex flex-col">
                             <span className="font-bold font-merriweather text-sm text-dGreen">Attainment Upon Graduation</span>
@@ -290,20 +293,17 @@ export const UploadSoaModal = () => {
 
                           <section className="flex flex-col">
                             <span className="font-bold font-merriweather text-sm text-dGreen">Report Card</span>
-                              {disInfo?.reportCard && (
                                 <Button
                                   variant="confirmButton"
                                   className="px-4 py-1 rounded-lg"
-                                  onClick={handleOpenDocument}  // pass URL
-                                  // onClick={() => openDocument(disInfo.reportCard!)}  
+                                  onClick={handleOpenDocument} 
                                 >
                                   View Report Card
                                 </Button>
-                              )}
                           </section>
-                          
                         </div>
                       )}
+
 
                       {disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null && (
                         <div className="flex flex-col gap-4">
@@ -351,200 +351,212 @@ export const UploadSoaModal = () => {
 
                       </div>
                     </div>
-                  ) : (
-                    disInfo.studentType === "Old Student" ? (
-                    <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
-                      <div className="grid grid-cols-3 gap-7 ">
-                        <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">Last Year&apos;s discount</span>
-                          <input 
-                            type="text"
-                            readOnly
-                            value={prevAcadDiscount}
-                            className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
-                          />
-                        </section>
+                </section>
+                )}
 
-                        <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">Grant discount</span>
-                          <select 
-                            onChange={(e) => setAcad(e.target.value)} 
-                            className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
-                            value={prevAcadDiscount}>
-                            
-                            <option value="N/a">N/a</option>
-                            <option value="With Honor">With Honor</option>
-                            <option value="With High Honor"> With High Honor</option>
-                            <option value="With Highest Honor"> With Highest Honor</option>
-                          </select>
-                        </section>
+                {disInfo.studentType === "Old Student" && (
+                  prevAcadDiscount !== "N/a" ||
+                  (disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null) ||
+                  prevSiblingsDiscount !== "N/a" ||
+                  prevGrantee !== "N/a" ||
+                  escGrantee !== "N/a" ||
+                  disInfo?.reportCard
+                ) && (
+                <section className="flex flex-col ">
+                <span className="font-semibold text-sm text-dGreen mb-1">Discount Classification</span>
+                  <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                    <div className="grid grid-cols-3 gap-7 ">
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Last Year&apos;s discount</span>
+                        <input 
+                          type="text"
+                          readOnly
+                          value={prevAcadDiscount}
+                          className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
+                        />
+                      </section>
 
-                        <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">Grade Summary</span>
-                            {disInfo?.reportCard && (
-                              <Button
-                                variant="confirmButton"
-                                className="px-4 py-1 rounded-lg"
-                                onClick={handleOpenGrade}
-                              >
-                                View Grade
-                              </Button>
-                            )}
-                        </section>
-                      </div>
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Grant discount</span>
+                        <select 
+                          onChange={(e) => setAcad(e.target.value)} 
+                          className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
+                          value={prevAcadDiscount}>
+                          
+                          <option value="N/a">N/a</option>
+                          <option value="With Honor">With Honor</option>
+                          <option value="With High Honor"> With High Honor</option>
+                          <option value="With Highest Honor"> With Highest Honor</option>
+                        </select>
+                      </section>
 
-                      {disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null && (
-                        <div className="flex flex-col gap-4">
-                          <div className="grid grid-cols-2 gap-7 ">
-                            <section className="flex flex-col">
-                              <span className="font-bold font-merriweather text-sm text-dGreen">Siblings Discount</span>
-                              <input 
-                                type="text"
-                                readOnly
-                                value={prevSiblingsDiscount}
-                                className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
-                              />
-                            </section>
-                            
-
-                            <section className="flex flex-col">
-                              <span className="font-bold font-merriweather text-sm text-dGreen">Siblings Name</span>
-                              <input readOnly value={disInfo.siblingName}  className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
-                            </section>
-                          </div>
-
-                          {/* <div>
-                            search func here
-                          </div> */}
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-2 gap-7 ">
-        
-                        <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">Prev. Grantee</span>
-                          <input 
-                            type="text"
-                            readOnly
-                            value={prevGrantee}
-                            className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
-                          />
-                        </section>
-
-                        <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">Current Eligibility</span>
-                          <input 
-                            type="text"
-                            readOnly
-                            value={escGrantee}
-                            className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
-                          />
-                         </section>
-
-                      </div>
-
-
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Grade Summary</span>
+                          {disInfo?.reportCard && (
+                            <Button
+                              variant="confirmButton"
+                              className="px-4 py-1 rounded-lg"
+                              onClick={handleOpenGrade}
+                            >
+                              View Grade
+                            </Button>
+                          )}
+                      </section>
                     </div>
-                    ) : (
-                    disInfo.studentType === "Transferee" ? (
-                    <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
-                      {disInfo.AttainmentUponGraduation !== "N/a" && disInfo.reportCard !== null && disInfo.reportCard !== "" && (
+
+                    {disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null && (
+                      <div className="flex flex-col gap-4">
                         <div className="grid grid-cols-2 gap-7 ">
                           <section className="flex flex-col">
-                            <span className="font-bold font-merriweather text-sm text-dGreen">Academic Discount</span>
-                            <select 
-                              onChange={(e) => setAcad(e.target.value)} 
-                              className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
-                              value={acad}>
-                              
-                              <option value="N/a">N/a</option>
-                              <option value="With Honor">With Honor</option>
-                              <option value="With High Honor"> With High Honor</option>
-                              <option value="With Highest Honor"> With Highest Honor</option>
-                            </select>
-                          </section>
-
-                          <section className="flex flex-col">
-                            <span className="font-bold font-merriweather text-sm text-dGreen">Report Card</span>
-                              {disInfo?.reportCard && (
-                                <Button
-                                  variant="confirmButton"
-                                  className="px-4 py-1 rounded-lg"
-                                  onClick={handleOpenDocument}  // pass URL
-                                >
-                                  View Report Card
-                                </Button>
-                              )}
+                            <span className="font-bold font-merriweather text-sm text-dGreen">Siblings Discount</span>
+                            <input 
+                              type="text"
+                              readOnly
+                              value={prevSiblingsDiscount}
+                              className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
+                            />
                           </section>
                           
+
+                          <section className="flex flex-col">
+                            <span className="font-bold font-merriweather text-sm text-dGreen">Siblings Name</span>
+                            <input readOnly value={disInfo.siblingName}  className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                          </section>
                         </div>
-                      )}
 
-                      {disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null && (
-                        <div className="flex flex-col gap-4">
-                          <div className="grid grid-cols-2 gap-7 ">
-                            <section className="flex flex-col">
-                              <span className="font-bold font-merriweather text-sm text-dGreen">has Sibling?</span>
-                              <select 
-                                value={sibling} 
-                                onChange={(e) => setSibling(e.target.value)}
-                                className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
-                              >
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                              </select>
-                            </section>
+                        {/* <div>
+                          search func here
+                        </div> */}
+                      </div>
+                    )}
 
-                            <section className="flex flex-col">
-                              <span className="font-bold font-merriweather text-sm text-dGreen">Siblings Name</span>
-                              <input readOnly value={disInfo.siblingName}  className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
-                            </section>
-                          </div>
+                    <div className="grid grid-cols-2 gap-7 ">
+      
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Prev. Grantee</span>
+                        <input 
+                          type="text"
+                          readOnly
+                          value={prevGrantee}
+                          className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
+                        />
+                      </section>
 
-                          {/* <div>
-                            search func here
-                          </div> */}
-                        </div>
-                      )}
-                      {disInfo?.escCert && (
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Current Eligibility</span>
+                        <input 
+                          type="text"
+                          readOnly
+                          value={escGrantee}
+                          className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
+                        />
+                      </section>
+                    </div>
+
+                    </div>
+                </section>
+                )}
+
+                {disInfo.studentType === "Transferee" &&(
+                  disInfo.AttainmentUponGraduation !== "N/a" ||
+                  (disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null) ||
+                  disInfo.escCert
+                ) && (
+                <section className="flex flex-col ">
+                <span className="font-semibold text-sm text-dGreen mb-1">Discount Classification</span>
+                  <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                  {disInfo.AttainmentUponGraduation !== "N/a" && (
+                    <div className="grid grid-cols-2 gap-7 ">
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Academic Discount</span>
+                        <select 
+                          onChange={(e) => setAcad(e.target.value)} 
+                          className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
+                          value={acad}>
+                          
+                          <option value="N/a">N/a</option>
+                          <option value="With Honor">With Honor</option>
+                          <option value="With High Honor"> With High Honor</option>
+                          <option value="With Highest Honor"> With Highest Honor</option>
+                        </select>
+                      </section>
+
+                      <section className="flex flex-col">
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Report Card</span>
+                            <Button
+                              variant="confirmButton"
+                              className="px-4 py-1 rounded-lg"
+                              onClick={handleOpenDocument}  // pass URL
+                            >
+                              View Report Card
+                            </Button>
+                      </section>
+                    </div>
+                  )}
+
+                  {disInfo.HasEnrolledSibling === "Yes" && disInfo.siblingName !== null && (
+                    <div className="flex flex-col gap-4">
                       <div className="grid grid-cols-2 gap-7 ">
                         <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">Esc Grantee</span>
+                          <span className="font-bold font-merriweather text-sm text-dGreen">has Sibling?</span>
                           <select 
-                            value={escGrantee}
-                            onChange={(e) => setEscGrantee(e.target.value)}
+                            value={sibling} 
+                            onChange={(e) => setSibling(e.target.value)}
                             className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
                           >
-                            <option value="">Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                           </select>
-                          {/* <input readOnly value={ "Granted"} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" /> */}
                         </section>
 
                         <section className="flex flex-col">
-                          <span className="font-bold font-merriweather text-sm text-dGreen">ESC Certificate</span>
-                           
-                              <Button
-                                variant="confirmButton"
-                                className="px-4 py-1 rounded-lg"
-                                onClick={() => openDocument(disInfo.escCert ?? "")}  // pass URL
-                              >
-                                View ESC Cert
-                              </Button>
-                         
+                          <span className="font-bold font-merriweather text-sm text-dGreen">Siblings Name</span>
+                          <input readOnly value={disInfo.siblingName}  className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                         </section>
                       </div>
-                         )}
 
+   
                     </div>
-        
-                    ) : null
+                  )}
 
-                  ))}
+                  {disInfo?.escCert && (
+                  <div className="grid grid-cols-2 gap-7 ">
+                    <section className="flex flex-col">
+                      <span className="font-bold font-merriweather text-sm text-dGreen">Esc Grantee</span>
+                      <select 
+                        value={escGrantee}
+                        onChange={(e) => setEscGrantee(e.target.value)}
+                        className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
+                      >
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                      {/* <input readOnly value={ "Granted"} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" /> */}
+                    </section>
 
+                    <section className="flex flex-col">
+                      <span className="font-bold font-merriweather text-sm text-dGreen">ESC Certificate</span>
+                        
+                          <Button
+                            variant="confirmButton"
+                            className="px-4 py-1 rounded-lg"
+                            onClick={() => openDocument(disInfo.escCert ?? "")}  // pass URL
+                          >
+                            View ESC Cert
+                          </Button>
+                      
+                    </section>
+                  </div>
+                  )}
+                  </div>
                 </section>
-                {(disInfo.studentType === "Incoming G7" && disInfo.HasEnrolledSibling === "Yes" &&  disInfo.siblingName !== null) || (disInfo.studentType === "Transferee" && disInfo.HasEnrolledSibling === "Yes" &&  disInfo.siblingName !== null) && (
+              )}
+
+              {(
+                  (disInfo.studentType === "Incoming G7" && disInfo.HasEnrolledSibling === "Yes" &&  disInfo.siblingName !== null) || 
+                  (disInfo.studentType === "Transferee" && disInfo.HasEnrolledSibling === "Yes" &&  disInfo.siblingName !== null)
+                ) && (
                 <section className="flex flex-col ">
                   <span className="font-semibold text-sm text-dGreen mb-1">Search Sibling</span>
                   <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4 ">
@@ -617,7 +629,7 @@ export const UploadSoaModal = () => {
                       disabled
                       className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"
                     >
-                      <option value="" className="text-center"></option>
+                      <option value="" className="text-center">No</option>
                       <option value="Yes">Yes</option>
                       <option value="No">No</option>
                     </select>                  
@@ -630,7 +642,7 @@ export const UploadSoaModal = () => {
                       disabled
                       className="py-1 px-2  outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"  
                     >                     
-                      <option value="" className="text-center"></option>
+                      <option value="">None</option>
                       <option value="With Honor">With Honor</option>
                       <option value="With High Honor" >With High Honor</option>
                       <option value="With Highest Honor">With Highest Honor</option>
@@ -644,7 +656,7 @@ export const UploadSoaModal = () => {
                       disabled
                       className="py-1 px-2  outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg"  
                     >                     
-                      <option value="" className="text-center"></option>
+                      <option value="" className="text-center">None</option>
                       <option value="Yes" >Yes</option>
                       <option value="No">No</option>
                     </select> 
