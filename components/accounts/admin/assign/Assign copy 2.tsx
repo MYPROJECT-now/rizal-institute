@@ -105,22 +105,23 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
               ))}
             </select>
           )}
+
         </section>
 
         <EditAssign />
         <Button
-          variant={"confirmButton"}
-          className="px-5 py-2 rounded-lg"
-          onClick={OpenEdit}
+        variant={"confirmButton"}
+        className="px-5 py-2 rounded-lg"
+        onClick={OpenEdit}
         >
           Edit
         </Button>
 
         <DeleteAssign />
         <Button
-          variant={"rejectButton"}
-          className="px-5 py-2 rounded-lg"
-          onClick={OpenDelete}
+        variant={"rejectButton"}
+        className="px-5 py-2 rounded-lg"
+        onClick={OpenDelete}
         >
           Delete
         </Button>
@@ -131,49 +132,34 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
           <div key={grade.gradeLevel_id} className="shadow-lg border-2 border-gray-300 rounded-lg p-4">
             <h2 className="text-lg font-bold text-dGreen">Grade {grade.gradeLevelName}</h2>
             <ul className="pl-4 text-sm">
-              {(() => {
-                const unassignedSubjects = subjects.filter(
-                  (subject) => !assignedSet.has(`${grade.gradeLevel_id}-${subject.subject_id}`)
+
+              {subjects.map((subject) => {
+              const pairKey = `${grade.gradeLevel_id}-${subject.subject_id}`;
+              if (assignedSet.has(pairKey)) {
+                // already assigned → skip
+                return ;
+              }
+
+              const checked = selectedPairs.some(
+                (p) =>
+                  p.gradeLevel_id === grade.gradeLevel_id &&
+                  p.subject_id === subject.subject_id
+              );
+
+                return (
+                  <li key={`${grade.gradeLevel_id}-${subject.subject_id}`}>
+                    <label className="inline-flex items-center space-x-2 text-lGreen font-semibold">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) => handleCheckboxChange(grade.gradeLevel_id, subject.subject_id, e.target.checked)}
+                      />
+                      <span>{subject.subjectName}</span>
+                    </label>
+                  </li>
                 );
-
-                if (unassignedSubjects.length === 0) {
-                  return (
-                    <li className="text-gray-500 italic font-medium text-center py-5">
-                      All subjects were assigned
-                    </li>
-                  );
-                }
-
-                return unassignedSubjects.map((subject) => {
-                  const checked = selectedPairs.some(
-                    (p) =>
-                      p.gradeLevel_id === grade.gradeLevel_id &&
-                      p.subject_id === subject.subject_id
-                  );
-
-                  return (
-                    <li key={`${grade.gradeLevel_id}-${subject.subject_id}`}>
-                      <label className="inline-flex items-center space-x-2 text-lGreen font-semibold">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={(e) =>
-                            handleCheckboxChange(
-                              grade.gradeLevel_id,
-                              subject.subject_id,
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span>{subject.subjectName}</span>
-                      </label>
-                    </li>
-                  );
-                });
-              })()}
+              })}
             </ul>
-
-
           </div>
         ))}
       </section>

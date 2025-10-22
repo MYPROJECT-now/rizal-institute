@@ -66,6 +66,7 @@ export interface StudentInfo {
   studentSuffix: string | null;
   sectionName: string | null;
   subjects?: string[]; 
+  rooomName: string | null;
 
 }
 
@@ -114,6 +115,12 @@ export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentIn
           <View style={{ marginTop: 20, alignItems: "center" }}>
             <Text style={{ fontSize: 13 }}>
               <Text style={styles.data}>{studentInfo?.sectionName || "________"}</Text>
+            </Text>
+          </View>
+
+          <View style={{ marginTop: 20, alignItems: "center" }}>
+            <Text style={{ fontSize: 13 }}>
+              <Text style={styles.data}>Room: {studentInfo?.rooomName || "________"}</Text>
             </Text>
           </View>
         </View>

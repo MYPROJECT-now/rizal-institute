@@ -221,6 +221,11 @@ export const StatusModal = () => {
               Pay Reservation
             </Button>
           ) : (
+          statusData?.confirmationStatus === "Aprroved" || statusData?.confirmationStatus === "Approved" ? (
+            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+              Kindly wait for registrar to confirm your enrollment
+            </p>
+          ) :  
           statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" ? (
             <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg px-[80px] py-3">
               <p className="text-[15px] font-bold text-dGreen">
@@ -236,11 +241,7 @@ export const StatusModal = () => {
               </Button>
             </div>
           ) :
-          statusData?.confirmationStatus === "Confirmed" ? (
-            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
-              Kindly wait for registrar to confirm your enrollment
-            </p>
-          ) :  
+
           statusData?.paymentStatus === "Declined" ? (
             <Button
               variant="mainButton"

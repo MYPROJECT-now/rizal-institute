@@ -1047,13 +1047,26 @@ export const prevDiscounts = async (lrn: string) => {
   const months: string[] = [];
   const current =  new Date(startDate);
 
-  while(current <= endDate) {
+  // while(current <= endDate) {
+  //   const monthName = current.toLocaleString("default", { month: "long" });
+  //   const year = current.getFullYear();
+  //   months.push(`${monthName} ${year}`);
+
+  //   current.setMonth(current.getMonth() + 1);
+  // }
+  while (current <= endDate) {
     const monthName = current.toLocaleString("default", { month: "long" });
     const year = current.getFullYear();
-    months.push(`${monthName} ${year}`);
+    const day = 5;
+
+    // Optional: create a Date object if you need exact date reference later
+    const formatted = `${monthName} ${day}, ${year}`;
+    months.push(formatted);
 
     current.setMonth(current.getMonth() + 1);
   }
+
+
 
   const getDOwnPayment = await db
     .select({

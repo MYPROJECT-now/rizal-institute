@@ -4,7 +4,7 @@
   import { Card, CardContent } from "@/components/ui/card";
   import { BadgeCheck, School } from "lucide-react";
   import { useEffect, useState } from "react";
-  import { getInfoForDashboard } from "@/src/actions/studentAction";
+  import { getInfoForDashboard, sendReminder } from "@/src/actions/studentAction";
   import { Skeleton } from "@/components/ui/skeleton"
 
   export const StudentDashboard = () => {
@@ -23,6 +23,27 @@
       fetchData();
     }, []);
 
+    useEffect(() => {
+      if (!loading && data) {
+        // condition: only trigger if balance is not 0
+        if (
+          !data.reminderForCurrentMonth && 
+          data.outstandingBalance > 0
+        ) {
+          // call your API
+          const handleTrigger = async () => {
+            try {
+              await sendReminder(data.lrn, data.email, data.outstandingBalance);
+            } catch (err) {
+              console.error("Failed to trigger API:", err);
+            }
+          };
+
+          handleTrigger();
+        }
+      }
+    }, [data, loading]); 
+  
     const studentInfo = data;
 
     return (
@@ -110,8 +131,8 @@
         <div className="mt-[60px]">
           <div className="bg-red-50 sm:p-6 p-2 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
             <span className="sm:text-xl text-sm font-bold text-red-700">Outstanding Balance:</span>
-            <span className={studentInfo?.paymentMethod === "full_payment" ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
-              {studentInfo?.paymentMethod === "full_payment" ? (
+            <span className={studentInfo?.paymentMethod === "full_payment"  ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : studentInfo?.outstandingBalance === 0 ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
+              {studentInfo?.paymentMethod === "full_payment" || studentInfo?.outstandingBalance === 0 ? (
                 <div>
                   <p className="sm:text-xl text-sm">Fully Paid</p>
                 </div>

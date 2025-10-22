@@ -97,6 +97,13 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
               onClick={onClose}
             />
 
+            <SidebarItem
+              label="Announcement"
+              href="/ACCOUNTS/admin/announcement"
+              iconSrc="/announcement.png"
+              onClick={onClose}
+            />
+
             <Fiscal_Year />
             <SidebarItemAdmin
               label="Set Academic Year"

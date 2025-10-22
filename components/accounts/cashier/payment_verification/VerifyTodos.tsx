@@ -7,6 +7,7 @@ import { StudentsPaymentReceipt } from "./payment_receipt/cashiers_receipt";
 import { ApprovedMonth, declinePayment } from "@/src/actions/cashierAction";
 import { toast } from "sonner";
 import { StudentsPaymentReview } from "./payment_receipt/student_payment";
+// import { useAddPaymentModal } from "@/src/store/CASHIER/montly";
 
 interface Props {
   VerifyTodos: VerifyPayment[];
@@ -20,6 +21,8 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const [filterLRN, setFilterLRN] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [loadingId, setLoadingId] = useState<number | null>(null);
+
+    // const { open } = useAddPaymentModal();
 
     const itemsPerPage = 5;
 
@@ -79,13 +82,13 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         <input
         type="text"
         placeholder="LRN"
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[180px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         value={filterLRN}
         onChange={(e) => setFilterLRN(e.target.value)}
         />
         
         <select
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[180px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         value={filterMop}
         onChange={(e) => setFilterMop(e.target.value)}
         >
@@ -97,13 +100,13 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
 
         <input
         type="date"
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[180px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         value={filterDate}
         onChange={(e) => setFilterDate(e.target.value)}
         />
         
         <select
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[180px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         value={filterStatus}
         onChange={(e) => setFilterStatus(e.target.value)}
         >
@@ -125,6 +128,14 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         >
             Clear Filter
         </Button>
+
+        {/* <Button
+            className=" rounded-lg px-4  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
+            variant={"confirmButton"}
+            onClick={open}
+        >
+            Add Payment
+        </Button> */}
     </section>
 
     <section className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">

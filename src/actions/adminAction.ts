@@ -2,7 +2,7 @@
 
 import { and, desc, eq, gte, isNull, lte, ne, or} from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AcademicYearTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, RoomTable, ScheduleTable, SectionTable, staffClerkUserTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { AcademicYearTable, AnnouncementReadStatusTable, AnnouncementTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, RoomTable, ScheduleTable, SectionTable, staffClerkUserTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { clerkClient } from "@clerk/nextjs/server";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -876,14 +876,74 @@ export const deleteSchedule = async (schedule_id: number, clerk_uid: number) => 
 
 
 
+// announcement
+export const getAnnouncement = async () => {
+  await requireStaffAuth(["admin"]); // gatekeeper
 
+  const get_announcement = await db
+  .select({
+    title: AnnouncementTable.title,
+    content: AnnouncementTable.content,
+    createdAt: AnnouncementTable.createdAt,
+    image: AnnouncementTable.image,
+  })
+  .from(AnnouncementTable)
+  .orderBy(desc(AnnouncementTable.announcement_id))
+  .where(eq(AnnouncementTable.academicYear_id, await getAcademicYearID()))
+  return get_announcement;
+}
 
+export const addAnnouncement = async (title: string, content: string, image: string) => {
+  const acad_id = await getAcademicYearID();
+  if (!acad_id) {
+    return console.log("Academic year not found.");
+  }
+
+  const [insertedAnnouncement] = await db
+  .insert(AnnouncementTable)
+  .values({
+    title: title,
+    content: content,
+    image: image,
+    createdAt: new Date().toISOString(),
+    academicYear_id: acad_id,
+  })
+  .returning({ announcement_id: AnnouncementTable.announcement_id });
+
+  const announcementID = insertedAnnouncement?.announcement_id;
+  if (!announcementID) {
+    console.log("Announcement insertion failed.");
+    return;
+  }
+
+  const getStudentID = await db
+  .select({
+  student_id: StudentInfoTable.student_id,
+  }).from(StudentInfoTable)
+  .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+  .where(eq(StudentPerGradeAndSection.academicYear_id, acad_id))
+
+  console.log(getStudentID)
+
+  if (getStudentID.length > 0) {
+  const readStatusRecords = getStudentID.map((s) => ({
+    announcement_id: announcementID,
+    student_id: s.student_id,
+    isRead: false,
+  }));
+
+  await db.insert(AnnouncementReadStatusTable).values(readStatusRecords);
+} 
+
+  console.log("Announcement added and read statuses initialized.");
+}
 
 
 export const getCurrentAcademicYear = async () => {
   await requireStaffAuth(["admin"]); // gatekeeper
 
   // Try to get the active academic year
+
   const activeYear = await db
     .select({
       academicYear_id: AcademicYearTable.academicYear_id,

@@ -87,6 +87,8 @@ const dropAllTables = async () => {
     await db.execute(sql`DROP TABLE IF EXISTS "AcademicYearTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "EnrollmentStatusTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "auditTrailsTable" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "AnnouncementTable" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "AnnouncementReadStatusTable" CASCADE`);
 
     // teacher component
     await db.execute(sql`DROP TABLE IF EXISTS "TeacherAssignmentTable" CASCADE`);

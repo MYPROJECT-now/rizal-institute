@@ -273,6 +273,7 @@ export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
     dateOfPayment: date('dateOfPayment'),
     remarks: varchar('remarks', { length:100 }),
     SINumber: varchar('SINumber', { length:300 }),
+    Reminder: boolean("Reminder").notNull().default(false),
   })
 
 
@@ -329,21 +330,21 @@ export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
 
 // admin components
   export const AcademicYearTable = pgTable("AcademicYearTable", {
-      academicYear_id: serial('academicYear_id').primaryKey(),
-      academicYear: varchar('academicYear', { length:100 }).notNull(),
-      academicYearStart: date('academicYearStart').notNull(),
-      academicYearEnd: date('academicYearEnd').notNull(),
-      isActive: boolean('isActive').notNull().default(true),
-    })
-
-export const EnrollmentStatusTable = pgTable("EnrollmentStatusTable", {
-    enrollment_status_id: serial('enrollment_status_id').primaryKey(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
-    enrollment_period: varchar('enrollment_period', { length:100 }).notNull(),
-    enrollment_start_date: varchar('enrollment_start_date', { length:100 }).notNull(),
-    enrollment_end_date: varchar('enrollment_end_date', { length:100 }).notNull(),
+    academicYear_id: serial('academicYear_id').primaryKey(),
+    academicYear: varchar('academicYear', { length:100 }).notNull(),
+    academicYearStart: date('academicYearStart').notNull(),
+    academicYearEnd: date('academicYearEnd').notNull(),
     isActive: boolean('isActive').notNull().default(true),
   })
+
+export const EnrollmentStatusTable = pgTable("EnrollmentStatusTable", {
+  enrollment_status_id: serial('enrollment_status_id').primaryKey(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  enrollment_period: varchar('enrollment_period', { length:100 }).notNull(),
+  enrollment_start_date: varchar('enrollment_start_date', { length:100 }).notNull(),
+  enrollment_end_date: varchar('enrollment_end_date', { length:100 }).notNull(),
+  isActive: boolean('isActive').notNull().default(true),
+})
 
 export const auditTrailsTable = pgTable("auditTrailsTable", {
   auditTrail_id: serial("auditTrail_id").primaryKey(),
@@ -355,8 +356,21 @@ export const auditTrailsTable = pgTable("auditTrailsTable", {
   dateOfAction: date("dateOfAction").notNull(),
 });
 
+export const AnnouncementTable = pgTable("AnnouncementTable", {
+  announcement_id: serial("announcement_id").primaryKey(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  content: varchar("content", { length: 2000 }).notNull(),
+  image: varchar("image", { length: 2000 }).notNull(),
+  createdAt: date("createdAt").notNull(),
+});
 
-
+export const AnnouncementReadStatusTable = pgTable("AnnouncementReadStatusTable", {
+  readStatus_id: serial("readStatus_id").primaryKey(),
+  announcement_id: integer("announcement_id").references(() => AnnouncementTable.announcement_id, { onDelete: "cascade" }).notNull(),
+  student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
+  isRead: boolean("isRead").notNull().default(false),
+});
 
 
 //teacher component

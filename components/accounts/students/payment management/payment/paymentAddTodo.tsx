@@ -104,7 +104,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
     <section className="w-full  sm:p-6 py-0 px-3  ">
       <PreviewModal />
       <section className="bg-green-50 rounded-lg p-4 mb-4">
-        {balance?.paymentMethod === "full_payment"  ? (
+        {balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0  ? (
           <div>
             <p className="text-green-600 font-bold">Fully Paid</p>
           </div>
@@ -142,6 +142,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
             onChange={handleAmount}
             value={amount}
+            disabled={balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0}
             placeholder="Enter amount to pay"
           />
         </div>
@@ -153,11 +154,12 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
             onChange={handleMop}
             value={mop}
+            disabled={balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0}
+
           >
             <option value="">Select payment method</option>
             <option value="GCash">GCash</option>
             <option value="Bank Transfer">Bank Transfer</option>
-            <option value="OTC">Over the Counter (OTC)</option>
           </select>
         </div>
 
@@ -193,6 +195,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
               onChange={handlePOP}
               name="document"
               id="pop"
+              disabled={balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0}
               className="border bg-gray-100 rounded-lg px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-dGreen transition"
             />
           )}
@@ -204,7 +207,12 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
           className="px-2 py-1"
           onClick={handleAdd}
           variant="confirmButton"
-          disabled={!amount || !mop || !POP || isSubmitting || balance?.paymentMethod === "full_payment"}
+          disabled={
+            !amount || !mop || !POP || isSubmitting || 
+            balance?.paymentMethod === "full_payment" || 
+            balance?.totalRemainingBalance === 0 ||   
+            (balance?.dueThisMonth !== undefined && Number(amount) !== balance.dueThisMonth / 2)
+          }
         >
         {isSubmitting ? "Submitting..." : "Submit Payment"}
         </Button>

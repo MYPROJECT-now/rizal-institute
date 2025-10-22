@@ -51,7 +51,30 @@ const staffAccounts = [
     password: "TeacherPass0123",
     email: "conan@school.com",
   },
-
+{
+  role: "teacher",
+  username: "alicia",
+  password: "TeacherPass0123",
+  email: "alicia@school.com",
+},
+{
+  role: "teacher",
+  username: "bernard",
+  password: "TeacherPass0123",
+  email: "bernard@school.com",
+},
+{
+  role: "teacher",
+  username: "donna",
+  password: "TeacherPass0123",
+  email: "donna@school.com",
+},
+{
+  role: "teacher",
+  username: "felix",
+  password: "TeacherPass0123",
+  email: "felix@school.com",
+},
 ];
 
 const createStaffAccounts = async () => {

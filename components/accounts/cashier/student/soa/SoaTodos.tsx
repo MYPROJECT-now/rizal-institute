@@ -37,23 +37,50 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
     }
 
     // Function to calculate total amount due for current month
+    // const calculateTotalAmountDue = () => {
+    //     const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
+    //     const currentMonthIndex = calculatedRows.findIndex(row => 
+    //         (row.month ?? '').toLowerCase().includes(currentMonth)
+    //     );
+        
+    //     if (currentMonthIndex === -1) return 0;
+        
+    //     const totalMonthlyDue = calculatedRows
+    //         .slice(0, currentMonthIndex + 1)
+    //         .reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
+        
+    //     const totalAmountPaid = calculatedRows
+    //         .slice(0, currentMonthIndex + 1)
+    //         .reduce((sum, row) => sum + (row.amountPaid || 0), 0);
+        
+    //     return Math.max(0, totalMonthlyDue - totalAmountPaid);
+    // };
+    
     const calculateTotalAmountDue = () => {
         const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
-        const currentMonthIndex = calculatedRows.findIndex(row => 
+
+        // Find the current month index
+        const currentMonthIndex = calculatedRows.findIndex(row =>
             (row.month ?? '').toLowerCase().includes(currentMonth)
         );
-        
+
         if (currentMonthIndex === -1) return 0;
-        
-        const totalMonthlyDue = calculatedRows
+
+        // Total due up to current month
+        const totalDueSoFar = calculatedRows
             .slice(0, currentMonthIndex + 1)
             .reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
-        
-        const totalAmountPaid = calculatedRows
+
+        // Total paid up to current month
+        const totalPaidSoFar = calculatedRows
             .slice(0, currentMonthIndex + 1)
             .reduce((sum, row) => sum + (row.amountPaid || 0), 0);
-        
-        return totalMonthlyDue - totalAmountPaid;
+
+        // Remaining balance for current month and past months
+        const remainingBalance = totalDueSoFar - totalPaidSoFar;
+
+        // Ensure we never return negative, unless you want to show credit
+        return Math.max(0, remainingBalance);
     };
 
     // Debug logging
@@ -107,7 +134,7 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
     return (
         <main className="p-3">
             <div>
-                <section className="mb-3 text-sm font-semibold ">
+                <section className="mb-3 text-sm font-semibold text-dGreen font=oswald ">
                     <p><strong className="pr-2">Student Name:</strong> {SOATodos[0]?.studentLastName ?? ""}, {SOATodos[0]?.studentFirstName ?? ""} {SOATodos[0]?.studentMiddleName ?? ""} {SOATodos[0]?.studentSuffix ?? ""}</p>
                     <p><strong className="pr-[77px]">LRN:</strong> {SOATodos[0]?.lrn}</p>
                     <p><strong className="pr-[25px]">School Year:</strong> {SOATodos[0]?.academicYear}</p>

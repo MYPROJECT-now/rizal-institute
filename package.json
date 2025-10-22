@@ -14,7 +14,10 @@
     "db:acad": "tsx ./scripts/acadYear.ts",
     "db:staff": "tsx ./scripts/staff.ts",
     "db:prod": "tsx ./scripts/prod.ts",
-    "db:month": "tsx ./scripts/month.ts"
+    "db:month": "tsx ./scripts/month.ts",
+    "db:soa": "tsx ./scripts/soa.ts",
+    "db:grade": "tsx ./scripts/grade.ts",
+    "db:prod2": "tsx ./scripts/prod2.ts"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",

@@ -62,7 +62,7 @@ export const Grade_Summary = () => {
                     {"Grade " + (grade.gradeLevelName ?? "-")}
                   </span>
                   <span className="font-semibold text-dGreen">
-                    {Number(grade.finalGrade).toFixed(2)}
+                    {Math.round(grade.finalGrade)}
                   </span>
                 </div>
               ))}

@@ -63,15 +63,15 @@ const insertMockApplicants = async () => {
       attainmentUponGraduation: "With Honor", hasEnrolledSibling: "No", siblingName: ""
     },
     {
-      applicantsLastName: "Navarro", applicantsFirstName: "Mia", applicantsMiddleName: "Lopez", applicantsSuffix: "",
-      dateOfBirth: new Date("2009-05-30"), age: 16, gender: "Female", mobileNumber: "091712345686", email: "mia1@example.com", lrn: "123456789020",
+      applicantsLastName: "Navarro", applicantsFirstName: "Myra", applicantsMiddleName: "Lopez", applicantsSuffix: "",
+      dateOfBirth: new Date("2009-05-30"), age: 16, gender: "Female", mobileNumber: "091712345686", email: "mia1@example.com", lrn: "123456789456",
       guardiansLastName: "Navarro", guardiansFirstName: "Rafael", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876551", emergencyEmail: "rafael.guardian1@example.com", fullAddress: "456 Elm St, Calamba",
       gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Rizal Institute", schoolAddress: "Canlubang, Calamba",
       birthCert: "", hasBirth: true,
       reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
       mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
-      attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "No", siblingName: ""
+      attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "Yes", siblingName: "Navarro, Mia Lopez"
     },
     {
       applicantsLastName: "Reyes", applicantsFirstName: "Patrick", applicantsMiddleName: "Nolasco", applicantsSuffix: "",

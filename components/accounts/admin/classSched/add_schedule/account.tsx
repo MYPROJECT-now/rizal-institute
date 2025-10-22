@@ -170,7 +170,7 @@ export const Add_Schedule = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="lg:w-[600px] overflow-y-auto bg-white rounded-xl shadow-lg">
+      <DialogContent className="lg:w-[600px] overflow-y-auto bg-white rounded-xl ">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white bg-dGreen h-[60px] flex items-center justify-center">
             Create Schedule

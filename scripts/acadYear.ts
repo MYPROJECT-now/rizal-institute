@@ -12,9 +12,9 @@ const insertAcademicYear = async () => {
 
     const AcademicYear = [
     {
-      academicYear: "2024-2025",
-      academicYearStart: new Date("2024-10-1").toISOString(), //yyyy-mm-dd
-      academicYearEnd: new Date("2025-03-30").toISOString(),
+      academicYear: "2022-2023",
+      academicYearStart: new Date("2022-09-01").toISOString(), //yyyy-mm-dd
+      academicYearEnd: new Date("2023-04-30").toISOString(),
       isActive: true,
     },
 

@@ -17,6 +17,7 @@ interface StudentInfo {
   studentSuffix: string | null;
   sectionName: string | null;
   subjects?: string[];
+  rooomName: string | null;
 
 }
 const CertificatePage = () => {

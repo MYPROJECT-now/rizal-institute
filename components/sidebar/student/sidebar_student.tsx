@@ -59,6 +59,13 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                         onClick={onClose} 
                     />
 
+                    <SidebarItem 
+                        label="Announcements" 
+                        href="/ACCOUNTS/student/announcement"
+                        iconSrc="/announcement.png"
+                        onClick={onClose} 
+                    />
+
                     <AcademicYearModal />
                     <SidebarAcad 
                         label="Academic Year"

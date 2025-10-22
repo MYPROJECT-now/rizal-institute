@@ -1,12 +1,12 @@
 // app/actions/getStudentData.ts
 "use server";
 
-import { and, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, ScheduleTable, RoomTable, applicantsInformationTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
-
+import nodemailer from "nodemailer";
 
 export interface StudentInfo {
   lrn: string | null;
@@ -18,7 +18,9 @@ export interface StudentInfo {
   studentMiddleName: string | null;
   studentLastName: string | null;
   studentSuffix: string | null;
-  paymentMethod: string | null
+  paymentMethod: string | null;
+  email: string | null;
+  reminderForCurrentMonth: boolean;
 }
 
 
@@ -46,7 +48,8 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
       studentMiddleName: StudentInfoTable.studentMiddleName,
       studentLastName: StudentInfoTable.studentLastName,
       studentSuffix: StudentInfoTable.studentSuffix,
-      paymentMethod: downPaymentTable.paymentMethod
+      paymentMethod: downPaymentTable.paymentMethod,
+      email: applicantsInformationTable.email
     })
     .from(StudentInfoTable)
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
@@ -54,11 +57,14 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
     .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
     .leftJoin(downPaymentTable, eq(downPaymentTable.applicants_id, StudentInfoTable.applicants_id))
+    .leftJoin(applicantsInformationTable, eq(applicantsInformationTable.applicants_id, StudentInfoTable.applicants_id))
     .where(eq(StudentInfoTable.applicants_id, applicantId));
 
     
 
   let outstandingBalance = 0;
+  let reminderForCurrentMonth = false; // default
+
   if (studentInfo[0]?.student_id) {
     const monthDue = await db
       .select({
@@ -66,19 +72,25 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
         amountPaid: MonthsInSoaTable.amountPaid,
         month: MonthsInSoaTable.month,
         month_id: MonthsInSoaTable.month_id,
+        reminder: MonthsInSoaTable.Reminder, // include Reminder
       })
       .from(MonthsInSoaTable)
       .where(and(
         eq(MonthsInSoaTable.applicants_id, studentInfo[0].student_id),
         eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)
      ));
+
     // Get current month name (e.g., 'October')
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
     // Find the SOA row for the current month
     const currentMonthRow = monthDue.find(row =>
       (row.month || '').toLowerCase().includes(currentMonth.toLowerCase())
     );
+
     const currentMonthId = currentMonthRow?.month_id;
+    if (currentMonthRow) {
+      reminderForCurrentMonth = currentMonthRow.reminder ?? false;
+    }
     if (currentMonthId !== undefined) {
       // Sum monthlyDue and amountPaid for all months up to and including currentMonthId
       const dueUpToCurrent = monthDue.filter(row => row.month_id <= currentMonthId);
@@ -100,6 +112,8 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
     studentLastName: student?.studentLastName ?? null,
     studentSuffix: student?.studentSuffix ?? null,
     paymentMethod: studentInfo[0]?.paymentMethod ?? null,
+    email: studentInfo[0]?.email ?? null,
+    reminderForCurrentMonth,
   };
 }
 
@@ -157,6 +171,7 @@ export const getStudentInfo = async () => {
       studentSuffix: StudentInfoTable.studentSuffix,
       sectionName: SectionTable.sectionName,
       section_id: SectionTable.section_id,
+      rooomName: RoomTable.roomName,
     })
     .from(StudentInfoTable)
     .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
@@ -164,7 +179,10 @@ export const getStudentInfo = async () => {
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
     .leftJoin(studentTypeTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
-    .where(eq(StudentInfoTable.applicants_id, applicantId));
+    .leftJoin(ScheduleTable, eq(ScheduleTable.section_id, SectionTable.section_id))
+    .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
+    .where(eq(StudentInfoTable.applicants_id, applicantId))
+    .limit(1);
 
   if (!studentInfo[0]) return null;
 
@@ -530,3 +548,134 @@ export const addPayment = async (
 
   return info[0] ?? null; // return only one row
   }
+
+
+  export const getAnnouncement = async () => {
+  
+  const selectedAcademicYear = await getSelectedAcademicYear();
+    
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+  }
+    const get_announcement = await db
+    .select({
+      title: AnnouncementTable.title,
+      content: AnnouncementTable.content,
+      createdAt: AnnouncementTable.createdAt,
+      image: AnnouncementTable.image,
+    })
+    .from(AnnouncementTable)
+    .orderBy(desc(AnnouncementTable.announcement_id))
+    .where(eq(AnnouncementTable.academicYear_id, selectedAcademicYear ?? 1));
+    return get_announcement;
+  }
+
+  export const ActiveAnnouncement = async () => {
+  
+    const selectedAcademicYear = await getSelectedAcademicYear();
+    
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+    }
+    const studentId = await getStudentId();
+    if (!studentId) return [];
+
+      const get_announcement = await db
+      .select({
+        announcement_id: AnnouncementTable.announcement_id,
+        title: AnnouncementTable.title,
+        content: AnnouncementTable.content,
+        date: AnnouncementTable.createdAt,
+        image: AnnouncementTable.image,
+      })
+      .from(AnnouncementTable)
+      .leftJoin(AnnouncementReadStatusTable, eq(AnnouncementTable.announcement_id, AnnouncementReadStatusTable.announcement_id))
+      .orderBy(desc(AnnouncementTable.announcement_id))
+      .where(and(
+        eq(AnnouncementTable.academicYear_id, selectedAcademicYear ?? 1),
+        eq(AnnouncementReadStatusTable.isRead, false),
+        eq(AnnouncementReadStatusTable.student_id, studentId),
+      ))
+      .limit(1);
+      return get_announcement;
+  }
+
+  export const UpdateAnnouncementReadStatus = async (announcementId: number) => {
+  const studentId = await getStudentId();
+  if (!studentId) return;
+
+  await db
+    .update(AnnouncementReadStatusTable)
+    .set({ isRead: true })
+    .where(
+      and(
+        eq(AnnouncementReadStatusTable.announcement_id, announcementId),
+        eq(AnnouncementReadStatusTable.student_id, studentId)
+      )
+    );
+};
+
+export const sendReminder = async (lrn: string, email: string, balance: number) => {
+  try {
+    // --- 1. Send email ---
+    const now = new Date();
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const currentMonth = monthNames[now.getMonth()]; // e.g., "October"
+    const dueDay = 5;
+
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USER!,
+        pass: process.env.EMAIL_PASS!,
+      },
+    });
+
+    const mailContent = `
+      Dear Student,
+
+      This is a friendly reminder that you have an outstanding balance of ₱${balance} for the month of ${currentMonth}.
+
+      Please settle your balance on or before the ${dueDay}th of ${currentMonth} to avoid any inconvenience.
+
+      Thank you,
+      Rizal Institute - Canlubang Registrar Office
+    `;
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: `Tuition Fee Reminder for ${currentMonth}`,
+      text: mailContent,
+    });
+
+    console.log(`Reminder sent to ${email} for LRN ${lrn}`);
+
+    // --- 2. Update Reminder flag in DB for current month ---
+    const student = await db
+      .select()
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn))
+      .limit(1);
+
+    if (student.length === 0) {
+      throw new Error("Student not found.");
+    }
+
+    await db
+      .update(MonthsInSoaTable)
+      .set({ Reminder: true })
+      .where(and(
+        eq(MonthsInSoaTable.applicants_id, student[0].applicants_id),
+        (eq(MonthsInSoaTable.month, currentMonth)
+      )));
+
+    console.log(`Reminder flag updated for ${currentMonth} for LRN ${lrn}`);
+  } catch (err) {
+    console.error("Failed to send reminder:", err);
+    throw err;
+  }
+};

@@ -441,7 +441,7 @@ export async function POST(request: Request) {
       .limit(1);
 
     let newSectionCount = 1;
-    const limitCount = 40; // capacity per section test
+    const limitCount = 20; // capacity per section test
     // let limitCount = 1;
     const limit = limitCount - 1; // default for a new section
     let section_id = 1;

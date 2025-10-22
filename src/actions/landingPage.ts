@@ -25,7 +25,7 @@ import {
   studentTypeTable,
   StudentGradesTable,
 } from "../db/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
@@ -425,6 +425,7 @@ export const getStatusByTrackingId = async (trackingId: string) => {
       ))
       .limit(1);
 
+    console.log(result);
     if (result.length > 0) {
       console.log("Reservation ID:", result[0].hasPaidReservation);
       return result[0];
@@ -641,6 +642,7 @@ export const getPaymentMethodData = async (trackingId: string) => {
      })
     .from(TempMonthsInSoaTable)
     .where(eq(TempMonthsInSoaTable.applicants_id, applicantID[0].applicants_id))
+    .orderBy(asc(TempMonthsInSoaTable.temp_month_id))
 
   const Down = await db
   .select({
@@ -664,6 +666,7 @@ export const getPaymentMethodData = async (trackingId: string) => {
   .from(BreakDownTable)
   .where(eq(BreakDownTable.applicants_id, applicantID[0].applicants_id))
   
+  console.log(MonthlyDues)
   return{ 
     totalTuitionFee: getTotalTuition[0]?.total ?? 0, 
     MonthlyDues, 

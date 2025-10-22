@@ -58,8 +58,8 @@ export const Enrollees_info_Modal = () => {
         ) : grades.length === 0 ? (
           <div className="py-6 text-center text-gray-600">No grades available.</div>
         ) : (
-          <div className="space-y-6 px-2 py-4 text-sm text-gray-700  overflow-y-auto max-h-[400px]">
-            {Object.entries(groupedGrades).map(([gradeLevel, subjects]) => (
+          <div className="space-y-6 px-4 py-4 text-sm text-gray-700  overflow-y-auto max-h-[400px]">
+            {/* {Object.entries(groupedGrades).map(([gradeLevel, subjects]) => (
               <section
                 key={gradeLevel}
                 className="bg-white p-4 rounded-lg shadow-sm border"
@@ -76,7 +76,43 @@ export const Enrollees_info_Modal = () => {
                   ))}
                 </div>
               </section>
-            ))}
+            ))} */}
+
+            {Object.entries(groupedGrades).map(([gradeLevel, subjects]) => {
+
+            // Calculate GWA for this grade level
+            const validGrades = subjects
+              .map(s => s.finalGrade)
+              .filter((g): g is number => g !== null)
+            const gwa = validGrades.length > 0
+            ? Math.round(validGrades.reduce((acc, curr) => acc + curr, 0) / validGrades.length)
+              : null
+
+            return (
+              <section key={gradeLevel} className="bg-white p-4 rounded-lg shadow-sm border-2 flex flex-col gap-3">
+                <h3 className="sm:text-lg text-base text-dGreen font-bold mb-1 border-l-4 border-dGreen pl-2 rounded-lg">
+                  {gradeLevel === "Unknown" ? "Unspecified Grade Level" : `Grade ${gradeLevel}`} 
+
+                </h3>
+                
+                {/* Display GWA for this grade level */}
+
+
+                <div className="grid grid-cols-2 gap-4">
+                  {subjects.map((subject, idx) => (
+                    <div key={idx} className="flex flex-row gap-2">
+                      <strong className="text-green-800">{subject.subject ?? "Unnamed Subject"}:</strong>
+                      <p className="text-green-800">{subject.finalGrade ?? "-"}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="self-end px-3 py-1 rounded-full text-xl font-bold bg-green-100 text-green-800 shadow-sm">
+                  GWA: {gwa ?? "-"}
+                </div>
+              </section>
+            )
+          })}
+
           </div>
         )}
       </DialogContent>
