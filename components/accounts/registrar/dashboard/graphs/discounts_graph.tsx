@@ -74,9 +74,9 @@ const chartData = useMemo(() => {
 
   return [
     { category: "New ESC", value: Number(item.New_ESC_Grantee), fill: "#0FC64F" },
-    { category: "All ESC", value: Number(item.All_Grantees), fill: "#0FC64F" },
-    { category: "Academic", value: academicTotal, fill: "#FFB347" },
-    { category: "Sibling", value: Number(item.sibling_discount), fill: "#0FC64F" },
+    { category: "All ESC", value: Number(item.All_Grantees), fill: "#0A8E38" },
+    { category: "Academic", value: academicTotal, fill: "#1E3A8A" },
+    { category: "Sibling", value: Number(item.sibling_discount), fill: "#A855F7" },
   ];
 }, [rawData]);
 

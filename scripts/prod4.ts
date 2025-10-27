@@ -15,6 +15,7 @@ const insertMockApplicants = async () => {
 
   const mockApplicants = [
     // Grade 7 (3)
+    //complete discount
     {
     applicantsLastName: "Garcia", applicantsFirstName: "Nathaniel", applicantsMiddleName: "Lopez", applicantsSuffix: "",
     dateOfBirth: new Date("2010-05-20"), age: 12, gender: "Male", mobileNumber: "09593430011", email: "nathaniel.garcia10@gmail.com", lrn: "501193300011",

@@ -17,7 +17,7 @@ const insertMockApplicants = async () => {
     // Grade 7 (3)
     {
       applicantsLastName: "Bautista", applicantsFirstName: "Jose", applicantsMiddleName: "Pilar", applicantsSuffix: "Jr.",
-      dateOfBirth: new Date("2010-06-2"), age:15, gender: "Male", mobileNumber: "09119874321", email: "jose1@example.com", lrn: "40337115001",
+      dateOfBirth: new Date("2010-06-2"), age:15, gender: "Male", mobileNumber: "09119874321", email: "jose1@example.com", lrn: "403371150011",
       guardiansLastName: "Bautista", guardiansFirstName: "Juan", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "0911874322", emergencyEmail: "juan.guardian1@example.com", fullAddress: "Acacia 1, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "Sta. Cecilia", schoolAddress: "Canlubang",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
@@ -28,7 +28,7 @@ const insertMockApplicants = async () => {
     },
     {
       applicantsLastName: "Clara", applicantsFirstName: "Maria", applicantsMiddleName: "", applicantsSuffix: "",
-      dateOfBirth: new Date("2011-01-02"), age: 14, gender: "Female", mobileNumber: "091712345679", email: "clara1@example.com", lrn: "40337115002",
+      dateOfBirth: new Date("2011-01-02"), age: 14, gender: "Female", mobileNumber: "091712345679", email: "clara1@example.com", lrn: "403371150021",
       guardiansLastName: "Ibarra", guardiansFirstName: "Simon", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "0911874321", emergencyEmail: "ibarra.guardian1@example.com", fullAddress: "Narra 2, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "Holy Child School", schoolAddress: "Calamba",
       birthCert: "", hasBirth: true,
@@ -39,7 +39,7 @@ const insertMockApplicants = async () => {
     },
    {
       applicantsLastName: "Rivera", applicantsFirstName: "Angelo", applicantsMiddleName: "Torres", applicantsSuffix: "",
-      dateOfBirth: new Date("2010-09-15"), age: 14, gender: "Male", mobileNumber: "09181234001", email: "angelo1@example.com", lrn: "40337115003",
+      dateOfBirth: new Date("2010-09-15"), age: 14, gender: "Male", mobileNumber: "09181234001", email: "angelo1@example.com", lrn: "403371150031",
       guardiansLastName: "Rivera", guardiansFirstName: "Mario", guardiansMiddleName: "Delos Santos", guardiansSuffix: "", emergencyContact: "09181234011", emergencyEmail: "mario.rivera@example.com", fullAddress: "Blk 5 Lot 12 Banlic, Calamba",
       gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "St. Therese Academy", schoolAddress: "Calamba",
       birthCert: "", hasBirth: true,
@@ -49,6 +49,31 @@ const insertMockApplicants = async () => {
       reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Lara Rivera"
     },
+    {
+      applicantsLastName: "Cruz", applicantsFirstName: "Miguel", applicantsMiddleName: "Santos", applicantsSuffix: "",
+      dateOfBirth: new Date("2010-09-15"), age: 14, gender: "Male", mobileNumber: "09181234001", email: "migsCrus@example.com", lrn: "403371150032",
+      guardiansLastName: "Rivera", guardiansFirstName: "Mario", guardiansMiddleName: "Delos Santos", guardiansSuffix: "", emergencyContact: "09181234011", emergencyEmail: "mario.rivera@example.com", fullAddress: "Blk 5 Lot 12 Banlic, Calamba",
+      gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "St. Therese Academy", schoolAddress: "Calamba",
+      birthCert: "", hasBirth: true,
+      reportCard: "", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true,
+      itr: "", hasTIR: true, escCert: "", hasEscCertificate: true, mop: "GCash",
+      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
+      attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Lara Rivera"
+    },
+    {
+      applicantsLastName: "Santos", applicantsFirstName: "Jared", applicantsMiddleName: "Lopez", applicantsSuffix: "",
+      dateOfBirth: new Date("2010-09-15"), age: 14, gender: "Male", mobileNumber: "09181234001", email: "SantosJared@example.com", lrn: "403371150033",
+      guardiansLastName: "Rivera", guardiansFirstName: "Mario", guardiansMiddleName: "Delos Santos", guardiansSuffix: "", emergencyContact: "09181234011", emergencyEmail: "mario.rivera@example.com", fullAddress: "Blk 5 Lot 12 Banlic, Calamba",
+      gradeLevel: "7", studentType: "Incoming G7", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "St. Therese Academy", schoolAddress: "Calamba",
+      birthCert: "", hasBirth: true,
+      reportCard: "", hasReportCard: true,
+      goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true,
+      itr: "", hasTIR: true, escCert: "", hasEscCertificate: true, mop: "GCash",
+      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
+      attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Lara Rivera"
+    },
+
     
     // Grade 8 (5)
     {
@@ -64,9 +89,9 @@ const insertMockApplicants = async () => {
     },
     {
       applicantsLastName: "Navarro", applicantsFirstName: "Myra", applicantsMiddleName: "Lopez", applicantsSuffix: "",
-      dateOfBirth: new Date("2009-05-30"), age: 16, gender: "Female", mobileNumber: "091712345686", email: "mia1@example.com", lrn: "123456789456",
+      dateOfBirth: new Date("2009-05-30"), age: 16, gender: "Female", mobileNumber: "091712345686", email: "myraNavarro@example.com", lrn: "123456789456",
       guardiansLastName: "Navarro", guardiansFirstName: "Rafael", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09179876551", emergencyEmail: "rafael.guardian1@example.com", fullAddress: "456 Elm St, Calamba",
-      gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Rizal Institute", schoolAddress: "Canlubang, Calamba",
+      gradeLevel: "8", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "Rizal Institute", schoolAddress: "Canlubang, Calamba",
       birthCert: "", hasBirth: true,
       reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
@@ -77,7 +102,7 @@ const insertMockApplicants = async () => {
       applicantsLastName: "Reyes", applicantsFirstName: "Patrick", applicantsMiddleName: "Nolasco", applicantsSuffix: "",
       dateOfBirth: new Date("2009-07-22"), age: 15, gender: "Male", mobileNumber: "09181234004", email: "patrick1@example.com", lrn: "401056789021",
       guardiansLastName: "Reyes", guardiansFirstName: "Jun", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09181234014", emergencyEmail: "jun.r@example.com", fullAddress: "Linga, Calamba",
-      gradeLevel: "8", studentType: "Incoming G8", schoolYear: "2023-2024", schoolType: "Public", prevSchool: "Calamba National High School", schoolAddress: "Calamba",
+      gradeLevel: "8", studentType: "Transferee", schoolYear: "2023-2024", schoolType: "Public", prevSchool: "Calamba National High School", schoolAddress: "Calamba",
       birthCert: "", hasBirth: true,
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
@@ -99,7 +124,7 @@ const insertMockApplicants = async () => {
     },
     {
       applicantsLastName: "Doe", applicantsFirstName: "Juan", applicantsMiddleName: "", applicantsSuffix: "",
-      dateOfBirth: new Date("2008-06-19"), age: 17, gender: "Male", mobileNumber: "09390001111", email: "doe1@example.com", lrn: "40319116099",
+      dateOfBirth: new Date("2008-06-19"), age: 17, gender: "Male", mobileNumber: "09390001111", email: "doe1@example.com", lrn: "403191160991",
       guardiansLastName: "", guardiansFirstName: "", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "", emergencyEmail: "", fullAddress: "39 Amapola, Calamba",
       gradeLevel: "9", studentType: "Transferee", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "Brent International School", schoolAddress: "Calamba",
       birthCert: "", hasBirth: true,
@@ -110,9 +135,9 @@ const insertMockApplicants = async () => {
     },
     {
       applicantsLastName: "Garcia", applicantsFirstName: "Nathan", applicantsMiddleName: "Reyes", applicantsSuffix: "",
-      dateOfBirth: new Date("2008-02-02"), age: 16, gender: "Male", mobileNumber: "09181234007", email: "nathan1@example.com", lrn: "40319116091",
+      dateOfBirth: new Date("2008-02-02"), age: 16, gender: "Male", mobileNumber: "09181234007", email: "nathan1@example.com", lrn: "403191160911",
       guardiansLastName: "Garcia", guardiansFirstName: "Linda", guardiansMiddleName: "", guardiansSuffix: "", emergencyContact: "09181234017", emergencyEmail: "linda.g@example.com", fullAddress: "Real, Calamba",
-      gradeLevel: "9", studentType: "Incoming G9", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "La Salle Canlubang", schoolAddress: "Calamba",
+      gradeLevel: "9", studentType: "Transferee", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "La Salle Canlubang", schoolAddress: "Calamba",
       birthCert: "", hasBirth: true,
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
@@ -134,9 +159,9 @@ const insertMockApplicants = async () => {
     },
      {
       applicantsLastName: "Gaspar", applicantsFirstName: "Lia", applicantsMiddleName: "", applicantsSuffix: "",
-      dateOfBirth: new Date("2007-03-29") , age: 18, gender: "Female", mobileNumber: "09456789012", email: "lia1@example.com", lrn: "511590015423",
-      guardiansLastName: "Gaspar", guardiansFirstName: "Crisostomo", guardiansMiddleName: "Ibarra", guardiansSuffix: "", emergencyContact: "09272543019", emergencyEmail: "ibarrac@example.com", fullAddress: "38 Gumamela, Calamba",
-      gradeLevel: "10", studentType: "Incoming G10", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "Rizal Institute", schoolAddress: "Canlubang, Calamba",
+      dateOfBirth: new Date("2007-03-29") , age: 18, gender: "Female", mobileNumber: "09456789012", email: "gaspar@example.com", lrn: "511590015423",
+      guardiansLastName: "Gaspar", guardiansFirstName: "Crisostomo", guardiansMiddleName: "Ibarra", guardiansSuffix: "", emergencyContact: "09272543019", emergencyEmail: " ", fullAddress: "38 Gumamela, Calamba",
+      gradeLevel: "10", studentType: "Transferee", schoolYear: "2023-2024", schoolType: "Private", prevSchool: "Rizal Institute", schoolAddress: "Canlubang, Calamba",
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
       reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,

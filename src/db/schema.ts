@@ -181,13 +181,13 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     roomName: varchar("roomName", { length: 100 }).notNull(),
   })
 
-export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
-  spgac_id: serial("spgac_id").primaryKey(),
-  student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
-  section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
-  gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
-  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
-})
+  export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
+    spgac_id: serial("spgac_id").primaryKey(),
+    student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
+    section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
+    gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
+  })
 
   export const ScheduleTable = pgTable("ScheduleTable", {
     schedule_id: serial("schedule_id").primaryKey(),

@@ -38,7 +38,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className="px-4 py-2">{applicants.lrn}</td>
       <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
       <td className="px-[55px] py-2">{applicants.gradeLevel}</td>
-      <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
+      <td className={applicants.reservationPaymentStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : applicants.reservationPaymentStatus === "Pending" ? "px-4 py-2 text-yellow-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
       <td className="px-4 py-2">
         <Button 
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "

@@ -78,7 +78,7 @@ export const PaymentScheme = () => {
           Payment Scheme Distribution
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative flex justify-center items-center ">
+      <CardContent className="relative flex justify-center items-center  ">
         {loading ? (
           <div className="flex items-center justify-center h-40">
             <Loader2 className="h-8 w-8 animate-spin text-green-700" />
@@ -86,7 +86,7 @@ export const PaymentScheme = () => {
         ) : (
           <>
             {/* ✅ Centered Pie Chart */}
-            <PieChart width={200} height={180}>
+            <PieChart width={240} height={200} >
               <Pie
                 data={chartData}
                 dataKey="value"

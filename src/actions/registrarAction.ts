@@ -1,6 +1,6 @@
   "use server"
 
-  import { desc, eq, or, and, inArray } from "drizzle-orm";
+  import { desc, eq, or, and, inArray,  } from "drizzle-orm";
   import { db } from "../db/drizzle";
   import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
@@ -83,7 +83,8 @@
       .leftJoin(documentsTable, eq(StudentInfoTable.applicants_id, documentsTable.applicants_id))
       .where(and(
         eq(AdmissionStatusTable.academicYear_id, selectedYear),
-        eq(AcademicYearTable.academicYear_id, selectedYear)
+        eq(AcademicYearTable.academicYear_id, selectedYear),
+        eq(AdmissionStatusTable.admissionStatus, "Enrolled")
       ));
 
     console.log("Fetched documents:", documents);
@@ -115,6 +116,7 @@
       .where(and(
           eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
           eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
+          eq(applicationStatusTable.academicYear_id, selectedYear),
           eq(AdmissionStatusTable.academicYear_id, selectedYear),
           eq(AdmissionStatusTable.admissionStatus, "Pending"),
       ));
@@ -193,7 +195,8 @@ export const getDiscountDIstribution = async () => {
     .leftJoin(BreakDownTable, eq(BreakDownTable.applicants_id, ESCGranteeTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(BreakDownTable.applicants_id, AdmissionStatusTable.applicants_id))
     .where(and(
-      eq(AcademicYearTable.academicYear_id, selectedYear),
+      eq(AdmissionStatusTable.academicYear_id, selectedYear),
+      eq(BreakDownTable.academicYear_id, selectedYear),
       eq(AdmissionStatusTable.admissionStatus, "Enrolled")
     ));
 
@@ -348,7 +351,7 @@ export const getEnrollmentTrend = async () => {
         studentFirstName: StudentInfoTable.studentFirstName,
         studentMiddleName: StudentInfoTable.studentMiddleName,
         status: AdmissionStatusTable.admissionStatus,
-        gradeLevel: GradeLevelTable.gradeLevelName,
+        gradeLevel: studentTypeTable.gradeToEnroll,
         isActive: AcademicYearTable.isActive,
         hasBirth: documentsTable.hasBirth,
         hasReportCard: documentsTable.hasReportCard,
@@ -358,23 +361,26 @@ export const getEnrollmentTrend = async () => {
         hasForm137: documentsTable.hasForm137,
         hasITR: documentsTable.hasTIR,
         hasEscCert: documentsTable.hasEscCertificate,
-        studentType: educationalBackgroundTable.studentType,
+        studentType: studentTypeTable.studentType,
         schoolType: educationalBackgroundTable.schoolType,
         escGrantee: additionalInformationTable.escGrantee,
       })
       .from(StudentInfoTable)
       .leftJoin(additionalInformationTable, eq(StudentInfoTable.applicants_id, additionalInformationTable.applicants_id))
       .leftJoin(educationalBackgroundTable, eq(StudentInfoTable.applicants_id, educationalBackgroundTable.applicants_id))
+      .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
       .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-      .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
-      .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-      .leftJoin(AcademicYearTable, eq(StudentPerGradeAndSection.academicYear_id, AcademicYearTable.academicYear_id))
+      .leftJoin(AcademicYearTable, eq(studentTypeTable.academicYear_id, AcademicYearTable.academicYear_id))
       .leftJoin(documentsTable, eq(StudentInfoTable.applicants_id, documentsTable.applicants_id))
       .where(and(
         eq(AdmissionStatusTable.academicYear_id, selectedYear),
-        eq(AcademicYearTable.academicYear_id, selectedYear)
-      ));
-
+        eq(AcademicYearTable.academicYear_id, selectedYear),
+        eq(studentTypeTable.academicYear_id, selectedYear),
+      ))
+      .orderBy(
+        sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`,
+        StudentInfoTable.applicants_id
+      )
     console.log("Fetched Enrollees:", allStudent);
     return allStudent;
   };
@@ -654,7 +660,7 @@ export const getEnrollmentTrend = async () => {
       lastName: applicantsInformationTable.applicantsLastName,
       firstName: applicantsInformationTable.applicantsFirstName,
       middleName: applicantsInformationTable.applicantsMiddleName,
-      gradeLevel: educationalBackgroundTable.gradeLevel,
+      gradeLevel: studentTypeTable.gradeToEnroll,
       applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
       reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus, 
       dateApprovedByRegistrar: applicationStatusTable.dateApprovedByRegistrar,
@@ -662,13 +668,14 @@ export const getEnrollmentTrend = async () => {
 
     })
     .from(applicantsInformationTable)
-    .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
+    .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
     .where(and(
       eq(AdmissionStatusTable.academicYear_id, selectedYear),
-      eq(applicationStatusTable.academicYear_id, selectedYear)
+      eq(applicationStatusTable.academicYear_id, selectedYear),
+      eq(studentTypeTable.academicYear_id, selectedYear),
     ))
 
     console.log("Fetched Enrollees:", allEnrollees);
@@ -759,7 +766,7 @@ export const getEnrollmentTrend = async () => {
       lastName: applicantsInformationTable.applicantsLastName,
       firstName: applicantsInformationTable.applicantsFirstName,
       middleName: applicantsInformationTable.applicantsMiddleName,
-      gradeLevel: educationalBackgroundTable.gradeLevel,
+      gradeLevel: studentTypeTable.gradeToEnroll,
       applicationStatus: applicationStatusTable.applicationFormReviewStatus,
       reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
       admissionStatus: AdmissionStatusTable.admissionStatus,
@@ -768,17 +775,20 @@ export const getEnrollmentTrend = async () => {
 
     })
     .from(applicantsInformationTable)
-    .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
+    .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
     .where(and(
-          eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
-          eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
-          eq(AdmissionStatusTable.academicYear_id, selectedYear),
-          eq(applicationStatusTable.academicYear_id, selectedYear),
+      eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
+      eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
+      eq(AdmissionStatusTable.academicYear_id, selectedYear),
+      eq(applicationStatusTable.academicYear_id, selectedYear),
+      eq(studentTypeTable.academicYear_id, selectedYear),
+      eq(AcademicYearTable.academicYear_id, selectedYear),
     ))
-    
+    .orderBy(sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`)
+
   
     console.log("Fetched Enrollees:", allReserved);
     

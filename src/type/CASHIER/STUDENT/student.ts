@@ -1,4 +1,5 @@
 export type all_student_Type = {
+    id: number ;
     lrn: string;
     studentLastName: string;
     studentFirstName: string;

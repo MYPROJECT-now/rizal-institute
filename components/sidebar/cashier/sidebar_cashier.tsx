@@ -52,14 +52,14 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     />
 
                     <SidebarItem 
-                        label="Monthly Pay" 
+                        label="Monthly Payment" 
                         href="/ACCOUNTS/cashier/payment_Approval"
                         iconSrc="/reserved.png" 
                         onClick={onClose}
                     />
 
                     <SidebarItem 
-                        label="Full Payments" 
+                        label="Full Payment" 
                         href="/ACCOUNTS/cashier/full"
                         iconSrc="/money.png" 
                         onClick={onClose}
@@ -73,7 +73,7 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     />
 
                     <SidebarItem 
-                        label="Reserved Slot" 
+                        label="Reserved" 
                         href="/ACCOUNTS/cashier/reserved"
                         iconSrc="/lock.png" 
                         onClick={onClose}

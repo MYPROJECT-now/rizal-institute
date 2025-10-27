@@ -123,7 +123,7 @@ const filteredStudents = studentList.filter((student) => {
           ) : (
           currentStudents.map((student, idx) => (
             <Student 
-              key={student.lrn} 
+              key={student.id} 
               student={student} 
               className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
 

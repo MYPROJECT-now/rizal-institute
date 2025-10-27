@@ -1,11 +1,12 @@
 import { db } from '@/src/db/drizzle';
 import { and, desc, eq } from 'drizzle-orm';
-import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, educationalBackgroundTable, GradeLevelTable, guardianAndParentsTable, SectionTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable } from '@/src/db/schema';
+import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, GradeLevelTable, guardianAndParentsTable, SectionTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { clerkClient } from '@clerk/nextjs/server';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
+import { getSelectedYear } from '@/src/actions/utils/getSelectedYear';
 
 // Define Clerk error interface
 // interface ClerkError extends Error {
@@ -57,8 +58,12 @@ async function getStudentName(applicantId: number): Promise<{ lastName: string; 
     : { lastName: "N/A", firstName: "N/A" };
 }
 
+
 async function getApplicantInfo
-  (studentId: number): Promise<{ 
+  (
+    studentId: number, 
+    academicYearID: number
+  ): Promise<{ 
     applicantId: number;
     lrn: string;
     lastName: string; 
@@ -69,6 +74,7 @@ async function getApplicantInfo
     age: number;
     gender: string;
     fullAddress: string | null;
+    studenType: string | null;
   }> {
 
   const result = await db
@@ -83,11 +89,16 @@ async function getApplicantInfo
       age: applicantsInformationTable.age,
       gender: applicantsInformationTable.gender,
       fullAddress: guardianAndParentsTable.fullAddress,
+      studenType: studentTypeTable.studentType,
 
     })
     .from(applicantsInformationTable)
     .leftJoin(guardianAndParentsTable, eq(applicantsInformationTable.applicants_id, guardianAndParentsTable.applicants_id))
-    .where(eq(applicantsInformationTable.applicants_id, studentId))
+    .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
+    .where(and(
+      eq(applicantsInformationTable.applicants_id, studentId),
+      eq(studentTypeTable.academicYear_id, academicYearID)
+    ))
     .limit(1);
 
   return result.length > 0
@@ -102,6 +113,7 @@ async function getApplicantInfo
       age: result[0].age,
       gender: result[0].gender,
       fullAddress: result[0].fullAddress,
+      studenType: result[0].studenType
     }
     : { 
       applicantId: 0,
@@ -113,7 +125,9 @@ async function getApplicantInfo
       dateOfBirth: new Date(),
       age: 0,
       gender: "N/A",
-      fullAddress: "N/A",};
+      fullAddress: "N/A",
+      studenType: "N/A" 
+  };
 }
 
 // Send admission email
@@ -169,139 +183,42 @@ async function sendAdmissionEmail(
   await transporter.sendMail(mailOptions);
 }
 
-// // API Handler
-// export async function POST(request: Request) {
-//   try {
-//     const { applicantId, name } = await request.json();
+async function sendAdmissionEmailOldStudent(
+  email: string,
+  firstName: string,
+  lastName: string
+) {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
 
-//     if (!applicantId) {
-//       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
-//     }
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Welcome Back to Rizal Institute - Canlubang!',
+    text: `
+    Dear ${firstName} ${lastName},
 
-//     const email = await getStudentEmail(applicantId);
-//     if (!email) {
-//       return NextResponse.json({ error: "Student email not found" }, { status: 404 });
-//     }
+    We are pleased to inform you that your admission to Rizal Institute - Canlubang has been successfully confirmed.
 
-//     const lrn = await getLRN(applicantId);
-//     const { firstName, lastName } = await getStudentName(applicantId);
-//     const randomPassword = generateRandomPassword();
-//     const {
-//       middleName,
-//       suffix,
-//       dateOfBirth,
-//       age,
-//       gender,
-//       fullAddress
-//     } = await getApplicantInfo(applicantId);
+    Welcome back! We are delighted to have you continue your academic journey with us this school year.
 
-//     // Create Clerk user
-//     const clerk = await clerkClient();
-    
-//     console.log('Creating Clerk user with:', {
-//       username: `RIZAL-${lrn}`,
-//       email: email,
-//       firstName,
-//       lastName
-//     });
-    
-    
-//   const credentials = await getStaffCredentials();
-//     if (!credentials) {
-//       return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
-//     }
-    
-    
-//     let user;
-//     try {
-//       user = await clerk.users.createUser({
-//         username: `RIZAL-${lrn}`,
-//         password: randomPassword,
-//         emailAddress: [email],
-//         firstName,
-//         lastName,
-//         publicMetadata: {
-//           role: "student",
-//         },
-//       });
-      
-//       console.log('Clerk user created successfully:', user.id);
-//     } catch (clerkError: unknown) {
-//       console.error('Clerk user creation failed:', {
-//         error: clerkError instanceof Error ? clerkError.message : 'Unknown error',
-//         status: (clerkError as ClerkError)?.status,
-//         errors: (clerkError as ClerkError)?.errors
-//       });
-//       throw clerkError;
-//     }
+    As a returning student, you may continue using your existing account to access our online portal for updates, schedules, and other important announcements.
 
-//     // Update admission status
-//     await db
-//       .update(AdmissionStatusTable)
-//       .set({ 
-//         admissionStatus: "Enrolled",
-//         isActive: true,
-//         dateAdmitted: new Date().toISOString().split("T")[0],
-//       })
-//       .where(eq(AdmissionStatusTable.applicants_id, applicantId));
+    Thank you for your continued trust in Rizal Institute - Canlubang. We look forward to another successful year together!
 
-    
-//       const academicYearID = await getAcademicYearID();
-      
-//     // Insert student info
-//     const [insertStudent] = await db
-//       .insert(StudentInfoTable)
-//       .values({
-//         applicants_id: applicantId,
-//         lrn,
-//         studentFirstName: firstName,
-//         studentMiddleName: middleName ?? undefined,
-//         studentLastName: lastName,
-//         studentSuffix: suffix ?? undefined,
-//         fullAddress: fullAddress ?? "",
-//         studentGender: gender,
-//         studentBirthDate: dateOfBirth.toISOString().split('T')[0],
-//         studentAge: age,
-//       })
-//       .returning({ id: StudentInfoTable.student_id});
+    Best regards,
+    Rizal Institute - Canlubang Registrar Office
+    `,
+  };
 
-//       const student_id = insertStudent.id;
+  await transporter.sendMail(mailOptions);
+}
 
-//     // Insert Clerk user reference
-//     await db.insert(ClerkUserTable).values({
-//       selected_AcademicYear_id: academicYearID,
-//       clerkId: user.id,
-//       applicants_id: applicantId,
-//       student_id: student_id,
-//       userType: "student",
-//       clerk_username: `RIZAL-${lrn}`,
-//       clerk_email: email,
-//     });
-
-//     await  db.insert(auditTrailsTable)
-//         .values({
-//         actionTaken: "Applicant was admitted",
-//         actionTakenFor: name,
-//         dateOfAction: new Date().toISOString(),
-//         username: credentials.clerk_username,
-//         usertype: credentials.userType,
-//         academicYear_id: await getAcademicYearID(),
-//       })
-
-//     // Send admission email
-//     await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
-
-//     return NextResponse.json({ 
-//       message: "Student was successfully admitted and email sent successfully.",
-//       admissionStatus: "Enrolled", });
-//   } catch (error: unknown) {
-//     console.error("Admission process failed:", error);
-//     return NextResponse.json({ 
-//       error: "Failed to complete admission process", 
-//       details: error instanceof Error ? error.message : 'Unknown error'
-//     }, { status: 500 });
-//   }
-// }
 
 
 export async function POST(request: Request) {
@@ -315,7 +232,13 @@ export async function POST(request: Request) {
     const email = await getStudentEmail(applicantId);
     if (!email) {
       return NextResponse.json({ error: "Student email not found" }, { status: 404 });
+    }  
+    
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) {
+      return NextResponse.json({ error: "No selected academic year found." }, { status: 400 });
     }
+
 
     const lrn = await getLRN(applicantId);
     const { firstName, lastName } = await getStudentName(applicantId);
@@ -326,24 +249,32 @@ export async function POST(request: Request) {
       dateOfBirth,
       age,
       gender,
-      fullAddress
-    } = await getApplicantInfo(applicantId);
+      fullAddress,
+      studenType,
+    } = await getApplicantInfo(applicantId, selectedYear);
 
     const clerk = await clerkClient();
     const credentials = await getStaffCredentials();
     if (!credentials) {
       return NextResponse.json({ error: "Unauthorized or invalid session." }, { status: 401 });
     }
+    
+      let userId: string | null = null;
 
     // Create Clerk user
-    const user = await clerk.users.createUser({
-      username: `RIZAL-${lrn}`,
-      password: randomPassword,
-      emailAddress: [email],
-      firstName,
-      lastName,
-      publicMetadata: { role: "student" },
-    });
+    if (studenType !== "Old Student") {
+      const user = await clerk.users.createUser({
+        username: `RIZAL-${lrn}`,
+        password: randomPassword,
+        emailAddress: [email],
+        firstName,
+        lastName,
+        publicMetadata: { role: "student" },
+      });
+      
+      userId = user.id;
+
+    }
 
     // Update admission status
     await db.update(AdmissionStatusTable)
@@ -355,9 +286,13 @@ export async function POST(request: Request) {
       .where(eq(AdmissionStatusTable.applicants_id, applicantId));
 
     const academicYearID = await getAcademicYearID();
+  
+    
+    let student_id: number | null = null;
 
     // Insert into StudentInfoTable
-    const [insertStudent] = await db.insert(StudentInfoTable).values({
+    if (studenType !== "Old Student") {
+      const [insertStudent] = await db.insert(StudentInfoTable).values({
       applicants_id: applicantId,
       lrn,
       studentFirstName: firstName,
@@ -370,24 +305,53 @@ export async function POST(request: Request) {
       studentAge: age,
     }).returning({ id: StudentInfoTable.student_id });
 
-    const student_id = insertStudent.id;
+    student_id = insertStudent.id;
+    }
+    
+    if (studenType === "Old Student") {
+      const getStudentID = await db
+      .select({ student_id: StudentInfoTable.student_id })
+      .from(StudentInfoTable)
+      .where(eq(StudentInfoTable.lrn, lrn));
+      
+      student_id = getStudentID[0]?.student_id ?? null;
+
+    }
+    
+    if (!student_id) {
+      throw new Error("student_id is null before ClerkUserTable insertion");
+    }
 
     // Insert into ClerkUserTable
-    await db.insert(ClerkUserTable).values({
-      selected_AcademicYear_id: academicYearID,
-      clerkId: user.id,
-      applicants_id: applicantId,
-      student_id: student_id,
-      userType: "student",
-      clerk_username: `RIZAL-${lrn}`,
-      clerk_email: email,
-    });
+    if (studenType !== "Old Student" && userId) {
+      await db.insert(ClerkUserTable).values({
+        selected_AcademicYear_id: academicYearID,
+        clerkId: userId,
+        applicants_id: applicantId,
+        student_id: student_id,
+        userType: "student",
+        clerk_username: `RIZAL-${lrn}`,
+        clerk_email: email,
+      });
+}
+    // await db.insert(ClerkUserTable).values({
+    //   selected_AcademicYear_id: academicYearID,
+    //   clerkId: user.id,
+    //   applicants_id: applicantId,
+    //   student_id: student_id,
+    //   userType: "student",
+    //   clerk_username: `RIZAL-${lrn}`,
+    //   clerk_email: email,
+    // });
 
     // Get grade level
     const gradeLevelResult = await db
-      .select({ gradeLevel: educationalBackgroundTable.gradeLevel })
-      .from(educationalBackgroundTable)
-      .where(eq(educationalBackgroundTable.applicants_id, applicantId))
+      .select({ gradeLevel: studentTypeTable.gradeToEnroll })
+      .from(studentTypeTable)
+      .where(and(
+        eq(studentTypeTable.applicants_id, applicantId),
+        eq(studentTypeTable.academicYear_id, selectedYear)
+        ))
       .limit(1);
 
     const gradeLevelName = gradeLevelResult[0]?.gradeLevel;
@@ -503,7 +467,12 @@ export async function POST(request: Request) {
     });
 
     // Send Email
-    await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
+    if(studenType !== "Old Student"){
+      await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
+    } else {
+      await sendAdmissionEmailOldStudent(email, firstName, lastName );
+
+    }
 
     return NextResponse.json({
       message: "Student was successfully admitted and email sent successfully.",

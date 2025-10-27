@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -120,10 +120,14 @@ export const UploadSoaModal = () => {
       setSibling(info[0].HasEnrolledSibling ?? "")
     }
 
-
-    if (info[0]?.studentType === "Incoming G7" || info[0]?.studentType === "Old Student" && info[0]?.student_case === "REGULAR") {
+    const prev_discount = await prevDiscounts(lrn);
+    if ((info[0]?.studentType === "Incoming G7") || (info[0]?.studentType === "Old Student" && info[0]?.student_case === "REGULAR" && prev_discount?.escGrant === 9000)) {
       setEscGrantee("Yes");
     }
+    else {
+      setEscGrantee("No");
+    }
+    //prev grantee yes and old student and regular
 
     setLrnLoading(false);
     if (!info || info.length === 0) {
@@ -133,7 +137,6 @@ export const UploadSoaModal = () => {
     const granted = await getGranted();
     setGranted(granted);
 
-    const prev_discount = await prevDiscounts(lrn);
     setPrevGrantee(prev_discount?.escGrant === 9000 ? "Yes" : "No");
     if (info[0]?.studentType === "Old Student") {
       setSibling(prev_discount?.withSibling ?? "");
@@ -157,6 +160,8 @@ export const UploadSoaModal = () => {
 
     setSearching(false);
   };
+
+
 
   const handelAddTuition = async () => {
     setAddTuition(true);
@@ -367,7 +372,7 @@ export const UploadSoaModal = () => {
                   <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                     <div className="grid grid-cols-3 gap-7 ">
                       <section className="flex flex-col">
-                        <span className="font-bold font-merriweather text-sm text-dGreen">Last Year&apos;s discount</span>
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Past Acad discount</span>
                         <input 
                           type="text"
                           readOnly
@@ -377,7 +382,7 @@ export const UploadSoaModal = () => {
                       </section>
 
                       <section className="flex flex-col">
-                        <span className="font-bold font-merriweather text-sm text-dGreen">Grant discount</span>
+                        <span className="font-bold font-merriweather text-sm text-dGreen">Grant Acad discount</span>
                         <select 
                           onChange={(e) => setAcad(e.target.value)} 
                           className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
@@ -389,18 +394,16 @@ export const UploadSoaModal = () => {
                           <option value="With Highest Honor"> With Highest Honor</option>
                         </select>
                       </section>
-
+                      {/* change to acad later on */}
                       <section className="flex flex-col">
                         <span className="font-bold font-merriweather text-sm text-dGreen">Grade Summary</span>
-                          {disInfo?.reportCard && (
-                            <Button
-                              variant="confirmButton"
-                              className="px-4 py-1 rounded-lg"
-                              onClick={handleOpenGrade}
-                            >
-                              View Grade
-                            </Button>
-                          )}
+                          <Button
+                            variant="confirmButton"
+                            className="px-4 py-1 rounded-lg"
+                            onClick={handleOpenGrade}
+                          >
+                            View Grade
+                          </Button>
                       </section>
                     </div>
 

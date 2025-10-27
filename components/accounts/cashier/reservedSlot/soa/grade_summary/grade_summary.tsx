@@ -39,7 +39,7 @@ export const Grade_Summary = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[450px] bg-gray-50 rounded-xl shadow-lg">
+      <DialogContent className="w-[450px]  bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="rounded-t-lg text-xl font-bold text-white bg-dGreen py-3 flex items-center justify-center">
             Grade Summary
@@ -62,7 +62,7 @@ export const Grade_Summary = () => {
                     {"Grade " + (grade.gradeLevelName ?? "-")}
                   </span>
                   <span className="font-semibold text-dGreen">
-                    {Math.round(grade.finalGrade)}
+                    GWA: {Math.round(grade.finalGrade)}
                   </span>
                 </div>
               ))}

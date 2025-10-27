@@ -2,7 +2,7 @@
 
 import { and, asc, desc, eq, ilike, sql, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable,  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -369,6 +369,7 @@ export const getTotalperMonth = async () => {
       .from(downPaymentTable)
       .where(eq(downPaymentTable.academicYear_id, selectedYear))
 
+    console.log("Payment scheme:", paymentScheme);
     return paymentScheme;
   }
 
@@ -407,21 +408,51 @@ export const getEnrolledStudents = async () => {
   if(!selectedYear) return [];
 
   const enrolledStudents = await db
-    .selectDistinctOn([StudentInfoTable.lrn], {
+  .select({
+    id: StudentInfoTable.student_id,
     lrn: StudentInfoTable.lrn,
     studentLastName: StudentInfoTable.studentLastName,
     studentFirstName: StudentInfoTable.studentFirstName,
     studentMiddleName: StudentInfoTable.studentMiddleName,
     studentSuffix: StudentInfoTable.studentSuffix,
-    gradeLevelName: GradeLevelTable.gradeLevelName,
+    gradeLevelName: studentTypeTable.gradeToEnroll,
     paymentMethod: downPaymentTable.paymentMethod
   })
   .from(StudentInfoTable)
   .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-  .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
-  .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
   .leftJoin(downPaymentTable, eq(StudentInfoTable.applicants_id, downPaymentTable.applicants_id))
-  .where(eq(AdmissionStatusTable.academicYear_id, selectedYear));
+  .where(and(
+    eq(AdmissionStatusTable.academicYear_id, selectedYear),
+    eq(studentTypeTable.academicYear_id, selectedYear),
+    eq(downPaymentTable.academicYear_id, selectedYear),
+  ))
+  .orderBy(sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`)
+
+// const enrolledStudents = await db
+//   .selectDistinctOn([StudentInfoTable.student_id], {
+//     id: StudentInfoTable.student_id,
+//     lrn: StudentInfoTable.lrn,
+//     studentLastName: StudentInfoTable.studentLastName,
+//     studentFirstName: StudentInfoTable.studentFirstName,
+//     studentMiddleName: StudentInfoTable.studentMiddleName,
+//     studentSuffix: StudentInfoTable.studentSuffix,
+//     gradeLevelName: studentTypeTable.gradeToEnroll,
+//     paymentMethod: downPaymentTable.paymentMethod,
+//   })
+//   .from(StudentInfoTable)
+//   .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+//   .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
+//   .leftJoin(downPaymentTable, eq(StudentInfoTable.applicants_id, downPaymentTable.applicants_id))
+//   .where(and(
+//     eq(AdmissionStatusTable.academicYear_id, selectedYear),
+//     eq(studentTypeTable.academicYear_id, selectedYear),
+//     eq(downPaymentTable.academicYear_id, selectedYear)
+//   ))
+//   .orderBy(
+//     StudentInfoTable.student_id, // must come first to match DISTINCT ON
+//     sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`
+//   );
 
 console.log("Fetched Enrolled Students:", enrolledStudents);
 return enrolledStudents;
@@ -480,7 +511,10 @@ export const getSOAsStudent = async (lrn: string) => {
       remarks: MonthsInSoaTable.remarks,
     })
     .from(MonthsInSoaTable)
-    .where(eq(MonthsInSoaTable.applicants_id, studentData.student_id ?? 0))
+    .where(and(
+      eq(MonthsInSoaTable.applicants_id, studentData.student_id ?? 0),
+      eq(MonthsInSoaTable.academicYear_id, selectedYear)
+    ))
     .orderBy(MonthsInSoaTable.month_id);
     
 
@@ -662,6 +696,7 @@ export const getItsPayment = async (selectedID: number) => {
       eq(AdmissionStatusTable.academicYear_id, selectedYear),
       eq(reservationFeeTable.academicYear_id, selectedYear),
       eq(applicationStatusTable.academicYear_id, selectedYear),
+      eq(AcademicYearTable.academicYear_id, selectedYear),
     ))
   
     console.log("Fetched Enrollees:", allEnrollees);
@@ -743,7 +778,8 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
       eq(applicationStatusTable.academicYear_id, selectedYear),
 
     ))
-  
+    .orderBy(sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`)
+
     console.log("Fetched Enrollees:", allEnrollees);
     
     return allEnrollees;
