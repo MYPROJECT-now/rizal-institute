@@ -20,7 +20,7 @@ onClick
 
 return(
     <Button 
-        className="flex flex-row justify-start h-[40px]  sm:text-lg text-sm  "
+        className="flex flex-row justify-start h-[40px]  sm:text-lg text-sm   "
         variant="link"
         onClick={onClick}
         asChild

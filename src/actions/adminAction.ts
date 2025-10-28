@@ -374,6 +374,9 @@ export const updateAssigned = async (selectedTeacher: number, unassignedGradeLev
 
 // class schedule
 export const getSchedule = async () => { 
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
   const getSched = await db
   .select({
     schedule_id: ScheduleTable.schedule_id,
@@ -396,6 +399,10 @@ export const getSchedule = async () => {
   .leftJoin(SubjectTable, eq(SubjectTable.subject_id, ScheduleTable.subject_id))
   .leftJoin(staffClerkUserTable, eq(staffClerkUserTable.clerk_uid, ScheduleTable.clerk_uid))
   .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
+  .where(and(
+    eq(ScheduleTable.academicYear_id, selectedYear),
+    
+  ))
   return getSched;
 }
 
@@ -526,6 +533,7 @@ export const checkSchedule = async (
   gradeLevelId: number,
   subjectId: number
 ) => {
+  
   // 1. Check teacher conflict (your existing overlap logic)
   const teacherConflicts = await db
     .select({
@@ -584,77 +592,6 @@ export const checkSchedule = async (
 };
 
 
-  
-// export const  getAvailableAssignments = async (teacherId: number) => {
-//   // Get all assigned grade + subject for teacher
-//   const assigned = await db
-//     .select({
-//       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
-//       subject_id: TeacherAssignmentTable.subject_id,
-//       clerk_uid: TeacherAssignmentTable.clerk_uid,
-//     })
-//     .from(TeacherAssignmentTable)
-//     .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
-
-//   // Get all scheduled grade + subject for teacher
-//   const scheduled = await db
-//     .select({
-//       gradeLevel_id: ScheduleTable.gradeLevel_id,
-//       subject_id: ScheduleTable.subject_id,
-//     })
-//     .from(ScheduleTable)
-//     .where(eq(ScheduleTable.clerk_uid, teacherId));
-
-//   // Filter out assignments that already exist in schedules
-//   const scheduledSet = new Set(
-//     scheduled.map((s) => `${s.gradeLevel_id}-${s.subject_id}`)
-//   );
-
-//   const available = assigned.filter(
-//     (a) => !scheduledSet.has(`${a.gradeLevel_id}-${a.subject_id}`)
-//   );
-
-//   return available;
-// };
-
-// export const getAvailableAssignments = async (teacherId: number) => {
-//   // Get all assigned grade + subject for teacher
-//   const assigned = await db
-//     .select({
-//       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
-//       subject_id: TeacherAssignmentTable.subject_id,
-//       clerk_uid: TeacherAssignmentTable.clerk_uid,
-//     })
-//     .from(TeacherAssignmentTable)
-//     .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
-
-//   if (assigned.length === 0) {
-//     return { available: [], scheduledAll: false, noAssigned: true };
-//   }
-
-//   // Get all scheduled grade + subject for teacher
-//   const scheduled = await db
-//     .select({
-//       gradeLevel_id: ScheduleTable.gradeLevel_id,
-//       subject_id: ScheduleTable.subject_id,
-//     })
-//     .from(ScheduleTable)
-//     .where(eq(ScheduleTable.clerk_uid, teacherId));
-
-//   const scheduledSet = new Set(
-//     scheduled.map((s) => `${s.gradeLevel_id}-${s.subject_id}`)
-//   );
-
-//   const available = assigned.filter(
-//     (a) => !scheduledSet.has(`${a.gradeLevel_id}-${a.subject_id}`)
-//   );
-
-//   return {
-//     available,
-//     scheduledAll: available.length === 0, // means all assignments already scheduled
-//     noAssigned: false,
-//   };
-// };
 
 export const getAvailableAssignments = async (teacherId: number) => {
   // Get all assigned grade + subject for teacher

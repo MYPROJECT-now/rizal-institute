@@ -143,11 +143,11 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
             <thead>
                 <tr className="bg-green-600 text-white">
                     {/* <th className="px-4 py-2">SI Number</th> */}
-                    <th className="px-4 py-2 min-w-[140px] sm:min-w-0">Proof of Payment</th>
                     <th className="px-4 py-2 min-w-[140px] sm:min-w-0">LRN</th>
                     <th className="px-4 py-2 min-w-[140px] sm:min-w-0">Mode of Payment</th>
                     <th className="px-4 py-2 min-w-[130px] sm:min-w-0">Date of Payment</th>
                     <th className="px-4 py-2">Status</th>
+                    <th className="px-4 py-2 min-w-[140px] sm:min-w-0">Proof of Payment</th>
                     <th className="px-4 py-2">Actions</th>
                 </tr>
             </thead>

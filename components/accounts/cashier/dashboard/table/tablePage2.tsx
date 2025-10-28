@@ -18,6 +18,7 @@ const recentPayment: RecentPaymentType[] = await getRecentPayments();
             <th className="border p-2 min-w-[100px] sm:min-w-0">Grade Level</th>
             <th className="border p-2 min-w-[120px] sm:min-w-0">Amount Paid</th>
             <th className="border p-2 min-w-[100px] sm:min-w-0">Date Paid</th>
+            <th className="border p-2 min-w-[100px] sm:min-w-0">Type</th>
           </tr>
         </thead>
         <tbody>
@@ -36,10 +37,11 @@ const recentPayment: RecentPaymentType[] = await getRecentPayments();
                 } hover:bg-green-300 transition duration-200`}
               >
               <td className="border p-2">{item.lrn}</td>
-              <td className="border p-2">{item.studentLastName}, {item.studentFirstName} {item.studentMiddleName} {item.studentSuffix}</td>
+              <td className="border p-2">{item.lastName}, {item.firstName} {item.middleName} {item.suffix}</td>
               <td className="border px-[55px]">Grade 7</td>
               <td className="border p-2">₱{item.amount.toLocaleString()}</td>
               <td className="border p-2">{item.dateOfPayment}</td>
+              <td className="border p-2">{item.type}</td>
             </tr>
           ))
         )}

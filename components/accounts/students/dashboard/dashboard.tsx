@@ -106,7 +106,7 @@
                   <div>
                     <p className="text-sm text-gray-500">Year Level</p>
                     <div className="text-lg font-semibold">
-                    {loading ? <Skeleton className="h-8 w-[100px] rounded-lg" /> : "Grade" + studentInfo?.gradeLevelName    }
+                    {loading ? <Skeleton className="h-8 w-[100px] rounded-lg" /> : "Grade" + " " + studentInfo?.gradeLevelName    }
                     </div>
                   </div>
                 </div>

@@ -54,28 +54,28 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                     <SidebarItem 
                         label="Monthly Payment" 
                         href="/ACCOUNTS/cashier/payment_Approval"
-                        iconSrc="/reserved.png" 
+                        iconSrc="/month.png" 
                         onClick={onClose}
                     />
 
                     <SidebarItem 
                         label="Full Payment" 
                         href="/ACCOUNTS/cashier/full"
-                        iconSrc="/money.png" 
+                        iconSrc="/full.png" 
                         onClick={onClose}
                     />
                     
                     <SidebarItem 
                         label="Applicants" 
                         href="/ACCOUNTS/cashier/applicants"
-                        iconSrc="/enrollment.png"
+                        iconSrc="/board.png"
                         onClick={onClose} 
                     />
 
                     <SidebarItem 
                         label="Reserved" 
                         href="/ACCOUNTS/cashier/reserved"
-                        iconSrc="/lock.png" 
+                        iconSrc="/slot.png" 
                         onClick={onClose}
                     />
 

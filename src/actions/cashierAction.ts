@@ -41,10 +41,23 @@ export const getReservedSlotCount = async (selectedYear: number) => {
   return allReserved.length;
 };
 
-export const getPendingPaymentsCount = async (selectedYear: number) => {
+export const getPendingFullPaymentsCount = async (selectedYear: number) => {
 
   const payments = await db.select({
-    monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
+    fullpayment_id: fullPaymentTable.payment_id,
+  })
+    .from(fullPaymentTable)
+    .where(and(
+      eq(fullPaymentTable.academicYear_id, selectedYear), 
+      eq(fullPaymentTable.paymentStatus, 'Pending'),
+    ))
+  return payments.length;
+};
+
+export const getPendingMonthlyPaymentsCount = async (selectedYear: number) => {
+
+  const payments = await db.select({
+    month_id: MonthlyPayementTable.monthlyPayment_id,
   })
     .from(MonthlyPayementTable)
     .where(and(
@@ -52,8 +65,8 @@ export const getPendingPaymentsCount = async (selectedYear: number) => {
       eq(MonthlyPayementTable.status, 'Pending'),
     ))
   return payments.length;
+  
 };
-
 // graph
 // export const getTotalperMontha = async () => {
 
@@ -374,30 +387,92 @@ export const getTotalperMonth = async () => {
   }
 
 
-  // get recent payment
-  export const getRecentPayments = async () => {
+//   // get recent payment
+//   export const getRecentPayments = async () => {
 
-    const selectedYear = await getSelectedYear();
-    if (!selectedYear) return [];
+//     const selectedYear = await getSelectedYear();
+//     if (!selectedYear) return [];
 
-    const recentPayments = await db.select({
-      monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
-      student_id: MonthlyPayementTable.student_id,
+//     const recentPayments = await db.select({
+//       monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
+//       student_id: MonthlyPayementTable.student_id,
+//       lrn: StudentInfoTable.lrn,
+//       studentLastName: StudentInfoTable.studentLastName,
+//       studentFirstName: StudentInfoTable.studentFirstName,
+//       studentMiddleName: StudentInfoTable.studentMiddleName,
+//       studentSuffix: StudentInfoTable.studentSuffix,
+//       amount: MonthlyPayementTable.amount,
+//       dateOfPayment: MonthlyPayementTable.dateOfPayment,
+//     })
+//       .from(MonthlyPayementTable)
+//       .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
+//       .where(and(
+//         eq(MonthlyPayementTable.academicYear_id, selectedYear),
+//         eq(MonthlyPayementTable.status, "Pending"),
+//       ))
+//       .orderBy(desc(MonthlyPayementTable.dateOfPayment))
+//       .limit(5);
+
+//     return recentPayments;
+// };
+
+export const getRecentPayments = async () => {
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return [];
+
+  // 🟢 Student monthly payments
+  const studentPayments = db
+    .select({
+      id: MonthlyPayementTable.monthlyPayment_id,
+      type: sql<string>`'Monthly Payment'`.as('type'),
+      lastName: StudentInfoTable.studentLastName,
+      firstName: StudentInfoTable.studentFirstName,
+      middleName: StudentInfoTable.studentMiddleName,
+      suffix: StudentInfoTable.studentSuffix,
       lrn: StudentInfoTable.lrn,
-      studentLastName: StudentInfoTable.studentLastName,
-      studentFirstName: StudentInfoTable.studentFirstName,
-      studentMiddleName: StudentInfoTable.studentMiddleName,
-      studentSuffix: StudentInfoTable.studentSuffix,
       amount: MonthlyPayementTable.amount,
       dateOfPayment: MonthlyPayementTable.dateOfPayment,
     })
-      .from(MonthlyPayementTable)
-      .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
-      .where(eq(MonthlyPayementTable.academicYear_id, selectedYear))
-      .orderBy(desc(MonthlyPayementTable.dateOfPayment))
-      .limit(5);
+    .from(MonthlyPayementTable)
+    .leftJoin(
+      StudentInfoTable, 
+      eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id)
+    )
+    .where(and(
+      eq(MonthlyPayementTable.academicYear_id, selectedYear),
+      eq(MonthlyPayementTable.status, "Pending")
+    ));
 
-    return recentPayments;
+  // 🟢 Reservation payments
+  const reservationPayments = db
+    .select({
+      id: reservationFeeTable.reservation_id,
+      type: sql<string>`'Reservation Fee'`.as('type'),
+      lastName: applicantsInformationTable.applicantsLastName,
+      firstName: applicantsInformationTable.applicantsFirstName,
+      middleName: applicantsInformationTable.applicantsMiddleName,
+      suffix: applicantsInformationTable.applicantsSuffix,
+      lrn: applicantsInformationTable.lrn,
+      amount: reservationFeeTable.reservationAmount,
+      dateOfPayment: reservationFeeTable.dateOfPayment,
+    })
+    .from(reservationFeeTable)
+    .leftJoin(applicantsInformationTable, eq(reservationFeeTable.applicants_id, applicantsInformationTable.applicants_id))
+    .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
+    .where(and(
+      eq(reservationFeeTable.academicYear_id, selectedYear),
+      eq(applicationStatusTable.reservationPaymentStatus, "Pending")
+      ));
+
+  // 🟢 Union both and order
+  const recentPayments = await db
+    .select()
+    .from(
+      studentPayments.unionAll(reservationPayments).as('combined')
+    )
+    .limit(5);
+
+  return recentPayments;
 };
 
 
@@ -818,7 +893,25 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     return { message: "Grant Added" };
   }
 
+  export const checkSoa = async (lrn: string) => {
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+    
+      const checkSoa = await db
+    .select({
+      temp_month_id: TempMonthsInSoaTable.temp_month_id
+    })
+    .from(TempMonthsInSoaTable)
+    .leftJoin(applicantsInformationTable, eq(TempMonthsInSoaTable.applicants_id, applicantsInformationTable.applicants_id))
+    .where(and(
+      eq(TempMonthsInSoaTable.academicYear_id, selectedYear),
+      eq(applicantsInformationTable.lrn, lrn),
+    ))
 
+    console.log("Fetched Enrollees:", checkSoa);    
+    return checkSoa;
+  }
+  
   export const getInfo = async (lrn: string) => {
     await requireStaffAuth(["cashier"]); // gatekeeper
 
@@ -831,6 +924,8 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     .where(eq(applicantsInformationTable.lrn, lrn));
 
     if(checkLRN.length === 0) return [];
+
+
 
     const info = await db
     .select({
@@ -1279,6 +1374,8 @@ export const prevDiscounts = async (lrn: string) => {
 
 // get who paid full payment upon payment method selection
   export const getFullPayments = async () => {
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
 
     const allEnrollees = await db.select({
       id: applicantsInformationTable.applicants_id,
@@ -1300,7 +1397,12 @@ export const prevDiscounts = async (lrn: string) => {
     .leftJoin(fullPaymentTable, eq(applicantsInformationTable.applicants_id, fullPaymentTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
-    .where(eq(downPaymentTable.paymentMethod, "full_payment"))
+    .where(and(
+      eq(downPaymentTable.paymentMethod, "full_payment"),
+      eq(fullPaymentTable.academicYear_id, selectedYear),
+      eq(AdmissionStatusTable.academicYear_id, selectedYear),
+      eq(downPaymentTable.academicYear_id, selectedYear),
+    ))
 
     console.log("Fetched Enrollees:", allEnrollees);
     

@@ -79,47 +79,47 @@ export const PaymentScheme = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="relative flex justify-center items-center  ">
-        {loading ? (
-          <div className="flex items-center justify-center h-40">
-            <Loader2 className="h-8 w-8 animate-spin text-green-700" />
-          </div>
-        ) : (
-          <>
-            {/* ✅ Centered Pie Chart */}
-            <PieChart width={240} height={200} >
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={75}
-                label
-                
-              >
-                {chartData.map((entry, index) => (
-                  <Cell key={index} fill={entry.color} />
-                ))}
-              </Pie>
-              <RechartsTooltip content={<CustomTooltip />} />
-            </PieChart>
-
-            {/* ✅ Floating legend */}
-            <div className="absolute top-0 right-6 bg-gray-300/50  rounded-md p-2 shadow-sm text-xs">
-              {chartData.map((item, index) => (
-                <div key={index} className="flex items-center gap-2 mb-1">
-                  <div
-                    className="w-3 h-3 rounded-sm "
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span className="text-gray-600 font-medium">
-                    {item.name}
-                  </span>
-                </div>
+      {loading ? (
+        <div className="flex items-center justify-center h-40">
+          <Loader2 className="h-8 w-8 animate-spin text-green-700" />
+        </div>
+      ) : chartData.every((item) => item.value === 0) ? (
+        <div className="flex items-center justify-center h-40 text-gray-500 font-medium">
+          No Data
+        </div>
+      ) : (
+        <>
+          <PieChart width={240} height={180}>
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={75}
+              label
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={index} fill={entry.color} />
               ))}
-            </div>
-          </>
-        )}
+            </Pie>
+            <RechartsTooltip content={<CustomTooltip />} />
+          </PieChart>
+
+          <div className="absolute top-0 right-6 bg-gray-300/50 rounded-md p-2 shadow-sm text-xs">
+            {chartData.map((item, index) => (
+              <div key={index} className="flex items-center gap-2 mb-1">
+                <div
+                  className="w-3 h-3 rounded-sm"
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-gray-600 font-medium">{item.name}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       </CardContent>
     </Card>
   );

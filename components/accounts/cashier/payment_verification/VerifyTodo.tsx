@@ -28,6 +28,10 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => 
     return (
         <tr className="border-b">
             {/* <td className="px-4 py-2">{VerifyTodo.SInumber}</td> */}
+            <td className="px-4 py-2">{VerifyTodo.lrn}</td>
+            <td className="px-4 py-2">{VerifyTodo.modeOfPayment}</td>
+            <td className="px-4 py-2">{VerifyTodo.dateOfPayment}</td>
+            <td className={VerifyTodo.status === "Approved" ? "px-4 py-2 text-green-600 font-semibold" : VerifyTodo.status === "Pending " ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-yellow-600 font-semibold"}>{VerifyTodo.status}</td>
             <td className="px-4 py-2">
                 <Button 
                     className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
@@ -37,10 +41,6 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => 
                     View
                 </Button> 
             </td>
-            <td className="px-4 py-2">{VerifyTodo.lrn}</td>
-            <td className="px-4 py-2">{VerifyTodo.modeOfPayment}</td>
-            <td className="px-4 py-2">{VerifyTodo.dateOfPayment}</td>
-            <td className={VerifyTodo.status === "Approved" ? "px-4 py-2 text-green-600 font-semibold" : VerifyTodo.status === "Pending " ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-yellow-600 font-semibold"}>{VerifyTodo.status}</td>
             <td className="px-4 py-2 space-x-2">
                 <Button
                     variant="acceptButton"

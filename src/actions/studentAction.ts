@@ -42,7 +42,7 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
       lrn: StudentInfoTable.lrn,
       student_id: StudentInfoTable.applicants_id,
       admissionStatus: AdmissionStatusTable.admissionStatus,
-      gradeLevelName: GradeLevelTable.gradeLevelName,
+      gradeLevelName: studentTypeTable.gradeToEnroll,
       academicYear: AcademicYearTable.academicYear,
       studentFirstName: StudentInfoTable.studentFirstName,
       studentMiddleName: StudentInfoTable.studentMiddleName,
@@ -53,12 +53,16 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
     })
     .from(StudentInfoTable)
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-    .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
-    .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
+    .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
     .leftJoin(downPaymentTable, eq(downPaymentTable.applicants_id, StudentInfoTable.applicants_id))
     .leftJoin(applicantsInformationTable, eq(applicantsInformationTable.applicants_id, StudentInfoTable.applicants_id))
-    .where(eq(StudentInfoTable.applicants_id, applicantId));
+    .where(and(
+      eq(StudentInfoTable.applicants_id, applicantId),
+      eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear),
+      eq(downPaymentTable.academicYear_id, selectedAcademicYear),
+      eq(studentTypeTable.academicYear_id, selectedAcademicYear)
+    ))
 
     
 
@@ -151,13 +155,24 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
 
 //     return studentInfo[0];
 // }
-
 export const getStudentInfo = async () => {
+  console.log("🟡 Starting getStudentInfo...");
+
   const applicantId = await getApplicantID();
-  if (!applicantId) return null;
+  console.log("✅ Applicant ID:", applicantId);
+  if (!applicantId) {
+    console.warn("❌ No applicant ID found.");
+    return null;
+  }
 
   const selectedAcademicYear = await getSelectedAcademicYear();
-  if (!selectedAcademicYear) return null;
+  console.log("✅ Selected Academic Year:", selectedAcademicYear);
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected.");
+    return null;
+  }
+
+  console.log("🔍 Fetching student info for applicant:", applicantId, "and year:", selectedAcademicYear);
 
   const studentInfo = await db
     .select({
@@ -177,23 +192,45 @@ export const getStudentInfo = async () => {
     .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
     .leftJoin(SectionTable, eq(SectionTable.section_id, StudentPerGradeAndSection.section_id))
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
+    .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
     .leftJoin(studentTypeTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
     .leftJoin(ScheduleTable, eq(ScheduleTable.section_id, SectionTable.section_id))
     .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
-    .where(eq(StudentInfoTable.applicants_id, applicantId))
+    .where(
+      and(
+        eq(StudentInfoTable.applicants_id, applicantId),
+        eq(studentTypeTable.academicYear_id, selectedAcademicYear),
+        eq(StudentPerGradeAndSection.academicYear_id, selectedAcademicYear),
+        eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear),
+        eq(ScheduleTable.academicYear_id, selectedAcademicYear)
+      )
+    )
     .limit(1);
 
-  if (!studentInfo[0]) return null;
+  console.log("📦 Raw studentInfo query result:", studentInfo);
 
-  // Fetch subjects for this section (or by grade if you prefer)
+  if (!studentInfo || studentInfo.length === 0) {
+    console.warn("⚠️ No student info found for this academic year.");
+    return null;
+  }
+
+  console.log("✅ Found student info:", studentInfo[0]);
+
+  console.log("🔍 Fetching subjects for student:", applicantId, "year:", selectedAcademicYear);
   const subjects = await db
     .select({
       subjectName: SubjectTable.subjectName,
     })
     .from(SubjectTable)
-    .leftJoin(StudentGradesTable, eq(StudentGradesTable.subject_id, SubjectTable.subject_id)) // assuming you have this mapping table
-    .where(eq(StudentGradesTable.student_id, applicantId));
+    .leftJoin(StudentGradesTable, eq(StudentGradesTable.subject_id, SubjectTable.subject_id))
+    .where(
+      and(
+        eq(StudentGradesTable.student_id, applicantId),
+        eq(StudentGradesTable.academicYear_id, selectedAcademicYear)
+      )
+    );
+
+  console.log("📚 Subjects found:", subjects);
 
   return {
     ...studentInfo[0],
@@ -226,8 +263,10 @@ export const getStudentInfo = async () => {
       status: MonthlyPayementTable.status,
     })
     .from(MonthlyPayementTable)
-    .where(and (eq(MonthlyPayementTable.student_id, applicantId), eq(MonthlyPayementTable.academicYear_id, selectedAcademicYear))
-)
+    .where(and (
+      eq(MonthlyPayementTable.student_id, applicantId), 
+      eq(MonthlyPayementTable.academicYear_id, selectedAcademicYear)
+    ))
 
   console.log(paymentHistory);
 

@@ -143,14 +143,14 @@ const updateSOA = async () => {
     { month_id: 288, siNumber: "151128", dateOfPayment: "2023-04-06", amountPaid: 1575 },
 
     // student 17
-    { month_id: 289, siNumber: "151129", dateOfPayment: "2022-09-06", amountPaid: 938 },
-    { month_id: 290, siNumber: "151130", dateOfPayment: "2022-10-06", amountPaid: 938 },
-    { month_id: 291, siNumber: "151131", dateOfPayment: "2022-11-06", amountPaid: 938 },
-    { month_id: 292, siNumber: "151132", dateOfPayment: "2022-12-06", amountPaid: 938 },
-    { month_id: 293, siNumber: "151133", dateOfPayment: "2023-01-06", amountPaid: 937 },
-    { month_id: 294, siNumber: "151134", dateOfPayment: "2023-02-06", amountPaid: 937 },
-    { month_id: 295, siNumber: "151135", dateOfPayment: "2023-03-06", amountPaid: 937 },
-    { month_id: 296, siNumber: "151136", dateOfPayment: "2023-04-06", amountPaid: 937 },
+    { month_id: 289, siNumber: "151129", dateOfPayment: "2022-09-06", amountPaid: 1000 },
+    { month_id: 290, siNumber: "151130", dateOfPayment: "2022-10-06", amountPaid: 1000 },
+    { month_id: 291, siNumber: "151131", dateOfPayment: "2022-11-06", amountPaid: 1000 },
+    { month_id: 292, siNumber: "151132", dateOfPayment: "2022-12-06", amountPaid: 1000 },
+    { month_id: 293, siNumber: "151133", dateOfPayment: "2023-01-06", amountPaid: 1000 },
+    { month_id: 294, siNumber: "151134", dateOfPayment: "2023-02-06", amountPaid: 1000 },
+    { month_id: 295, siNumber: "151135", dateOfPayment: "2023-03-06", amountPaid: 1000 },
+    { month_id: 296, siNumber: "151136", dateOfPayment: "2023-04-06", amountPaid: 1000 },
 
     // student 18
     { month_id: 297, siNumber: "151137", dateOfPayment: "2022-09-06", amountPaid: 1000 },
@@ -167,8 +167,8 @@ const updateSOA = async () => {
     { month_id: 306, siNumber: "151146", dateOfPayment: "2022-10-06", amountPaid: 469 },
     { month_id: 307, siNumber: "151147", dateOfPayment: "2022-11-06", amountPaid: 469 },
     { month_id: 308, siNumber: "151148", dateOfPayment: "2022-12-06", amountPaid: 469 },
-    { month_id: 309, siNumber: "151149", dateOfPayment: "2023-01-06", amountPaid: 468 },
-    { month_id: 310, siNumber: "151150", dateOfPayment: "2023-02-06", amountPaid: 468 },
+    { month_id: 309, siNumber: "151149", dateOfPayment: "2023-01-06", amountPaid: 469 },
+    { month_id: 310, siNumber: "151150", dateOfPayment: "2023-02-06", amountPaid: 469 },
     { month_id: 311, siNumber: "151151", dateOfPayment: "2023-03-06", amountPaid: 468 },
     { month_id: 312, siNumber: "151152", dateOfPayment: "2023-04-06", amountPaid: 468 },
 

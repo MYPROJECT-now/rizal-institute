@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useShowDocumentModal, useShowGradeModal, useUploadSoaModal } from "@/src/store/CASHIER/reserved";
 import { Button } from "@/components/ui/button";
-import { addBreakDown, addGrant, getESC, getGranted, getInfo, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
+import { addBreakDown, addGrant, checkSoa, getESC, getGranted, getInfo, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Document_Review } from "./document/document_review";
@@ -44,15 +44,6 @@ export const UploadSoaModal = () => {
   const [lrnLoading, setLrnLoading] = useState(false);
   const [page, setPage] = useState(1);
 
-  // const [fullName, setFullName] = useState("");
-  // const [studentType, setStudentType] = useState("");
-  // const [gradeLevel, setGradeLevel] = useState("");
-
-  // const [dateOfPayment, setDateOfPayment] = useState("");
-  // const [amount, setAmount] = useState("");
-
-  // const [AttainmentUponGraduation, setAttainmentUponGraduation] = useState("");
-  // const [reportCard, setReportCard] = useState("");
 
   const [tuition, setTuition] = useState("");
   const [miscellaneous, setMiscellaneous] = useState("");
@@ -84,10 +75,29 @@ export const UploadSoaModal = () => {
     close();
   }
 
-  const handleClose = () => {
-    setLrn("");
-    close();
-  }
+const handleClose = () => {
+  // reset input fields
+  setLrn("");
+  setDisInfo(null);
+  setGrant("");
+  setGranted(0);
+  setAcad("");
+  setSibling("");
+  setOtherDiscount("");
+  setOtherFees("");
+  setEscGrantee("");
+  setSiblingSearch("");
+  setSearchResults([]);
+  setHasSearched(false);
+  setPage(1);
+  setPrevAcadDiscount("");
+  setPrevGrantee("");
+  setPrevSiblingsDiscount("");
+
+  // finally close the modal
+  close();
+};
+
   const fetchESC = async () => {
     const esc = await getESC();
     setEsc(esc);
@@ -107,10 +117,22 @@ export const UploadSoaModal = () => {
     await fetchESC(); 
     setGrandLoading(false);
   };
+
+
+
   const handleGetInfoByLrn = async () => {
     setLrnLoading(true);
     if (!/^\d{12}$/.test(lrn)) {
-      return toast.error("Invalid LRN. Please enter a valid 12-digit LRN.");
+      setLrnLoading(false);
+      toast.error("Invalid LRN. Please enter a valid 12-digit LRN.");
+    return 
+    }
+
+    const check = await checkSoa(lrn);
+    if (check) {
+      setLrnLoading(false);
+      toast.error("This student already has been issued a tuition fee.");
+    return
     }
 
     const info = await getInfo(lrn);
