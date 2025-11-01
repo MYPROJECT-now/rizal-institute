@@ -7,7 +7,8 @@ import { StudentsPaymentReceipt } from "./payment_receipt/cashiers_receipt";
 import { ApprovedMonth, declinePayment } from "@/src/actions/cashierAction";
 import { toast } from "sonner";
 import { StudentsPaymentReview } from "./payment_receipt/student_payment";
-// import { useAddPaymentModal } from "@/src/store/CASHIER/montly";
+import { useCashPaymentModal } from "@/src/store/CASHIER/montly";
+import { CashPayment } from "./cashPayment/cash_payment";
 
 interface Props {
   VerifyTodos: VerifyPayment[];
@@ -15,23 +16,23 @@ interface Props {
 
 const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     const [verifyTodos, setVerifyTodos] = useState<VerifyPayment[]>(VerifyTodos);
-    const [filterMop, setFilterMop] = useState("");
     const [filterDate, setFilterDate] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
     const [filterLRN, setFilterLRN] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [loadingId, setLoadingId] = useState<number | null>(null);
 
+    const { open } = useCashPaymentModal();
+
     // const { open } = useAddPaymentModal();
 
     const itemsPerPage = 5;
 
     const filteredData = verifyTodos.filter((payment) => {
-        const MatchMop = (payment.modeOfPayment ?? "").includes(filterMop);
         const MatchDate = (payment.dateOfPayment ?? "").includes(filterDate);
         const MatchStatus = (payment.status ?? "").includes(filterStatus);
         const MatchLrn = (payment.lrn ?? "").includes(filterLRN);
-    return  MatchMop && MatchDate && MatchStatus && MatchLrn;
+    return   MatchDate && MatchStatus && MatchLrn;
     });
 
     // Pagination
@@ -75,6 +76,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
     <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
     <StudentsPaymentReceipt />
     <StudentsPaymentReview />
+    <CashPayment/>
 
         <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 mb-4">
         <label className="text-green-900 font-bold text-sm  sm:text-lg">Filter By:</label>
@@ -87,16 +89,7 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         onChange={(e) => setFilterLRN(e.target.value)}
         />
         
-        <select
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[180px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-        value={filterMop}
-        onChange={(e) => setFilterMop(e.target.value)}
-        >
-            <option value="">Mode of Payment</option>
-            <option value="GCash">GCash</option>
-            <option value="Bank Transfer">Bank Transfer</option>
-            <option value="OTC">OTC</option>
-        </select>
+
 
         <input
         type="date"
@@ -118,7 +111,6 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
 
         <Button
             onClick={() => {
-                setFilterMop("");
                 setFilterDate("");
                 setFilterStatus("");
                 setFilterLRN("");
@@ -129,13 +121,13 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
             Clear Filter
         </Button>
 
-        {/* <Button
+        <Button
             className=" rounded-lg px-4  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "
             variant={"confirmButton"}
             onClick={open}
         >
-            Add Payment
-        </Button> */}
+            Cash Payment
+        </Button>
     </section>
 
     <section className=" overflow-x-auto min-w-[100px] shadow-lg rounded-lg border border-green-300 bg-green-50">

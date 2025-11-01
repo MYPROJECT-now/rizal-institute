@@ -1,6 +1,6 @@
   "use server"
 
-  import { desc, eq, or, and, inArray,  } from "drizzle-orm";
+  import { desc, eq, or, and,  } from "drizzle-orm";
   import { db } from "../db/drizzle";
   import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
@@ -867,20 +867,24 @@ export const getAdmittedStudents = async () => {
   if(!selectedYear) return [];
 
   const admittedStudents = await db
-  .selectDistinctOn([StudentInfoTable.lrn],{
+  .select({
     lrn: StudentInfoTable.lrn,
     lastName: StudentInfoTable.studentLastName,
     firstName: StudentInfoTable.studentFirstName,
     middleName: StudentInfoTable.studentMiddleName,
     suffix: StudentInfoTable.studentSuffix,
-    gradeLevelName: GradeLevelTable.gradeLevelName,
+    gradeLevelName: studentTypeTable.gradeToEnroll,
   })
   .from(StudentInfoTable)
   .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-  .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
-  .leftJoin(GradeLevelTable, eq(StudentGradesTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-  .where(and(eq(AdmissionStatusTable.academicYear_id, selectedYear), eq(AdmissionStatusTable.admissionStatus, "Enrolled")));
-
+  .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
+  .where(and(
+    eq(AdmissionStatusTable.academicYear_id, selectedYear), 
+    eq(studentTypeTable.academicYear_id, selectedYear),
+    eq(AdmissionStatusTable.admissionStatus, "Enrolled")
+  ))
+  .orderBy(sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`)
+  
   if (admittedStudents.length === 0) {
     console.log("❌ No admitted students found");
   }
@@ -996,15 +1000,12 @@ export const getAmountPaid = async () => {
       `,
     })
     .from(StudentInfoTable)
-    .leftJoin(
-      MonthsInSoaTable,
-      eq(StudentInfoTable.applicants_id, MonthsInSoaTable.applicants_id)
-    )
-    .leftJoin(
-      AdmissionStatusTable,
-      eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id)
-    )
-    .where(eq(AdmissionStatusTable.academicYear_id, selectedYear))
+    .leftJoin(MonthsInSoaTable, eq(StudentInfoTable.applicants_id, MonthsInSoaTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .where(and(
+      eq(AdmissionStatusTable.academicYear_id, selectedYear),
+      eq(MonthsInSoaTable.academicYear_id, selectedYear)
+    ))
     .groupBy(
       StudentInfoTable.student_id,
       StudentInfoTable.lrn,
@@ -1033,9 +1034,9 @@ export const getRecentGrantees = async () => {
   .leftJoin(StudentInfoTable, eq(ESCGranteeTable.applicants_id, StudentInfoTable.applicants_id))
   .where(and(
     eq(ESCGranteeTable.academicYear_id, selectedYear),
-    inArray(ESCGranteeTable.studentType, ["Incoming G7", "Transferee"])
-
+    eq(ESCGranteeTable.studentType, "Incoming G7"),
   ))
+  
 
   return grantees;
 }

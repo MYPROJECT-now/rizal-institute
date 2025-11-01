@@ -100,7 +100,7 @@ const insertMockApplicants = async () => {
     birthCert: "", hasBirth: true,
     reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true,
-    mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample1.jpg", reservationAmount: 500,
+    mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With High Honor", hasEnrolledSibling: "No", siblingName: ""
   },
   {
@@ -111,7 +111,7 @@ const insertMockApplicants = async () => {
     hasBirth: true, birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample.jpg",
     hasReportCard: true, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759929394/samplecard.webp",
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true,
-    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample2.jpg", reservationAmount: 500,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Marco Balagtas"
   },
   {
@@ -122,7 +122,7 @@ const insertMockApplicants = async () => {
     birthCert: "", hasBirth: true,
     reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true,
-    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample3.jpg", reservationAmount: 500,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
    },
     // Grade 9 (5)
@@ -155,7 +155,7 @@ const insertMockApplicants = async () => {
     gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Private", prevSchool: "St. John Academy", schoolAddress: "Calamba",
     birthCert: "", hasBirth: true, reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample5.jpg", reservationAmount: 500,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Ella Francisco"
   },
   {
@@ -165,7 +165,7 @@ const insertMockApplicants = async () => {
     gradeLevel: "9", studentType: "Transferee", schoolYear: "2024-2025", schoolType: "Public", prevSchool: "Calamba Elementary", schoolAddress: "Calamba",
     birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample6.jpg", hasBirth: true,
     reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,  goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-    mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample6.jpg", reservationAmount: 500,
+    mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
   },
   {
@@ -176,7 +176,7 @@ const insertMockApplicants = async () => {
     birthCert: "", hasBirth: true,
     reportCard: "", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample7.jpg", reservationAmount: 500,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
   },
 
@@ -211,7 +211,7 @@ const insertMockApplicants = async () => {
     birthCert: "", hasBirth: true,
     reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-    mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample10.jpg", reservationAmount: 500,
+    mop: "Bank Transfer", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Honor", hasEnrolledSibling: "Yes", siblingName: "Kai Castro"
   },
   {
@@ -222,7 +222,7 @@ const insertMockApplicants = async () => {
     hasBirth: true, birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/sample11.jpg",
     reportCard: "", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample11.jpg", reservationAmount: 500,
+    mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
   },
   {
@@ -233,7 +233,7 @@ const insertMockApplicants = async () => {
     birthCert: "", hasBirth: true,
     reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
     goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-    mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample12.jpg", reservationAmount: 500,
+    mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
     attainmentUponGraduation: "With Highest Honor", hasEnrolledSibling: "No", siblingName: ""
   }
   ];

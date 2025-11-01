@@ -37,7 +37,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
       <td className=" flex flex-row gap-1 items-center justify-center py-2 px-2">
         <Button
           onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "", applicants.payment_amount ?? 0)}
-          disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || applicants.isActive === false}
+          disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || loading || applicants.isActive === false}
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           variant={"acceptButton"}
         >
@@ -48,7 +48,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
         <RemarksModal onDecline={onDecline} />
         <Button
           onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
-          disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || applicants.isActive === false}
+          disabled={applicants.payment_status === "Approved" || applicants.payment_status === "Declined" || loading || applicants.isActive === false}
           variant={"rejectButton"}
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
           

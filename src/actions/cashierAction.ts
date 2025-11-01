@@ -263,6 +263,7 @@ export const getTotalperMonth = async () => {
     })
     .from(StudentGradesTable)
     .leftJoin(StudentInfoTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+    .where(eq(StudentGradesTable.academicYear_id, selectedYear))
     .groupBy(StudentGradesTable.student_id, StudentGradesTable.gradeLevel_id, StudentInfoTable.applicants_id)
     .as("gradeLevels");
 
@@ -636,6 +637,8 @@ export const updateSoa = async ( month_id: number, month: string, monthlyDue: nu
 
 //monthly fees to verify
 export const paymentToVerify = async () => {
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
 
   const paymentToVerify = await db.select({
     monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
@@ -653,6 +656,11 @@ export const paymentToVerify = async () => {
   .leftJoin(MonthsInSoaTable, eq(MonthlyPayementTable.month_id, MonthsInSoaTable.month_id))
   .leftJoin(AcademicYearTable, eq(MonthlyPayementTable.academicYear_id, AcademicYearTable.academicYear_id))
   .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
+  .where(and(
+    eq(MonthlyPayementTable.academicYear_id, selectedYear),
+    eq(MonthsInSoaTable.academicYear_id, selectedYear),
+
+  ));
 
   return paymentToVerify;
 }
@@ -696,6 +704,9 @@ export const declinePayment = async (monthlyPaymentId: number, lrn: string) => {
     }),
 
   ])
+
+
+
   // await db.update(MonthlyPayementTable)
   //   .set({ status: 'Declined' })
   //   .where(eq(MonthlyPayementTable.monthlyPayment_id, monthlyPaymentId));
@@ -712,6 +723,112 @@ export const declinePayment = async (monthlyPaymentId: number, lrn: string) => {
   //   }) ;
 };
 
+export const getBalanceForCash = async (lrn: string) => {
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return null;
+
+  const soaRecords = await db
+    .select({
+      month_id: MonthsInSoaTable.month_id,
+      month: MonthsInSoaTable.month,
+      monthlyDue: MonthsInSoaTable.monthlyDue,
+      amountPaid: MonthsInSoaTable.amountPaid,
+      student_id: StudentInfoTable.student_id,
+    })
+    .from(MonthsInSoaTable)
+    .leftJoin(
+      StudentInfoTable,
+      eq(MonthsInSoaTable.applicants_id, StudentInfoTable.applicants_id)
+    )
+    .where(
+      and(
+        eq(StudentInfoTable.lrn, lrn),
+        eq(MonthsInSoaTable.academicYear_id, selectedYear)
+      )
+    )
+    .orderBy(MonthsInSoaTable.month_id);
+
+  const currentMonth = new Date().toLocaleString("default", { month: "long" });
+  const currentMonthRow = soaRecords.find((row) => (row.month || "").toLowerCase().includes(currentMonth.toLowerCase()));
+
+  let dueThisMonth = 0;
+
+  if (currentMonthRow) {
+    const currentMonthId = currentMonthRow.month_id;
+
+    const dueThisMonthRecords = soaRecords.filter((row) => row.month_id <= currentMonthId);
+
+    const totalMonthlyDue = dueThisMonthRecords.reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
+    const totalAmountPaid = dueThisMonthRecords.reduce( (sum, row) => sum + (row.amountPaid || 0), 0);
+    dueThisMonth = totalMonthlyDue - totalAmountPaid;
+
+    return {
+      dueThisMonth: Math.max(0, dueThisMonth),
+      student_id: currentMonthRow.student_id ?? 0,
+      month_id: currentMonthId, // ✅ now this is the current month’s ID
+    };
+  }
+
+  // If no current month found
+  return {
+    dueThisMonth: 0,
+    student_id: soaRecords.length > 0 ? soaRecords[0].student_id : 0,
+    month_id: 0,
+  };
+};
+
+
+export const addCashPayment = async (amount: number, lrn: string, month_id: number, student_id: number) => {
+  await requireStaffAuth(["cashier"]);
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return null;
+
+  const { userId } = await auth();
+  if (!userId) return null;
+
+  const clerkRecord = await db
+    .select({
+      clerk_username: staffClerkUserTable.clerk_username,
+      userType: staffClerkUserTable.userType,
+      selectedYear: staffClerkUserTable.selected_AcademicYear_id, 
+    })
+    .from(staffClerkUserTable)
+    .where(eq(staffClerkUserTable.clerkId, userId))
+    .limit(1);
+
+  const clerk_username = clerkRecord[0].clerk_username;
+  const userType = clerkRecord[0].userType;
+
+  const SINumber = await generateSINumber();
+
+  await db
+  .insert(MonthlyPayementTable)
+  .values({
+    student_id: student_id,
+    month_id: month_id,
+    academicYear_id: selectedYear,
+
+    dateOfPayment: new Date().toISOString(),
+    amount: amount,
+    proofOfPayment: "sdasda",
+    modeOfPayment: "OTC",
+    dateOfVerification: new Date().toISOString(),
+    SINumber: SINumber,
+    status: "Approved"
+  });
+
+  await db
+  .insert(auditTrailsTable)
+  .values({
+    username: clerk_username,
+    usertype: userType,
+    actionTaken: "Cash Payment Verified",
+    dateOfAction: new Date().toISOString(),
+    actionTakenFor: lrn,
+    academicYear_id: selectedYear,
+  });
+
+}
 //get payments receipts
 export const getItsPayment = async (selectedID: number) => {
   await requireStaffAuth(["cashier"]); // gatekeeper
@@ -912,20 +1029,19 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     return checkSoa;
   }
   
+  export const isLrnExist = async (lrn: string) => {
+    const checkLRN = await db
+      .select()
+      .from(applicantsInformationTable)
+      .where(eq(applicantsInformationTable.lrn, lrn));
+
+    return checkLRN;
+  }
   export const getInfo = async (lrn: string) => {
     await requireStaffAuth(["cashier"]); // gatekeeper
 
     const selectedYear = await getSelectedYear();
     if(!selectedYear) return [];
-
-    const checkLRN = await db
-    .select()
-    .from(applicantsInformationTable)
-    .where(eq(applicantsInformationTable.lrn, lrn));
-
-    if(checkLRN.length === 0) return [];
-
-
 
     const info = await db
     .select({

@@ -514,16 +514,16 @@ export const AddSchedule = async (
 
 //   return conflicts;
 // };
-export const getAvailableRooms = async () => {
-  const rooms = await db
-    .select({
-    roomName: RoomTable.roomName,
-    room_id: RoomTable.room_id
-  })
-  .from(RoomTable)
+// export const getAvailableRooms = async () => {
+//   const rooms = await db
+//     .select({
+//     roomName: RoomTable.roomName,
+//     room_id: RoomTable.room_id
+//   })
+//   .from(RoomTable)
 
-  return rooms;
-}
+//   return rooms;
+// }
 
 export const checkSchedule = async (
   teacherId: number,
@@ -533,7 +533,10 @@ export const checkSchedule = async (
   gradeLevelId: number,
   subjectId: number
 ) => {
-  
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return { type: "noYear", rows: [] };
+
+
   // 1. Check teacher conflict (your existing overlap logic)
   const teacherConflicts = await db
     .select({
@@ -547,6 +550,7 @@ export const checkSchedule = async (
       and(
         eq(ScheduleTable.clerk_uid, teacherId),
         eq(ScheduleTable.dayOfWeek, day),
+        eq(ScheduleTable.academicYear_id, selectedYear),
         or(
           and(
             lte(ScheduleTable.startTime, startTime),
@@ -580,7 +584,8 @@ export const checkSchedule = async (
       and(
         eq(ScheduleTable.gradeLevel_id, gradeLevelId),
         eq(ScheduleTable.subject_id, subjectId),
-        eq(ScheduleTable.dayOfWeek, day)
+        eq(ScheduleTable.dayOfWeek, day),
+        eq(ScheduleTable.academicYear_id, selectedYear)
       )
     );
 
@@ -595,6 +600,11 @@ export const checkSchedule = async (
 
 export const getAvailableAssignments = async (teacherId: number) => {
   // Get all assigned grade + subject for teacher
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) {
+    return { available: [], scheduledAll: false, noAssigned: true };
+  }
+
   const assigned = await db
     .select({
       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
@@ -602,7 +612,10 @@ export const getAvailableAssignments = async (teacherId: number) => {
       clerk_uid: TeacherAssignmentTable.clerk_uid,
     })
     .from(TeacherAssignmentTable)
-    .where(eq(TeacherAssignmentTable.clerk_uid, teacherId));
+    .where(and(
+      eq(TeacherAssignmentTable.clerk_uid, teacherId),
+      eq(TeacherAssignmentTable.academicYear_id, selectedYear)
+    ));
 
   if (assigned.length === 0) {
     return { available: [], scheduledAll: false, noAssigned: true };
@@ -616,7 +629,10 @@ export const getAvailableAssignments = async (teacherId: number) => {
       day: ScheduleTable.dayOfWeek,
     })
     .from(ScheduleTable)
-    .where(eq(ScheduleTable.clerk_uid, teacherId));
+    .where(and(
+      eq(ScheduleTable.clerk_uid, teacherId),
+      eq(ScheduleTable.academicYear_id, selectedYear)
+    ));
 
   // Build a map of scheduled days
   const scheduleMap = new Map<string, Set<string>>();
@@ -658,19 +674,30 @@ export const getSubjects = async () => {
 
 
 export const gradeAndSection = async () => {
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) { return [] }
+
   const gradeAndSection = await db
   .select({
     gradeLevel_id: SectionTable.gradeLevel_id,
     gradeLevelName: GradeLevelTable.gradeLevelName,
     section_id: SectionTable.section_id,
-    sectionName: SectionTable.sectionName
+    sectionName: SectionTable.sectionName,
+    room_id: SectionTable.room_id,
+    roomName: RoomTable.roomName
   })
   .from(SectionTable)
   .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, SectionTable.gradeLevel_id))
+  .leftJoin(RoomTable, eq(RoomTable.room_id, SectionTable.room_id))
+  .where(eq(SectionTable.academicYear_id, selectedYear),)
+  
   return gradeAndSection;
 }
 
 export const getData = async (selectedTeacher: number) => {
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) { return [] }
+
   const getData = db
   .select({
     gradeLevel_id: SectionTable.gradeLevel_id,
@@ -685,7 +712,10 @@ export const getData = async (selectedTeacher: number) => {
   .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, SectionTable.gradeLevel_id))
   .leftJoin(TeacherAssignmentTable, eq(TeacherAssignmentTable.gradeLevel_id, SectionTable.gradeLevel_id))
   .leftJoin(SubjectTable, eq(SubjectTable.subject_id, TeacherAssignmentTable.subject_id))
-  .where(eq(TeacherAssignmentTable.clerk_uid, selectedTeacher))
+  .where(and(
+    eq(TeacherAssignmentTable.clerk_uid, selectedTeacher),
+    eq(TeacherAssignmentTable.academicYear_id, selectedYear)
+  ))
 
   return getData;
 }
@@ -696,22 +726,24 @@ export const getDaySched = async (
   setSelectedSubject: number,
   setSelectedSection: number
 ) => {
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) { return [] }
+
   const day = await db
   .select({
     schedule_id: ScheduleTable.schedule_id,
     dayOfWeek: ScheduleTable.dayOfWeek,
     startTime: ScheduleTable.startTime,
     endTime: ScheduleTable.endTime,
-    room_id: ScheduleTable.room_id,
-    roomName: RoomTable.roomName,
+
   })
   .from(ScheduleTable)
-  .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
   .where(
     and(
       eq(ScheduleTable.section_id, setSelectedSection),
       eq(ScheduleTable.gradeLevel_id, setSelectedGradeLevel),
-      eq(ScheduleTable.subject_id, setSelectedSubject)
+      eq(ScheduleTable.subject_id, setSelectedSubject),
+      eq(ScheduleTable.academicYear_id, selectedYear)
     )
   );
   console.log(day);
@@ -829,6 +861,8 @@ export const getAnnouncement = async () => {
   .where(eq(AnnouncementTable.academicYear_id, await getAcademicYearID()))
   return get_announcement;
 }
+
+
 
 export const addAnnouncement = async (title: string, content: string, image: string) => {
   const acad_id = await getAcademicYearID();

@@ -3,7 +3,7 @@
 
 import { and, desc, eq, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, ScheduleTable, RoomTable, applicantsInformationTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
 import nodemailer from "nodemailer";
@@ -122,39 +122,8 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
 }
 
 
-// export const getStudentInfo = async () => {
-//   const applicantId = await getApplicantID();
-//   if (!applicantId) return null;
-//   console.log("Applicant ID:", applicantId);
 
-//   const selectedAcademicYear = await getSelectedAcademicYear();
-//   if (!selectedAcademicYear) {
-//     console.warn("❌ No academic year selected");
-//     return null;
-//   }
 
-//     const studentInfo = await db
-//     .select({
-//       lrn: StudentInfoTable.lrn,
-//       student_id: StudentInfoTable.applicants_id,
-//       gradeLevelName: studentTypeTable.gradeToEnroll,
-//       academicYear: AcademicYearTable.academicYear,
-//       studentFirstName: StudentInfoTable.studentFirstName,
-//       studentMiddleName: StudentInfoTable.studentMiddleName,
-//       studentLastName: StudentInfoTable.studentLastName,
-//       studentSuffix: StudentInfoTable.studentSuffix,
-//       sectionName: SectionTable.sectionName,
-//     })
-//     .from(StudentInfoTable)
-//     .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
-//     .leftJoin(SectionTable, eq(SectionTable.section_id, StudentPerGradeAndSection.section_id))
-//     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
-//     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, selectedAcademicYear))
-//     .leftJoin(studentTypeTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
-//     .where(eq(StudentInfoTable.applicants_id, applicantId));
-
-//     return studentInfo[0];
-// }
 export const getStudentInfo = async () => {
   console.log("🟡 Starting getStudentInfo...");
 
@@ -194,15 +163,14 @@ export const getStudentInfo = async () => {
     .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
     .leftJoin(studentTypeTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
-    .leftJoin(ScheduleTable, eq(ScheduleTable.section_id, SectionTable.section_id))
-    .leftJoin(RoomTable, eq(RoomTable.room_id, ScheduleTable.room_id))
+    .leftJoin(RoomTable, eq(RoomTable.room_id, SectionTable.room_id))
     .where(
       and(
         eq(StudentInfoTable.applicants_id, applicantId),
         eq(studentTypeTable.academicYear_id, selectedAcademicYear),
         eq(StudentPerGradeAndSection.academicYear_id, selectedAcademicYear),
         eq(AdmissionStatusTable.academicYear_id, selectedAcademicYear),
-        eq(ScheduleTable.academicYear_id, selectedAcademicYear)
+        eq(SectionTable.academicYear_id, selectedAcademicYear)
       )
     )
     .limit(1);

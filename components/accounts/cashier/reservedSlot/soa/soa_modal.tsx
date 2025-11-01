@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useShowDocumentModal, useShowGradeModal, useUploadSoaModal } from "@/src/store/CASHIER/reserved";
 import { Button } from "@/components/ui/button";
-import { addBreakDown, addGrant, checkSoa, getESC, getGranted, getInfo, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
+import { addBreakDown, addGrant, checkSoa, getESC, getGranted, getInfo, isLrnExist, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Document_Review } from "./document/document_review";
@@ -128,12 +128,21 @@ const handleClose = () => {
     return 
     }
 
+    const isLRNexist = await isLrnExist(lrn);
+    if (isLRNexist.length === 0) {
+      setLrnLoading(false);
+      toast.error("No student found with this LRN.");
+    return
+    }
+    
     const check = await checkSoa(lrn);
-    if (check) {
+    if (check.length > 0) {
       setLrnLoading(false);
       toast.error("This student already has been issued a tuition fee.");
     return
     }
+
+
 
     const info = await getInfo(lrn);
     setDisInfo(info[0]);
@@ -626,17 +635,17 @@ const handleClose = () => {
             )}
 
             {page === 2 && (
-            <article  className="flex flex-col gap-8">
+            <article  className="flex flex-col gap-8 py-5">
               <section className="flex flex-col ">
                   <span className="font-semibold text-sm text-dGreen mb-1">Main Fees</span>
                   <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                     <section className="flex flex-col">
-                      <span className="font-bold font-merriweather text-sm text-dGreen">Tuition Fee</span>
+                      <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">*</strong> Tuition Fee</span>
                       <input type="text" placeholder="0"  value={tuition} onChange={(e) => setTuition(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                     </section>
 
                     <section className="flex flex-col">
-                      <span className="font-bold font-merriweather text-sm text-dGreen">Miscellaneous Fee</span>
+                      <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">* </strong> Miscellaneous Fee</span>
                       <input type="text" placeholder="0"  value={miscellaneous} onChange={(e) => setMiscellaneous(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                     </section>
                   </div>
@@ -706,19 +715,94 @@ const handleClose = () => {
 
               </section>
 
-              <section className="w-full text-center">
-                <Button
-                  variant="confirmButton"
-                  className="px-10 py-2 rounded-lg mb-5"
-                  disabled={!tuition || !miscellaneous || addTuition }
-                  onClick={handelAddTuition}
-                >
-                  Submit
-                </Button>
 
-              </section>
 
             </article>
+            )}
+
+            {page === 3 && (
+              <article  className="flex flex-col gap-8 py-5">
+
+                <section className="flex flex-col ">
+                  <span className="font-semibold text-sm text-dGreen mb-1">Tuition Summary</span>
+                  <div className="flex flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                    <table className="w-full text-sm">
+                      <tbody>
+                          <tr>
+                          <td className="py-2">Tuition Fee</td>
+                          <td className="text-right font-medium">₱{tuition}</td>
+                          </tr>
+                          <tr>
+                          <td className="py-2">Miscellaneous Fee</td>
+                          <td className="text-right font-medium">₱{miscellaneous}</td>
+                          </tr>
+
+
+                          <tr className="border-t">
+                          <td className="py-2 font-semibold"></td>
+                          <td className="text-right">₱{Number(tuition) + Number(miscellaneous)}</td>
+                          </tr>
+
+                          {escGrantee === "Yes"  && (
+                          <tr>
+                              <td className="py-2 text-red-600">Less: ESC Grant</td>
+                              <td className="text-right text-red-600">-₱9000</td>
+                          </tr>
+                          )}
+                          {acad !== "N/a" && (
+                          <tr>
+                              <td className="py-2 text-red-600">Less: {acad} Discount</td>
+                              <td className="text-right text-red-600">-₱{acad === "With Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.20) : acad === "With High Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.50)  : acad === "With Highest Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.75)  : 0}</td>
+                          </tr>
+                          )}
+                          {sibling === "Yes" && (
+                          <tr>
+                              <td className="py-2 text-red-600">Less: </td>
+                              <td className="text-right text-red-600">-₱500</td>
+                          </tr>
+                          )}
+                          {other_discount !== "" && (
+                          <tr>
+                              <td className="py-2 text-red-600">Less: Other Discount</td>
+                              <td className="text-right text-red-600">-₱{other_discount}</td>
+                          </tr>
+                          )}
+
+                          <tr className="border-t font-semibold">
+                          <td className="py-2">Total Tuition & Misc.</td>
+                          <td className="text-right">₱ {Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0) - (acad === "With Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.20) : acad === "With High Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.50)  : acad === "With Highest Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.75)  : 0) - (sibling === "Yes" ? 500 : 0) - Number(other_discount )}</td>
+                          {/* <td className="text-right">₱{tuition + miscellaneous - escGrant - academic_discount_amount - withSibling_amount - other_discount}</td> */}
+                          </tr>
+
+                          {other_fees !== "" && (
+                          <tr>
+                              <td className="py-2">Other Fees</td>
+                              <td className="text-right">₱{other_fees}</td>
+                          </tr>
+                          )}
+
+                          <tr className="border-t text-lg font-bold text-green-700">
+                          <td className="py-3">Grand Total</td>
+                          <td className="text-right">₱ {Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0) - (acad === "With Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.20) : acad === "With High Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.50)  : acad === "With Highest Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.75)  : 0) - (sibling === "Yes" ? 500 : 0) - Number(other_discount ) + Number(other_fees) }</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                </section>
+
+                <section className="w-full text-center">
+                  <Button
+                    variant="confirmButton"
+                    className="px-10 py-2 rounded-lg mb-5"
+                    disabled={!tuition || !miscellaneous || addTuition }
+                    onClick={handelAddTuition}
+                  >
+                    Submit
+                  </Button>
+              </section>
+
+              </article>
             )}
 
             <article className="flex  justify-center mt-4 gap-10">
@@ -733,7 +817,7 @@ const handleClose = () => {
               <Button
                 variant="prevButton"
                 className="px-4 py-2 rounded-lg"
-                disabled={page === 2}
+                disabled={page === 3 || (page === 2 && Number(tuition) === 0 && Number(miscellaneous) === 0)}
                 onClick={() => setPage(page + 1)}
               >
                 Next
@@ -741,6 +825,7 @@ const handleClose = () => {
             </article>
 
             </>
+            
           )}
 
           </div>

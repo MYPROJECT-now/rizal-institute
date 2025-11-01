@@ -14,7 +14,6 @@ interface Props {
 
 const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => {
     const { open:openPayment } = useShowMonthlyPayementModal();
-    // const { open:sendReceipt } = useShowPaymentReceiptModal();
 
     const handleAccept = async () => {
         onAccept(VerifyTodo.month_id ?? 0, VerifyTodo.amount, VerifyTodo.dateOfPayment ?? "");

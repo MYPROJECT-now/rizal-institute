@@ -1,6 +1,6 @@
 import { db } from '@/src/db/drizzle';
 import { and, desc, eq } from 'drizzle-orm';
-import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, GradeLevelTable, guardianAndParentsTable, SectionTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from '@/src/db/schema';
+import { AdmissionStatusTable, applicantsInformationTable, auditTrailsTable, ClerkUserTable, GradeLevelTable, guardianAndParentsTable, RoomTable, SectionTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import { clerkClient } from '@clerk/nextjs/server';
@@ -392,7 +392,7 @@ export async function POST(request: Request) {
         section_id: SectionTable.section_id,
         sectionName: SectionTable.sectionName,
         limit: SectionTable.limit,
-        gradeLevel_id: SectionTable.gradeLevel_id,
+        // gradeLevel_id: SectionTable.gradeLevel_id,
       })
       .from(SectionTable)
       .where(
@@ -404,19 +404,37 @@ export async function POST(request: Request) {
       .orderBy(desc(SectionTable.section_id)) // get the latest section for that grade/year
       .limit(1);
 
+
     let newSectionCount = 1;
     const limitCount = 20; // capacity per section test
     // let limitCount = 1;
-    const limit = limitCount - 1; // default for a new section
+    const limit = limitCount - 1; 
     let section_id = 1;
+
+    // ROOM ASSIGNMENT LOGIC
+    const rooms = await db.select({ room_id: RoomTable.room_id }).from(RoomTable).orderBy(RoomTable.room_id);
+    const assignedRooms = await db
+      .select({ room_id: SectionTable.room_id })
+      .from(SectionTable)
+      .where(eq(SectionTable.academicYear_id, academicYearID));
+
+    const assignedRoomIds = assignedRooms.map(r => r.room_id);
+    const availableRooms = rooms.filter(r => !assignedRoomIds.includes(r.room_id));
+    const assignedRoom = availableRooms.length > 0 ? availableRooms[0] : null;
+
+    if (!assignedRoom) {
+      throw new Error("No available rooms left for this academic year.");
+    }
 
     if (sectionData.length === 0) {
       // no section yet → create Section 1
+      
       const sectionData2 = await db.insert(SectionTable).values({
         sectionName: "Section " + newSectionCount,
         gradeLevel_id,
         academicYear_id: academicYearID,
         limit: limit,
+        room_id: assignedRoom.room_id,
       }).returning({ section_id: SectionTable.section_id });
 
       section_id = sectionData2[0].section_id;
@@ -441,6 +459,7 @@ export async function POST(request: Request) {
           gradeLevel_id,
           academicYear_id: academicYearID,
           limit: limit,
+          room_id: assignedRoom.room_id,
         }).returning({ section_id: SectionTable.section_id });
 
         section_id = sectionData3[0].section_id;

@@ -10,3 +10,4 @@ export type VerifyPayment = {
     isActive: boolean | null;
     lrn: string | null;
 }
+

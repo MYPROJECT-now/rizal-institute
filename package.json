@@ -17,8 +17,8 @@
 
     "db:proda": "tsx ./scripts/prod.ts",
     "db:methoda": "tsx ./scripts/payment_method.ts",
-    "db:montha": "tsx ./scripts/month.ts",
-    "db:soaa": "tsx ./scripts/soa.ts",
+    "db:month": "tsx ./scripts/month.ts",
+    "db:soa": "tsx ./scripts/soa.ts",
 
     
     "db:prod2a": "tsx ./scripts/prod2.ts",

@@ -20,27 +20,27 @@ const insertMockApplicants = async () => {
     {
       applicants_id: 22,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320381/reservationPayments/abcdfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 23,
       paymentMethod: "full_payment",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320382/reservationPayments/fghifaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 24,
       paymentMethod: "full_payment",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320383/reservationPayments/jklmfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 25,
       paymentMethod: "full_payment",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320384/reservationPayments/nopqfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 1,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320385/reservationPayments/qrstfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 2,
@@ -50,67 +50,67 @@ const insertMockApplicants = async () => {
     {
       applicants_id: 26,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320387/reservationPayments/yzabfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 27,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320388/reservationPayments/cdefaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 28,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320389/reservationPayments/ghijfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 6,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320390/reservationPayments/jklmfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 7,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320391/reservationPayments/mnopfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 29,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320392/reservationPayments/pqrsfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 30,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320393/reservationPayments/stuvfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 31,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320394/reservationPayments/wxyzfaxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 11,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320395/reservationPayments/abcd2faxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 12,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320396/reservationPayments/efgh2faxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 32,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320397/reservationPayments/ijkl2faxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 33,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320398/reservationPayments/mnop2faxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
     {
       applicants_id: 34,
       paymentMethod: "Installments",
-      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320399/reservationPayments/qrst2faxnbbkupqv9nodt.jpg",
+      uploadReservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg",
     },
   ];
 

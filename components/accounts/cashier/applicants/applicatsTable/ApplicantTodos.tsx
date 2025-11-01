@@ -1,18 +1,18 @@
-  "use client";
-  import { FC, useState } from "react";
-  import Student from "./ApplicantTodo";
-  import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
-  import { Button } from "@/components/ui/button";
+"use client";
+import { FC, useState } from "react";
+import Student from "./ApplicantTodo";
+import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Cashier_ReservationReview } from "../applicants_view/Enrollees_cashier";
 import { Receipts_Info } from "../info/info";
 
 
-  interface Props {
-    applicants: Tableapplicant_Type[];
-    activeReceipt?: { id: number; isActive: boolean } | null;
+interface Props {
+  applicants: Tableapplicant_Type[];
+  activeReceipt?: { id: number; isActive: boolean } | null;
 
-  }
+}
 
   const Students: FC<Props> = ({ applicants, activeReceipt }) => {
     const [studentList, setApplicantList] = useState<Tableapplicant_Type[]>(applicants);

@@ -46,7 +46,7 @@ const insertMockApplicants = async () => {
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true,
       itr: "", hasTIR: true, escCert: "", hasEscCertificate: true, mop: "GCash",
-      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
+      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Lara Rivera"
     },
     {
@@ -58,7 +58,7 @@ const insertMockApplicants = async () => {
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true,
       itr: "", hasTIR: true, escCert: "", hasEscCertificate: true, mop: "GCash",
-      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
+      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Lara Rivera"
     },
     {
@@ -70,7 +70,7 @@ const insertMockApplicants = async () => {
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true,
       itr: "", hasTIR: true, escCert: "", hasEscCertificate: true, mop: "GCash",
-      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample13.jpg", reservationAmount: 500,
+      reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "Yes", siblingName: "Lara Rivera"
     },
 
@@ -106,7 +106,7 @@ const insertMockApplicants = async () => {
       birthCert: "", hasBirth: true,
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-      mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample16.jpg", reservationAmount: 500,
+      mop: "Cash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
 
@@ -141,7 +141,7 @@ const insertMockApplicants = async () => {
       birthCert: "", hasBirth: true,
       reportCard: "", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-      mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample19.jpg", reservationAmount: 500,
+      mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "N/a", hasEnrolledSibling: "No", siblingName: ""
     },
 
@@ -176,7 +176,7 @@ const insertMockApplicants = async () => {
       birthCert: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320377/documents/dezmmdodr9ttjcduwbjo.jpg", hasBirth: true,
       reportCard: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1760809969/report_card_lrkbc5.jpg", hasReportCard: true,
       goodMoral: "", hasGoodMoral: true, idPic: "", hasIdPic: true, studentExitForm: "", hasExitForm: true, form137: "", hasForm137: true, itr: "", hasTIR: true, escCert: "", hasEscCertificate: true,
-      mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/sample22.jpg", reservationAmount: 500,
+      mop: "GCash", reservationReceipt: "https://res.cloudinary.com/dkfn4xy6q/image/upload/v1759320380/reservationPayments/edktfaxnbbkupqv9nodt.jpg", reservationAmount: 500,
       attainmentUponGraduation: "With Honor", hasEnrolledSibling: "No", siblingName: ""
     },
     

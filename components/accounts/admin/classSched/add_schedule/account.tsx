@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { usescheduleModal } from "@/src/store/ADMIN/addSchedule";
-import { AddSchedule, checkSchedule, getAvailableAssignments, getAvailableRooms, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
+import { AddSchedule, checkSchedule, getAvailableAssignments, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -21,14 +21,13 @@ export const Add_Schedule = () => {
 
   const [subjects, setSubjects] = useState<{ subject_id: number; subject_name: string }[]>([]);
   const [teachers, setTeachers] = useState<{ clerk_uid: number; clerk_username: string }[]>([]);
-  const [gradeSections, setGradeSections] = useState<{ gradeLevel_id: number; gradeLevelName: string | null; section_id: number; sectionName: string }[]>([]);
+  const [gradeSections, setGradeSections] = useState<{ gradeLevel_id: number; gradeLevelName: string | null; section_id: number; sectionName: string; room_id: number; roomName: string | null; }[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [assignmentData, setAssignmentData] = useState<{
     available: { gradeLevel_id: number; subject_id: number }[];
     scheduledAll: boolean;
     noAssigned: boolean;
   }>({ available: [], scheduledAll: false, noAssigned: false });
-  const [room, setRoom] = useState<{ room_id: number; roomName: string }[]>([]);
 
   const [selectedSubject, setSelectedSubject] = useState(0);
   const [selectedTeacher, setSelectedTeacher] = useState(0);
@@ -54,11 +53,11 @@ export const Add_Schedule = () => {
       const result = await getSubjects();
       const result2 = await getTeachersName();
       const result3 = await gradeAndSection();
-      const result4 = await getAvailableRooms();
+      // const result4 = await getAvailableRooms();
       setSubjects(result);
       setTeachers(result2);
       setGradeSections(result3);
-      setRoom(result4);
+      // setRoom(result4);
       setIsLoading(false);
     };
     fetchSubjects();
@@ -89,6 +88,9 @@ export const Add_Schedule = () => {
     const [gradeId, sectionId] = e.target.value.split("|"); // split back into separate IDs
     setSelectedGradeLevel(Number(gradeId));
     setSelectedSection(Number(sectionId));
+
+    const selected = gradeSections.find(gs => gs.section_id === Number(sectionId));
+    setSelectedRoom(selected?.room_id || 0);
   };
 
 
@@ -96,6 +98,7 @@ export const Add_Schedule = () => {
     const found = gradeSections.find(gs => gs.gradeLevel_id === id);
     return found ? found.gradeLevelName : `Grade ${id}`;
   };
+
 
   const submitSchedule = async () => {
     if (!selectedSection || !selectedGradeLevel || !selectedSubject || !selectedTeacher || !selectedDays || !startTime || !endTime) {
@@ -113,6 +116,17 @@ export const Add_Schedule = () => {
       return;
     }
 
+    // 🕕 Time validation (6 AM - 6 PM)
+    const start = new Date(`1970-01-01T${startTime}`);
+    const end = new Date(`1970-01-01T${endTime}`);
+    const minTime = new Date(`1970-01-01T06:00`);
+    const maxTime = new Date(`1970-01-01T18:00`);
+
+    if (start < minTime || end > maxTime) {
+      toast.error("Please select a time between 6:00 AM and 6:00 PM only.");
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       for (const day of selectedDays) {
@@ -314,21 +328,12 @@ export const Add_Schedule = () => {
             </section>
 
             <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
-              <span className="text-dGreen text-sm font-semibold">Rooms:</span>
-              <select
-                value={selectedRoom}
-                onChange={(e) => setSelectedRoom(Number(e.target.value))}
-                disabled={!startTime || !endTime}
-                className="border-2 border-gray-300 rounded px-3 py-1  w-full  focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-              >
-                <option value="">-- Select Room --</option>
-                {room.map((rooms) => (
-                  <option key={rooms.room_id} value={rooms.room_id}>
-                    {rooms.roomName}
-                  </option>
-                ))}
-              </select>
-            </section>  
+              <span className="text-dGreen text-sm font-semibold">Room:</span>
+              <div className="border-2 border-gray-300 rounded px-3 py-2 bg-gray-50 text-gray-700">
+                {gradeSections.find(gs => gs.section_id === selectedSection)?.roomName || "—"}
+              </div>
+            </section>
+
 
             <Button
               variant="confirmButton"

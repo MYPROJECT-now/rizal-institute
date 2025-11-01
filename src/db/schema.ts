@@ -173,6 +173,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     sectionName: varchar("sectionName", { length: 100 }).notNull(),
     limit: integer("limit").notNull(),
     gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
+    room_id: integer("room_id").references(() => RoomTable.room_id, { onDelete: "cascade" }).notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
   })
 
@@ -285,13 +286,13 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
 
     dateOfPayment: varchar('dateOfPayment', { length:100 }).notNull(),
     amount: integer('amount').notNull(),
-    proofOfPayment: varchar('proofOfPayment', { length:300 }).notNull(),
+    proofOfPayment: varchar('proofOfPayment', { length:300 }),
     cashiersReceipt: varchar('cashiersReceipt', { length:300 }),
     modeOfPayment: varchar('modeOfPayment', { length:100 }).notNull(),
     dateOfVerification: varchar('dateOfVerification', { length:100 }),
     SINumber: varchar('SINumber', { length:300 }),
     status: varchar('status', { length:100 }).notNull(),
-    
+    rejectmessage: varchar('rejectmessage', { length:100})
   })
 
 

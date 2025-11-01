@@ -59,8 +59,11 @@ interface Props {
       };
 
 
-  const handleDecline = () => {
+  const handleDecline = (id: number) => {
+    setLoadingId(id);
+    
     setApplicantList((prevList) => prevList.map((student) => ({ ...student, payment_status: "Declined" })));
+    setLoadingId(null);
   };
     
   const filteredStudents = studentList.filter((student) => {

@@ -472,7 +472,7 @@ const sections = [
                         )}
 
                         <tr className="border-t font-semibold">
-                        <td className="py-2">Total Tuition + Misc.</td>
+                        <td className="py-2">Total Tuition & Misc.</td>
                         <td className="text-right">₱{tuitionFee + miscellaneous - downPayment - escGrant - academic_discount_amount - withSibling_amount - other_discount}</td>
                         </tr>
 

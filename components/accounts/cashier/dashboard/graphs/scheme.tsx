@@ -85,7 +85,7 @@ export const PaymentScheme = () => {
         </div>
       ) : chartData.every((item) => item.value === 0) ? (
         <div className="flex items-center justify-center h-40 text-gray-500 font-medium">
-          No Data
+          No Data to fetch
         </div>
       ) : (
         <>

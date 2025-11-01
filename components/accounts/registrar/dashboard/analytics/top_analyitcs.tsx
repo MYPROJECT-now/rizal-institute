@@ -151,7 +151,7 @@ export const Top_analytics = async () => {
                 <div className="gap-4  flex flex-row justify-center items-center">
                 <div>
                     <Image
-                        src="/slot.png"
+                        src="/school12.png"
                         alt="cup"
                         width={1000}
                         height={1000}
