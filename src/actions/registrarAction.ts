@@ -401,7 +401,6 @@ export const getEnrollmentTrend = async () => {
       studentGender: StudentInfoTable.studentGender,
       studentBirthDate: StudentInfoTable.studentBirthDate,
       age: StudentInfoTable.studentAge,
-      fullAddress: StudentInfoTable.fullAddress,
 
       guardiansLastName: guardianAndParentsTable.guardiansLastName,
       guardiansFirstName: guardianAndParentsTable.guardiansFirstName,
@@ -498,7 +497,6 @@ export const getEnrollmentTrend = async () => {
         studentGender: values.studentGender,
         studentBirthDate: values.studentBirthDate,
         studentAge: values.studentAge,
-        fullAddress: values.fullAddress,
       })
       .where(eq(StudentInfoTable.applicants_id, id)),
 
@@ -709,6 +707,13 @@ export const getEnrollmentTrend = async () => {
       dateOfBirth: applicantsInformationTable.dateOfBirth,
       age: applicantsInformationTable.age,  
       gender: applicantsInformationTable.gender,
+      religion: applicantsInformationTable.religion,
+      ip: applicantsInformationTable.ip,
+      house_no_purok: applicantsInformationTable.house_no_purok,
+      barangay: applicantsInformationTable.barangay,
+      city: applicantsInformationTable.city,
+      province: applicantsInformationTable.province,
+      motherTounge: applicantsInformationTable.motherTounge,
       mobileNumber: applicantsInformationTable.mobileNumber,
       email: applicantsInformationTable.email,
 
@@ -718,7 +723,7 @@ export const getEnrollmentTrend = async () => {
       guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
       emergencyContact: guardianAndParentsTable.emergencyContact,
       emergencyEmail: guardianAndParentsTable.emergencyEmail,
-      fullAddress: guardianAndParentsTable.fullAddress,
+      relationship: guardianAndParentsTable.relationship,
 
       lrn: applicantsInformationTable.lrn,
       gradeLevel: educationalBackgroundTable.gradeLevel,

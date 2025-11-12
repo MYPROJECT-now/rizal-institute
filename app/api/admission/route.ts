@@ -73,7 +73,13 @@ async function getApplicantInfo
     dateOfBirth: Date;
     age: number;
     gender: string;
-    fullAddress: string | null;
+    religion: string;
+    ip: string | null;
+    house_no_purok: string;
+    barangay: string;
+    city: string;
+    province: string;
+    motherTounge: string;
     studenType: string | null;
   }> {
 
@@ -88,7 +94,13 @@ async function getApplicantInfo
       dateOfBirth: applicantsInformationTable.dateOfBirth,  
       age: applicantsInformationTable.age,
       gender: applicantsInformationTable.gender,
-      fullAddress: guardianAndParentsTable.fullAddress,
+      religion: applicantsInformationTable.religion,
+      ip: applicantsInformationTable.ip,
+      house_no_purok: applicantsInformationTable.house_no_purok,
+      barangay: applicantsInformationTable.barangay,
+      city: applicantsInformationTable.city,
+      province: applicantsInformationTable.province,
+      motherTounge: applicantsInformationTable.motherTounge,
       studenType: studentTypeTable.studentType,
 
     })
@@ -112,7 +124,13 @@ async function getApplicantInfo
       dateOfBirth: new Date(result[0].dateOfBirth),
       age: result[0].age,
       gender: result[0].gender,
-      fullAddress: result[0].fullAddress,
+      religion: result[0].religion,
+      ip: result[0].ip,
+      house_no_purok: result[0].house_no_purok,
+      barangay: result[0].barangay,
+      city: result[0].city,
+      province: result[0].province,
+      motherTounge: result[0].motherTounge,
       studenType: result[0].studenType
     }
     : { 
@@ -125,7 +143,13 @@ async function getApplicantInfo
       dateOfBirth: new Date(),
       age: 0,
       gender: "N/A",
-      fullAddress: "N/A",
+      religion: "N/A",
+      ip: "N/A",
+      house_no_purok: "N/A",
+      barangay: "N/A",
+      city: "N/A",
+      province: "N/A",
+      motherTounge: "N/A",
       studenType: "N/A" 
   };
 }
@@ -249,8 +273,14 @@ export async function POST(request: Request) {
       dateOfBirth,
       age,
       gender,
-      fullAddress,
       studenType,
+      religion,
+      ip,
+      house_no_purok,
+      barangay,
+      city,
+      province,
+      motherTounge
     } = await getApplicantInfo(applicantId, selectedYear);
 
     const clerk = await clerkClient();
@@ -299,10 +329,17 @@ export async function POST(request: Request) {
       studentMiddleName: middleName ?? undefined,
       studentLastName: lastName,
       studentSuffix: suffix ?? undefined,
-      fullAddress: fullAddress ?? "",
       studentGender: gender,
       studentBirthDate: dateOfBirth.toISOString().split('T')[0],
       studentAge: age,
+      religion,
+      ip: ip ?? undefined,
+      house_no_purok,
+      barangay,
+      city,
+      province,
+      motherTounge,
+
     }).returning({ id: StudentInfoTable.student_id });
 
     student_id = insertStudent.id;

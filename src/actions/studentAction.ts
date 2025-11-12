@@ -511,7 +511,7 @@ export const addPayment = async (
   export const getPaymentReceipt = async (selectedID: number) => {
   
     const paymentReceipt = await db.select({
-      cashiersReceipt: MonthlyPayementTable.cashiersReceipt,
+      // cashiersReceipt: MonthlyPayementTable.cashiersReceipt,
     })
       .from(MonthlyPayementTable)
       .where(eq(MonthlyPayementTable.monthlyPayment_id, selectedID ));

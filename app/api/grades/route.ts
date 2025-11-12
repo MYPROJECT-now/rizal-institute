@@ -3,8 +3,9 @@ import * as XLSX from "xlsx";
 import { ilike, and, or, eq } from "drizzle-orm";
 
 import { db } from "@/src/db/drizzle";
-import { StudentGradesTable, StudentInfoTable } from "@/src/db/schema";
+import { StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable } from "@/src/db/schema";
 import { getAcademicYearID } from "@/src/actions/utils/academicYear";
+import { getSelectedYear } from "@/src/actions/utils/getSelectedYear";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +15,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File;
     const gradeLevel_id = Number(formData.get("gradeLevel_id"));
     const subject_id = Number(formData.get("subject_id"));
+    const section_id = Number(formData.get("section_id"));
 
 
     if (!file) {
@@ -141,6 +143,9 @@ export async function POST(req: NextRequest) {
 
     let insertedCount = 0;
 
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return console.log(`❌ Failed to get selected year`);
+
     // ✅ MATCH & FILL FINAL GRADE
     for (const student of allStudents) {
       const originalName = student.name.trim();
@@ -160,17 +165,28 @@ export async function POST(req: NextRequest) {
           lastName: StudentInfoTable.studentLastName,
         })
         .from(StudentInfoTable)
+        .leftJoin(StudentGradesTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+        .leftJoin(StudentPerGradeAndSection, eq(StudentPerGradeAndSection.student_id, StudentInfoTable.student_id))
         .where(
-          or(
-            and(
-              ilike(StudentInfoTable.studentFirstName, `%${part1}%`),
-              ilike(StudentInfoTable.studentLastName, `%${part2}%`)
+          and(
+            or(
+              and(
+                ilike(StudentInfoTable.studentFirstName, `%${part1}%`),
+                ilike(StudentInfoTable.studentLastName, `%${part2}%`)
+              ),
+              and(
+                ilike(StudentInfoTable.studentFirstName, `%${part2}%`),
+                ilike(StudentInfoTable.studentLastName, `%${part1}%`)
+              )
             ),
-            and(
-              ilike(StudentInfoTable.studentFirstName, `%${part2}%`),
-              ilike(StudentInfoTable.studentLastName, `%${part1}%`)
-            )
+            eq(StudentGradesTable.grade_id, gradeLevel_id),
+            eq(StudentGradesTable.subject_id, subject_id),
+            eq(StudentPerGradeAndSection.section_id, section_id),
+            eq(StudentPerGradeAndSection.academicYear_id, selectedYear),
+            eq(StudentGradesTable.academicYear_id, selectedYear)
+
           )
+        
         );
         
 
@@ -193,23 +209,80 @@ export async function POST(req: NextRequest) {
 
 
 
-        const acadId = await getAcademicYearID();
-        if (!isNaN(grade)) {
-          const updateResult = await db
-            .update(StudentGradesTable)
-            .set({
-              remarks: grade > 75 ? "PASSED" : "FAILED",
-              finalGrade: grade,
-              dateSubmitted: new Date().toISOString().split("T")[0],
-            })
-            .where(
-              and(
-                eq(StudentGradesTable.student_id, found.student_id),
-                eq(StudentGradesTable.academicYear_id, acadId),
-                eq(StudentGradesTable.gradeLevel_id, gradeLevel_id),
-                eq(StudentGradesTable.subject_id, subject_id)
-              )
+      const acadId = await getAcademicYearID();
+      if (!isNaN(grade)) {
+        const updateResult = await db
+          .update(StudentGradesTable)
+          .set({
+            remarks: grade > 75 ? "PASSED" : "FAILED",
+            finalGrade: grade,
+            dateSubmitted: new Date().toISOString().split("T")[0],
+          })
+          .where(
+            and(
+              eq(StudentGradesTable.student_id, found.student_id),
+              eq(StudentGradesTable.academicYear_id, acadId),
+              eq(StudentGradesTable.gradeLevel_id, gradeLevel_id),
+              eq(StudentGradesTable.subject_id, subject_id)
+            )
+          );
+          
+          // ✅ After updating final grade
+          if (updateResult.rowCount > 0) {
+            insertedCount++;
+            console.log(`✅ INSERTED INTO EXISTING ROW: ${originalName} → ${grade}`);
+
+            // Get all grades of the student for this grade level and year
+            const allGrades = await db
+              .select({ finalGrade: StudentGradesTable.finalGrade })
+              .from(StudentGradesTable)
+              .where(
+                and(
+                  eq(StudentGradesTable.student_id, found.student_id),
+                  eq(StudentGradesTable.gradeLevel_id, gradeLevel_id),
+                  eq(StudentGradesTable.academicYear_id, acadId)
+                )
+              );
+
+            // 🧱 Stopper: if any grade is null, skip promotion evaluation
+            const hasNullGrades = allGrades.some(
+              (g) => g.finalGrade === null || g.finalGrade === undefined
             );
+
+            if (hasNullGrades) {
+              console.log(
+                `⏹️ Student ${found.student_id} has incomplete grades — skipping promotion check.`
+              );
+              return; // ⛔ Stop processing this student
+            }
+
+            // 🧮 Step 2: Decide promotion based on failed subjects count
+            const failingSubjects = allGrades.filter((g) => (g.finalGrade ?? 0) < 75).length;
+
+            let promotion = "PROMOTED";
+            if (failingSubjects > 2) promotion = "RETAIN";
+            else if (failingSubjects > 0 && failingSubjects <= 2) promotion = "SUMMER";
+
+            console.log(
+              `📊 Student ${found.student_id} → ${failingSubjects} failing subjects → ${promotion}`
+            );
+
+            await db
+              .update(studentTypeTable)
+              .set({ promotion })
+              .where(
+                and(
+                  eq(studentTypeTable.applicants_id, found.student_id),
+                  eq(studentTypeTable.academicYear_id, acadId)
+                )
+              );
+
+            console.log(
+              `🎓 Updated promotion for student ${found.student_id} → ${promotion}`
+            );
+          }
+
+
 
           if (updateResult.rowCount > 0) {
             insertedCount++;
@@ -224,6 +297,8 @@ export async function POST(req: NextRequest) {
         console.log(`❌ NO MATCH: "${originalName}"`);
       }
     }
+
+    
 
     return NextResponse.json({
       success: true,

@@ -30,6 +30,13 @@
     dateOfBirth: string;
     age: number;
     gender: string;
+    religion: string;
+    motherTounge: string;
+    ip: string | null;
+    house_no_purok: string;
+    barangay: string;
+    city: string;
+    province: string;
     mobileNumber: string;
     email: string;
 
@@ -39,7 +46,7 @@
     guardiansSuffix?: string | null;
     emergencyContact: string | null;
     emergencyEmail?: string | null;
-    fullAddress: string | null;
+    relationship?: string | null;
 
     lrn: string;
     prevSchool: string  | null;

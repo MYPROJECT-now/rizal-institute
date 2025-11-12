@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "../db/drizzle";
-import { revalidatePath } from "next/cache";
 import {
   applicantsInformationTable,
   documentsTable,
@@ -12,7 +11,6 @@ import {
   AdmissionStatusTable,
   Registrar_remaks_table,
   Cashier_remaks_table,
-  additionalInformationTable,
   StudentInfoTable,
   EnrollmentStatusTable,
   TempMonthsInSoaTable,
@@ -24,11 +22,14 @@ import {
   AcademicYearTable,
   studentTypeTable,
   StudentGradesTable,
+  additionalInformationTable,
 } from "../db/schema";
 import { and, asc, desc, eq } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
+import dns from "dns/promises";
+
 
 // Generate random tracking ID
 function generateRandomTrackingId(length = 12) {
@@ -37,8 +38,6 @@ function generateRandomTrackingId(length = 12) {
 }
 
 // Send email with tracking ID
-
-
 async function sendEmail(to: string, trackingId: string, hasReservationReceipt: boolean,) {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -118,10 +117,10 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
       - CACPRISAA Student Exit Clearance
 
       if you are incoming Grade 7 student:
-      - Income Tax Return
+      - Parent's Income Tax Return
 
       if you are a transferee that is already ESC Grantee:
-      - Parent's Income Tax Return
+      - ECS Certificate
 
     Disregard this reminder if you have already submitted the required documents.
 
@@ -129,7 +128,7 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
     We look forward to reviewing your application.
 
     Best regards,
-    Rizal Institute - Canlubang Registrar Office
+    Rizal Institute - Canlubang 
   `;
 
   const mailOptions = {
@@ -142,118 +141,62 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
   await transporter.sendMail(mailOptions);
 }
 
-export const addNewApplicant = async (formData: {
-  applicantsLastName: string;
-  applicantsFirstName: string;
-  applicantsMiddleName: string;
-  applicantsSuffix: string;
-  dateOfBirth: Date;
-  age: number;
-  gender: string;
-  mobileNumber: string;
-  email: string;
-  lrn: string;
-  trackingId?: string;
+export const addNewApplicants = async (
+  applicantsLastName: string,
+  applicantsFirstName: string,
+  applicantsMiddleName: string,
+  applicantsSuffix: string,
+  dateOfBirth: Date,
+  age: number,
+  gender: string,
+  religion: string,
+  motherTounge: string,
+  ip: string,
+  house_no_purok: string,
+  barangay: string,
+  city: string,
+  province: string,
+  mobileNumber: string,
+  email: string,
+  lrn: string,
 
-  guardiansLastName: string;
-  guardiansFirstName: string;
-  guardiansMiddleName: string;
-  guardiansSuffix: string;
-  emergencyContact: string;
-  emergencyEmail: string;
-  fullAddress: string;
+  guardiansLastName: string,
+  guardiansFirstName: string,
+  guardiansMiddleName: string,
+  guardiansSuffix: string,
+  emergencyContact: string,
+  emergencyEmail: string,
+  relationship: string,
 
-  gradeLevel: string;
-  studentType: string;
-  schoolYear: string;
-  schoolType: string;
-  prevSchool: string;
-  schoolAddress: string;
+  gradeLevel: string,
+  studentType: string,
+  schoolYear: string,
+  schoolType: string,
+  prevSchool: string,
+  schoolAddress: string,
 
-  birthCert: string;
-  reportCard: string;
-  goodMoral: string;
-  idPic: string;
-  studentExitForm: string;
-  form137: string;
-  itr: string;
-  escCert: string;
+  birthCert: string,
+  reportCard: string,
+  goodMoral: string,
+  idPic: string,
+  studentExitForm: string,
+  form137: string,
+  itr: string,
+  escCert: string,
 
-  mop: string;
-  reservationReceipt: string;
-  reservationAmount: number;
+  mop: string,
+  reservationReceipt: string,
+  reservationAmount: string,
 
-  attainmentUponGraduation: string;
+  attainmentUponGraduation: string,
   // consistentGPA: string;
-  hasEnrolledSibling: string;
-  siblingName: string;
-}) => {
-  const {
-    applicantsLastName,
-    applicantsFirstName,
-    applicantsMiddleName,
-    applicantsSuffix,
-    dateOfBirth,
-    age,
-    gender,
-    mobileNumber,
-    email,
-    lrn,
-    // trackingId,
+  hasEnrolledSibling: string,
+  siblingName: string,
+  escGrantee: string,
+) => {
 
-    guardiansLastName,
-    guardiansFirstName,
-    guardiansMiddleName,
-    guardiansSuffix,
-    emergencyContact,
-    emergencyEmail,
-    fullAddress,
-
-    gradeLevel,
-    studentType,
-    schoolYear,
-    schoolType,
-    prevSchool,
-    schoolAddress,
-
-    birthCert,
-    reportCard,
-    goodMoral,
-    idPic,
-    studentExitForm,
-    form137,
-    itr,
-    escCert,
-
-    mop,
-    reservationReceipt,
-    reservationAmount,
-
-    attainmentUponGraduation,
-    // consistentGPA,
-    hasEnrolledSibling,
-    siblingName,
-  } = formData;
-
-
-
-  const existingEmail = await db
-    .select()
-    .from(applicantsInformationTable)
-    .where(eq(applicantsInformationTable.email, email))
-    .limit(1);
-
-  if (existingEmail.length > 0) {
-    throw new Error("This email in use. Please use another email.");
-  }
-
-  const existing = await db.select().from(applicantsInformationTable).where(eq(applicantsInformationTable.lrn, lrn)).limit(1);
-  if (existing.length > 0) {
-    throw new Error("This LRN has already submitted an application.");
-  }
-
-   const academicYearID = await getAcademicYearID();
-
+  
+  const academicYearID = await getAcademicYearID();
 
   const [insertedApplicant] = await db.insert(applicantsInformationTable).values({
     // academicYear_id: academicYearID,
@@ -264,6 +207,13 @@ export const addNewApplicant = async (formData: {
     dateOfBirth: dateOfBirth.toISOString().split("T")[0],
     age,
     gender,
+    religion,
+    motherTounge,
+    ip,
+    house_no_purok,
+    barangay,
+    city,
+    province,
     mobileNumber,
     email,
     lrn
@@ -271,111 +221,129 @@ export const addNewApplicant = async (formData: {
 
   const applicantId = insertedApplicant.id;
 
-  try {
-    await Promise.all([
-      db.insert(guardianAndParentsTable).values({
-        applicants_id: applicantId,
-        guardiansLastName,
-        guardiansFirstName,
-        guardiansMiddleName,
-        guardiansSuffix,
-        emergencyContact,
-        emergencyEmail,
-        fullAddress
-      }),
-      db.insert(educationalBackgroundTable).values({
-        applicants_id: applicantId,
-        gradeLevel,
-        schoolYear,
-        studentType,
-        schoolType,
-        prevSchool,
-        schoolAddress
-      }),
-      db.insert(documentsTable).values({
-        applicants_id: applicantId,
-        birthCert,
-        hasBirth: !!birthCert,
-        reportCard,
-        hasReportCard: !!reportCard,
-        goodMoral,
-        hasGoodMoral: !!goodMoral,
-        idPic,
-        hasIdPic: !!idPic,
-        studentExitForm,
-        hasExitForm: !!studentExitForm,
-        form137,
-        hasForm137: !!form137,
-        itr,
-        hasTIR: !!itr,
-        escCert,
-        hasEscCertificate: !!escCert
-      }),
-      db.insert(reservationFeeTable).values({
-        applicants_id: applicantId,
-        academicYear_id: academicYearID,
-        mop,
-        reservationReceipt,
-        reservationAmount,
-        dateOfPayment: new Date().toISOString().slice(0, 10),
-      }),
-      db.insert(additionalInformationTable).values({
-        applicants_id: applicantId,
-        AttainmentUponGraduation: attainmentUponGraduation,
-        // ConsistentGPA: consistentGPA,
-        HasEnrolledSibling: hasEnrolledSibling,
-        siblingName: siblingName,
-      })
-    ]);
+  const insertGuardian = db.insert(guardianAndParentsTable).values({
+    applicants_id: applicantId,
+    guardiansLastName,
+    guardiansFirstName,
+    guardiansMiddleName,
+    guardiansSuffix,
+    emergencyContact,
+    emergencyEmail,
+    relationship,
+  });
 
-    const trackingId = generateRandomTrackingId();
-    await db.insert(applicationStatusTable).values({
-      applicants_id: applicantId,
-      academicYear_id: academicYearID,
-      trackingId,
-      applicationFormReviewStatus: 'Pending',
-      reservationPaymentStatus: 'Pending',
-      dateOfApplication: new Date().toISOString().slice(0, 10),
-    });
+  const insertEducational = db.insert(educationalBackgroundTable).values({
+    applicants_id: applicantId,
+    gradeLevel,
+    studentType,
+    schoolYear,
+    schoolType,
+    prevSchool,
+    schoolAddress,
+  });
 
-    await db.insert(AdmissionStatusTable).values({
-      applicants_id: applicantId,
-      academicYear_id: academicYearID,
-      admissionStatus: 'Pending',
-      confirmationStatus: 'Pending',
-      dateOfAdmission: new Date().toISOString().slice(0, 10),
-    });
+  const insertDocument = db.insert(documentsTable).values({
+    applicants_id: applicantId,
+    birthCert,
+    hasBirth: !!birthCert,
+    reportCard,
+    hasReportCard: !!reportCard,
+    goodMoral,
+    hasGoodMoral: !!goodMoral,
+    idPic,
+    hasIdPic: !!idPic,
+    studentExitForm,
+    hasExitForm: !!studentExitForm,
+    form137,
+    hasForm137: !!form137,
+    itr,
+    hasTIR: !!itr,
+    escCert,
+    hasEscCertificate: !!escCert
+  });
+  
+  const insertReservation = db.insert(reservationFeeTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
+    mop,
+    reservationReceipt,
+    reservationAmount: Number(reservationAmount),
+    dateOfPayment: new Date().toISOString().slice(0, 10),
+  });
 
-    await db.insert(studentTypeTable).values({
-      applicants_id: applicantId,
-      academicYear_id: academicYearID,
-      studentType,
-      gradeToEnroll: gradeLevel,
-      student_case: 'REGULAR'
-    });
+  const insertDiscount = db.insert(additionalInformationTable).values({
+    applicants_id: applicantId,
+    AttainmentUponGraduation: attainmentUponGraduation,
+    HasEnrolledSibling: hasEnrolledSibling,
+    siblingName: siblingName,
+    escGrantee: escGrantee
+  })
 
-    // Check if reservation receipt and documents are provided
-    const hasReservationReceipt = !!reservationReceipt;
-    // const hasDocuments = !!(birthCert && reportCard && goodMoral && idPic && studentExitForm);
-    await sendEmail(email, trackingId, hasReservationReceipt);
+  const trackingId = generateRandomTrackingId();
+  const insertApplicationStatus = db.insert(applicationStatusTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
+    trackingId,
+    applicationFormReviewStatus: 'Pending',
+    reservationPaymentStatus: 'Pending',
+    dateOfApplication: new Date().toISOString().slice(0, 10),
+  });
 
-    revalidatePath("/");
-    revalidatePath("/enrollment");
+  const insertAdmissionStatus =  db.insert(AdmissionStatusTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
+    admissionStatus: 'Pending',
+    confirmationStatus: 'Pending',
+    dateOfAdmission: new Date().toISOString().slice(0, 10),
+  });
 
-    return { success: true, trackingId };
-  } catch (err) {
-    await db.delete(applicantsInformationTable).where(eq(applicantsInformationTable.applicants_id, applicantId));
-    throw new Error("Application failed. All partial data has been removed.");
-    console.error(err);
-  }
-};
+  const insertStudentType = db.insert(studentTypeTable).values({
+    applicants_id: applicantId,
+    academicYear_id: academicYearID,
+    studentType,
+    gradeToEnroll: gradeLevel,
+    student_case: 'REGULAR'
+  });
 
+  await Promise.all([
+    insertGuardian, 
+    insertEducational, 
+    insertDocument, 
+    insertReservation, 
+    insertDiscount, 
+    insertApplicationStatus, 
+    insertAdmissionStatus, 
+    insertStudentType
+  ]);
+  
+  const hasReservationReceipt = !!reservationReceipt;
+  await sendEmail(email, trackingId, hasReservationReceipt);
+
+
+  
+  
+
+  
+}
 
 export const verifyEmail = async (email: string) => {
   const existing = await db.select().from(applicantsInformationTable).where(eq(applicantsInformationTable.email, email)).limit(1);
   if (existing.length > 0) {
     throw new Error("This email is already in use. Please use another email.");
   }
+
+    const domain = email.split("@")[1];
+  try {
+    const mxRecords = await dns.resolveMx(domain);
+    if (!mxRecords || mxRecords.length === 0) {
+      throw new Error("The email is invalid and cannot receive mail. Please check for typos.");
+    }
+  } catch {
+      throw new Error("The email is invalid and cannot receive mail. Please check for typos.");
+  }
+
+  // ✅ If all checks pass
+  return { success: true };
 };
 
 export const verifyLrn = async (lrn: string) => {
@@ -542,7 +510,6 @@ export const acceptAdmission = async (trackingId: string) => {
                 guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
                 emergencyContact: guardianAndParentsTable.emergencyContact,
                 emergencyEmail: guardianAndParentsTable.emergencyEmail,
-                fullAddress: guardianAndParentsTable.fullAddress,
 
                 gradeLevel: educationalBackgroundTable.gradeLevel,
                 schoolYear: educationalBackgroundTable.schoolYear,
@@ -824,7 +791,6 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       guardiansSuffix,
       emergencyContact,
       emergencyEmail,
-      fullAddress,
 
       gradeLevel,
       schoolYear,
@@ -870,7 +836,6 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
         guardiansMiddleName,
         guardiansLastName,
         guardiansSuffix,
-        fullAddress,
         emergencyContact,
         emergencyEmail,
       })

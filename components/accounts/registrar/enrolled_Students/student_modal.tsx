@@ -64,7 +64,6 @@ useEffect(() => {
       setDateOfBirth(data[0].studentBirthDate || "-");
       setAge(data[0].age || 0);
       setGender(data[0].studentGender || "-");
-      setFullAddress(data[0].fullAddress || "-"  );
 
       setGuardiansLastName(data[0].guardiansLastName || "-");
       setGuardiansFirstName(data[0].guardiansFirstName || "-");

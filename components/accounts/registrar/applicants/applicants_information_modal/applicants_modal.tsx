@@ -120,11 +120,34 @@ const showDocument = (src: string | null, title: string) => {
                 </section>
 
                 <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Gender:</p>
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Religion:</p>
                   <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.gender}
+                    {applicant.religion}
                   </p>
                 </section>
+
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Mother Tounge:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.motherTounge}
+                  </p>
+                </section>
+
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Ethnic Group:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.ip || "-"}
+                  </p>
+                </section>
+
+                <section className="flex flex-col">
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Address:</p>
+                  <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
+                    {applicant.house_no_purok} {applicant.barangay}  {applicant.city}  {applicant.province}
+                  </p>
+                </section>
+
+                
 
                 <section className="flex flex-col">
                   <p className="text-green-900 font-semibold text-xs font-sans pl-1">Mobile Number:</p>
@@ -169,12 +192,11 @@ const showDocument = (src: string | null, title: string) => {
                 </section>
 
                 <section className="flex flex-col">
-                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Full Address:</p>
+                  <p className="text-green-900 font-semibold text-xs font-sans pl-1">Relationship:</p>
                   <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.fullAddress}
+                    {applicant.relationship || "-"}
                   </p>
                 </section>
-              
               </div>
             </article>
 
@@ -240,7 +262,7 @@ const showDocument = (src: string | null, title: string) => {
               </div>
             </article>
 
-          
+
             <article className="bg-white sm:p-4 p-2 rounded-lg shadow-sm border">
               <p className="border-l-4  border-dGreen rounded-lg pl-2 text-base font-bold font-oswald mb-4 text-dGreen "> 
                 Section 4: Submitted Documents

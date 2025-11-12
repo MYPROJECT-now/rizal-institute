@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
-import { getPromotion, OldStudentEnrollment, oldStudentEnrollment } from "@/src/actions/landingPage";
+import {  OldStudentEnrollment, oldStudentEnrollment } from "@/src/actions/landingPage";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -57,7 +57,7 @@ export const Old_Application = () => {
                 if (!lrn) return; // 👈 prevents null
                 setPromotionLoader(true);
                 try {
-                    await getPromotion(lrn);
+                    // await getPromotion(lrn);
 
                     const gradeLevel = await oldStudentEnrollment(lrn);
 

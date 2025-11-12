@@ -77,11 +77,12 @@ export const UploadGradeClient = ({
               <p className="w-full border px-3 py-2 rounded text-sm sm:text-base">No Assigned grades and subjet yet.</p>
             ) : (
               <select
-                value={`${gradeLevel_id}-${subject_id}`}
+                value={`${gradeLevel_id}-${subject_id}-${section_id}`}
                 onChange={(e) => {
-                  const [gId, sId] = e.target.value.split("-");
+                  const [gId, sId, secId] = e.target.value.split("-");
                   setGradeLevel(gId);
                   setSubject(sId);
+                  setSection(secId);
                 }}
                 className="w-full border px-3 py-2 rounded"
               >

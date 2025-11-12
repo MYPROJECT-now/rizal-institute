@@ -6,7 +6,6 @@ import { toast } from "sonner";
 
 interface Props {
   createTodo: (
-    receipt: string,
     selectedID: number,
 ) => void;
 }
@@ -31,24 +30,24 @@ const CashierAddTodo: FC<Props> = ({ createTodo }) => {
   const handleReceiptUpload = async () => {
     setIsLoading(true);
     try {
-    const uploadImage = async (file: File, folder: string) => {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'my_preset'); // Use one preset for all
-      formData.append('folder', folder); // Dynamically assign the folder
+    // const uploadImage = async (file: File, folder: string) => {
+    //   const formData = new FormData();
+    //   formData.append('file', file);
+    //   formData.append('upload_preset', 'my_preset'); // Use one preset for all
+    //   formData.append('folder', folder); // Dynamically assign the folder
 
-      const response = await fetch('https://api.cloudinary.com/v1_1/dkfn4xy6q/image/upload', {
-      method: 'POST',
-      body: formData,
-      });
+    //   const response = await fetch('https://api.cloudinary.com/v1_1/dkfn4xy6q/image/upload', {
+    //   method: 'POST',
+    //   body: formData,
+    //   });
 
-      const data = await response.json();  
-      return data.secure_url; // Returns the image URL from Cloudinary
-      };
+    //   const data = await response.json();  
+    //   return data.secure_url; // Returns the image URL from Cloudinary
+    //   };
 
-      const uploadReceipt = receipt ? await uploadImage(receipt, 'paymentReceipts') : "";
+      // const uploadReceipt = receipt ? await uploadImage(receipt, 'paymentReceipts') : "";
 
-      createTodo(uploadReceipt, selectedID ?? 0);
+      createTodo(selectedID ?? 0);
       // toast.success("Receipt sent successfully!");
     } catch (error) {
       console.error("Error fetching receipt:", error);

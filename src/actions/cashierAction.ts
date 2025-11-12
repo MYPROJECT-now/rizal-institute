@@ -978,22 +978,22 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
   };
 
 // get discount details for reserved slots
-  export const getDiscountClass = async (lrn: string) => {
-    const discountClass = await db
-    .select({
-      attainment: additionalInformationTable.AttainmentUponGraduation,
-      gpa: additionalInformationTable.ConsistentGPA,
-      hasSibling: additionalInformationTable.HasEnrolledSibling,
-      reservationAmount: reservationFeeTable.reservationAmount,
-      dateOfPayment: reservationFeeTable.dateOfPayment
-    })
-    .from(additionalInformationTable)
-    .leftJoin(applicantsInformationTable, eq(additionalInformationTable.applicants_id, applicantsInformationTable.applicants_id))
-    .leftJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
-    .where(eq(applicantsInformationTable.lrn, lrn));
-    console.log("Fetched Enrollees:", discountClass);    
-    return discountClass;
-  }
+  // export const getDiscountClass = async (lrn: string) => {
+  //   const discountClass = await db
+  //   .select({
+  //     attainment: additionalInformationTable.AttainmentUponGraduation,
+  //     // gpa: additionalInformationTable.ConsistentGPA,
+  //     hasSibling: additionalInformationTable.HasEnrolledSibling,
+  //     reservationAmount: reservationFeeTable.reservationAmount,
+  //     dateOfPayment: reservationFeeTable.dateOfPayment
+  //   })
+  //   .from(additionalInformationTable)
+  //   .leftJoin(applicantsInformationTable, eq(additionalInformationTable.applicants_id, applicantsInformationTable.applicants_id))
+  //   .leftJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
+  //   .where(eq(applicantsInformationTable.lrn, lrn));
+  //   console.log("Fetched Enrollees:", discountClass);    
+  //   return discountClass;
+  // }
 
 
   export const addGrant = async (grant: number) => {
@@ -1619,7 +1619,7 @@ export const acceptPayment = async (monthlyPaymentId: number, month_id: number, 
 
 
 
-export const sendReceipt = async (selectedID: number, cashiersReceipt: string, ) => {
+export const sendReceipt = async (selectedID: number,  ) => {
   await requireStaffAuth(["cashier"]); // gatekeeper
 
   const data = await db
@@ -1641,7 +1641,7 @@ export const sendReceipt = async (selectedID: number, cashiersReceipt: string, )
   await db
     .update(MonthlyPayementTable)
     .set({ 
-      cashiersReceipt: cashiersReceipt,
+      // cashiersReceipt: cashiersReceipt,
       dateOfVerification: new Date().toLocaleDateString(),
       status: "Approved",
      })

@@ -112,7 +112,6 @@ export const ReApplication = () => {
                     setGuardianMiddleName(data.guardiansMiddleName || "");
                     setGuardianLastName(data.guardiansLastName || "");
                     setGuardianSuffix(data.guardiansSuffix || "");
-                    setFullAddress(data.fullAddress || "");
                     setEmergencyContact(data.emergencyContact || "");
                     setEmergencyEmail(data.emergencyEmail || "");
 

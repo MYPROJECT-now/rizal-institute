@@ -8,9 +8,9 @@ export const CashierPage = () => {
   // State to manage the list of todo items
 
   // Function to create a new todo item
-  const createTodo = async (uploadReceipt: string, selectedID: number) => {
+  const createTodo = async ( selectedID: number) => {
     try {
-      await sendReceipt(selectedID, uploadReceipt);
+      await sendReceipt(selectedID,);
       toast.success("Receipt sent successfully!");
     } catch (error) {
       console.error("Error fetching receipt:", error);

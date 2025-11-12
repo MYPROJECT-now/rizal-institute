@@ -69,7 +69,7 @@ const insertAcademicYear = async () => {
       academicYear_id: acadId,
       enrollment_period: "2025-2026",
       enrollment_start_date: "2025-06-01",
-      enrollment_end_date: "2025-10-30",
+      enrollment_end_date: "2025-11-30",
       }
     ]
     const result4 = await db.insert(EnrollmentStatusTable).values(enrollment).returning();

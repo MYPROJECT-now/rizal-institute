@@ -8,6 +8,13 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     applicantsMiddleName: varchar('applicantsMiddleName', { length:100 }),
     applicantsSuffix: varchar('applicantsSuffix', { length:100 }),
     dateOfBirth: date('dateOfBirth' ).notNull(),
+    religion: varchar('religion', { length:100 }).notNull(),
+    ip: varchar('ip', { length:100 }),
+    house_no_purok: varchar('house_no_purok', { length:100 }).notNull(),
+    barangay: varchar('barangay', { length:100 }).notNull(),
+    city: varchar('city', { length:100 }).notNull(),
+    province: varchar('province', { length:100 }).notNull(),
+    motherTounge: varchar('motherTounge', { length:100 }).notNull(),
     age: integer('age').notNull(),
     gender: varchar('gender', { length:100 }).notNull(),
     mobileNumber: varchar('mobileNumber', { length:12 }).notNull(),
@@ -24,7 +31,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     guardiansSuffix: varchar('guardiansSuffix', { length:100 }),
     emergencyContact: varchar('mobileNumber', { length:12 }).notNull(),
     emergencyEmail: varchar('email', { length:100 }),
-    fullAddress: varchar('fullAddress', { length:250 }).notNull(),
+    relationship: varchar('relationship', { length:100 }).notNull(),
   })
 
   export const educationalBackgroundTable = pgTable("educationalBackgroundTable" , {
@@ -74,7 +81,6 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     additionalInformation_id: serial('additionalInformation_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
     AttainmentUponGraduation: varchar('AttainmentUponGraduation', { length:100 }),
-    ConsistentGPA: varchar('ConsistentGPA', { length:100 }),
     HasEnrolledSibling: varchar('HasEnrolledSibling', { length:100 }),
     siblingName: varchar('siblingName', { length:100 }),
     escGrantee: varchar('escGrantee', { length:100 }),
@@ -150,7 +156,13 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     studentFirstName: varchar('studentFirstName', { length:100 }).notNull(),
     studentMiddleName: varchar('studentMiddleName', { length:100 }),
     studentSuffix: varchar('studentSuffix', { length:100 }),
-    fullAddress: varchar('fullAddress', { length:300 }).notNull(),
+    religion: varchar('religion', { length:100 }).notNull(),
+    ip: varchar('ip', { length:100 }),
+    motherTounge: varchar('motherTounge', { length:100 }).notNull(),
+    house_no_purok: varchar('house_no_purok', { length:100 }).notNull(),
+    barangay: varchar('barangay', { length:100 }).notNull(),
+    city: varchar('city', { length:100 }).notNull(),
+    province: varchar('province', { length:100 }).notNull(),
     studentGender: varchar('studentGender', { length:100 }).notNull(),
     studentBirthDate: date('studentBirthDate').notNull(),
     studentAge: integer('studentAge').notNull(),
@@ -162,7 +174,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
     gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
     subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
-    clerk_uid: integer("clerk_uid").references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" }),
+    // clerk_uid: integer("clerk_uid").references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" }),
     finalGrade: integer("finalGrade"),
     remarks: varchar("remarks", { length: 100 }),
     dateSubmitted: date("dateSubmitted"),
@@ -171,7 +183,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
   export const SectionTable = pgTable("SectionTable", {
     section_id: serial("section_id").primaryKey(),
     sectionName: varchar("sectionName", { length: 100 }).notNull(),
-    limit: integer("limit").notNull(),
+    limit: integer("limit").notNull(),  
     gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
     room_id: integer("room_id").references(() => RoomTable.room_id, { onDelete: "cascade" }).notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
@@ -181,7 +193,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     room_id: serial("room_id").primaryKey(),
     roomName: varchar("roomName", { length: 100 }).notNull(),
   })
-
+  
   export const StudentPerGradeAndSection = pgTable("StudentPerGradeAndSection", {
     spgac_id: serial("spgac_id").primaryKey(),
     student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
@@ -196,11 +208,11 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
     gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
     subject_id: integer("subject_id").references(() => SubjectTable.subject_id, { onDelete: "cascade" }).notNull(),
+    room_id: integer("room_id").references(() => RoomTable.room_id, { onDelete: "cascade" }).notNull(),
     clerk_uid: integer("clerk_uid"), // teacher.references(() => staffClerkUserTable.clerk_uid, { onDelete: "cascade" })
     dayOfWeek: varchar("dayOfWeek", { length: 20 }).notNull(), // "Monday", "Tue"
     startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
-    endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30"
-    room_id: integer("room_id").references(() => RoomTable.room_id, { onDelete: "cascade" }).notNull(),
+    endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30" 
   });
 
   export const ESCGranteeTable = pgTable("ESCGranteeTable", {
@@ -287,7 +299,6 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     dateOfPayment: varchar('dateOfPayment', { length:100 }).notNull(),
     amount: integer('amount').notNull(),
     proofOfPayment: varchar('proofOfPayment', { length:300 }),
-    cashiersReceipt: varchar('cashiersReceipt', { length:300 }),
     modeOfPayment: varchar('modeOfPayment', { length:100 }).notNull(),
     dateOfVerification: varchar('dateOfVerification', { length:100 }),
     SINumber: varchar('SINumber', { length:300 }),
@@ -371,7 +382,7 @@ export const AnnouncementReadStatusTable = pgTable("AnnouncementReadStatusTable"
   announcement_id: integer("announcement_id").references(() => AnnouncementTable.announcement_id, { onDelete: "cascade" }).notNull(),
   student_id: integer("student_id").references(() => StudentInfoTable.student_id, { onDelete: "cascade" }).notNull(),
   isRead: boolean("isRead").notNull().default(false),
-});
+}); 
 
 
 //teacher component

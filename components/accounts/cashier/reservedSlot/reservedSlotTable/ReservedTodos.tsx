@@ -5,7 +5,7 @@ import { reservedSlotType } from "@/src/type/CASHIER/RESERVED/reserved";
 import Applicant from "./ReservedTodo";
 import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
 import { Button } from "@/components/ui/button";
-import { DiscountClass } from "../class/discount";
+// import { DiscountClass } from "../class/discount";
 
 interface Props {
   applicants: reservedSlotType[];
@@ -46,7 +46,7 @@ interface Props {
 
   return (
   <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
-    <DiscountClass />
+    {/* <DiscountClass /> */}
     <UploadSoaModal />
 
     <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 mb-4">
