@@ -1,10 +1,11 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
 import { and, eq } from 'drizzle-orm';
-import { AcademicYearTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, Cashier_remaks_table } from '@/src/db/schema';
+import {  applicantsInformationTable, applicationStatusTable, auditTrailsTable, Cashier_remaks_table } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
+import { getSelectedYear } from '@/src/actions/utils/getSelectedYear';
 
 // Setup email transporter
 const transporter = nodemailer.createTransport({
@@ -28,11 +29,18 @@ async function getStudentEmail(studentId: number): Promise<string | null> {
 
 // Function to fetch tracking ID from applicationStatusTable
 async function getTrackingId(studentId: number): Promise<string> {
+    const selectedYear = await getSelectedYear();
+    if (selectedYear === null) {
+      console.error("No selected year found.");
+      return "N/A";
+    }
+
   const result = await db
     .select({ trackingId: applicationStatusTable.trackingId })
     .from(applicationStatusTable)
-    .leftJoin(AcademicYearTable, and(eq(applicationStatusTable.academicYear_id, AcademicYearTable.academicYear_id), eq(AcademicYearTable.isActive, true)))
-    .where(eq(applicationStatusTable.applicants_id, studentId))
+    .where(and
+      (eq(applicationStatusTable.academicYear_id, selectedYear), 
+      eq(applicationStatusTable.applicants_id, studentId)))
     .limit(1);
 
   return result.length > 0 ? result[0].trackingId : "N/A";
