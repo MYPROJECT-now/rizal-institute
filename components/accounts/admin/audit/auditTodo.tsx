@@ -12,11 +12,11 @@ const AuditTodo: FC<Props> = ({ auditTodo, className}) => {
 
   return (
     <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
-        <td className="px-4 py-2">{auditTodo.username}</td>
-        <td className="px-4 py-2">{auditTodo.usertype}</td>
-        <td className="px-4 py-2">{auditTodo.actionTaken}</td>
-        <td className="px-4 py-2">{auditTodo.actionTakenFor}</td>
-        <td className="px-4 py-2">{auditTodo.dateOfAction}</td>
+        <td className="px-4 py-4">{auditTodo.username}</td>
+        <td className="px-4 py-4">{auditTodo.usertype}</td>
+        <td className="px-4 py-4">{auditTodo.actionTaken}</td>
+        <td className="px-4 py-4">{auditTodo.actionTakenFor}</td>
+        <td className="px-4 py-4">{auditTodo.dateOfAction}</td>
     </tr>
 
   );

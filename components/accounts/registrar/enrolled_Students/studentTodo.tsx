@@ -87,7 +87,8 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
       <td className="px-[55px] py-2">{student.gradeLevel}</td>
       <td className={ getDocumentStatus(student) === "Complete" ? "text-green-700 font-semibold" : getDocumentStatus(student) === "Incomplete" ? "text-yellow-600 font-semibold" : "text-red-600 font-semibold"}>
         {getDocumentStatus(student)}
-      </td>      
+      </td>    
+      <td className={student.status === "Dropped_Out" ? "px-4 py-2 text-red-600 font-semibold" : student.status === "Transferred_Out" ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold"}>{student.status === "Dropped_Out" ? "Dropped Out" : student.status === "Transferred_Out" ? "Transferred Out" : "Enrolled"}</td>
       <td className="px-4 py-2">
         <Button 
           variant="confirmButton"
@@ -96,6 +97,7 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
             View
           </Button>
       </td>
+
       <td className="py-2 px-2 flex gap-2 justify-center">
         <Button
           variant="rejectButton"
@@ -103,7 +105,7 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
           onClick={handleTransfer}
           disabled={loading || student.status === "Dropped" || student.status === "Transferred" || student.isActive === false}
         >
-          Transfer
+          Transfer Out
         </Button>
         
         <Button
@@ -112,7 +114,7 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
           onClick={handleDrop}
           disabled={loading || student.status === "Dropped" || student.status === "Transferred" || student.isActive === false}
         >
-          Drop
+          Drop Out
         </Button>
 
       </td>

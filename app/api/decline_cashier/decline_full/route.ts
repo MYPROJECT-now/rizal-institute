@@ -104,7 +104,7 @@ export async function POST(request: Request) {
       
     await  db.insert(auditTrailsTable)
         .values({
-        actionTaken: "Decline FUll Payment",
+        actionTaken: "Decline Full Payment",
         actionTakenFor: fullName,
         dateOfAction: new Date().toISOString(),
         username: credentials.clerk_username,

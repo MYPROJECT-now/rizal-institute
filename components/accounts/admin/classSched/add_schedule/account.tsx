@@ -130,7 +130,7 @@ export const Add_Schedule = () => {
     setIsSubmitting(true);
     try {
       for (const day of selectedDays) {
-        const result = await checkSchedule(selectedTeacher, day, startTime, endTime, selectedGradeLevel, selectedSubject);
+        const result = await checkSchedule(selectedTeacher, day, startTime, endTime, selectedGradeLevel, selectedSubject, selectedSection );
 
         if (result.type === "teacherConflict") {
           toast.error(`Teacher already has a class on ${day} during this time.`);
@@ -138,11 +138,15 @@ export const Add_Schedule = () => {
           return;
         }
 
-
-
         if (result.type === "subjectConflict") {
           const gradeName = getGradeLevelName(selectedGradeLevel);
           toast.error(`This subject is already scheduled in Grade ${gradeName} on ${day}.`);
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (result.type === "sectionConflict") {
+          toast.error(`This section already has another class scheduled on ${day} during this time.`);
           setIsSubmitting(false);
           return;
         }
@@ -284,7 +288,7 @@ export const Add_Schedule = () => {
               </>
             )}
     
-            <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+            {/* <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
               <span className="text-dGreen text-sm font-semibold">Days of the Week:</span>
               <div className="flex flex-wrap gap-2">
                 {["monday", "tuesday", "wednesday", "thursday", "friday"].map((day) => (
@@ -297,12 +301,49 @@ export const Add_Schedule = () => {
                       className="accent-dGreen"
                       disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
                     />
-                    {/* {day.charAt(0).toUpperCase() + day.slice(1)} */}
                       {day.charAt(0).toUpperCase() + day.slice(1, 3)}
                   </label>
                 ))}
               </div>
-            </section>
+            </section> */}
+<section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">
+  <span className="text-dGreen text-sm font-semibold">Days of the Week:</span>
+
+  <div className="flex flex-wrap gap-2">
+    {/* ✅ All days toggle */}
+    <label className="flex items-center gap-2">
+      <input
+        type="checkbox"
+        checked={selectedDays.length === 5}
+        onChange={() => {
+          if (selectedDays.length === 5) {
+            setSelectedDays([]); // uncheck all
+          } else {
+            setSelectedDays(["monday", "tuesday", "wednesday", "thursday", "friday"]);
+          }
+        }}
+        className="accent-dGreen"
+        disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
+      />
+      All
+    </label>
+
+    {/* ✅ Individual day toggles */}
+    {["monday", "tuesday", "wednesday", "thursday", "friday"].map((day) => (
+      <label key={day} className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          value={day}
+          checked={selectedDays.includes(day)}
+          onChange={() => toggleDay(day)}
+          className="accent-dGreen"
+          disabled={!selectedTeacher || !selectedGradeLevel || !selectedSection}
+        />
+        {day.charAt(0).toUpperCase() + day.slice(1, 3)}
+      </label>
+    ))}
+  </div>
+</section>
  
 
             <section className="flex flex-col gap-1 w-[200px] sm:w-[300px] xl:w-[400px]">

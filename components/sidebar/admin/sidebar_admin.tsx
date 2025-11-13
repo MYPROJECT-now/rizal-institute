@@ -38,7 +38,7 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
 
       <div
         className={cn(
-          "flex-col min-h-screen w-[255px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
+          "flex-col min-h-screen w-[280px] items-center pt-5 bg-lGreen left-0 top-0 px-4", 
           className
         )}
       >
@@ -77,7 +77,7 @@ export const Sidebar_admin = ({ className, onClose}: Props) => {
             />
 
             <SidebarItem
-              label="Assign Subject"
+              label="Teaching Assignment"
               href="/ACCOUNTS/admin/teacher"
               iconSrc="/role.png"
               onClick={onClose}

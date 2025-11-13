@@ -1,7 +1,7 @@
 // app/actions/getStudentData.ts
 "use server";
 
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, like, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
@@ -622,6 +622,8 @@ export const addPayment = async (
     );
 };
 
+
+
 export const sendReminder = async (lrn: string, email: string, balance: number) => {
   try {
     // --- 1. Send email ---
@@ -672,13 +674,22 @@ export const sendReminder = async (lrn: string, email: string, balance: number) 
       throw new Error("Student not found.");
     }
 
+    // await db
+    //   .update(MonthsInSoaTable)
+    //   .set({ Reminder: true })
+    //   .where(and(
+    //     eq(MonthsInSoaTable.applicants_id, student[0].applicants_id),
+    //     (eq(MonthsInSoaTable.month, currentMonth)
+    //   )));
     await db
       .update(MonthsInSoaTable)
       .set({ Reminder: true })
-      .where(and(
-        eq(MonthsInSoaTable.applicants_id, student[0].applicants_id),
-        (eq(MonthsInSoaTable.month, currentMonth)
-      )));
+      .where(
+        and(
+          eq(MonthsInSoaTable.applicants_id, student[0].applicants_id),
+          like(MonthsInSoaTable.month, `${currentMonth}%`)
+        )
+      );
 
     console.log(`Reminder flag updated for ${currentMonth} for LRN ${lrn}`);
   } catch (err) {
@@ -686,3 +697,16 @@ export const sendReminder = async (lrn: string, email: string, balance: number) 
     throw err;
   }
 };
+
+
+
+// export const studentProfile = async () => { 
+//   const applicantId = await getApplicantID();
+//   if (!applicantId) return null;
+//   console.log("Applicant ID:", applicantId);
+
+//   const studentsInfo = await db
+//   .select({
+    
+//   })
+// }

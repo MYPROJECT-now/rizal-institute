@@ -24,7 +24,14 @@ export const Students_info_Modal = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [age, setAge] = useState(0);
   const [gender, setGender] = useState("");
-  const [fullAddress, setFullAddress] = useState("");
+  const [religion, setReligion] = useState("");
+  const [ip, setIp] = useState("");
+  const [motherTongue, setMotherTongue] = useState("");
+  const [house_no_purok, setHouse_no_purok] = useState("");
+  const [barangay, setBarangay] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+
 
   const [guardiansLastName, setGuardiansLastName] = useState("");
   const [guardiansFirstName, setGuardiansFirstName] = useState("");
@@ -32,6 +39,7 @@ export const Students_info_Modal = () => {
   const [guardiansSuffix, setGuardiansSuffix] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [emergencyEmail, setEmergencyEmail] = useState("");
+  const [relationship, setRelationship] = useState("");
   const [isActive, setIsActive] = useState(false);
 
   const [birthcert, setBirthcert] = useState(false);
@@ -62,8 +70,15 @@ useEffect(() => {
       setStudentMiddleName(data[0].studentMiddleName || "-");
       setSuffix(data[0].studentSuffix || "-");
       setDateOfBirth(data[0].studentBirthDate || "-");
-      setAge(data[0].age || 0);
       setGender(data[0].studentGender || "-");
+      setReligion(data[0].religion || "-");
+      setIp(data[0].ip || "-");
+      setMotherTongue(data[0].motherTounge || "-");
+      setHouse_no_purok(data[0].house_no_purok || "-");
+      setBarangay(data[0].barangay || "-");
+      setCity(data[0].city || "-");
+      setProvince(data[0].province || "-");
+
 
       setGuardiansLastName(data[0].guardiansLastName || "-");
       setGuardiansFirstName(data[0].guardiansFirstName || "-");
@@ -71,6 +86,7 @@ useEffect(() => {
       setGuardiansSuffix(data[0].guardiansSuffix || "-");
       setEmergencyContact(data[0].emergencyContact || "-");
       setEmergencyEmail(data[0].emergencyEmail || "-");
+      setRelationship(data[0].relationship || "-");
 
       setBirthcert(Boolean(data[0].birthcert));
       setReportcard(Boolean(data[0].reportCard));
@@ -97,6 +113,9 @@ useEffect(() => {
   const handleEdit = () => {
     setEditing(true);
   };
+  const handleCancel = () => {
+    setEditing(false);
+  };
 
   const handleSave = async () => {
       
@@ -112,9 +131,14 @@ useEffect(() => {
           studentMiddleName,
           suffix,
           studentBirthDate: dateOfBirth,
-          studentAge: age,
           studentGender: gender,
-          fullAddress,
+          religion,
+          ip,
+          motherTongue,
+          house_no_purok,
+          barangay,
+          city,
+          province,
 
           guardiansLastName,
           guardiansFirstName,
@@ -122,6 +146,7 @@ useEffect(() => {
           guardiansSuffix,
           emergencyContact,
           emergencyEmail,
+          relationship,
 
           birthcert,
           reportcard,
@@ -143,6 +168,27 @@ useEffect(() => {
  
   };
 
+useEffect(() => {
+  if (!dateOfBirth || dateOfBirth === "-") {
+    setAge(0);
+    return;
+  }
+
+  const birthDate = new Date(dateOfBirth);
+  const today = new Date();
+
+  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    calculatedAge--;
+  }
+
+  setAge(calculatedAge);
+}, [dateOfBirth]);
   const handleClose = () => {
     close();
     setEditing(false);
@@ -153,7 +199,7 @@ useEffect(() => {
       <DialogContent className="lg:w-[700px] sm:w-[550px] w-[290px] max-h-[400px] overflow-hidden bg-gray-50 rounded-xl shadow-lg">
         <DialogHeader>
           <DialogTitle className="lg:text-2xl sm:text-xl text-lg font-bold text-white bg-dGreen lg:py-4 sm:py-3 py-4 flex items-center justify-center">
-            Student Registration Form
+            Student Information
           </DialogTitle>
         </DialogHeader>
       {isLoading ? (  
@@ -236,12 +282,11 @@ useEffect(() => {
                 <label className=" font-merriweather font-semibold text-dGreen text-[12px]">Age:</label>
                 <input 
                   type="text"
-                  readOnly={!editing}
+                  readOnly
+                  disabled
                   value={age}
-                  onChange={(e) => setAge(Number(e.target.value))} 
-                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
-                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
-                  }`}
+                  className="font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+
                 />
               </section>
 
@@ -259,17 +304,96 @@ useEffect(() => {
               </section>
 
               <section className="flex flex-col">
-                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Full Address:</label>
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Religion:</label>
                 <input 
                   type="text"
                   readOnly={!editing}
-                  value={fullAddress}
-                  onChange={(e) => setFullAddress(e.target.value)} 
+                  value={religion}
+                  onChange={(e) => setReligion(e.target.value)} 
                   className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
                     editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
                 />
               </section>
+
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Ethnic Group:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={ip}
+                  onChange={(e) => setIp(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Mother Tounge:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={motherTongue}
+                  onChange={(e) => setMotherTongue(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">House# / Street / Purok:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={house_no_purok}
+                  onChange={(e) => setHouse_no_purok(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Barangay:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={barangay}
+                  onChange={(e) => setBarangay(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">City / Municipality:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+              
+              <section className="flex flex-col">
+                <label className="font-merriweather font-semibold text-dGreen text-[12px]">Province:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+
             </div>
           </article>
 
@@ -349,6 +473,19 @@ useEffect(() => {
                   readOnly={!editing}
                   value={emergencyEmail}
                   onChange={(e) => setEmergencyEmail(e.target.value)} 
+                  className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
+                    editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
+                  }`}
+                />
+              </section>
+
+              <section className="flex flex-col">
+                <label className=" font-merriweather font-semibold text-dGreen text-[12px]">Relationship:</label>
+                <input 
+                  type="text"
+                  readOnly={!editing}
+                  value={relationship}
+                  onChange={(e) => setRelationship(e.target.value)} 
                   className={`font-merriweather text-dGreen text-sm lg:w-[220px] sm:w-[190px] p-2 ${
                     editing ? "bg-green-100 rounded-sm  outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition" : "outline-none bg-green-100/50 rounded-sm "
                   }`}
@@ -460,14 +597,26 @@ useEffect(() => {
           </article>
 
           <div className="flex flex-row w-full justify-center gap-2 ">
-            <Button
-              onClick={handleEdit}
-              variant={"acceptButton"}
-              disabled={!isActive}
-              className="rounded-xl px-2 w-14 py-1"
-            >
-              Edit
-            </Button>
+            {editing ? (
+              <Button
+                onClick={handleCancel}
+                variant={"acceptButton"}
+                disabled={!isActive}
+                className="rounded-xl px-2 w-14 py-1"
+              >
+                Cancel
+              </Button>
+            ): (
+              <Button
+                onClick={handleEdit}
+                variant={"acceptButton"}
+                disabled={!isActive}
+                className="rounded-xl px-2 w-14 py-1"
+              >
+                Edit
+              </Button>
+            )}
+
             
             <Button
               onClick={handleSave}

@@ -8,6 +8,7 @@ import { useDeleteAssignModal, useEditAssignModal } from "@/src/store/ADMIN/assi
 import { EditAssign } from "./edit/edit";
 import { DeleteAssign } from "./delete/delete";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 type Grade = {
   gradeLevel_id: number;
@@ -44,7 +45,8 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
   const { open: OpenEdit } = useEditAssignModal();
   const { open: OpenDelete } = useDeleteAssignModal();
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
+  const [isLoading2, setIsLoading2] = useState(false);
   useEffect(() => {
     setLoading(true);
     const fetchTeachers = async () => {
@@ -87,6 +89,11 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
     setIsLoading(false);
     window.location.reload();
   };
+  const handleAssigned = () => {
+    setIsLoading2(true);
+    router.push("/ACCOUNTS/admin/teacher/teacher");
+    setIsLoading2(false);
+  };
 
 
   return (
@@ -106,6 +113,14 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
             </select>
           )}
         </section>
+        <Button
+          variant={"confirmButton"}
+          className="px-5 py-2 rounded-lg"
+          onClick={handleAssigned}
+          disabled={isLoading2}
+        >
+          {isLoading2 ? "Loading..." : "Assigned Subject & Grade"} 
+        </Button>
 
         <EditAssign />
         <Button
@@ -124,6 +139,8 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
         >
           Delete
         </Button>
+
+
       </header>
 
       <section className="w-full grid sm:grid-cols-2 grid-cols-1 gap-4 ">

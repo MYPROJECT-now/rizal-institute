@@ -1520,7 +1520,7 @@ export const prevDiscounts = async (lrn: string) => {
       eq(downPaymentTable.academicYear_id, selectedYear),
     ))
 
-    console.log("Fetched Enrollees:", allEnrollees);
+    console.log("Fetched full payment:", allEnrollees);
     
   return allEnrollees ;
   };

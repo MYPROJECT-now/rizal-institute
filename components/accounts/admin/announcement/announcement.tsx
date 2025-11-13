@@ -1,16 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAddAnnouncement, useAnnouncement } from "@/src/store/ADMIN/announcement";
-import { getAnnouncement } from "@/src/actions/adminAction";
+import { useAddAnnouncement, useAnnouncement, useEditAnnouncement } from "@/src/store/ADMIN/announcement";
+import { deleteAnnouncement, getAnnouncement } from "@/src/actions/adminAction";
 import { Button } from "@/components/ui/button";
 import { Announcement_Modal } from "./announcemet_modal";
 import { AddAnnouncement_Modal } from "./addAnnouncement";
+import { EditAnnouncement_Modal } from "./editAnnouncement";
+import { toast } from "sonner";
 
 type Announcement = {
+  announcement_id: number; // 👈 add this
   title: string;
   content: string;
   createdAt: string;
+  image?: string | null;
+};
+
+type AnnouncementData = {
+  id: number;
+  title: string;
+  content: string;
   image?: string | null;
 };
 
@@ -18,13 +28,17 @@ export const AnnouncementPage = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [filtered, setFiltered] = useState<Announcement[]>([]);
   const [selected, setSelected] = useState<Announcement | null>(null);
+  const [selectedData, setSelectedData] = useState<AnnouncementData | null>(null);
+
   const [page, setPage] = useState(1);
   const [dateFilter, setDateFilter] = useState("");
   const [loading, setLoading] = useState(true); // 👈 added loading state
+  const [deleting, setDeleting] = useState<number | null>(null); // 👈 to track which item is being deleted
   const limit = 6;
 
   const { open } = useAnnouncement();
   const { open: openAdd } = useAddAnnouncement();
+  const { open: openEdit } = useEditAnnouncement();
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -62,6 +76,32 @@ export const AnnouncementPage = () => {
     open();
   };
 
+  const openEditModal = (b: AnnouncementData) => {
+    setSelectedData(b);
+    openEdit();
+  };
+  const handleDelete = async (announcement_id: number) => {
+    const confirmDelete = confirm("Are you sure you want to delete this announcement?");
+    if (!confirmDelete) return;
+
+    try {
+      setDeleting(announcement_id);
+      await deleteAnnouncement(announcement_id);
+
+      // ✅ Update UI immediately
+      const updated = announcements.filter(a => a.announcement_id !== announcement_id);
+      setAnnouncements(updated);
+      setFiltered(updated);
+
+      toast.success("Announcement deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting announcement:", error);
+      toast.error("Failed to delete announcement.");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   return (
     <div className="p-6">
       {/* Filter Section */}
@@ -92,6 +132,8 @@ export const AnnouncementPage = () => {
         >
           Add Announcement
         </Button>
+
+
       </section>
 
       {/* Loading State */}
@@ -112,6 +154,7 @@ export const AnnouncementPage = () => {
                   <th className="px-4 py-2 font-semibold text-center">Title</th>
                   <th className="px-4 py-2 font-semibold text-center">Date</th>
                   <th className="px-4 py-2 font-semibold text-center">View</th>
+                  <th className="px-4 py-2 font-semibold text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -138,6 +181,31 @@ export const AnnouncementPage = () => {
                           className="rounded-lg lg:px-5 sm:px-3 px-2 lg:py-2 py-1 text-xs sm:text-sm sm:w-auto w-full"
                         >
                           Show
+                        </Button>
+                      </td>
+                      <td className="px-4 py-2 text-center justify-center gap-3 flex flex-row">
+                        <Button
+                          onClick={() =>
+                            openEditModal({
+                              id: a.announcement_id,
+                              title: a.title,
+                              content: a.content,
+                              image: a.image,
+                            })
+                          }
+                          variant="confirmButton"
+                          className="rounded-lg lg:px-5 sm:px-3 px-2 lg:py-2 py-1 text-xs sm:text-sm"
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          onClick={() => handleDelete(a.announcement_id)}
+                          disabled={deleting === a.announcement_id}                          
+                          variant="rejectButton"
+                          className="rounded-lg lg:px-5 sm:px-3 px-2 lg:py-2 py-1 text-xs sm:text-sm sm:w-auto w-full"
+                        >
+                          {deleting === a.announcement_id ? "Deleting..." : "Delete"}
                         </Button>
                       </td>
                     </tr>
@@ -183,6 +251,16 @@ export const AnnouncementPage = () => {
           content={selected.content}
           image={selected.image}
           date={selected.createdAt}
+        />
+      )}
+
+      {/* Modal */}
+      {selectedData && (
+        <EditAnnouncement_Modal
+          id={selectedData.id}
+          title={selectedData.title}
+          content={selectedData.content}
+          image={selectedData.image}
         />
       )}
     </div>

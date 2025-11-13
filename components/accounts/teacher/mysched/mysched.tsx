@@ -40,16 +40,17 @@ export const MySched = () => {
   const renderSkeleton = () => (
     <div className="flex flex-col gap-2 w-full">
       {[...Array(2)].map((_, i) => (
-        <div key={i} className="flex  items-center justify-around w-full">
+        <div key={i} className="grid grid-cols-2 gap-2  items-center justify-center w-full">
           <Skeleton className="h-5 w-[150px]" />
-          <Skeleton className="h-5 w-[15    0px]" />
+          <Skeleton className="h-5 w-[150px]" />
+
         </div>
       ))}
     </div>
   );
 
   return (
-    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1  p-5 gap-4 py-10">
+    <div className=" grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1  p-5 gap-4 py-10">
       {grouped.map(({ day, entries }) => (
         <Card
           key={day}
@@ -80,7 +81,7 @@ export const MySched = () => {
             )}
           </section> */}
           
-          <section className="w-full space-y-1">
+          <section className="w-full space-y-1 ">
             {loading ? (
               renderSkeleton()
             ) : entries.length === 0 ? (

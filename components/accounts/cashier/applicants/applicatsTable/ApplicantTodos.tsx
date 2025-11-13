@@ -16,8 +16,7 @@ interface Props {
 
   const Students: FC<Props> = ({ applicants, activeReceipt }) => {
     const [studentList, setApplicantList] = useState<Tableapplicant_Type[]>(applicants);
-    const [filterName, setFilterName] = useState("");
-    const [filterLRN, setFilterLRN] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [filterGrade, setFilterGrade] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
 
@@ -76,12 +75,13 @@ interface Props {
     
   const filteredStudents = studentList.filter((student) => {
     const fullName = `${student.firstName} ${student.middleName ?? ""} ${student.lastName}`.toLowerCase();
-    const matchesName = fullName.includes(filterName.toLowerCase());
-    const matchesLRN = student.lrn.includes(filterLRN);
+    const matchesSearch =
+      fullName.includes(searchQuery.toLowerCase()) ||
+      student.lrn.includes(searchQuery);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
     const matchesStatus = filterStatus === "" || student.reservationPaymentStatus === filterStatus;
 
-    return matchesName && matchesLRN && matchesGrade && matchesStatus;
+    return matchesSearch && matchesGrade && matchesStatus;
   });
 
     // 🧮 Pagination logic
@@ -101,18 +101,10 @@ interface Props {
 
       <input
         type="text"
-        placeholder="Name"
-        value={filterName}
-        onChange={(e) => setFilterName(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-      />
-
-      <input
-        type="text"
-        placeholder="LRN"
-        value={filterLRN}
-        onChange={(e) => setFilterLRN(e.target.value)}
-          className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
+        placeholder="Search Name or LRN"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
       <select
@@ -142,8 +134,7 @@ interface Props {
 
       <Button
         onClick={() => {
-          setFilterName("");
-          setFilterLRN("");
+          setSearchQuery("");
           setFilterGrade("");
           setFilterStatus("");
         }}

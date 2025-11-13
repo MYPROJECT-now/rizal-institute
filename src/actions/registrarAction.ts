@@ -401,6 +401,14 @@ export const getEnrollmentTrend = async () => {
       studentGender: StudentInfoTable.studentGender,
       studentBirthDate: StudentInfoTable.studentBirthDate,
       age: StudentInfoTable.studentAge,
+      religion: StudentInfoTable.religion,
+      ip: StudentInfoTable.ip,
+      motherTounge: StudentInfoTable.motherTounge,
+      house_no_purok: StudentInfoTable.house_no_purok,
+      barangay: StudentInfoTable.barangay,
+      city: StudentInfoTable.city,
+      province: StudentInfoTable.province,
+
 
       guardiansLastName: guardianAndParentsTable.guardiansLastName,
       guardiansFirstName: guardianAndParentsTable.guardiansFirstName,
@@ -408,6 +416,7 @@ export const getEnrollmentTrend = async () => {
       guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
       emergencyContact: guardianAndParentsTable.emergencyContact,
       emergencyEmail: guardianAndParentsTable.emergencyEmail,
+      relationship: guardianAndParentsTable.relationship,
 
       birthcert: documentsTable.hasBirth,
       reportCard: documentsTable.hasReportCard,
@@ -456,8 +465,13 @@ export const getEnrollmentTrend = async () => {
     suffix: string;
     studentGender: string;
     studentBirthDate: string;
-    studentAge: number;
-    fullAddress: string;
+    religion: string;
+    ip: string;
+    motherTongue: string;
+    house_no_purok: string;
+    barangay: string;
+    city: string;
+    province: string;
 
     guardiansLastName: string;
     guardiansFirstName: string;
@@ -465,6 +479,7 @@ export const getEnrollmentTrend = async () => {
     guardiansSuffix: string;
     emergencyContact: string;
     emergencyEmail: string;
+    relationship: string;
 
     birthcert: boolean;
     reportcard: boolean;
@@ -496,7 +511,13 @@ export const getEnrollmentTrend = async () => {
         studentSuffix: values.suffix,
         studentGender: values.studentGender,
         studentBirthDate: values.studentBirthDate,
-        studentAge: values.studentAge,
+        religion: values.religion,
+        ip: values.ip,
+        motherTounge: values.motherTongue,
+        house_no_purok: values.house_no_purok,
+        barangay: values.barangay,
+        city: values.city,
+        province: values.province
       })
       .where(eq(StudentInfoTable.applicants_id, id)),
 
@@ -508,6 +529,7 @@ export const getEnrollmentTrend = async () => {
         guardiansSuffix: values.guardiansSuffix,
         emergencyContact: values.emergencyContact,
         emergencyEmail: values.emergencyEmail,
+        relationship: values.relationship
       })
       .where(eq(guardianAndParentsTable.applicants_id, id)),
 
@@ -570,7 +592,8 @@ export const getEnrollmentTrend = async () => {
       db
       .update(AdmissionStatusTable)
       .set({
-        admissionStatus: "Transferred",
+        admissionStatus: "Transferred_Out",
+        dateTransferred: new Date().toISOString()
       })
       .where(eq(AdmissionStatusTable.applicants_id, id)),
 
@@ -627,7 +650,8 @@ export const getEnrollmentTrend = async () => {
     db
       .update(AdmissionStatusTable)
       .set({
-        admissionStatus: "Dropped",
+        admissionStatus: "Dropped_Out",
+        dateDropped: new Date().toISOString()
       })
       .where(eq(AdmissionStatusTable.applicants_id, id)),
 

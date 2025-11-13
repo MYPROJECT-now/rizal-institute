@@ -12,8 +12,7 @@ interface Props {
 
 const Students: FC<Props> = ({ students }) => {
   const [studentList] = useState<all_student_Type[]>(students);
-  const [filterName, setFilterName] = useState("");
-  const [filterLRN, setFilterLRN] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterMethod, setFilterMethod] = useState("");
 
@@ -26,12 +25,13 @@ const Students: FC<Props> = ({ students }) => {
   
 const filteredStudents = studentList.filter((student) => {
   const fullName = `${student.studentLastName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`.toLowerCase();
-  const matchesName = fullName.includes(filterName.toLowerCase());
-  const matchesLRN = student.lrn.includes(filterLRN);
+    const matchesSearch =
+      fullName.includes(searchQuery.toLowerCase()) ||
+      student.lrn.includes(searchQuery);
   const matchesGrade = filterGrade === "" || student.gradeLevelName === filterGrade;
   const matchesMethod = filterMethod === "" || student.paymentMethod === filterMethod;
 
-  return matchesName && matchesLRN && matchesGrade && matchesMethod;
+  return matchesSearch && matchesGrade && matchesMethod;
   // return matchesName && matchesLRN;
 });
 
@@ -51,17 +51,9 @@ const filteredStudents = studentList.filter((student) => {
 
       <input
         type="text"
-        placeholder="Name"
-        value={filterName}
-        onChange={(e) => setFilterName(e.target.value)}
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-      />
-
-      <input
-        type="text"
-        placeholder="LRN"
-        value={filterLRN}
-        onChange={(e) => setFilterLRN(e.target.value)}
+        placeholder="Search Name or LRN"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
@@ -89,8 +81,7 @@ const filteredStudents = studentList.filter((student) => {
       </select>
       <Button
         onClick={() => {
-          setFilterName("");
-          setFilterLRN("");
+          setSearchQuery("");
           setFilterGrade("");
           setFilterMethod("");
         }}

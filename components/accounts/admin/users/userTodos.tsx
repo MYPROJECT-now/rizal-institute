@@ -57,7 +57,7 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
           onChange={(e) => setFilterUsertype(e.target.value)}
           className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
         >
-          <option value="">All Usertypes</option>
+          <option value="">All users</option>
           <option value="admin">Admin</option>
           <option value="registrar">Registrar</option>
           <option value="teacher">Teacher</option>

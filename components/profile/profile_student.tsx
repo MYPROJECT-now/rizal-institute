@@ -7,7 +7,6 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
@@ -41,7 +40,19 @@ export const Profile_student = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator /> */}
+
+                <DropdownMenuItem>
+                    <Link href="/ACCOUNTS/student/profile">
+                        Student Info
+                    </Link>
+                    {/* <button>
+                        <a href="/ACCOUNTS/student/settings">
+                            Settings
+                        </a>
+                    </button> */}
+                </DropdownMenuItem>
+               
                 <DropdownMenuItem>
                     <Link href="/ACCOUNTS/student/settings">
                         Settings
@@ -52,6 +63,9 @@ export const Profile_student = () => {
                         </a>
                     </button> */}
                 </DropdownMenuItem>
+
+
+
                 <DropdownMenuItem>
                 <SignOutButton
                     redirectUrl="/portal2"

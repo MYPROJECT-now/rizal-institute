@@ -123,6 +123,8 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     admissionStatus: varchar('admissionStatus', { length:100 }).notNull(),
     dateOfAdmission: date('dateOfAdmission').notNull(),
     dateAdmitted: date('dateAdmitted'),
+    dateDropped: date('dateDropped'),
+    dateTransferred: date('dateTransferred'),
     isActive: boolean('isActive').notNull().default(false),
   })
 
@@ -204,6 +206,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
 
   export const ScheduleTable = pgTable("ScheduleTable", {
     schedule_id: serial("schedule_id").primaryKey(),
+
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: "cascade" }).notNull(),
     section_id: integer("section_id").references(() => SectionTable.section_id, { onDelete: "cascade" }).notNull(),
     gradeLevel_id: integer("gradeLevel_id").references(() => GradeLevelTable.gradeLevel_id, { onDelete: "cascade" }).notNull(),
@@ -214,7 +217,6 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     startTime: varchar("startTime", { length: 10 }).notNull(), // "08:00"
     endTime: varchar("endTime", { length: 10 }).notNull(),     // "09:30" 
   });
-
   export const ESCGranteeTable = pgTable("ESCGranteeTable", {
     ESCGrantee_id: serial("ESCGrantee_id").primaryKey(),
     applicants_id: integer("applicants_id").references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),

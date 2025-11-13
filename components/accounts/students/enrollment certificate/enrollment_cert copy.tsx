@@ -40,9 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginLeft: 40,
     marginRight: 40,
-    marginTop: 10,         // a bit more top margin
-    lineHeight: 1.6,       // adds breathing space between lines
-    textAlign: "justify",  // makes it look cleaner and formal
+    marginTop: 5,
   },
   waterMark: {
     position: "absolute",
@@ -103,11 +101,13 @@ export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentIn
         </View>
 
         <View>
+          <Text style={styles.indent}>
+            This certifies that <Text style={styles.data}>{fullName || "_____________"}</Text>,{" "}
+            <Text style={styles.data}>LRN: {studentInfo?.lrn || "_____________"}</Text> 
+          </Text>
 
           <Text style={styles.paragraph}>
-            {"         "}
-            This certifies that <Text style={styles.data}>{fullName || "_____________"}</Text>,{" "}
-            <Text style={styles.data}>LRN: {studentInfo?.lrn || "_____________"}</Text> is currently enrolled in Rizal Institute Canlubang Foundation Inc. as a{" "}
+            is currently enrolled in Rizal Institute Canlubang Foundation Inc. as a{" "}
             <Text style={styles.data}>Grade {studentInfo?.gradeLevelName || "___"}</Text> student for the S.Y{" "}
             <Text style={styles.data}>{studentInfo?.academicYear || "____-____"}</Text>.
           </Text>

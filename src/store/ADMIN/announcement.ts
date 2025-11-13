@@ -23,3 +23,15 @@ export const useAddAnnouncement = create<AddAnnouncementModalState>((set) => ({
      open: () => set ({ isOpen: true}),
      close: () => set ({ isOpen: false}),
 }));
+
+type EditAnnouncementModalState = {
+    isOpen: boolean;
+     open: () => void;
+     close: () => void;
+};
+
+export const useEditAnnouncement = create<EditAnnouncementModalState>((set) => ({
+    isOpen: false, //change mo maya
+     open: () => set ({ isOpen: true}),
+     close: () => set ({ isOpen: false}),
+}));

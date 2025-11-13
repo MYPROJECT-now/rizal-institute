@@ -13,7 +13,7 @@ const SchedTodoComponent: FC<Props> = ({ sched, className }) => {
       className={`flex flex-col items-center justify-center text-center p-3 rounded-lg   hover:bg-green-300 transition-all ${className ?? ""}`}
     >
       {/* Teacher name */}
-      <div className="font-semibold text-sm text-gray-800">
+      <div className="font-semibold text-sm text-dGreen capitalize">
         {sched.clerk_username}
       </div>
 
@@ -24,7 +24,7 @@ const SchedTodoComponent: FC<Props> = ({ sched, className }) => {
 
       {/* Room name */}
       <div className="text-xs text-gray-500 mt-0.5">
-        {sched.roomName}
+        {sched.roomName} - {sched.sectionName}
       </div>
     </div>
   );

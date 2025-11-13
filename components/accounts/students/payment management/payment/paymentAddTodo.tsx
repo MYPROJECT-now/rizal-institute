@@ -130,15 +130,25 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
         )}
 
 
+
+
       </section>
 
+      {balance && balance.paymentMethod !== "full_payment" && balance.dueThisMonth > 0 && (
+        <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-lg p-3 mb-4">
+          <p className="text-sm sm:text-base font-semibold">
+            💡 Reminder: Please make sure to pay <span className="font-semibold">at least half</span> of the total dues up to this month. 
+          </p>
+        </div>
+      )}
+
       <main className="flex flex-col gap-10">
+
         <div>
           <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Amount</label>
           <input
             id="amount"
             type="number"
-            min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
             onChange={handleAmount}
             value={amount}
@@ -211,7 +221,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
             !amount || !mop || !POP || isSubmitting || 
             balance?.paymentMethod === "full_payment" || 
             balance?.totalRemainingBalance === 0 ||   
-            (balance?.dueThisMonth !== undefined && Number(amount) !== balance.dueThisMonth / 2)
+            (balance?.dueThisMonth !== undefined && Number(amount) < balance.dueThisMonth / 2)
           }
         >
         {isSubmitting ? "Submitting..." : "Submit Payment"}

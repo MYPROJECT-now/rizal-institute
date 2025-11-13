@@ -1,6 +1,6 @@
 "use server"
 
-import { and, desc, eq, gte, isNull, lte, ne, or} from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte, ne, or, sql} from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AcademicYearTable, AnnouncementReadStatusTable, AnnouncementTable, auditTrailsTable, ClerkUserTable, EnrollmentStatusTable, GradeLevelTable, RoomTable, ScheduleTable, SectionTable, staffClerkUserTable, StudentInfoTable, StudentPerGradeAndSection, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { requireStaffAuth } from "./utils/staffAuth";
@@ -188,6 +188,35 @@ export const deleteUser = async (clerkId: string, clerk_username: string) => {
   }
 };
 
+
+
+export const getAssignedLoad2 = async () => {
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const assignedLoad = await db
+  .select({
+    TeachersName: staffClerkUserTable.clerk_username,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    subjectName: SubjectTable.subjectName
+
+  })
+  .from(staffClerkUserTable)
+    .leftJoin(
+      TeacherAssignmentTable,
+      and(
+        eq(TeacherAssignmentTable.clerk_uid, staffClerkUserTable.clerk_uid),
+        eq(TeacherAssignmentTable.academicYear_id, selectedYear) // ✅ move this into the join condition
+      )
+    )  
+  .leftJoin(GradeLevelTable, eq(TeacherAssignmentTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .leftJoin(SubjectTable, eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id))
+  .where(eq(staffClerkUserTable.userType, "teacher") )
+  .orderBy(sql`CAST(${GradeLevelTable.gradeLevelName} AS INTEGER)`);
+
+  console.log(assignedLoad)
+  return assignedLoad;
+}
 
 export const getTeachers = async () => {
   const teachers = await db
@@ -525,19 +554,91 @@ export const AddSchedule = async (
 //   return rooms;
 // }
 
+// export const checkSchedule = async (
+//   teacherId: number,
+//   day: string,
+//   startTime: string,
+//   endTime: string,
+//   gradeLevelId: number,
+//   subjectId: number
+// ) => {
+//   const selectedYear = await getSelectedYear();
+//   if(!selectedYear) return { type: "noYear", rows: [] };
+
+
+//   // 1. Check teacher conflict (your existing overlap logic)
+//   const teacherConflicts = await db
+//     .select({
+//       schedule_id: ScheduleTable.schedule_id,
+//       startTime: ScheduleTable.startTime,
+//       endTime: ScheduleTable.endTime,
+//       day: ScheduleTable.dayOfWeek,
+//     })
+//     .from(ScheduleTable)
+//     .where(
+//       and(
+//         eq(ScheduleTable.clerk_uid, teacherId),
+//         eq(ScheduleTable.dayOfWeek, day),
+//         eq(ScheduleTable.academicYear_id, selectedYear),
+//         or(
+//           and(
+//             lte(ScheduleTable.startTime, startTime),
+//             gte(ScheduleTable.endTime, startTime)
+//           ),
+//           and(
+//             lte(ScheduleTable.startTime, endTime),
+//             gte(ScheduleTable.endTime, endTime)
+//           ),
+//           and(
+//             gte(ScheduleTable.startTime, startTime),
+//             lte(ScheduleTable.endTime, endTime)
+//           )
+//         )
+//       )
+//     );
+
+//   if (teacherConflicts.length > 0) {
+//     return { type: "teacherConflict", rows: teacherConflicts };
+//   }
+
+//   // 2. Check if the subject is already scheduled in this grade level on the same day
+//   const subjectConflicts = await db
+//     .select({
+//       schedule_id: ScheduleTable.schedule_id,
+//       subject_id: ScheduleTable.subject_id,
+//       day: ScheduleTable.dayOfWeek,
+//     })
+//     .from(ScheduleTable)
+//     .where(
+//       and(
+//         eq(ScheduleTable.gradeLevel_id, gradeLevelId),
+//         eq(ScheduleTable.subject_id, subjectId),
+//         eq(ScheduleTable.dayOfWeek, day),
+//         eq(ScheduleTable.academicYear_id, selectedYear)
+//       )
+//     );
+
+//   if (subjectConflicts.length > 0) {
+//     return { type: "subjectConflict", rows: subjectConflicts };
+//   }
+
+//   return { type: "ok", rows: [] };
+// };
+
+
 export const checkSchedule = async (
   teacherId: number,
   day: string,
   startTime: string,
   endTime: string,
   gradeLevelId: number,
-  subjectId: number
+  subjectId: number,
+  sectionId: number // <-- add section id param
 ) => {
   const selectedYear = await getSelectedYear();
-  if(!selectedYear) return { type: "noYear", rows: [] };
+  if (!selectedYear) return { type: "noYear", rows: [] };
 
-
-  // 1. Check teacher conflict (your existing overlap logic)
+  // 1️⃣ Check teacher conflict
   const teacherConflicts = await db
     .select({
       schedule_id: ScheduleTable.schedule_id,
@@ -572,7 +673,7 @@ export const checkSchedule = async (
     return { type: "teacherConflict", rows: teacherConflicts };
   }
 
-  // 2. Check if the subject is already scheduled in this grade level on the same day
+  // 2️⃣ Check subject conflict (same grade level + subject + day)
   const subjectConflicts = await db
     .select({
       schedule_id: ScheduleTable.schedule_id,
@@ -593,9 +694,43 @@ export const checkSchedule = async (
     return { type: "subjectConflict", rows: subjectConflicts };
   }
 
+  // 3️⃣ Check section conflict (same section overlapping time)
+  const sectionConflicts = await db
+    .select({
+      schedule_id: ScheduleTable.schedule_id,
+      startTime: ScheduleTable.startTime,
+      endTime: ScheduleTable.endTime,
+      day: ScheduleTable.dayOfWeek,
+    })
+    .from(ScheduleTable)
+    .where(
+      and(
+        eq(ScheduleTable.section_id, sectionId),
+        eq(ScheduleTable.dayOfWeek, day),
+        eq(ScheduleTable.academicYear_id, selectedYear),
+        or(
+          and(
+            lte(ScheduleTable.startTime, startTime),
+            gte(ScheduleTable.endTime, startTime)
+          ),
+          and(
+            lte(ScheduleTable.startTime, endTime),
+            gte(ScheduleTable.endTime, endTime)
+          ),
+          and(
+            gte(ScheduleTable.startTime, startTime),
+            lte(ScheduleTable.endTime, endTime)
+          )
+        )
+      )
+    );
+
+  if (sectionConflicts.length > 0) {
+    return { type: "sectionConflict", rows: sectionConflicts };
+  }
+
   return { type: "ok", rows: [] };
 };
-
 
 
 export const getAvailableAssignments = async (teacherId: number) => {
@@ -851,6 +986,7 @@ export const getAnnouncement = async () => {
 
   const get_announcement = await db
   .select({
+    announcement_id: AnnouncementTable.announcement_id,
     title: AnnouncementTable.title,
     content: AnnouncementTable.content,
     createdAt: AnnouncementTable.createdAt,
@@ -909,6 +1045,34 @@ export const addAnnouncement = async (title: string, content: string, image: str
   console.log("Announcement added and read statuses initialized.");
 }
 
+
+
+
+export const editAnnouncement = async (
+  announcement_id: number,
+  title: string,
+  content: string,
+  image: string
+) => {
+  await requireStaffAuth(["admin"]); // gatekeeper
+
+  await db.update(AnnouncementTable)
+  .set({
+    title: title,
+    content: content,
+    image: image,
+  })
+  .where(eq(AnnouncementTable.announcement_id, announcement_id))
+
+}
+
+
+export const deleteAnnouncement = async (announcement_id: number) => {
+  await requireStaffAuth(["admin"]); // gatekeeper
+
+  await db.delete(AnnouncementTable)
+  .where(eq(AnnouncementTable.announcement_id, announcement_id))
+}
 
 export const getCurrentAcademicYear = async () => {
   await requireStaffAuth(["admin"]); // gatekeeper

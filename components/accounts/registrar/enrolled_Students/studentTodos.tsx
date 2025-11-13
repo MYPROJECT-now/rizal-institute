@@ -14,8 +14,7 @@ interface Props {
 
 const Students: FC<Props> = ({ students }) => {
   const [studentList, setStudentList] = useState<all_studentTable_Type []>(students);
-  const [filterName, setFilterName] = useState("");
-  const [filterLRN, setFilterLRN] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterDocument, setFilterDocument] = useState("");
 
@@ -70,12 +69,13 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
     
   const filteredStudents = studentList.filter((student) => {
     const fullName = `${student.studentFirstName} ${student.studentMiddleName ?? ""} ${student.studentLastName}`.toLowerCase();
-    const matchesName = fullName.includes(filterName.toLowerCase());
-    const matchesLRN = student.lrn.includes(filterLRN);
+    const matchesSearch =
+      fullName.includes(searchQuery.toLowerCase()) ||
+      student.lrn.includes(searchQuery);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
     const matchesDocument = filterDocument === "" || getDocumentStatus(student) === filterDocument;
 
-    return matchesName && matchesLRN && matchesGrade && matchesDocument;
+    return matchesSearch && matchesGrade && matchesDocument;
     // return matchesName && matchesLRN;
   });
 
@@ -167,19 +167,12 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
 
       <input
         type="text"
-        placeholder="Name"
-        value={filterName}
-        onChange={(e) => setFilterName(e.target.value)}
+        placeholder="Search Name or LRN"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       />
 
-      <input
-        type="text"
-        placeholder="LRN"
-        value={filterLRN}
-        onChange={(e) => setFilterLRN(e.target.value)}
-        className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
-      />
 
       <select
         value={filterGrade}
@@ -209,8 +202,7 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
 
       <Button
         onClick={() => {
-          setFilterName("");
-          setFilterLRN("");
+          setSearchQuery("");
           setFilterGrade("");
           setFilterDocument("");
         }}
@@ -229,6 +221,7 @@ const getDocumentStatus = (s: all_studentTable_Type) => {
             <th className="px-4  py-2 min-w-[100px] sm:min-w-0">Full Name</th>
             <th className="px-4  py-2 min-w-[100px] lg:min-w-0">Grade Level</th>
             <th className="px-4 py-2">Document</th>
+            <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2 min-w-[100px] sm:min-w-0">Full Details</th>
             <th className="px-2 py-2">Actions</th>
           </tr>
