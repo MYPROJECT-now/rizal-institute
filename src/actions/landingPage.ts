@@ -879,22 +879,37 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
     // Get current application status
     const currentStatus = await db
       .select({
-        applicationStatus: applicationStatusTable.applicationFormReviewStatus
+        applicationStatus: applicationStatusTable.applicationFormReviewStatus,
+        reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus
       })
       .from(applicationStatusTable)
       .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id))
       .limit(1);
 
     // Only update status to Pending if it was previously Declined
-    if (currentStatus[0]?.applicationStatus === "Declined") {
+    if (currentStatus[0]?.applicationStatus === "Declined" ) {
+      await db
+        .update(applicationStatusTable)
+        .set({
+          applicationFormReviewStatus: "Pending",
+          dateOfApplication: new Date().toISOString().slice(0, 10),
+        })
+        .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id));
+    } else if (currentStatus[0]?.reservationPaymentStatus === "Declined") {
+        await db
+          .update(applicationStatusTable)
+          .set({
+            dateOfApplication: new Date().toISOString().slice(0, 10),
+            reservationPaymentStatus: "Pending"
+          })
+          .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id));
+    } else {
       await db
         .update(applicationStatusTable)
         .set({
           applicationFormReviewStatus: "Pending",
           dateOfApplication: new Date().toISOString().slice(0, 10),
           reservationPaymentStatus: "Pending"
-
-
         })
         .where(eq(applicationStatusTable.applicants_id, updatedStudent[0]?.applicants_id));
     }

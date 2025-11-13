@@ -1,7 +1,7 @@
 import { db } from '@/src/db/drizzle';
 import { NextResponse } from 'next/server';
-import { eq } from 'drizzle-orm';
-import { applicantsInformationTable, applicationStatusTable, auditTrailsTable, Cashier_remaks_table } from '@/src/db/schema';
+import { and, eq } from 'drizzle-orm';
+import { AcademicYearTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, Cashier_remaks_table } from '@/src/db/schema';
 import nodemailer from 'nodemailer';
 import { getStaffCredentials } from '@/src/actions/utils/staffID';
 import { getAcademicYearID } from '@/src/actions/utils/academicYear';
@@ -31,6 +31,7 @@ async function getTrackingId(studentId: number): Promise<string> {
   const result = await db
     .select({ trackingId: applicationStatusTable.trackingId })
     .from(applicationStatusTable)
+    .leftJoin(AcademicYearTable, and(eq(applicationStatusTable.academicYear_id, AcademicYearTable.academicYear_id), eq(AcademicYearTable.isActive, true)))
     .where(eq(applicationStatusTable.applicants_id, studentId))
     .limit(1);
 
