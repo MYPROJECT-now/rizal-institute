@@ -3,7 +3,7 @@
 
 import { and, desc, eq, like, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable, guardianAndParentsTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import { getAcademicYearID } from "./utils/academicYear";
 import nodemailer from "nodemailer";
@@ -700,13 +700,53 @@ export const sendReminder = async (lrn: string, email: string, balance: number) 
 
 
 
-// export const studentProfile = async () => { 
-//   const applicantId = await getApplicantID();
-//   if (!applicantId) return null;
-//   console.log("Applicant ID:", applicantId);
+export const studentProfile = async () => { 
+  const applicantId = await getApplicantID();
+  if (!applicantId) return null;
+  console.log("Applicant ID:", applicantId);
+  
+  const selectedAcademicYear = await getSelectedAcademicYear();
+  
+  if (!selectedAcademicYear) {
+    console.warn("❌ No academic year selected");
+  }
 
-//   const studentsInfo = await db
-//   .select({
-    
-//   })
-// }
+  const studentsInfo = await db
+  .select({
+    studentLastName: StudentInfoTable.studentLastName,
+    studentFirstName: StudentInfoTable.studentFirstName,
+    studentMiddleName: StudentInfoTable.studentMiddleName,
+    studentSuffix: StudentInfoTable.studentSuffix,
+    lrn: StudentInfoTable.lrn,
+    religion: StudentInfoTable.religion,
+    ip: StudentInfoTable.ip,
+    motherTounge: StudentInfoTable.motherTounge,
+    house_no_purok: StudentInfoTable.house_no_purok,
+    barangay: StudentInfoTable.barangay,
+    city: StudentInfoTable.city,
+    province: StudentInfoTable.province,
+    studentGender: StudentInfoTable.studentGender,
+    studentBirthDate: StudentInfoTable.studentBirthDate,
+    studentAge: StudentInfoTable.studentAge,
+    gradeToEnroll: studentTypeTable.gradeToEnroll,
+    email: applicantsInformationTable.email,
+    mobileNumber: applicantsInformationTable.mobileNumber,
+    guardiansLastName: guardianAndParentsTable.guardiansLastName,
+    guardiansFirstName: guardianAndParentsTable.guardiansFirstName,
+    guardiansMiddleName: guardianAndParentsTable.guardiansMiddleName,
+    guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
+    emergencyContact: guardianAndParentsTable.emergencyContact,
+    relationship: guardianAndParentsTable.relationship,
+  })
+  .from(StudentInfoTable)
+  .leftJoin(studentTypeTable, and(
+    eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id),
+    eq(studentTypeTable.academicYear_id, selectedAcademicYear ?? 1),
+  ))
+  .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
+  .leftJoin(applicantsInformationTable, eq(StudentInfoTable.applicants_id, applicantsInformationTable.applicants_id))
+  .where(eq(StudentInfoTable.applicants_id, applicantId))
+  .limit(1);
+
+  return studentsInfo[0] ?? null;
+}
