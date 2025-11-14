@@ -327,6 +327,7 @@ export const addNewApplicants = async (
 }
 
 export const verifyEmail = async (email: string) => {
+  
   const existing = await db.select().from(applicantsInformationTable).where(eq(applicantsInformationTable.email, email)).limit(1);
   if (existing.length > 0) {
     throw new Error("This email is already in use. Please use another email.");
@@ -499,6 +500,13 @@ export const acceptAdmission = async (trackingId: string) => {
                 applicantsSuffix: applicantsInformationTable.applicantsSuffix,
                 dateOfBirth: applicantsInformationTable.dateOfBirth,
                 age: applicantsInformationTable.age,
+                religion: applicantsInformationTable.religion,
+                ip: applicantsInformationTable.ip,
+                house_no_purok: applicantsInformationTable.house_no_purok,
+                barangay: applicantsInformationTable.barangay,
+                city: applicantsInformationTable.city,
+                province: applicantsInformationTable.province,
+                motherTounge: applicantsInformationTable.motherTounge,
                 gender: applicantsInformationTable.gender,
                 mobileNumber: applicantsInformationTable.mobileNumber,
                 email: applicantsInformationTable.email,
@@ -510,6 +518,7 @@ export const acceptAdmission = async (trackingId: string) => {
                 guardiansSuffix: guardianAndParentsTable.guardiansSuffix,
                 emergencyContact: guardianAndParentsTable.emergencyContact,
                 emergencyEmail: guardianAndParentsTable.emergencyEmail,
+                relationship: guardianAndParentsTable.relationship,
 
                 gradeLevel: educationalBackgroundTable.gradeLevel,
                 schoolYear: educationalBackgroundTable.schoolYear,
@@ -524,6 +533,8 @@ export const acceptAdmission = async (trackingId: string) => {
                 idPic: documentsTable.idPic,
                 studentExitForm: documentsTable.studentExitForm,
                 form137: documentsTable.form137,
+                itr: documentsTable.itr,
+                escCert: documentsTable.escCert,
 
                 mop: reservationFeeTable.mop,
                 reservationAmount: reservationFeeTable.reservationAmount,
@@ -591,6 +602,14 @@ export const acceptAdmission = async (trackingId: string) => {
 
 
 export const getPaymentMethodData = async (trackingId: string) => {
+
+  const acadID = await db
+  .select({academicYear_id: AcademicYearTable.academicYear_id})
+  .from(AcademicYearTable)
+  .where(eq(AcademicYearTable.isActive, true))
+  
+  const activeAcadID = acadID[0]?.academicYear_id ?? 1;
+
   const applicantID = await db
     .select({ applicants_id: applicationStatusTable.applicants_id })
     .from(applicationStatusTable)
@@ -600,7 +619,10 @@ export const getPaymentMethodData = async (trackingId: string) => {
   const getTotalTuition = await db
     .select({ total: BreakDownTable.totalTuitionFee})
     .from(BreakDownTable)
-    .where(eq(BreakDownTable.applicants_id, applicantID[0].applicants_id))
+    .where(and(
+      eq(BreakDownTable.applicants_id, applicantID[0].applicants_id),
+      eq(BreakDownTable.academicYear_id, activeAcadID)
+    ))
 
   const MonthlyDues = await db
     .select({ 
@@ -608,7 +630,10 @@ export const getPaymentMethodData = async (trackingId: string) => {
       monthlyDues: TempMonthsInSoaTable.temp_monthlyDue
      })
     .from(TempMonthsInSoaTable)
-    .where(eq(TempMonthsInSoaTable.applicants_id, applicantID[0].applicants_id))
+    .where(and(
+      eq(TempMonthsInSoaTable.applicants_id, applicantID[0].applicants_id),
+      eq(TempMonthsInSoaTable.academicYear_id, activeAcadID)  
+    ))
     .orderBy(asc(TempMonthsInSoaTable.temp_month_id))
 
   const Down = await db
@@ -616,7 +641,10 @@ export const getPaymentMethodData = async (trackingId: string) => {
     amount: tempdownPaymentTable.amount,
   })
   .from(tempdownPaymentTable)
-  .where(eq(tempdownPaymentTable.applicants_id, applicantID[0].applicants_id))
+  .where(and(
+    eq(tempdownPaymentTable.applicants_id, applicantID[0].applicants_id),
+    eq(tempdownPaymentTable.academicYear_id,  activeAcadID)
+  ))
 
   const breakDown = await db
   .select({
@@ -629,9 +657,12 @@ export const getPaymentMethodData = async (trackingId: string) => {
     other_discount: BreakDownTable.other_discount,
     escGrant: BreakDownTable.escGrant,
     tuitionFee: BreakDownTable.tuitionFee,
+    pastTuition: BreakDownTable.remainingTuitionFee
   })
   .from(BreakDownTable)
-  .where(eq(BreakDownTable.applicants_id, applicantID[0].applicants_id))
+  .where(and(
+    eq(BreakDownTable.applicants_id, applicantID[0].applicants_id),
+    eq(BreakDownTable.academicYear_id, activeAcadID)))
   
   console.log(MonthlyDues)
   return{ 
@@ -648,6 +679,7 @@ export const getPaymentMethodData = async (trackingId: string) => {
     other_discount: breakDown[0]?.other_discount ?? 0,
     escGrant: breakDown[0]?.escGrant ?? 0,
     tuitionFee: breakDown[0]?.tuitionFee ?? 0,
+    pastTuition: breakDown[0]?.pastTuition ?? 0,
   }
 }
 
@@ -782,6 +814,13 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       dateOfBirth,
       age,
       gender,
+      religion,
+      ip,
+      house_no_purok,
+      barangay,
+      city,
+      province,
+      motherTongue,
       mobileNumber,
       email,
 
@@ -791,8 +830,10 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       guardiansSuffix,
       emergencyContact,
       emergencyEmail,
+      relationship,
 
       gradeLevel,
+      studentType,
       schoolYear,
       schoolType,
       prevSchool,
@@ -804,6 +845,8 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       idPic,
       studentExitForm,
       form137,
+      itr,
+      escCert,
 
       mop,
       reservationAmount,
@@ -822,6 +865,13 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
         applicantsSuffix,
         dateOfBirth,
         age,
+        religion,
+        ip,
+        house_no_purok,
+        barangay,
+        city,
+        province,
+        motherTounge: motherTongue,
         gender,
         mobileNumber,
         email,
@@ -838,6 +888,7 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
         guardiansSuffix,
         emergencyContact,
         emergencyEmail,
+        relationship,
       })
       .where(eq(guardianAndParentsTable.applicants_id, updatedStudent[0]?.applicants_id))
       .returning();
@@ -846,6 +897,7 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
       .update(educationalBackgroundTable)
       .set({
         prevSchool,
+        studentType,
         schoolAddress,
         schoolType,
         gradeLevel,
@@ -863,6 +915,8 @@ export const updateStudentData = async (lrn: string, updatedData: StudentUpdateD
         idPic,
         studentExitForm,
         form137,
+        itr,
+        escCert,
       })
       .where(eq(documentsTable.applicants_id, updatedStudent[0]?.applicants_id))
       .returning();
@@ -1247,6 +1301,38 @@ await sendReservationEmail(email, trackingId);
   }
 };
 
+export const checkGrades = async (lrn: string) => {
+  const acad_id = await getAcademicYearID();
+  if (!acad_id) return false;
+
+  const prevAcad = acad_id - 1;
+
+  const gradeCheck = await db
+    .select({
+      finalGrade: StudentGradesTable.finalGrade,
+    })
+    .from(StudentGradesTable)
+    .leftJoin(
+      StudentInfoTable,
+      eq(StudentGradesTable.student_id, StudentInfoTable.student_id)
+    )
+    .where(
+      and(
+        eq(StudentInfoTable.lrn, lrn),
+        eq(StudentGradesTable.academicYear_id, prevAcad)
+      )
+    );
+
+  // If no grades → treat as incomplete
+  if (gradeCheck.length === 0) return false;
+
+  // Check if any finalGrade is null
+  const hasMissing = gradeCheck.some((g) => g.finalGrade === null);
+
+  return !hasMissing; // true = all good, false = missing grades
+};
+
+
 export const checkLRN = async (lrn: string) => {
   try {
     // Check in applicants table
@@ -1327,7 +1413,7 @@ export const oldStudentEnrollment = async (lrn: string) => {
   .from(applicantsInformationTable)
   .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
   .where(eq(applicantsInformationTable.lrn, lrn))
-  .orderBy(desc(applicantsInformationTable.applicants_id)) 
+  .orderBy(desc(studentTypeTable.studentType_id)) 
   .limit(1);
 
   return getGrade[0];
@@ -1432,7 +1518,7 @@ export const OldStudentEnrollment = async (
     academicYear_id: academicYearID,
     studentType : "Old Student",
     gradeToEnroll: gradeLevel,
-    student_case: promotion === "REGULAR" ? null : "REPEATER",
+    student_case: promotion === "PROMOTED" ? "REGULAR" : "REPEATER",
   });
 
   await OldStudentEmail(email, trackingId);

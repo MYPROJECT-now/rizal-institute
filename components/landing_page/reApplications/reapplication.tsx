@@ -32,6 +32,13 @@ export const ReApplication = () => {
     const [applicantsMiddleName, setApplicantsMiddleName] = useState("");
     const [applicantsSuffix, setApplicantsSuffix] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
+    const [religion, setReligion] = useState("");
+    const [ip, setIp] = useState("");
+    const [house_no_purok, setHouseNoPurok] = useState("");
+    const [barangay, setBarangay] = useState("");
+    const [city, setCity] = useState("");
+    const [province, setProvince] = useState("");
+    const [motherTongue, setMotherTongue] = useState("");
     const [age, setAge] = useState("");
     const [gender, setGender] = useState("");
     const [mobileNumber, setMobileNumber] = useState("");
@@ -43,7 +50,7 @@ export const ReApplication = () => {
     const [guardiansSuffix, setGuardianSuffix] = useState("");
     const [emergencyContact, setEmergencyContact] = useState("");
     const [emergencyEmail, setEmergencyEmail] = useState("");
-    const [fullAddress, setFullAddress] = useState("");
+    const [relationship, setRelationship] = useState("");
 
     const [lrn, setLrn] = useState(""); 
     const [gradeLevel, setGradeLevel] = useState("");
@@ -59,6 +66,8 @@ export const ReApplication = () => {
     const [idPic, setIdPic] = useState<File | null>(null);
     const [studentExitForm, setStudentExitForm] = useState<File | null>(null);
     const [form137, setForm137] = useState<File | null>(null);
+    const [itr, setITR] = useState<File | null>(null);
+    const [escCert, setEscCert] = useState<File | null>(null);
 
     const [mop, setMop] = useState("");
     const [reservationReceipt, setReservationReceipt] = useState<File | null>(null);
@@ -87,6 +96,8 @@ export const ReApplication = () => {
     const idPicRef = useRef<HTMLInputElement>(null);
     const studentExitFormRef = useRef<HTMLInputElement>(null);
     const form137Ref = useRef<HTMLInputElement>(null);
+    const itrRef = useRef<HTMLInputElement>(null);
+    const escCertRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (trackingId) {
@@ -104,6 +115,13 @@ export const ReApplication = () => {
                     setApplicantsSuffix(data.applicantsSuffix || "");
                     setDateOfBirth(data.dateOfBirth || "");
                     setAge(data.age.toString() || "");
+                    setReligion(data.religion || "");
+                    setIp(data.ip || "");
+                    setHouseNoPurok(data.house_no_purok || "");
+                    setBarangay(data.barangay || "");
+                    setCity(data.city || "");
+                    setProvince(data.province || "");
+                    setMotherTongue(data.motherTounge || "");
                     setGender(data.gender || "");
                     setMobileNumber(data.mobileNumber || "");
                     setEmail(data.email || "");
@@ -114,6 +132,7 @@ export const ReApplication = () => {
                     setGuardianSuffix(data.guardiansSuffix || "");
                     setEmergencyContact(data.emergencyContact || "");
                     setEmergencyEmail(data.emergencyEmail || "");
+                    setRelationship(data.relationship || "");
 
                     setLrn(data.lrn || "");
                     setGradeLevel(data.gradeLevel || "");
@@ -189,7 +208,13 @@ const validatePage = async (): Promise<boolean> => {
         if (!gender.trim()) newErrors.gender = "Required";
         if (!mobileNumber.trim()) newErrors.mobileNumber = "Required";
         if (!email.trim()) newErrors.email = "Required";
-
+        if (!religion.trim()) newErrors.religion = "Required";
+        if (!motherTongue.trim()) newErrors.motherTongue = "Required";
+        if (!house_no_purok.trim()) newErrors.house_no_purok = "Required";
+        if (!barangay.trim()) newErrors.barangay = "Required";
+        if (!city.trim()) newErrors.city = "Required";
+        if (!province.trim()) newErrors.province = "Required";
+            
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             toast.error("Please fill in all required fields.");
@@ -244,6 +269,68 @@ const validatePage = async (): Promise<boolean> => {
             return false;
         }
 
+        if (religion && !/^[\p{L}\s'-]+$/u.test(religion)) {
+            newErrors.religion = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid religion.");
+            return false;
+        }
+        if (
+            !/^[a-zA-Z\s'-]+$/.test(motherTongue)
+        ) {
+            newErrors.motherTongue = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid mother tongue. Please enter a valid native language name.");
+            return false;
+        }
+        if (
+            ip && !/^[a-zA-Z\s'-]+$/.test(ip) 
+        ) {
+            newErrors.ip = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid ethnic. Please enter a proper Ethnic Group.");
+            return false;
+        }
+
+
+
+        if (
+            house_no_purok && !/^[a-zA-Z0-9\s,'\-#./]+$/.test(house_no_purok)
+        ) {
+            newErrors.house_no_purok = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid house# / purok / street. Please enter a valid house# / purok / street.");
+            return false;
+        }
+
+        if (
+            barangay && !/^[a-zA-Z0-9\s,'\-#./]+$/.test(barangay)
+        ) {
+            newErrors.barangay = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid barangay. Please enter a valid barangay.");
+            return false;
+        }
+
+        if (
+            city && !/^[a-zA-Z\s,'\-#./]+$/.test(city)
+        ) {
+            newErrors.city = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid city. Please enter a valid city.");
+            return false;
+        }
+
+        if (
+            province && !/^[a-zA-Z\s,'\-#./]+$/.test(province)
+        ) {
+            newErrors.province = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid province. Please enter a valid province.");
+            return false;
+        }
+
+
         if (
             !/^[0-9]+$/.test(mobileNumber) || 
             mobileNumber.length !== 11
@@ -254,17 +341,24 @@ const validatePage = async (): Promise<boolean> => {
             return false;
         }
         
-        if (
-            !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email) ||
-            email.length < 5 ||
-            email.length > 50
-        ) {
-             newErrors.email = "invalid";
-            setErrors(newErrors);
-            toast.error("Invalid email. Please enter a valid email.");
-            return false;
-        }   
-        
+            if (
+                !/^[0-9]+$/.test(mobileNumber) || 
+                mobileNumber.length !== 11
+            ) {
+                newErrors.mobileNumber = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid mobile number. Please enter a valid mobile number.");
+                return false;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                newErrors.email = "invalid";
+                setErrors(newErrors);
+                toast.error("Invalid email format.");
+                return false;
+            }
+
+
 
     return true;
 
@@ -275,8 +369,7 @@ const validatePage = async (): Promise<boolean> => {
         if (!guardiansLastName.trim()) newErrors.guardiansLastName = "Required";
         if (!guardiansFirstName.trim()) newErrors.guardiansFirstName = "Required";
         if (!emergencyContact.trim()) newErrors.emergencyContact = "Required";
-        if (!fullAddress.trim()) newErrors.fullAddress = "Required";
-
+        if (!relationship.trim()) newErrors.relationship = "Required";
         
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -305,6 +398,25 @@ const validatePage = async (): Promise<boolean> => {
             toast.error("Invalid guardian's first name. Please enter a valid first name.");
             return false;
         }
+    
+        if (
+            guardiansMiddleName && !/^[a-zA-Z\s'-]+$/.test(guardiansMiddleName) 
+        ) {
+            newErrors.guardiansMiddleName = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid middle name. Please enter a valid middle name.");
+            return false;
+        }
+        
+        if (
+            guardiansSuffix && !/^[a-zA-Z\s'-]+$/.test(guardiansSuffix) 
+        ) {
+            newErrors.guardiansSuffix = "invalid";
+            setErrors(newErrors);
+            toast.error("Invalid suffix. Please enter a valid suffix.");
+            return false;
+        }
+        
         
         if (
             !/^[0-9]+$/.test(emergencyContact) || 
@@ -317,14 +429,14 @@ const validatePage = async (): Promise<boolean> => {
         }
 
         if (
-            fullAddress.length < 2 ||
-            fullAddress.length > 50
+            emergencyEmail && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emergencyEmail) 
         ) {
-            newErrors.fullAddress = "invalid";
+            newErrors.emergencyEmail = "invalid";
             setErrors(newErrors);
-            toast.error("Invalid address. Please enter a valid address.");
+            toast.error("Invalid email. Please enter a valid email.");
             return false;
         }
+
 
 
     return true;
@@ -391,7 +503,12 @@ const validatePage = async (): Promise<boolean> => {
     }
   };
 
-  
+const handleDateOfBirth = (e: ChangeEvent<HTMLInputElement>) => {
+const dateOfBirth = new Date(e.target.value);
+const age = calculateAge(dateOfBirth);
+setDateOfBirth(e.target.value);
+setAge(age.toString());
+};
 const handleBirthCertChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -429,7 +546,19 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
       setForm137(file);
     }
 };
+const handleITRChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+    setITR(file);
+    }
+};
 
+const handleEscCert = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+    setEscCert(file);
+    }
+}
 
     const handleMopChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setMop(e.target.value);
@@ -475,6 +604,12 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
     return age <= 100;
     }
 
+    const calculateAge = (dateOfBirth: Date) => {
+        const today = new Date();
+        const age = Math.floor((today.getTime() - dateOfBirth.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+        return age;
+    };
+
     const years = Array.from({ length: 4 }, (_, i) => new Date().getFullYear() - i - 1);
 
     const previewImage = (file: File | null) => {
@@ -515,6 +650,8 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
             const uploadStudentExitForm = studentExitForm ? await uploadImage(studentExitForm, 'documents') : "";
             const uploadForm137 = form137 ? await uploadImage(form137, 'documents') : "";
             const uploadReservationReceipt = reservationReceipt ? await uploadImage(reservationReceipt, 'reservationPayments') : "";
+            const uploadITR = itr ? await uploadImage(itr, 'documents') : "";
+            const uploadEscCert = escCert ? await uploadImage(escCert, 'documents') : "";
 
             const updatedData = {
                 applicantsLastName, 
@@ -523,6 +660,13 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                 applicantsSuffix, 
                 dateOfBirth, 
                 age: parseInt(age),
+                religion,
+                ip,
+                house_no_purok,
+                barangay,
+                city,
+                province,
+                motherTongue,
                 gender, 
                 mobileNumber, 
                 email,
@@ -534,9 +678,10 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                 guardiansSuffix,
                 emergencyContact,
                 emergencyEmail,
-                fullAddress,
+                relationship,
                 
                 gradeLevel,
+                studentType,
                 schoolYear,
                 schoolType,
                 prevSchool: schoolName,
@@ -548,6 +693,8 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                 idPic: uploadIdPic,
                 studentExitForm: uploadStudentExitForm,
                 form137: uploadForm137,
+                itr: uploadITR,
+                escCert: uploadEscCert,
 
                 mop,
                 reservationAmount,
@@ -571,25 +718,25 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
     };
 
     const sections = [
-        {
-            title: (
-                <div>
-                    <p className="sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
-                        Section 1: Personal Information
-                    </p>
-                </div>
-            ),
-            content: (
+    {
+        title: (
+            <div>
+                <p className="sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
+                    Section 1: Personal Information
+                </p>
+            </div>
+        ),
+        content: (
             <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                <section className="w-full px-0 sm:px-2 py-2">
+                <fieldset  className="w-full px-0 sm:px-2 py-2">
+                <legend className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</legend>
 
-                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                    <article className="w-full gap-8 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-5 mb-3 sm:mb-0">
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="text" 
                                     placeholder="Dela Cruz"
@@ -599,8 +746,9 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                     ${errors.applicantsLastName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
+
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input type="text"
                                     placeholder="John"
                                     onChange={(e) => setApplicantsFirstName(e.target.value)}
@@ -609,41 +757,46 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                     ${errors.applicantsFirstName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
+
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold"> Middle Name</span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold"> Middle Name</label>
                                 <input 
                                     type="text" 
                                     placeholder="Doe" 
                                     onChange={(e) => setApplicantsMiddleName(e.target.value)}
                                     value={applicantsMiddleName}
-                                    className="rounded-sm px-1 w-full sm:w-[170px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.applicantsMiddleName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 
                                 />
                             </div>
+
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold"> Suffix</span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold"> Suffix</label>
                                 <input
                                     type="text" 
                                     placeholder="Jr." 
                                     onChange={(e) => setApplicantsSuffix(e.target.value)}
                                     value={applicantsSuffix}
-                                    className="rounded-sm px-1  w-full sm:w-[70px] lg:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                />
+                                    className={`rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.applicantsSuffix ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                />
                             </div>
                         </section>
+
                         <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Date Of Birth <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Date Of Birth <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="date" 
-                                    onChange={(e) => setDateOfBirth(e.target.value)}
+                                    onChange={handleDateOfBirth}
                                     value={dateOfBirth}
                                     className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.dateOfBirth ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${dateOfBirth === '' ? 'text-gray-500' : 'text-black'}`} 
                                 />
                             </div>
+
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Age <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Age <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                 type="text" 
                                 value={age}
@@ -651,8 +804,9 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                     className="rounded-sm px-1 w-full sm:w-[170px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                             />
                             </div>
+
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Gender <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Gender <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <select 
                                     name="Gender"
                                     onChange={(e) => setGender(e.target.value)}
@@ -667,17 +821,112 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                             </div>
                         </section>
 
-                    </div>
-                </section>
 
-                <section className="w-full px-2 py-2">
+                    </article>
+                </fieldset >
 
-                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Contact Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <fieldset className="w-full px-0 sm:px-2 py-2">
+                <legend className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Cultural Background:</legend>
+                
+                    <article className="w-full gap-8 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Religion <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Religion"
+                                    onChange={(e) => setReligion(e.target.value)}
+                                    value={religion}
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.religion ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
+                                    ${religion === '' ? 'text-gray-500' : 'text-black'}`} 
+                                />
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Mother Tounge <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Tagalog"
+                                    onChange={(e) => setMotherTongue(e.target.value)}
+                                    value={motherTongue}
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.motherTongue ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
+                                    ${motherTongue === '' ? 'text-gray-500' : 'text-black'}`} 
+                                />
+                            </div>
+                            
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Ethnic Group </label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Aeta"
+                                    onChange={(e) => setIp(e.target.value)}
+                                    value={ip}
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.ip ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
+                                    ${ip === '' ? 'text-gray-500' : 'text-black'}`} 
+                                />
+                            </div>
+                        </section>
+
+                    </article>
+                </fieldset>
+
+                <fieldset className="w-full px-0 sm:px-2 py-2">
+                <legend className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Address & Contact Information:</legend>
+                    
+                    <article className="w-full gap-8 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+                        <section className="flex flex-col sm:flex-row gap-5 mb-3 sm:mb-0">
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">House#/ Purok / Street <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <input 
+                                    type="text" 
+                                    placeholder="House 3"
+                                    onChange={(e) => setHouseNoPurok(e.target.value)}
+                                    value={house_no_purok}
+                                    className={`rounded-sm px-1 w-full sm:w-[145px] lg:w-[260px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.house_no_purok ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Barangay <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <input type="text"
+                                    placeholder="Lawa"
+                                    onChange={(e) => setBarangay(e.target.value)}
+                                    value={barangay}
+                                    className={`rounded-sm px-1 w-full sm:w-[145px] lg:w-[260px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.barangay ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold"> City <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Calamba" 
+                                    onChange={(e) => setCity(e.target.value)}
+                                    value={city}
+                                    className={`rounded-sm px-1 w-full sm:w-[145px] lg:w-[260px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.city ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold"> Province <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <input
+                                    type="text" 
+                                    placeholder="Laguna" 
+                                    onChange={(e) => setProvince(e.target.value)}
+                                    value={province}
+                                    className={`rounded-sm px-1 w-full sm:w-[145px] lg:w-[260px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.province ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                />
+                            </div>
+                        </section>
+                        
+                        <section className="flex flex-col sm:flex-row gap-5">
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="text" 
                                     placeholder="09XXXXXXXX" 
@@ -688,10 +937,10 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Email <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Email <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="text" 
-                                    placeholder="l7B4G@example.com" 
+                                    placeholder="sample@example.com" 
                                     onChange={(e) => setEmail(e.target.value)}
                                     value={email}
                                     className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
@@ -700,32 +949,31 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                             </div>
                         </section>
 
-                    </div>
-                </section>
+                    </article>
+                </fieldset>
      
             </main>
-            ),
-        },
-
+        ),
+    },
         {
-            title: (
-                <div>
-                    <p className="sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
-                        Section 2: Contact & Guardian Details
-                    </p>
-                </div>
-            ),
-            content: (
+        title: (
+            <div>
+                <p className="sm:text-lg lg::text-2xl text-dGreen font-bold font-merriweather">
+                    Section 2: Parent / Guardian Details
+                </p>
+            </div>
+        ),
+        content: (
             <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                <section className="w-full px-0 sm:px-2 py-2">
-
-                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <fieldset className="w-full px-0 sm:px-2 py-2">
+                <legend className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather">Personal Details:</legend>
+                    
+                    <article className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Last Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="text" 
                                     placeholder="Garcia"
@@ -736,7 +984,7 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">First Name <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="text" 
                                     placeholder="John" 
@@ -747,80 +995,81 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Middle Name</span>
+                                <label className="text-xs lg:text-sm  text-dGreen font-semibold">Middle Name</label>
                                 <input 
                                     type="text" 
                                     placeholder="Doe"
                                     onChange={(e) => setGuardianMiddleName(e.target.value)}
                                     value={guardiansMiddleName}
-                                    className="rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                />
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.guardiansMiddleName ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm text-dGreen font-semibold">Suffix</span>
+                                <label className="text-xs lg:text-sm text-dGreen font-semibold">Suffix</label>
                                 <input 
                                     type="text" 
-                                    placeholder="Doe"
+                                    placeholder="jr."
                                     onChange={(e) => setGuardianSuffix(e.target.value)}
                                     value={guardiansSuffix}
-                                    className="rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                />
+                                    className={`rounded-sm px-1 w-full sm:w-[70px] lg:w-[100px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.guardiansSuffix ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`}                                 />
                             </div>
                         </section>
 
-                        <section className="flex flex-col sm:flex-row gap-5 sm:mt-0 mt-1"  >
-                            <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Full Address <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
-                                <input 
-                                    type="text" 
-                                    placeholder="123 Main Street, City, Country"
-                                    onChange={(e) => setFullAddress(e.target.value)}
-                                    value={fullAddress}
-                                    className={`rounded-sm px-1 w-full sm:w-[600px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
-                                    ${errors.fullAddress ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
-                                />
-                            </div>
-                        </section>
+                    </article>
+                </fieldset>
 
-                    </div>
-                </section>
-
-                <section className="w-full px-2 py-2">
-
-                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Emergency Contact Information:</span>
-                    <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+                <fieldset className="w-full px-2 py-2">
+                <legend className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Contact Information & Relationship:</legend>
+                    
+                    <article className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
 
                         <section className="flex flex-col sm:flex-row gap-5">
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></span>
+                                <label className="text-xs lg:text-sm  text-dGreen font-semibold">Mobile Number <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
                                 <input 
                                     type="text" 
                                     placeholder="09XXXXXXXX" 
                                     onChange={(e) => setEmergencyContact(e.target.value)}
                                     value={emergencyContact}
                                     className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
-                                    ${errors.setEmergencyContact ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
+                                    ${errors.emergencyContact ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xs lg:text-sm  text-dGreen font-semibold">Email </span>
+                                <label className="text-xs lg:text-sm  text-dGreen font-semibold">Email </label>
                                 <input 
                                     type="text" 
-                                    placeholder="l7B4G@example.com" 
+                                    placeholder="sample@example.com" 
                                     onChange={(e) => setEmergencyEmail(e.target.value)}
                                     value={emergencyEmail}
-                                    className="rounded-sm px-1 w-full sm-[150px] lg::w-[300px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-
+                                    className={`rounded-sm px-1 w-full sm:w-[170px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.emergencyEmail ? 'border border-red-600 bg-red-100' : ' bg-green-100'}`} 
                                 />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="text-xs lg:text-sm  text-dGreen font-semibold">Relationship <strong className="ml-1 text-red-600 text-[10px] lg:text-xs font-semibold">(Required)</strong></label>
+                                <select 
+                                    name="relationship"
+                                    onChange={(e) => setRelationship(e.target.value)}
+                                    value={relationship}
+                                    className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
+                                    ${errors.relationship ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
+                                    ${relationship === '' ? 'text-gray-500' : 'text-black'}`}>
+                                        <option value="" >Select Relationship</option>
+                                        <option value="Mother">Mother</option>
+                                        <option value="Father">Father</option>
+                                        <option value="Guardian">Guardian</option>
+                                </select>
                             </div>
                         </section>
 
-                    </div>
-                </section>
+                    </article>
+                </fieldset>
             </main>
-                
-            ),
-        },
+            
+        ),
+    },
         {
             title: (
                 <div>
@@ -875,9 +1124,8 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                                     ${errors.studentType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${studentType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Option</option>
-                                        <option value="New">Incoming G7</option>
+                                        <option value="Incoming G7">Incoming G7</option>
                                         <option value="Transferee">Transferee</option>
-                                        <option value="Returnee">Old Student</option>
                                 </select>
                             </div>
                         </section>
@@ -969,315 +1217,418 @@ const handleForm137Change = (e: ChangeEvent<HTMLInputElement>) => {
                         </p>
                     </div>
                 ),
-                content: (
-                <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
+                  content: (
+        <main className=" w-full flex flex-col gap-10 px-0 lg:px-10 h-auto mt-2 ">
 
-                    <section className="w-full px-0 sm:px-2 py-2">
+            <section className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-red-100/50 border-2 border-red-100 text-red-900 rounded-lg mt-3">
+                <p><strong>NOTE: </strong> 
+                    Uploading scanned copies of your documents is optional. 
+                    But if you would like to be considered for academic discounts, please upload a scanned copy of your Report Card.
+                    If you are a transferee and already an ESC grantee, do not forget to upload a scanned copy of your ESC Certificate too.
+                </p>
+            </section>
 
-                        <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Identity Documents:</span>
-                        <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+            <section className="w-full px-0 sm:px-2 py-2">
 
-                            <section className="flex flex-col sm:flex-row gap-8">
-                                <div className="flex flex-col">
-                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">Birth Certificate </span>
-                                    <PreviewModal />
-                                    {birthCert ? (
-                                    <div 
-                                        className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
-                                        key="birthcert_preview"
-                                    >
-                                        <div className="flex flex-row items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => previewImage(birthCert)}
-                                                className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
-                                                title="Click to preview"
-                                                >
-                                                {birthCert.name}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                setBirthCert(null);
-                                                if (birthCertRef.current) birthCertRef.current.value = "";}}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                                title="Remove file"
-                                                >
-                                                    ✕
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    ) : (
-                                    <div 
-                                        className="flex flex-col gap-1 "
-                                        key="birthcert_upload"
-                                    >
-                                        <input
-                                            type="file"
-                                            ref={birthCertRef}
-                                            accept="image/*"
-                                            onChange={handleBirthCertChange}
-                                            name="document"
-                                            className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                        />
-                                    </div>
-                                    )}
+                <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Identity & Financial Documents   :</span>
+                <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+
+                    <section className="flex flex-col sm:flex-row gap-8">
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">Birth Certificate </span>
+                            <PreviewModal />
+                            {birthCert ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="birthcert_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(birthCert)}
+                                        className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {birthCert.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setBirthCert(null);
+                                        if (birthCertRef.current) birthCertRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
                                 </div>
-
-                                <div className="flex flex-col">
-                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">id picture </span>
-                                    {idPic ? (
-                                    <div 
-                                        className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
-                                        key="idpic_preview"
-                                    >
-                                        <div className="flex flex-row items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => previewImage(idPic)}
-                                                className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
-                                                title="Click to preview"
-                                                >
-                                                {idPic.name}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                setIdPic(null);
-                                                if (idPicRef.current) idPicRef.current.value = "";}}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                                title="Remove file"
-                                                >
-                                                    ✕
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    ) : (
-                                    <div 
-                                        className="flex flex-col gap-1 "
-                                        key="idpic_upload"
-                                    >
-                                        <input
-                                            type="file"
-                                            ref={idPicRef}
-                                            accept="image/*"
-                                            onChange={handleIdPIcChange}
-                                            name="document"
-                                            className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                        />
-                                    </div>
-                                    )}
-                                </div>
-                                
-                            </section>
-
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="birthcert_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={birthCertRef}
+                                    accept="image/*"
+                                    onChange={handleBirthCertChange}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
                         </div>
+
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">id picture </span>
+                            {idPic ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="idpic_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(idPic)}
+                                        className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {idPic.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setIdPic(null);
+                                        if (idPicRef.current) idPicRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="idpic_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={idPicRef}
+                                    accept="image/*"
+                                    onChange={handleIdPIcChange}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
+                        </div>
+                            
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">Parent&apos;s Income Tax Return (for incoming G7)</span>
+                            {itr ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="itr_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(itr)}
+                                        className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {itr.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setIdPic(null);
+                                        if (itrRef.current) itrRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="itr_preview"
+                            >
+                                <input
+                                    type="file"
+                                    ref={itrRef}
+                                    accept="image/*"
+                                    onChange={handleITRChange}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
+                        </div>
+                        
                     </section>
 
-                    <section className="w-full px-0 sm:px-2 py-2">
+                </div>
+            </section>
 
-                    <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Academic Records:</span>
-                        <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+            <section className="w-full px-0 sm:px-2 py-2">
 
-                            <section className="flex flex-col gap-8">
-                                <div className="flex flex-col sm:flex-row gap-8">
-                                <div className="flex flex-col">
-                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">Report Card </span>
-                                    {reportCard ? (
-                                    <div 
-                                        className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
-                                        key="reportcard_preview"
-                                    >
-                                        <div className="flex flex-row items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => previewImage(reportCard)}
-                                                className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
-                                                title="Click to preview"
-                                                >
-                                                {reportCard.name}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                setReportCard(null);
-                                                if (reportCardRef.current) reportCardRef.current.value = "";}}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                                title="Remove file"
-                                                >
-                                                    ✕
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    ) : (
-                                    <div 
-                                        className="flex flex-col gap-1 "
-                                        key="reportcard_upload"
-                                    >
-                                        <input
-                                            type="file"
-                                            ref={reportCardRef}
-                                            accept="image/*"
-                                            onChange={handleReportCardChange}
-                                            name="document"
-                                            className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                        />
-                                    </div>
-                                    )}
+                <span className="pl-2 ml-0 sm:ml-2 text-[13px] sm:text-[14px] lg:text-[16px] text-dGreen font-semibold border-l-4 rounded-sm border-dGreen font-merriweather"> Academic Records:</span>
+                <div className="w-full gap-4 flex flex-col shadow-lg py-8 px-2 lg:px-8 bg-gray-100/50 border-2 border-gray-100 rounded-lg mt-3 ">
+
+                    <section className="flex flex-col gap-8">
+                        <div className="flex flex-col sm:flex-row gap-8">
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">Report Card </span>
+                            {reportCard ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="reportcard_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(reportCard)}
+                                        className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {reportCard.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setReportCard(null);
+                                        if (reportCardRef.current) reportCardRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
                                 </div>
-
-                                <div className="flex flex-col">
-                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">Form 137 </span>
-                                    {form137 ? (
-                                    <div 
-                                        className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
-                                        key="form137_preview"
-                                    >
-                                        <div className="flex flex-row items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => previewImage(form137)}
-                                                className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
-                                                title="Click to preview"
-                                                >
-                                                {form137.name}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                setForm137(null);
-                                                if (form137Ref.current) form137Ref.current.value = "";}}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                                title="Remove file"
-                                                >
-                                                    ✕
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    ) : (
-                                    <div 
-                                        className="flex flex-col gap-1 "
-                                        key="form137_upload"
-                                    >
-                                        <input
-                                            type="file"
-                                            ref={form137Ref}
-                                            accept="image/*"
-                                            onChange={handleForm137Change}
-                                            name="document"
-                                            className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                        />
-                                    </div>
-                                    )}
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">Good Moral </span>
-                                    {goodMoral ? (
-                                    <div 
-                                        className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
-                                        key="goodmoral_preview"
-                                    >
-                                        <div className="flex flex-row items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => previewImage(goodMoral)}
-                                                className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
-                                                title="Click to preview"
-                                                >
-                                                {goodMoral.name}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                setGoodMoral(null);
-                                                if (goodMoralRef.current) goodMoralRef.current.value = "";}}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                                title="Remove file"
-                                                >
-                                                    ✕
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    ) : (
-                                    <div 
-                                        className="flex flex-col gap-1 "
-                                        key="goodmoral_upload"
-                                    >
-                                        <input
-                                            type="file"
-                                            ref={goodMoralRef}
-                                            accept="image/*"
-                                            onChange={handleGoodMoralChange}
-                                            name="document"
-                                            className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                        />
-                                    </div>
-                                    )}
-                                </div>
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <span className="text-xs lg:text-sm text-dGreen font-semibold">CAPRISSA (if private) </span>
-                                    {studentExitForm ? (
-                                    <div 
-                                        className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
-                                        key="student_exit_preview"
-                                    >
-                                        <div className="flex flex-row items-center gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => previewImage(studentExitForm)}
-                                                className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
-                                                title="Click to preview"
-                                                >
-                                                {studentExitForm.name}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                setStudentExitForm(null);
-                                                if (studentExitFormRef.current) studentExitFormRef.current.value = "";}}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                                title="Remove file"
-                                                >
-                                                    ✕
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    ) : (
-                                    <div 
-                                        className="flex flex-col gap-1 "
-                                        key="student_exit_upload"
-                                    >
-                                        <input
-                                            type="file"
-                                            ref={studentExitFormRef}
-                                            accept="image/*"
-                                            onChange={handleStudentExitFormChange}
-                                            name="document"
-                                            className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
-                                        />
-                                    </div>
-                                    )}
-                                </div>
-                                
-                            </section>
-
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="reportcard_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={reportCardRef}
+                                    accept="image/*"
+                                    onChange={handleReportCardChange}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
                         </div>
+
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">Form 137 </span>
+                            {form137 ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="form137_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(form137)}
+                                        className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {form137.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setForm137(null);
+                                        if (form137Ref.current) form137Ref.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="form137_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={form137Ref}
+                                    accept="image/*"
+                                    onChange={handleForm137Change}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">Good Moral </span>
+                            {goodMoral ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="goodmoral_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(goodMoral)}
+                                        className="w-full sm:w-[180px] lg:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {goodMoral.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setGoodMoral(null);
+                                        if (goodMoralRef.current) goodMoralRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="goodmoral_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={goodMoralRef}
+                                    accept="image/*"
+                                    onChange={handleGoodMoralChange}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
+                        </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-8">
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">CAPRISSA (if private) </span>
+                            {studentExitForm ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="student_exit_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(studentExitForm)}
+                                        className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {studentExitForm.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setStudentExitForm(null);
+                                        if (studentExitFormRef.current) studentExitFormRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="student_exit_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={studentExitFormRef}
+                                    accept="image/*"
+                                    onChange={handleStudentExitFormChange}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col">
+                            <span className="text-xs lg:text-sm text-dGreen font-semibold">ESC Certificate (if transferee & prev ESC grantee) </span>
+                            {escCert ? (
+                            <div 
+                                className="flex flex-col gap-1 w-full sm:w-[190px] lg:w-[320px]"
+                                key="student_exit_preview"
+                            >
+                                <div className="flex flex-row items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => previewImage(escCert)}
+                                        className="w-[180px] sm:w-[320px] py-[6px] border-2 border-dGreen bg-green-100 rounded-sm p-1 outline-none focus:ring-1 focus:ring-dGreen focus:border-dGreen transition flex-1 text-left truncate p-"
+                                        title="Click to preview"
+                                        >
+                                        {escCert.name}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                        setEscCert(null);
+                                        if (escCertRef.current) escCertRef.current.value = "";}}
+                                        className="text-red-500 hover:text-red-700 font-bold"
+                                        title="Remove file"
+                                        >
+                                            ✕
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            ) : (
+                            <div 
+                                className="flex flex-col gap-1 "
+                                key="student_exit_upload"
+                            >
+                                <input
+                                    type="file"
+                                    ref={escCertRef}
+                                    accept="image/*"
+                                    onChange={handleEscCert}
+                                    name="document"
+                                    className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
+                                />
+                            </div>
+                            )}
+                        </div>
+                        </div>
+                        
                     </section>
+                </div>
+
+            </section>
 
 
-                    
-                </main>
-                ),
-            },
+            
+        </main>
+    ),
+    },
 
          {
             title: (

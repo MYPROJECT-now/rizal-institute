@@ -5,6 +5,13 @@ export interface StudentUpdateData {
     applicantsSuffix: string;
     dateOfBirth: string;
     age: number;
+    religion: string;
+    ip: string;
+    house_no_purok: string;
+    barangay: string;
+    city: string;
+    province: string;
+    motherTongue: string;
     gender: string;
     mobileNumber: string;
     email: string;
@@ -13,11 +20,12 @@ export interface StudentUpdateData {
     guardiansFirstName: string;
     guardiansMiddleName: string;
     guardiansSuffix: string;
-    fullAddress: string;
     emergencyContact: string;
     emergencyEmail: string;
+    relationship: string;
 
     prevSchool: string;
+    studentType: string;
     schoolAddress: string;
     schoolType: string;
     gradeLevel: string;
@@ -29,6 +37,8 @@ export interface StudentUpdateData {
     idPic?: string;
     studentExitForm?: string;
     form137?: string;
+    itr?: string;
+    escCert?: string;
 
     mop?: string;
     reservationReceipt?: string;

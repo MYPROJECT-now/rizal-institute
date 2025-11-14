@@ -16,7 +16,7 @@ const Dashboard = () => {
         <div className=" flex flex-col gap-10 px-5 pt-4 pb-8 sm-pt-0 ">
             <section className="flex flex-col">
                 <p className=" sm:text-xl text-lg font-bold text-dGreen mb-2">
-                    Quick Stats ( {year()} )
+                    Quick Stats | A.Y. {year()} 
                 </p>
             <Top_analytics />
             </section>            

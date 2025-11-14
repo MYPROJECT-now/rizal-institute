@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useShowDocumentModal, useShowGradeModal, useUploadSoaModal } from "@/src/store/CASHIER/reserved";
 import { Button } from "@/components/ui/button";
-import { addBreakDown, addGrant, checkSoa, getESC, getGranted, getInfo, isLrnExist, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
+import { addBreakDown, addGrant, checkSoa, getESC, getGranted, getInfo, getRemainingBalance, isLrnExist, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Document_Review } from "./document/document_review";
@@ -62,6 +62,7 @@ export const UploadSoaModal = () => {
   const [prevAcadDiscount, setPrevAcadDiscount] = useState("");
   const [prevSiblingsDiscount, setPrevSiblingsDiscount] = useState("");
 
+  const [pastTuition, setPastTuition] = useState<number>(0);
   const {open: openGrade} = useShowGradeModal();
   const [addTuition , setAddTuition] = useState(false);
 
@@ -93,6 +94,8 @@ const handleClose = () => {
   setPrevAcadDiscount("");
   setPrevGrantee("");
   setPrevSiblingsDiscount("");
+  setTuition("");
+  setMiscellaneous("");
 
   // finally close the modal
   close();
@@ -174,6 +177,13 @@ const handleClose = () => {
     }
     setPrevAcadDiscount(prev_discount?.academic_discount ?? "");
     setPrevSiblingsDiscount(prev_discount?.withSibling ?? "");
+
+    if (info[0]?.studentType === "Old Student") {
+      const remainingBalance = await getRemainingBalance(lrn);
+      setPastTuition(remainingBalance);
+    } 
+    
+
   }
 
   const handleSearchSibling = async () => {
@@ -199,7 +209,7 @@ const handleClose = () => {
     if (!/^\d{12}$/.test(lrn) ) {
       return toast.error("Invalid LRN. Please enter a valid LRN.");
     }
-    const result = await addBreakDown(lrn, Number(tuition),  Number(miscellaneous), acad, sibling, Number(other_discount), Number(other_fees), escGrantee, disInfo?.studentType ?? "")
+    const result = await addBreakDown(lrn, Number(tuition),  Number(miscellaneous), acad, sibling, Number(other_discount), Number(other_fees), escGrantee, disInfo?.studentType ?? "", pastTuition)
     toast.success(result.message);
     setAddTuition(false);
     close();
@@ -637,20 +647,33 @@ const handleClose = () => {
             {page === 2 && (
             <article  className="flex flex-col gap-8 py-5">
               <section className="flex flex-col ">
-                  <span className="font-semibold text-sm text-dGreen mb-1">Main Fees</span>
-                  <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
-                    <section className="flex flex-col">
-                      <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">*</strong> Tuition Fee</span>
-                      <input type="text" placeholder="0"  value={tuition} onChange={(e) => setTuition(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
-                    </section>
+                <span className="font-semibold text-sm text-dGreen mb-1">Main Fees</span>
+                <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                  <section className="flex flex-col">
+                    <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">*</strong> Tuition Fee</span>
+                    <input type="text" placeholder="0"  value={tuition} onChange={(e) => setTuition(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                  </section>
 
-                    <section className="flex flex-col">
-                      <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">* </strong> Miscellaneous Fee</span>
-                      <input type="text" placeholder="0"  value={miscellaneous} onChange={(e) => setMiscellaneous(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
-                    </section>
-                  </div>
+                  <section className="flex flex-col">
+                    <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">* </strong> Miscellaneous Fee</span>
+                    <input type="text" placeholder="0"  value={miscellaneous} onChange={(e) => setMiscellaneous(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                  </section>
+                </div>
 
               </section>
+
+              {pastTuition > 0 && (
+                <section className="flex flex-col ">
+                  <span className="font-semibold text-sm text-dGreen mb-1">Remaing Balance</span>
+                  <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
+                    <section className="flex flex-col w-full">
+                      <span className="font-bold font-merriweather text-sm text-dGreen">Unpaid Balance</span>
+                      <input type="text"  value={pastTuition} disabled readOnly className="w-full py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                    </section>
+                  </div>
+                </section>
+              )}
+
 
               <section className="flex flex-col ">
                 <span className="font-semibold text-sm text-dGreen mb-1">Discounts</span>
@@ -774,6 +797,13 @@ const handleClose = () => {
                           {/* <td className="text-right">₱{tuition + miscellaneous - escGrant - academic_discount_amount - withSibling_amount - other_discount}</td> */}
                           </tr>
 
+                          {pastTuition > 0 && (
+                          <tr className="border-t font-semibold">
+                              <td className="py-2">Unpaid Tuition</td>
+                              <td className="text-right">₱{pastTuition}</td>
+                          </tr>
+                          )}
+
                           {other_fees !== "" && (
                           <tr>
                               <td className="py-2">Other Fees</td>
@@ -783,7 +813,7 @@ const handleClose = () => {
 
                           <tr className="border-t text-lg font-bold text-green-700">
                           <td className="py-3">Grand Total</td>
-                          <td className="text-right">₱ {Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0) - (acad === "With Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.20) : acad === "With High Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.50)  : acad === "With Highest Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.75)  : 0) - (sibling === "Yes" ? 500 : 0) - Number(other_discount ) + Number(other_fees) }</td>
+                          <td className="text-right">₱ {Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0) - (acad === "With Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.20) : acad === "With High Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.50)  : acad === "With Highest Honor" ? Math.ceil((Number(tuition) + Number(miscellaneous) - (escGrantee === "Yes" ? 9000 : 0)) * 0.75)  : 0) - (sibling === "Yes" ? 500 : 0) - Number(other_discount ) + Number(other_fees) + (pastTuition > 0 ? pastTuition : 0)}</td>
                           </tr>
                       </tbody>
                     </table>

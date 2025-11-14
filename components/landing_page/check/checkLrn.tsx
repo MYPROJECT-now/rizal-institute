@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { checkLRN } from "@/src/actions/landingPage";
+import { checkGrades, checkLRN } from "@/src/actions/landingPage";
 
 export const CheckLrn = () => {
   const { isOpen, close } = useApplicationModal();
@@ -40,6 +40,26 @@ export const CheckLrn = () => {
     setNotFound(false);
 
     try {
+
+      const allGradesSubmitted = await checkGrades(lrn);
+
+      if (!allGradesSubmitted) {
+        toast.error("Some grades are not yet submitted. Try again later.");
+        return;
+      }
+
+      // Continue your process here...
+
+    } catch (err) {
+      const error = err as Error;
+      console.error("❌ Unexpected Error:", error);
+      toast.error("An error occurred. Try again.");
+    } finally {
+      setLoading(false);
+    }
+
+
+    try {
       const exists = await checkLRN(lrn);
 
       if (exists) {
@@ -48,11 +68,13 @@ export const CheckLrn = () => {
       } else {
         setNotFound(true);
       }
-    } catch (err) {
-    const error = err as Error; // 👈 assert to Error
-    console.error("❌ Unexpected Error:", error);
 
-      toast.error("An error occurred.");
+    } catch (err) {
+      const error = err as Error; // 👈 assert to Error
+      console.error("❌ Unexpected Error:", error);
+
+    
+      toast.error("An error occurred. Try again.");
     } finally {
       setLoading(false);
     }

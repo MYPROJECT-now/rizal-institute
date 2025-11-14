@@ -61,8 +61,8 @@ async function sendDeclineEmail(email: string, trackingId: string, remarks: stri
 
     Remarks: ${remarks}
 
-    Use the tracking ID provided to re-apply for enrollment on our website.
-    Go to our website click track application and enter your tracking ID in order to repply.
+    Use the tracking ID provided to fix your payment for enrollment on our website.
+    Go to our website click track application and enter your tracking ID in order to fix your payment.
     Please comply with the note in the remarks section.
 
     If you have any further inquiries, feel free to contact our office.

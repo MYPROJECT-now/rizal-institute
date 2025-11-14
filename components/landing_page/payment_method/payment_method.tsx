@@ -56,6 +56,7 @@ export const PaymentMethod = () => {
     const [other_discount, setOther_discount] = useState(0);
     const [escGrant, setEscGrant] = useState(0);
     const [tuitionFee, setTuitionFee] = useState(0);
+    const [pastTuition, setPastTuition] = useState(0);
     
 
 
@@ -81,6 +82,7 @@ export const PaymentMethod = () => {
                     setOther_discount(data.other_discount || 0);
                     setEscGrant(data.escGrant || 0);
                     setTuitionFee(data.tuitionFee || 0);
+                    setPastTuition(data.pastTuition || 0)
 
                 
                 } catch (error) {
@@ -475,6 +477,13 @@ const sections = [
                         <td className="py-2">Total Tuition & Misc.</td>
                         <td className="text-right">₱{tuitionFee + miscellaneous - downPayment - escGrant - academic_discount_amount - withSibling_amount - other_discount}</td>
                         </tr>
+                        
+                        {pastTuition > 0 && (
+                        <tr className="border-t font-semibold">
+                            <td className="py-2">Unpaid Balance</td>
+                            <td className="text-right">₱{pastTuition}</td>
+                        </tr>
+                        )}
 
                         {other_fees > 0 && (
                         <tr>
@@ -482,6 +491,8 @@ const sections = [
                             <td className="text-right">₱{other_fees}</td>
                         </tr>
                         )}
+                        
+
 
                         <tr className="border-t text-lg font-bold text-green-700">
                         <td className="py-3">Grand Total</td>

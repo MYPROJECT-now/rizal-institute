@@ -42,7 +42,7 @@ async function sendReservationEmail(email: string) {
 
     Your spot has been secured, and we look forward to welcoming you to our community. 
     
-    Our cashier is now calculating your tuition. You will be notified once the it is calculated.
+    Our cashier is now calculating your tuition. You will be notified once the tuition is calculated.
     After that you can either choose to pay in full or pay in installments.
     You can do that by going on the website, click the track application button, enter you tracking ID, and then select your payment method.
 

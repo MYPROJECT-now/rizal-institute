@@ -40,7 +40,7 @@ export const Announcement_Modal = ({ title, content, image, date }: Props) => {
               src={image}
               width="400" 
               height="400"
-              className="w-[550px] h-full"
+              className="w-[550px] h-auto"
               
             />
           )}

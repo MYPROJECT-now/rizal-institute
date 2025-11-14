@@ -79,8 +79,30 @@ interface Props {
       fullName.includes(searchQuery.toLowerCase()) ||
       student.lrn.includes(searchQuery);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
-    const matchesStatus = filterStatus === "" || student.reservationPaymentStatus === filterStatus;
-
+    const matchesStatus =
+      filterStatus === "" ||
+      (
+        filterStatus === "Pending" &&
+        student.reservationPaymentStatus === "Pending"
+      ) ||
+      (
+        filterStatus === "Declined" &&
+        student.reservationPaymentStatus === "Declined"
+      ) ||
+      (
+        filterStatus === "Reserved" &&
+        student.applicationFormReviewStatus === "Reserved" &&
+        student.reservationPaymentStatus === "Reserved"
+      ) ||
+      (
+        filterStatus === "Ongoing" &&
+        (
+          (student.applicationFormReviewStatus === "Reserved" &&
+          student.reservationPaymentStatus === "Pending") ||
+          (student.applicationFormReviewStatus === "Pending" &&
+          student.reservationPaymentStatus === "Reserved")
+        )
+      );
     return matchesSearch && matchesGrade && matchesStatus;
   });
 

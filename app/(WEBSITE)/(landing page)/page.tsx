@@ -33,6 +33,8 @@ import { Skeleton } from "@/components/ui/skeleton";
     const fetchStatus = async () => {
       const res = await fetch("/api/enrollment_status");
       await res.json(); // you’re not using this anyway
+      await fetch("/api/test_dns");
+
     };
     fetchStatus();
   }, []);

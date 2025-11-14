@@ -2,7 +2,7 @@
 
 import { and, asc, desc, eq, ilike, sql, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable,  } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable, SubjectTable,  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -1165,28 +1165,75 @@ export const prevDiscounts = async (lrn: string) => {
   return !!grantee[0]?.ESCGrantee;
   }
 
-  export const getGradesSummary = async (lrn:string) => {
-    const gradeSummary = await db.
-    select({
+export const getGradesSummary = async (lrn: string) => {
+  const gradeSummary = await db
+    .select({
       gradeLevelName: GradeLevelTable.gradeLevelName,
-      finalGrade: sql<number>`AVG(${StudentGradesTable.finalGrade})`,
-
+      finalGrade: StudentGradesTable.finalGrade,
+      subjectName: SubjectTable.subjectName,
     })
     .from(StudentGradesTable)
-    .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, StudentGradesTable.gradeLevel_id))
-    .leftJoin(StudentInfoTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id)) 
-    .where(eq(StudentInfoTable.lrn, lrn))
-    .groupBy(
-      GradeLevelTable.gradeLevelName,
-      StudentGradesTable.gradeLevel_id,  
+    .leftJoin(
+      GradeLevelTable,
+      eq(GradeLevelTable.gradeLevel_id, StudentGradesTable.gradeLevel_id)
     )
-    .orderBy(asc(StudentGradesTable.gradeLevel_id))
+    .leftJoin(
+      StudentInfoTable,
+      eq(StudentGradesTable.student_id, StudentInfoTable.student_id)
+    )
+    .leftJoin(
+      SubjectTable,
+      eq(SubjectTable.subject_id, StudentGradesTable.subject_id)
+    )
+    .where(eq(StudentInfoTable.lrn, lrn))
+    .orderBy(asc(StudentGradesTable.gradeLevel_id));
 
-    console.log("fetch:", gradeSummary)
-    return gradeSummary;
+  console.log("fetch:", gradeSummary);
+  return gradeSummary;
+};
 
-  }
+
   
+export const getRemainingBalance = async (lrn: string) => {
+  // 1. Find the latest academic year with tuition data
+  const latest = await db
+    .select({ year: MonthsInSoaTable.academicYear_id })
+    .from(MonthsInSoaTable)
+    .leftJoin(
+      StudentInfoTable,
+      eq(MonthsInSoaTable.applicants_id, StudentInfoTable.applicants_id)
+    )
+    .where(eq(StudentInfoTable.lrn, lrn))
+    .orderBy(desc(MonthsInSoaTable.academicYear_id))
+    .limit(1);
+
+  if (!latest.length) return 0;
+
+  const latestAcad = latest[0].year;
+
+  // 2. Sum monthlyDue and amountPaid for that academic year
+  const result = await db
+    .select({
+      totalDue: sql<number>`SUM(${MonthsInSoaTable.monthlyDue})`,
+      totalPaid: sql<number>`SUM(${MonthsInSoaTable.amountPaid})`,
+    })
+    .from(MonthsInSoaTable)
+    .leftJoin(
+      StudentInfoTable,
+      eq(MonthsInSoaTable.applicants_id, StudentInfoTable.applicants_id)
+    )
+    .where(
+      and(
+        eq(StudentInfoTable.lrn, lrn),
+        eq(MonthsInSoaTable.academicYear_id, latestAcad)
+      )
+    );
+
+  const totalDue = result[0]?.totalDue ?? 0;
+  const totalPaid = result[0]?.totalPaid ?? 0;
+  const remainingBalance = totalDue - totalPaid;
+  return remainingBalance;
+};
 
 
   // submit breakdown and monthly fees to pay
@@ -1200,6 +1247,7 @@ export const prevDiscounts = async (lrn: string) => {
     other_fees: number,
     escGrantee: string,
     studentType: string,
+    pastTuition: number,
   ) => {
   await requireStaffAuth(["cashier"]); // gatekeeper
 
@@ -1276,7 +1324,7 @@ export const prevDiscounts = async (lrn: string) => {
   net -= otherDisc;
 
   // --- Step 5: add other fees
-  const finalPayable = net + (other_fees ?? 0);
+  const finalPayable = net + (other_fees ?? 0) + pastTuition;
   console.log("Step 5 – After Adding Other Fees:", finalPayable);
 
   
@@ -1370,6 +1418,7 @@ export const prevDiscounts = async (lrn: string) => {
       other_discount: other_discount,
       totalTuitionFee: totalFee,
       escGrant: grant,
+      remainingTuitionFee: pastTuition,
   });
 
   // if (escValue[0].grantAvailable > 0) {

@@ -333,6 +333,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     totalTuitionFee: integer('totalTuitionFee'),
     escGrantee: varchar('escGrantee', { length:100 }),
     escGrant: integer('escGrant'),
+    remainingTuitionFee: integer('remainingTuitionFee'),
   })
 
 

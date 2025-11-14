@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Image from "next/image";
 import { usePreviewModal } from "@/src/store/preview";
-import {  addNewApplicants, verifyEmail, verifyLrn } from "@/src/actions/landingPage";
+import {  addNewApplicants, verifyLrn } from "@/src/actions/landingPage";
 
 import {
 Card,
@@ -256,19 +256,37 @@ import { useRouter } from "next/navigation";
             }
 
             
-            if (
-                !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email) ||
-                email.length < 5 ||
-                email.length > 50
-            ) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 newErrors.email = "invalid";
                 setErrors(newErrors);
-                toast.error("Invalid email. Please enter a valid email.");
+                toast.error("Invalid email format.");
                 return false;
-            }   
+            }
 
+
+            // try {
+            //     await verifyEmail(email);
+            // } catch (error) {
+            //     const err = error as Error;
+            //     newErrors.email = "invalid";
+            //     setErrors(newErrors);
+            //     toast.error(err.message || "Invalid email address.");
+            //     console.log(error);
+            //     return false;
+            // }
             try {
-                await verifyEmail(email);
+                const res = await fetch("/api/validate_email", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.valid) {
+                    throw new Error(data.message);
+                }
+
             } catch (error) {
                 const err = error as Error;
                 newErrors.email = "invalid";
