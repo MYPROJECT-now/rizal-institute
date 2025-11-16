@@ -854,6 +854,12 @@ const handleClose = () => {
                 </section>
 
                 <section className="w-full text-center">
+                  <p className="text-sm text-red-600 mb-3 font-medium">
+                    Please double-check all tuition and miscellaneous amounts before submitting.
+                  </p>
+                </section>
+
+                <section className="w-full text-center">
                   <Button
                     variant="confirmButton"
                     className="px-10 py-2 rounded-lg mb-5"
@@ -862,7 +868,7 @@ const handleClose = () => {
                   >
                     Submit
                   </Button>
-              </section>
+                </section>
 
               </article>
             )}

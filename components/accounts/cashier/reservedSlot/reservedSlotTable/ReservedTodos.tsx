@@ -67,10 +67,10 @@ interface Props {
         className="border-2 border-gray-300 rounded px-3 py-1  w-full sm:w-[125px] xl:w-[200px] focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
       >
         <option value="">All Grades</option>
-        <option value="Grade 7">Grade 7</option>
-        <option value="Grade 8">Grade 8</option>
-        <option value="Grade 9">Grade 9</option>
-        <option value="Grade 10">Grade 10</option>
+        <option value="7">Grade 7</option>
+        <option value="8">Grade 8</option>
+        <option value="9">Grade 9</option>
+        <option value="10">Grade 10</option>
         {/* Add other grades as needed */}
       </select>
 

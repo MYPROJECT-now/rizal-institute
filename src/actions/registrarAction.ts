@@ -2,7 +2,7 @@
 
   import { desc, eq, or, and,  } from "drizzle-orm";
   import { db } from "../db/drizzle";
-  import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
+  import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, SectionTable, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
   import { auth } from "@clerk/nextjs/server";
@@ -1068,4 +1068,89 @@ export const getRecentGrantees = async () => {
   
 
   return grantees;
+}
+
+export const getSecAndGrade = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const secAndGrade = await db
+  .select({
+    section_id: SectionTable.section_id,
+    gradeLevel_id: SectionTable.gradeLevel_id,
+    section: SectionTable.sectionName,
+    gradeLevel: GradeLevelTable.gradeLevelName,
+  }).from(SectionTable)
+  .leftJoin(GradeLevelTable, eq(SectionTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .where(and(
+    eq(SectionTable.academicYear_id, selectedYear),
+    ))
+  
+    console.log(secAndGrade);
+  return secAndGrade;
+}
+
+export const getSF1 = async (gradelevel_id: number, section_id: number) => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const sf1 = await db
+  .select({
+    lrn: StudentInfoTable.lrn,
+    name: sql<string>`
+      CONCAT(
+        ${StudentInfoTable.studentLastName}, ',  ',
+        ${StudentInfoTable.studentFirstName}, ' ',
+        ${StudentInfoTable.studentMiddleName}, ' ',
+        ${StudentInfoTable.studentSuffix}
+      )
+    `,
+    gender: StudentInfoTable.studentGender,
+    studentBirthDate: StudentInfoTable.studentBirthDate,
+    age: StudentInfoTable.studentAge,
+    motherTounge: StudentInfoTable.motherTounge,
+    ip: StudentInfoTable.ip,
+    religion: StudentInfoTable.religion,
+    house_no_purok: StudentInfoTable.house_no_purok,
+    barangay: StudentInfoTable.barangay,
+    city: StudentInfoTable.city,
+    province: StudentInfoTable.province,
+    gname: sql<string>`
+      CONCAT(
+        ${guardianAndParentsTable.guardiansLastName}, ',  ',
+        ${guardianAndParentsTable.guardiansFirstName}, ' ',
+        ${guardianAndParentsTable.guardiansMiddleName}, ' ',
+        ${guardianAndParentsTable.guardiansSuffix}
+      )
+    `,
+    emergencyContact: guardianAndParentsTable.emergencyContact,
+    relationship: guardianAndParentsTable.relationship,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    sectionName: SectionTable.sectionName,
+    schoolYear: AcademicYearTable.academicYear,
+  }).from(StudentInfoTable)
+  .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+  .leftJoin(SectionTable, eq(StudentPerGradeAndSection.gradeLevel_id, SectionTable.gradeLevel_id))
+  .leftJoin(GradeLevelTable, eq(SectionTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
+  .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+  .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+  .where(and(
+    eq(AdmissionStatusTable.academicYear_id, selectedYear),
+    eq(AdmissionStatusTable.admissionStatus, "Enrolled"),
+    eq(StudentPerGradeAndSection.gradeLevel_id, gradelevel_id),
+    eq(StudentPerGradeAndSection.section_id, section_id),
+    eq(SectionTable.academicYear_id, selectedYear),
+    eq(AcademicYearTable.academicYear_id, selectedYear),
+    
+  ))
+
+  console.log("SF1:", sf1);
+
+  return sf1; 
+
 }

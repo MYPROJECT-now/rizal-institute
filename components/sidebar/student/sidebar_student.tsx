@@ -7,6 +7,8 @@ import { SidebarItem } from "../sidebar_item";
 import { AcademicYearModal } from "../utils/academicYearS";
 import { useAcadModal } from "@/src/store/academicYear";
 import { SidebarAcad } from "../utils/sidebar_item_admin";
+import { COEModal } from "../utils/coe";
+import { useCOE } from "@/src/store/student/coe";
 
 type Props = {
     className?: string;
@@ -14,7 +16,8 @@ type Props = {
 };
 
 export const Sidebar_student = ({ className, onClose }: Props) => {
-      const { open } = useAcadModal();
+    const { open } = useAcadModal();
+    const { open: coeOpen } = useCOE();
     
     return (
         <div
@@ -44,13 +47,13 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                         onClick={onClose} 
                     />
 
-                    <SidebarItem 
+                    {/* <SidebarItem 
                         label="COE" 
                         href="/ACCOUNTS/student/enrollment_cert"
                         iconSrc="/student_logo.png"
                         onClick={onClose}
                         
-                    />
+                    /> */}
 
                     <SidebarItem 
                         label="Payments" 
@@ -65,6 +68,13 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                         iconSrc="/announcement.png"
                         onClick={onClose} 
                     />
+                    
+                    <COEModal />
+                    <SidebarAcad 
+                        label="COE"
+                        iconSrc="/student_logo.png"
+                        onClick={coeOpen} 
+                    />
 
                     <AcademicYearModal />
                     <SidebarAcad 
@@ -72,7 +82,7 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                         iconSrc="/calendar.png"
                         onClick={open} 
                     />
-            
+
                 </div>
             </div>
                 

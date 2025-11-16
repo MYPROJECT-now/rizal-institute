@@ -1,7 +1,32 @@
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
-export async function exportSF1() {
+export interface SF1Row {
+  lrn: string;
+  name: string;
+  gender:  string;
+  studentBirthDate: string;
+  age: number;
+  motherTounge: string;
+  ip: string | null;
+  religion: string;
+
+  house_no_purok: string;
+  barangay: string;
+  city: string;
+  province: string;
+
+  gname: string;          // Father / Mother / Guardian name
+  relationship:  string | null;
+
+  emergencyContact: string | null;
+
+  gradeLevelName: string | null;
+  sectionName: string | null;
+  schoolYear: string | null;
+}
+
+export async function exportSF1(sf1Data: SF1Row[]) {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet("School Form 1 (SF1)");
 
@@ -15,18 +40,18 @@ export async function exportSF1() {
   sheet.getColumn(7).width = 10;
   sheet.getColumn(8).width = 17;
   sheet.getColumn(9).width = 15;
-  sheet.getColumn(10).width = 22;
+  sheet.getColumn(10).width = 25;
   sheet.getColumn(11).width = 15;
-  sheet.getColumn(12).width = 18;
-  sheet.getColumn(13).width = 15;
-  sheet.getColumn(14).width = 25;
-  sheet.getColumn(15).width = 25;
-  sheet.getColumn(16).width = 20;
-  sheet.getColumn(17).width = 15;
+  sheet.getColumn(12).width = 15;
+  sheet.getColumn(13).width = 23;
+  sheet.getColumn(14).width = 15;
+  sheet.getColumn(15).width = 15;
+  sheet.getColumn(16).width = 10;
+  sheet.getColumn(17).width = 10;
   sheet.getColumn(18).width = 18;
-  sheet.getColumn(19).width = 20;
-  sheet.getColumn(20).width = 20;
-  sheet.getColumn(21).width = 18;
+  sheet.getColumn(19).width = 38;
+  sheet.getColumn(20).width = 38;
+  sheet.getColumn(21).width = 38;
   sheet.getColumn(22).width = 18;
   sheet.getColumn(23).width = 24;
 
@@ -49,12 +74,12 @@ export async function exportSF1() {
   sheet.addImage(imageId, "A1:B6");
 
   // === TITLE ===
-  sheet.mergeCells("B1:S1");
+  sheet.mergeCells("B1:Y1");
   sheet.getCell("B1").value = "School Form 1 (SF 1) School Register";
   sheet.getCell("B1").alignment = { horizontal: "center", vertical: "middle" };
   sheet.getCell("B1").font = { size: 22, bold: true, name: "Arial Narrow" };
 
-  sheet.mergeCells("B2:S2");
+  sheet.mergeCells("B2:Y2");
   sheet.getCell("B2").value = "(This replaces Form 1, Master List & STS Form 2-Family Background and Profile)";
   sheet.getCell("B2").alignment = { horizontal: "center", vertical: "middle" };
   sheet.getCell("B2").font = { size: 12, italic: true, name: "Arial Narrow" };
@@ -66,6 +91,7 @@ export async function exportSF1() {
   sheet.getCell("D4").alignment = { horizontal: "right", vertical: "middle" };
   sheet.getCell("D4").font = { size: 28,  name: "Arial Narrow" };
 
+  sheet.getCell("F4").value = "403358";
   sheet.getCell("F4").border = {
     top: { style: "thin" },
     left: { style: "thin" },
@@ -81,6 +107,7 @@ export async function exportSF1() {
   sheet.getCell("C6").alignment = { horizontal: "right", vertical: "middle" };
   sheet.getCell("C6").font = { size: 28,  name: "Arial Narrow" };
 
+  sheet.getCell("F6").value = "Rizal Institute Canlubang Foundation INC.";
   sheet.mergeCells("F6:K6");
   sheet.getCell("F6").border = {
     top: { style: "thin" },
@@ -92,11 +119,12 @@ export async function exportSF1() {
   sheet.getCell("F6").font = { size: 28,  name: "Arial Narrow" };
 
   sheet.mergeCells("L4:M4");
-  sheet.getCell("L4").value = "Division:";
+  sheet.getCell("L4").value = "Division";
   sheet.getCell("L4").alignment = { horizontal: "right", vertical: "middle" };
   sheet.getCell("L4").font = { size: 28,  name: "Arial Narrow" };
 
   sheet.mergeCells("N4:Q4");
+  sheet.getCell("N4").value = "Calamba City";
   sheet.getCell("N4").border = {
     top: { style: "thin" },
     left: { style: "thin" },
@@ -107,17 +135,18 @@ export async function exportSF1() {
   sheet.getCell("N4").font = { size: 28,  name: "Arial Narrow" };
 
   sheet.mergeCells("M6:O6");
-  sheet.getCell("M6").value = "School Year:";
+  sheet.getCell("M6").value = "School Year";
   sheet.getCell("M6").alignment = { horizontal: "right", vertical: "middle" };
   sheet.getCell("M6").font = { size: 28,  name: "Arial Narrow" };
 
-  sheet.mergeCells("P6:Q6");
+  sheet.mergeCells("P6:R6");
   sheet.getCell("P6").border = {
     top: { style: "thin" },
     left: { style: "thin" },
     bottom: { style: "thin" },
     right: { style: "thin" },
   };
+  sheet.getCell("P6").value = sf1Data[0].schoolYear;
   sheet.getCell("P6").alignment = { horizontal: "left", vertical: "middle" };
   sheet.getCell("P6").font = { size: 28,  name: "Arial Narrow" };
 
@@ -127,32 +156,36 @@ export async function exportSF1() {
   sheet.getCell("S4").font = { size: 28,  name: "Arial Narrow" };
 
   sheet.mergeCells("U4:X4");
+  sheet.getCell("U4").value = "District II ";
   sheet.getCell("U4").border = {
     top: { style: "thin" },
     left: { style: "thin" },
     bottom: { style: "thin" },
     right: { style: "thin" },
   };
+
+
   sheet.getCell("U4").alignment = { horizontal: "left", vertical: "middle" };
   sheet.getCell("U4").font = { size: 28,  name: "Arial Narrow" };
 
 
   sheet.mergeCells("S6:T6");
-  sheet.getCell("S6").value = "Grade Level:";
+  sheet.getCell("S6").value = "Grade Level";
   sheet.getCell("S6").alignment = { horizontal: "right", vertical: "middle" };
   sheet.getCell("S6").font = { size: 28,  name: "Arial Narrow" };
 
-    sheet.mergeCells("U6:V6");
+  sheet.mergeCells("U6:V6");
   sheet.getCell("U6").border = {
     top: { style: "thin" },
     left: { style: "thin" },
     bottom: { style: "thin" },
     right: { style: "thin" },
   };
+  sheet.getCell("U6").value = sf1Data[0].gradeLevelName;
   sheet.getCell("U6").alignment = { horizontal: "left", vertical: "middle" };
   sheet.getCell("U6").font = { size: 28,  name: "Arial Narrow" };
 
-  sheet.getCell("W6").value = "Section:";
+  sheet.getCell("W6").value = "Section";
   sheet.getCell("W6").alignment = { horizontal: "right", vertical: "middle" };
   sheet.getCell("W6").font = { size: 28,  name: "Arial Narrow" };
 
@@ -163,109 +196,391 @@ export async function exportSF1() {
     bottom: { style: "thin" },
     right: { style: "thin" },
   };
+  sheet.getCell("X6").value = sf1Data[0].sectionName;
   sheet.getCell("X6").alignment = { horizontal: "left", vertical: "middle" };
   sheet.getCell("X6").font = { size: 28,  name: "Arial Narrow" };
 
-  // === HEADER ROWS (Explicit placement) ===
-  const headerRow1 = [
-    "", 
-    "LRN", 
-    "NAME\n(Last Name, First Name, Middle Name)", 
-    "Sex (M/F)",
-    "BIRTH DATE\n(mm/dd/yyyy)", 
-    "AGE as of\n1st Friday June", 
-    "MOTHER TONGUE",
-    "IP (Ethnic Group)", 
-    "RELIGION", 
-    "ADDRESS", 
-    "", 
-    "", 
-    "", 
-    "PARENTS", 
-    "",
-    "GUARDIAN\n(if not Parent)", 
-    "", 
-    "Contact Number\nof Parent or Guardian", 
-    "REMARKS"
-  ];
-  const headerRow2 = [
-    "", "", "", "", "", "", "", "", "",
-    "House #/Street/Sitio/Purok", "Barangay", "Municipality/City", "Province",
-    "Father’s Name\n(Last Name, First Name, Middle Name)",
-    "Mother’s Maiden Name\n(Last Name, First Name, Middle Name)",
-    "Name", "Relationship", "", "(Please refer to legend)"
-  ];
 
-  // place these manually to fixed rows
-  sheet.getRow(8).values = headerRow1;
-  sheet.getRow(9).values = headerRow2;
 
-  // sheet.mergeCells("A8:Z9"); 
+  //HEADERS
   sheet.mergeCells("A8:A9"); 
+  sheet.getCell("A8:A9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+
+  };
+
   sheet.mergeCells("B8:B9"); 
+  sheet.getCell("B8:B9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("B8").value = "LRN";
+  sheet.getCell("B8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("B8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
   sheet.mergeCells("C8:F9"); 
+  sheet.getCell("C8:F9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("C8").value = "Name (Last Name, First Name, Middle Name)";
+  sheet.getCell("C8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("C8").font = { size: 18, bold: true, name: "Arial Narrow" };
+  
   sheet.mergeCells("G8:G9"); 
+  sheet.getCell("G8:G9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("G8").value = "Sex (M/F)";
+  sheet.getCell("G8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("G8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
   sheet.mergeCells("H8:H9"); 
+  sheet.getCell("H8:H9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("H8").value = "BIRTH DATE  (mm/dd/ yyyy)";
+  sheet.getCell("H8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("H8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
   sheet.mergeCells("I8:I9"); 
+  sheet.getCell("I8:I9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("I8").value = "AGE";
+  sheet.getCell("I8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("I8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
   sheet.mergeCells("J8:J9"); 
+  sheet.getCell("J8:J9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("J8").value = "MOTHER TONGUE";
+  sheet.getCell("J8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("J8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
   sheet.mergeCells("K8:K9"); 
+  sheet.getCell("K8:K9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("K8").value = "IP (Ethnic Group)";
+  sheet.getCell("K8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("K8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+
   sheet.mergeCells("L8:L9"); 
-  sheet.mergeCells("M8:R8"); 
+  sheet.getCell("L8:L9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("L8").value = "RELIGION";
+  sheet.getCell("L8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("L8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+
+  sheet.mergeCells("M8:R8");
+  sheet.getCell("M8:R8").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("M8").value = "ADDRESS";
+  sheet.getCell("M8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("M8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  sheet.getCell("M9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("M9").value = "House #/ Street/ Sitio/";
+  sheet.getCell("M9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("M9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+
   sheet.mergeCells("N9:O9");
+  sheet.getCell("N9:O9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("N9").value = "Barangay";
+  sheet.getCell("N9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("N9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  
   sheet.mergeCells("P9:Q9");
+  sheet.getCell("P9:Q9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("P9").value = "Municipality/ City ";
+  sheet.getCell("P9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("P9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+
+  sheet.getCell("R9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("R9").value = "Province";
+  sheet.getCell("R9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("R9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+
+
   sheet.mergeCells("S8:T8"); 
+  sheet.getCell("S8:T8").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("S8").value = "PARENTS ";
+  sheet.getCell("S8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("S8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  sheet.getCell("S9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("S9").value = "Father's Name (Last Name, First Name, Middle Name)";
+  sheet.getCell("S9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("S9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+
   sheet.getCell("T9").border = {
-    top: { style: "thin" },
+    left: { style: "thin" },
     right: { style: "thin" },
+    top: { style: "thin" },
     bottom: { style: "thin" },
+  };
+  sheet.getCell("T9").value = "Mother's Maiden Name (Last Name, First Name, Middle Name)";
+  sheet.getCell("T9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("T9").font = { size: 18, bold: true, name: "Arial Narrow" };
 
-  };
-  sheet.getCell("U9").border = {
-    top: { style: "thin" },
-    right: { style: "thin" },
-    bottom: { style: "thin" },
-
-  };
-  sheet.getCell("V9").border = {
-    top: { style: "thin" },
-    right: { style: "thin" },
-    bottom: { style: "thin" },
-  };
   sheet.mergeCells("U8:V8"); 
+  sheet.getCell("U8:V8").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("U8").value = "GUARDIAN (If not Parent) ";
+  sheet.getCell("U8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("U8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  sheet.getCell("U9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("U9").value = "Name";
+  sheet.getCell("U9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("U9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  sheet.getCell("V9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("V9").value = "Relationship";
+  sheet.getCell("V9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("V9").font = { size: 18, bold: true, name: "Arial Narrow" };
+
   sheet.mergeCells("W8:W9"); 
-  sheet.mergeCells("X8:Z9"); 
+  sheet.getCell("W8").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("W8").value = "Contact Number of Parent or Guardian";
+  sheet.getCell("W8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("W8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  sheet.mergeCells("X8:Z8"); 
+  sheet.getCell("X8").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("X8").value = "REMARKS";
+  sheet.getCell("X8").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("X8").font = { size: 18, bold: true, name: "Arial Narrow" };
+
+  sheet.mergeCells("X9:Z9"); 
+  sheet.getCell("X9").border = {
+    left: { style: "thin" },
+    right: { style: "thin" },
+    top: { style: "thin" },
+    bottom: { style: "thin" },
+  };
+  sheet.getCell("X9").value = "(Please refer to the legend on last page)";
+  sheet.getCell("X9").alignment = { horizontal: "center", vertical: "middle",  wrapText: true  };
+  sheet.getCell("X9").font = { size: 18, bold: true, name: "Arial Narrow" };
 
 
-
-
-  // === STYLE HEADERS ===
-  [8, 9].forEach((r) => {
-    const row = sheet.getRow(r);
-    row.eachCell((cell) => {
-      cell.font = { bold: true, name: "Arial Narrow", size: 16 };
-      cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
-      cell.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      };
-    });
-  });
 
   // === SAMPLE STUDENT ROWS ===
-  for (let i = 10; i <= 25; i++) {
-    const row = sheet.getRow(i);
-    row.height = 18;
-    row.eachCell((cell) => {
-      cell.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      };
-    });
+// ==== APPLY BORDERS FOR ROWS 10 TO 59 (COLUMNS A–Z) ====
+for (let rowIndex = 10; rowIndex <= 59; rowIndex++) {
+  // ===== MERGE CELLS PER ROW =====
+  // === SAMPLE DATA ===
+// const sampleStudents = [
+//   {
+//     lrn: "123456789012",
+//     name: "Dela Cruz, Juan, Santos",
+//     sex: "M",
+//     birthdate: "01/15/2012",
+//     age: "13",
+//     motherTongue: "Tagalog",
+//     ip: "None",
+//     religion: "Catholic",
+//     address_street: "123 Mabini St.",
+//     address_brgy: "Barangay Uno",
+//     address_city: "Calamba",
+//     address_province: "Laguna",
+//     father: "Dela Cruz, Jose, Ramirez",
+//     mother: "Ramirez, Maria, Lopez",
+//     guardian_name: "",
+//     guardian_rel: "",
+//     contact: "09123456789",
+//     remarks: ""
+//   },
+//   {
+//     lrn: "109876543210",
+//     name: "Santos, Maria, Dizon",
+//     sex: "F",
+//     birthdate: "03/05/2013",
+//     age: "12",
+//     motherTongue: "Tagalog",
+//     ip: "None",
+//     religion: "Christian",
+//     address_street: "456 Rizal St.",
+//     address_brgy: "Barangay Dos",
+//     address_city: "Calamba",
+//     address_province: "Laguna",
+//     father: "Santos, Mark, Dizon",
+//     mother: "Dizon, Ana, Flores",
+//     guardian_name: "",
+//     guardian_rel: "",
+//     contact: "09987654321",
+//     remarks: ""
+//   }
+// ];
+
+// INSERT SAMPLE STUDENTS INTO ROW 10 AND 11
+sf1Data.forEach((data, idx) => {
+  const rowNum = 10 + idx;
+
+  sheet.getCell(`A${rowNum}`).value = "";
+  sheet.getCell(`B${rowNum}`).value = data.lrn;
+
+  sheet.getCell(`C${rowNum}`).value = data.name;
+
+  // sheet.getCell(`G${rowNum}`).value = data.gender;
+  if(data.gender === "Male"){
+    sheet.getCell(`G${rowNum}`).value = "M";
   }
+  if(data.gender === "Female"){
+    sheet.getCell(`G${rowNum}`).value = "F";
+  }
+  sheet.getCell(`H${rowNum}`).value = data.studentBirthDate;
+  sheet.getCell(`I${rowNum}`).value = data.age;
+  sheet.getCell(`J${rowNum}`).value = data.motherTounge;
+  sheet.getCell(`K${rowNum}`).value = data.ip;
+  sheet.getCell(`L${rowNum}`).value = data.religion;
+
+  sheet.getCell(`M${rowNum}`).value = data.house_no_purok;
+  sheet.getCell(`N${rowNum}`).value = data.barangay;
+  sheet.getCell(`P${rowNum}`).value = data.city;
+  sheet.getCell(`R${rowNum}`).value = data.province;
+  if (data.relationship === "Father") {
+    sheet.getCell(`S${rowNum}`).value = data.gname;
+  }
+  if (data.relationship === "Mother") {
+    sheet.getCell(`T${rowNum}`).value = data.gname;
+  }
+  if (data.relationship === "Guardian") {
+    sheet.getCell(`U${rowNum}`).value = data.gname;
+    sheet.getCell(`V${rowNum}`).value = data.relationship;
+
+  }
+  // sheet.getCell(`S${rowNum}`).value = data.father;
+  // sheet.getCell(`T${rowNum}`).value = data.mother;
+
+  // sheet.getCell(`U${rowNum}`).value = data.guardian_name;
+  // sheet.getCell(`V${rowNum}`).value = data.relationship;
+
+  sheet.getCell(`W${rowNum}`).value = data.emergencyContact;
+
+  // sheet.getCell(`X${rowNum}`).value = data.remarks;
+});
+
+
+  sheet.getRow(rowIndex).height = 60;
+
+
+  sheet.mergeCells(`C${rowIndex}:F${rowIndex}`);
+  sheet.mergeCells(`N${rowIndex}:O${rowIndex}`);
+  sheet.mergeCells(`P${rowIndex}:Q${rowIndex}`);
+  sheet.mergeCells(`X${rowIndex}:Z${rowIndex}`);
+
+  // ===== APPLY BORDERS FOR A–Z =====
+  const row = sheet.getRow(rowIndex);
+  for (let colIndex = 1; colIndex <= 26; colIndex++) {
+    const cell = row.getCell(colIndex);
+    cell.border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    cell.value = cell.value ?? "";
+    cell.font= { size: 16,  name: "Arial Narrow" };  
+    cell.alignment = {  wrapText: true };
+  }
+}
+
+
+
 
   // === EXPORT ===
   const buffer = await workbook.xlsx.writeBuffer();

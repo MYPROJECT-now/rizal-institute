@@ -64,7 +64,7 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
             onClick={() => onAccept(applicants.id, applicants.lastName, applicants.firstName, applicants.middleName ?? "")}
             className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
             variant={"acceptButton"}
-            disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false}
+            disabled={applicants.reservationPaymentStatus !== "Pending" || loading || applicants.isActive === false || applicants.reservationReceipt === null || applicants.reservationReceipt === undefined}
           >
             {loading ? "Accepting..." : "Accept"}
           </Button>
@@ -78,9 +78,8 @@ const Student: FC<Props> = ({ applicants, onAccept, onDecline, className, loadin
           onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
           variant={"rejectButton"}
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
-          disabled={applicants.reservationPaymentStatus !== "Pending" || applicants.isActive === false}
-          
-        >
+          disabled={applicants.reservationPaymentStatus !== "Pending" || applicants.isActive === false || applicants.reservationReceipt === null || applicants.reservationReceipt === undefined}
+          >
           Decline
         </Button>
       </td>

@@ -116,20 +116,30 @@ const validatePage = async (): Promise<boolean> => {
 
 
     case 2:
-    const mopFilled = !!mop;
-    const receiptFilled = !!reservationReceipt;
-        
-    const anyFilled = mopFilled || receiptFilled;
-    const allFilled = mopFilled && receiptFilled;
-        
-    if (anyFilled && !allFilled) {
-        if (!mopFilled) newErrors.mop = "Required if other payment fields are filled.";
-        if (!receiptFilled) newErrors.reservationReceipt = "Required if other payment fields are filled.";
-        
+    if (!mop.trim()) newErrors.lrn = "Required";
+    if (!reservationReceipt) newErrors.reservationReceipt = "Required";
+
+
+    if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
-        toast.error("Keep all fields blank or complete all payment details.");
+        toast.error("Please fill in all required fields.");
         return false;
     }
+
+    // const mopFilled = !!mop;
+    // const receiptFilled = !!reservationReceipt;
+        
+    // const anyFilled = mopFilled || receiptFilled;
+    // const allFilled = mopFilled && receiptFilled;
+        
+    // if (anyFilled && !allFilled) {
+    //     if (!mopFilled) newErrors.mop = "Required if other payment fields are filled.";
+    //     if (!receiptFilled) newErrors.reservationReceipt = "Required if other payment fields are filled.";
+        
+    //     setErrors(newErrors);
+    //     toast.error("Keep all fields blank or complete all payment details.");
+    //     return false;
+    // }
     return true;
 
         

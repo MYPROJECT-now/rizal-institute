@@ -76,3 +76,16 @@ export const useShowStatusModal = create<ShowStatusModalState>((set) => ({
    open: () => set ({ isOpen: true}),
    close: () => set ({ isOpen: false}),
 }));
+
+
+type DOcReminderModalState = {
+  isOpen: boolean;
+   open: () => void;
+   close: () => void;
+};
+
+export const useReminderModal = create<DOcReminderModalState>((set) => ({
+  isOpen: false, //change mo maya
+   open: () => set ({ isOpen: true}),
+   close: () => set ({ isOpen: false}),
+}));

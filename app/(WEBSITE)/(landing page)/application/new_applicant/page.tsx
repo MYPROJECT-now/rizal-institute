@@ -15,6 +15,7 @@ CardTitle,
 } from "@/components/ui/card"
 import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
 import { useRouter } from "next/navigation";
+import { DiscountWarningModal } from "./reminder";
 
 
 
@@ -87,6 +88,8 @@ import { useRouter } from "next/navigation";
         const { open: openPreview } = usePreviewModal();
         const [isSubmitting, setIsSubmitting] = useState(false);
 
+        const [showDiscountWarning, setShowDiscountWarning] = useState(false);
+        const [discountWarningMessage, setDiscountWarningMessage] = useState<string[]>([]);
 
 
     // Validation per page
@@ -274,6 +277,8 @@ import { useRouter } from "next/navigation";
             //     console.log(error);
             //     return false;
             // }
+
+
             try {
                 const res = await fetch("/api/validate_email", {
                     method: "POST",
@@ -595,7 +600,13 @@ import { useRouter } from "next/navigation";
             if (value === "" || Number(value) >= 0) {
                 setReservationAmount(value);
             }
-            };
+        };
+
+        const handleProceedAnyway = () => {
+            setShowDiscountWarning(false);
+            setErrors({});
+            if (page < sections.length - 1) setPage(page + 1);
+        };
 
         // Refs for input elements
             const birthCertRef = useRef<HTMLInputElement>(null);
@@ -802,12 +813,48 @@ import { useRouter } from "next/navigation";
             setErrors({}); 
         };
 
+        // const handleNext = async () => {
+        //     if (!(await validatePage())) return;
+        //     if (page < sections.length - 1) setPage(page + 1);
+        //     setErrors({}); 
+        // };
+
         const handleNext = async () => {
             if (!(await validatePage())) return;
-            if (page < sections.length - 1) setPage(page + 1);
-            setErrors({}); 
-        };
 
+            if (page === 4) {
+                const warnings: string[] = [];
+
+                // 1️⃣ Academic Discount Requirement
+                const requiresReportCard =
+                attainmentUponGraduation === "With Honor" ||
+                attainmentUponGraduation === "With High Honor" ||
+                attainmentUponGraduation === "With Highest Honor";
+
+                if (requiresReportCard && !reportCard) {
+                    warnings.push(
+                    "You selected Academic Achievement. Please upload your Report Card to receive the discount; otherwise it would not be applied"      
+                    );
+                }
+
+                // 2️⃣ ESC Discount Requirement
+                if (escGrantee === "Yes" && !escCert) {
+                    warnings.push(
+                    "You indicated you are an ESC grantee. Please upload your ESC Certificate to receive the discount; otherwise it would not be applied"      
+                    );
+                }
+
+                // ❗ If there's at least one warning → show modal
+                if (warnings.length > 0) {
+                setDiscountWarningMessage(warnings); // now an array
+                setShowDiscountWarning(true);
+                return;
+                }
+            }
+
+            if (page < sections.length - 1) setPage(page + 1);
+            setErrors({});
+        };
 
 
 const sections = [
@@ -2193,6 +2240,13 @@ const sections = [
                         Next
                     </Button>
                 </div>
+
+                <DiscountWarningModal
+                  open={showDiscountWarning}
+                  onClose={() => setShowDiscountWarning(false)}
+                  onProceed={handleProceedAnyway}
+                  messages={discountWarningMessage}
+                />
             </div>
         </main>
     );
