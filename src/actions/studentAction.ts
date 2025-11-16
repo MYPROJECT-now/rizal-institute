@@ -401,7 +401,11 @@ export const addPayment = async (
       .select({academicYear: AcademicYearTable.academicYear})
       .from(AdmissionStatusTable)
       .leftJoin(AcademicYearTable, eq(AcademicYearTable.academicYear_id, AdmissionStatusTable.academicYear_id))
-      .where(and(eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id), eq(AdmissionStatusTable.applicants_id, applicantId)))
+      .where(and(
+        eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id), 
+        eq(AdmissionStatusTable.applicants_id, applicantId),
+        eq(AdmissionStatusTable.admissionStatus, "Enrolled")
+      ))
 
     return academicYear;
   }

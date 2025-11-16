@@ -330,7 +330,7 @@ const handleClose = () => {
                               className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
                               value={acad}>
                               
-                              <option value="N/a">N/a</option>
+                              <option value="N/a">None</option>
                               <option value="With Honor">With Honor</option>
                               <option value="With High Honor"> With High Honor</option>
                               <option value="With Highest Honor"> With Highest Honor</option>
@@ -518,7 +518,7 @@ const handleClose = () => {
                           className=" py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" 
                           value={acad}>
                           
-                          <option value="N/a">N/a</option>
+                          <option value="N/a">None</option>
                           <option value="With Honor">With Honor</option>
                           <option value="With High Honor"> With High Honor</option>
                           <option value="With Highest Honor"> With Highest Honor</option>

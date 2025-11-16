@@ -137,7 +137,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
       {balance && balance.paymentMethod !== "full_payment" && balance.dueThisMonth > 0 && (
         <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-lg p-3 mb-4">
           <p className="text-sm sm:text-base font-semibold">
-            💡 Reminder: Please make sure to pay <span className="font-semibold">at least half</span> of the total dues up to this month. 
+            💡 Reminder: Please make sure to pay <span className="font-semibold">at least half</span> of the amount due this month. 
           </p>
         </div>
       )}
