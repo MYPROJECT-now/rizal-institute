@@ -12,13 +12,15 @@ interface Props {
   onAccept: (id: number, lastName: string, firstName: string, middleName: string) => void;
   onDecline: (id: number ) => void;
   className?: string;
-  loading?: boolean;
+  loadingId: number | null;   // 👈 receive the ID
 }
 
-const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loading }) => {
+const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadingId }) => {
   const { open } = useDeclineRemarksModal();
   const { open: openEnrollees } = useShowApplicantInfoModal();
 
+  const isLoading = loadingId !== null;              // block ALL buttons
+  const isThisRowLoading = loadingId === applicant.id; // only this row shows "Accepting..."
 
   // Determine the display status based on both fields
   const getDisplayStatus = () => {
@@ -53,9 +55,9 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
           onClick={() => onAccept(applicant.id,  applicant.lastName, applicant.firstName, applicant.middleName ?? "")}
           variant={"acceptButton"}
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
-          disabled={applicant.applicationFormReviewStatus !== "Pending" || loading || applicant.isActive === false}
+          disabled={applicant.applicationFormReviewStatus !== "Pending" || isLoading  || applicant.isActive === false}
         >
-          {loading ? "Accepting..." : "Accept"}
+          {isThisRowLoading  ? "Accepting..." : "Accept"}
         </Button>
         
         {/* Decline button only opens the modal */}
@@ -64,7 +66,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
           onClick={() => open(applicant.id, `${applicant.lastName} ${applicant.firstName} ${applicant.middleName}`)}
           variant={"rejectButton"}
           className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
-          disabled={applicant.applicationFormReviewStatus !== "Pending" || applicant.isActive === false}
+          disabled={applicant.applicationFormReviewStatus !== "Pending" || isLoading || applicant.isActive === false}
         >
           Decline
         </Button>

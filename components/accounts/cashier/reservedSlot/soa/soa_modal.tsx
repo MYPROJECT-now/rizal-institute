@@ -651,12 +651,28 @@ const handleClose = () => {
                 <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                   <section className="flex flex-col">
                     <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">*</strong> Tuition Fee</span>
-                    <input type="text" placeholder="0"  value={tuition} onChange={(e) => setTuition(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                    <input 
+                      type="text" 
+                      placeholder="0"  
+                      value={tuition} 
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); 
+                        setTuition(val);
+                      }}
+                      className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                   </section>
 
                   <section className="flex flex-col">
                     <span className="font-bold font-merriweather text-sm text-dGreen"><strong className="text-red-500 text-xs">* </strong> Miscellaneous Fee</span>
-                    <input type="text" placeholder="0"  value={miscellaneous} onChange={(e) => setMiscellaneous(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                    <input 
+                      type="text" 
+                      placeholder="0" 
+                      value={miscellaneous} 
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); 
+                        setMiscellaneous(val);
+                      }}
+                      className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                   </section>
                 </div>
 
@@ -727,12 +743,28 @@ const handleClose = () => {
                   <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                     <section className="flex flex-col">
                       <span className="font-bold font-merriweather text-sm text-dGreen">Other discounts:</span>
-                      <input type="text" placeholder="0"  value={other_discount} onChange={(e) => setOtherDiscount(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                      <input 
+                        type="text" 
+                        placeholder="0"  
+                        value={other_discount} 
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9]/g, ""); 
+                          setOtherDiscount(val);
+                        }}
+                        className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                     </section>
 
                     <section className="flex flex-col">
                       <span className="font-bold font-merriweather text-sm text-dGreen">Other fees:</span>
-                      <input type="text" placeholder="0"  value={other_fees} onChange={(e) => setOtherFees(e.target.value)} className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
+                      <input 
+                        type="text" 
+                        placeholder="0"  
+                        value={other_fees} 
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9]/g, ""); 
+                          setOtherFees(val);
+                        }}
+                        className="py-1 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen transition rounded-lg" />
                     </section>
                   </div>
 

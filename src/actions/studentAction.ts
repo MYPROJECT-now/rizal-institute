@@ -21,6 +21,10 @@ export interface StudentInfo {
   paymentMethod: string | null;
   email: string | null;
   reminderForCurrentMonth: boolean;
+
+    // NEW FIELDS
+  unpaidMonthCount: number;
+  unpaidMonths: string[];
 }
 
 
@@ -69,6 +73,9 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
   let outstandingBalance = 0;
   let reminderForCurrentMonth = false; // default
 
+  let unpaidMonthCount = 0;
+  let unpaidMonths: string[] = [];
+
   if (studentInfo[0]?.student_id) {
     const monthDue = await db
       .select({
@@ -83,6 +90,12 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
         eq(MonthsInSoaTable.applicants_id, studentInfo[0].student_id),
         eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)
      ));
+
+    // COUNT UNPAID MONTHS
+    const unpaid = monthDue.filter(row => (row.amountPaid ?? 0) < (row.monthlyDue ?? 0));
+
+    unpaidMonthCount = unpaid.length;
+    unpaidMonths = unpaid.map(m => m.month);
 
     // Get current month name (e.g., 'October')
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
@@ -118,6 +131,8 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
     paymentMethod: studentInfo[0]?.paymentMethod ?? null,
     email: studentInfo[0]?.email ?? null,
     reminderForCurrentMonth,
+    unpaidMonthCount,
+    unpaidMonths,
   };
 }
 

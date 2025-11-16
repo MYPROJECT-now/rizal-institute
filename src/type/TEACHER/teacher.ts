@@ -7,6 +7,7 @@ export type ClassType = {
 
 export type MyStudentType = {
   grade_id: number | null;
+  applicants_id: number | null;
   studentLastName: string;
   studentFirstName: string;
   studentMiddleName: string | null;

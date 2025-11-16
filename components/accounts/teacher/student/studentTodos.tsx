@@ -22,11 +22,11 @@ const StudentTodos: FC<Props> = ({ studentTodos }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const studentsPerPage = 5;
 
-    const changeTodoText = (grade_id: number, finalGrade: number) => {
+    const changeTodoText = (grade_id: number, finalGrade: number, lrn:string, applicants_id: number) => {
       setMyStudents((prev) =>
       prev.map((studentTodos) => (studentTodos.grade_id === grade_id ? { ...studentTodos, finalGrade, remarks: finalGrade >= 75 ? "PASSED" : "FAILED" } : studentTodos))
       );
-      updateFinalGrade(grade_id, finalGrade);
+      updateFinalGrade(grade_id, finalGrade, lrn, applicants_id);
       toast.success("Final Grade successfully updated.");
     };
 

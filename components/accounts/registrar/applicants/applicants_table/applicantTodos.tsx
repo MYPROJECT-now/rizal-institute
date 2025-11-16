@@ -194,7 +194,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
                   onAccept={handleAccept}
                   onDecline={handleDecline} // 👈 NEW!
                   className={idx % 2 === 0 ? "bg-white" : "bg-green-100"}
-                  loading={loadingId === student.admission_id}
+                  loadingId={loadingId}   // 👈 pass the ID
                 />
               ))
             )}

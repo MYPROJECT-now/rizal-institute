@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import { BlobProvider } from "@react-pdf/renderer";
-import { getStudentInfo } from "@/src/actions/studentAction";
+import {  PDFViewer } from "@react-pdf/renderer";
+import {  getStudentInfo } from "@/src/actions/studentAction";
 import { Loader2 } from "lucide-react";
 import EnrollmentCert from "@/components/accounts/students/enrollment certificate/enrollment_cert";
+
 
 interface StudentInfo {
   lrn: string | null;
@@ -17,8 +18,8 @@ interface StudentInfo {
   sectionName: string | null;
   subjects?: string[];
   rooomName: string | null;
-}
 
+}
 const CertificatePage = () => {
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,40 +33,34 @@ const CertificatePage = () => {
     fetchData();
   }, []);
 
+
+
+  // ✅ Memoize the PDF Document so it doesn’t re-render unnecessarily
   const pdfDocument = useMemo(() => {
     if (!studentInfo) return null;
     return <EnrollmentCert studentInfo={studentInfo} />;
   }, [studentInfo]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <Loader2 className="animate-spin text-dGreen" />
-      </div>
-    );
-  }
-
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center p-4">
-      {pdfDocument && (
-        <BlobProvider document={pdfDocument}>
-          {({ url, loading }) =>
-            loading ? (
+        <div className=" h-full  flex-1 flex flex-col  rounded-t-lg  lg:px-5 px-0 ">
+          <section className="w-full h-full  bg-white self-center lg:mt-2 mt-0">
+          {loading ? (
+            <div className="flex justify-center items-center h-full">
               <Loader2 className="animate-spin text-dGreen" />
-            ) : (
-              <a
-                href={url!}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-dGreen text-white rounded-lg shadow-md hover:bg-dGreen/80 transition"
-              >
-                📄 View / Download Certificate
-              </a>
-            )
-          }
-        </BlobProvider>
-      )}
-    </div>
+            </div>
+          ) : (
+            <>
+              {pdfDocument && (
+                <PDFViewer className="w-[100%] h-full">{pdfDocument}</PDFViewer>
+              )}
+
+            </>
+          )}
+
+
+        </section>
+      </div>
+
   );
 };
 

@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import {  StudentGradesTable } from "../src/db/schema"; // make sure this is imported
+import {  StudentGradesTable, studentTypeTable } from "../src/db/schema"; // make sure this is imported
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
@@ -19,6 +19,12 @@ const updateSOA = async () => {
         finalGrade: grades.finalGrade,
         remarks: grades.remarks,
         dateSubmitted: grades.dateSubmitted,
+      });
+
+      await db
+      .update(studentTypeTable)
+      .set({
+        promotion: "PROMOTED",
       });
   }
 

@@ -2,7 +2,7 @@
 
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { GradeLevelTable, RoomTable, ScheduleTable, SectionTable, StudentGradesTable, StudentInfoTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
+import { GradeLevelTable, RoomTable, ScheduleTable, SectionTable, StudentGradesTable, StudentInfoTable, studentTypeTable, SubjectTable, TeacherAssignmentTable } from "../db/schema";
 import { getUid } from "./utils/staffID";
 import { getSelectedYear } from "./utils/getSelectedYear";
 
@@ -103,6 +103,7 @@ export const getMyStudents = async (
         studentMiddleName: StudentInfoTable.studentMiddleName,
         studentSuffix: StudentInfoTable.studentSuffix,
         lrn: StudentInfoTable.lrn,
+        applicants_id: StudentInfoTable.applicants_id,
         finalGrade: StudentGradesTable.finalGrade,
         remarks: StudentGradesTable.remarks
     })
@@ -118,14 +119,48 @@ export const getMyStudents = async (
     return myStudents;
 }
 
-export const updateFinalGrade = async (grade_id: number, finalGrade: number) => {
-    await db
-    .update(StudentGradesTable)
-    .set({
-    finalGrade: finalGrade,
-    remarks: finalGrade >= 75 ? "PASSED" : "FAILED",
-    })
-    .where(eq(StudentGradesTable.grade_id, grade_id));
+export const updateFinalGrade = async (grade_id: number, finalGrade: number, lrn: string, applicants_id: number) => {
+  const selectedYear = await getSelectedYear(); 
+  if(!selectedYear) return [];
+
+  await db
+  .update(StudentGradesTable)
+  .set({
+  finalGrade: finalGrade,
+  remarks: finalGrade >= 75 ? "PASSED" : "FAILED",
+  })
+  .where(and(
+    eq(StudentGradesTable.grade_id, grade_id),
+    eq(StudentGradesTable.academicYear_id, selectedYear),
+  ));
+
+  const allGrades = await db
+    .select({ finalGrade: StudentGradesTable.finalGrade })
+    .from(StudentGradesTable)
+    .leftJoin(StudentInfoTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+    .where(
+      and(
+        eq(StudentInfoTable.lrn, lrn),
+        eq(StudentGradesTable.academicYear_id, selectedYear)
+      )
+    );
+    
+  const failingSubjects = allGrades.filter((g) => (g.finalGrade ?? 0) < 75).length;
+
+  let promotion = "PROMOTED";
+  if (failingSubjects > 2) promotion = "RETAIN";
+  else if (failingSubjects > 0 && failingSubjects <= 2) promotion = "SUMMER";
+
+  await db
+    .update(studentTypeTable)
+    .set({ promotion })
+    .where(
+      and(
+        eq(studentTypeTable.applicants_id, applicants_id),
+        eq(studentTypeTable.academicYear_id, selectedYear)
+      )
+    );
+
 };
 
 

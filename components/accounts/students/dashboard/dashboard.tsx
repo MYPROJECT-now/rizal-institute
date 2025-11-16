@@ -129,21 +129,37 @@
 
         {/* Outstanding Balance Section */}
         <div className="mt-[60px]">
-          <div className="bg-red-50 sm:p-6 p-2 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center">
-            <span className="sm:text-xl text-sm font-bold text-red-700">Outstanding Balance:</span>
+          <div className={studentInfo?.paymentMethod === "full_payment" || studentInfo?.outstandingBalance === 0 ? "bg-green-50 sm:p-6 p-2 border-t-2 border-green-300 rounded-lg shadow-md flex justify-between items-center" : "bg-red-50 sm:p-6 p-2 border-t-2 border-red-300 rounded-lg shadow-md flex justify-between items-center"}>
+            <span className="sm:text-xl text-sm font-bold text-red-700">{(studentInfo?.paymentMethod === "full_payment" ||studentInfo?.outstandingBalance === 0) ? "" : "Outstanding Balance:"}</span>
             <span className={studentInfo?.paymentMethod === "full_payment"  ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : studentInfo?.outstandingBalance === 0 ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
               {studentInfo?.paymentMethod === "full_payment" || studentInfo?.outstandingBalance === 0 ? (
                 <div>
                   <p className="sm:text-xl text-sm">Fully Paid</p>
                 </div>
               ) : (
-                <div>
-                  <p>
-                    {studentInfo?.outstandingBalance !== undefined
-                      ? `₱${studentInfo.outstandingBalance}`
-                      : "..."}
-                  </p>
-                </div>
+                // <div>
+                //   <p>
+                //     {studentInfo?.outstandingBalance !== undefined
+                //       ? `₱${studentInfo.outstandingBalance}`
+                //       : ""}
+                //   </p>
+                //   <p>{studentInfo?.unpaidMonthCount} months worth</p>
+                //   <p>{studentInfo?.unpaidMonths.join(", ")}</p>
+                // </div>
+                loading || !studentInfo ? (
+                  <Skeleton className="h-8 w-[120px] rounded-lg" />
+                ) : studentInfo.paymentMethod === "full_payment" || studentInfo.outstandingBalance === 0 ? (
+                  <div>
+                    <p className="sm:text-xl text-sm">Fully Paid</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p>₱{studentInfo.outstandingBalance}</p>
+                    <p className="text-xs">{studentInfo.unpaidMonthCount} months worth</p>
+                    <p className="text-xs">{studentInfo.unpaidMonths.join(", ")}</p>
+                  </div>
+                )
+
               )}
 
             </span>
