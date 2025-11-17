@@ -87,6 +87,7 @@ export default async function ProfilePage() {
       <Section title="Academic Information">
         <Grid>
           <Info label="Grade Level" value={profile.gradeToEnroll ?? "-"} />
+          <Info label="Section" value={profile.sectionName ?? "-"} />
         </Grid>
       </Section>
 

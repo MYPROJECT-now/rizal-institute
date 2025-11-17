@@ -71,6 +71,11 @@ const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
   };
 
   const handleAdd = async () => {
+  if (balance?.hasPendingPayment) {
+    toast.error("Wait for your pending payment to be verified");
+    return;
+  }
+
     if((balance?.dueThisMonth !== undefined && Number(amount) < balance.dueThisMonth / 2) ){
       toast.error("Pay atlest half the amount of the total due this month")
       return
@@ -80,6 +85,8 @@ const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
       toast.error("Your payment is more than your total remaing tuition")
       return
     }
+
+
     try{
     setIsSubmitting(true);
 

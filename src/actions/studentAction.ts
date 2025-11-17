@@ -5,7 +5,6 @@ import { and, desc, eq, like, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable, guardianAndParentsTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
-import { getAcademicYearID } from "./utils/academicYear";
 import nodemailer from "nodemailer";
 
 export interface StudentInfo {
@@ -320,6 +319,23 @@ export const getBalance = async () => {
     const currentMonthRow = soaRecords.find(row =>
       (row.month || '').toLowerCase().includes(currentMonth.toLowerCase())
     );
+  // 🔥 CHECK PENDING PAYMENT HERE
+    let pendingPayment: { monthlyPayment_id: number; status: string }[] = [];
+
+  pendingPayment = await db
+    .select({
+      monthlyPayment_id: MonthlyPayementTable.monthlyPayment_id,
+      status: MonthlyPayementTable.status,
+    })
+    .from(MonthlyPayementTable)
+    .where(
+      and(
+        eq(MonthlyPayementTable.student_id, studentId),
+        eq(MonthlyPayementTable.academicYear_id, selectedAcademicYear)
+      )
+    );
+// const hasPendingPayment = pendingPayment.some(p => p.status === "Pending");
+
 
     let dueThisMonth = 0;
     let totalRemainingBalance = 0;
@@ -347,10 +363,12 @@ export const getBalance = async () => {
     .where(eq(downPaymentTable.applicants_id, studentId))
     .limit(1);
 
+  
     return {
       dueThisMonth: Math.max(0, dueThisMonth), // Ensure non-negative
       totalRemainingBalance: Math.max(0, totalRemainingBalance), // Ensure non-negative
       paymentMethod: paymentMethod[0]?.paymentMethod,
+      hasPendingPayment: pendingPayment.some(p => p.status === "Pending"),
     };
 }
 
@@ -369,6 +387,13 @@ export const addPayment = async (
     const id = await getStudentId();
     if (!id) return null;
 
+    const selectedAcademicYear = await getSelectedAcademicYear();
+      
+    if (!selectedAcademicYear) {
+      console.warn("❌ No academic year selected");
+      return null;
+    }
+
 
      // Get current month name (e.g., 'October')
      const currentMonth = new Date().toLocaleString('default', { month: 'long' });
@@ -377,7 +402,10 @@ export const addPayment = async (
      const monthRow = await db
        .select({ month_id: MonthsInSoaTable.month_id, month: MonthsInSoaTable.month })
        .from(MonthsInSoaTable)
-       .where(eq(MonthsInSoaTable.applicants_id, studentId));
+       .where(and(
+         eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear),
+         eq(MonthsInSoaTable.applicants_id, studentId)
+        ));
 
      const currentMonthRow = monthRow.find(row => (row.month || '').toLowerCase().includes(currentMonth.toLowerCase()));
     //  if (!currentMonthRow) return null; // No SOA for current month
@@ -388,7 +416,6 @@ export const addPayment = async (
 
 
     const currentMonthId = currentMonthRow.month_id;
-    const academicYearID = await getAcademicYearID();
      
 
      try{
@@ -398,7 +425,7 @@ export const addPayment = async (
        .values({
         student_id: id,
         month_id: currentMonthId,
-        academicYear_id: academicYearID,
+        academicYear_id: selectedAcademicYear,
         amount: amount,
         proofOfPayment: POP,
         modeOfPayment: mop,
@@ -761,6 +788,7 @@ export const studentProfile = async () => {
     studentBirthDate: StudentInfoTable.studentBirthDate,
     studentAge: StudentInfoTable.studentAge,
     gradeToEnroll: studentTypeTable.gradeToEnroll,
+    sectionName: SectionTable.sectionName,
     email: applicantsInformationTable.email,
     mobileNumber: applicantsInformationTable.mobileNumber,
     guardiansLastName: guardianAndParentsTable.guardiansLastName,
@@ -775,9 +803,14 @@ export const studentProfile = async () => {
     eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id),
     eq(studentTypeTable.academicYear_id, selectedAcademicYear ?? 1),
   ))
+  .leftJoin(StudentPerGradeAndSection,eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+  .leftJoin(SectionTable,eq(StudentPerGradeAndSection.section_id, SectionTable.section_id))
   .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
   .leftJoin(applicantsInformationTable, eq(StudentInfoTable.applicants_id, applicantsInformationTable.applicants_id))
-  .where(eq(StudentInfoTable.applicants_id, applicantId))
+  .where(and(
+    eq(StudentInfoTable.applicants_id, applicantId),
+    eq(StudentPerGradeAndSection.academicYear_id, selectedAcademicYear ?? 1),
+  ))
   .limit(1);
 
   return studentsInfo[0] ?? null;

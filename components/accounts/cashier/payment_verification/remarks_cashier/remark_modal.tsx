@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useState } from "react";
-import { useDeclineRemarksModal } from "@/src/store/CASHIER/applicants";
+import {  useDeclineStudentRemarksModal } from "@/src/store/CASHIER/applicants";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  onDecline?: (studentId: number) => void;
+  onDecline?: (month_id: number, lrn: string) => void;
 }
 
 export const RemarksModal =  ({ onDecline }: Props) => {
-  const { isOpen, close, remarks, setRemarks, studentId, fullName} = useDeclineRemarksModal();
+  const { isOpen, close, remarks, setRemarks, month_id, lrn }  = useDeclineStudentRemarksModal();
   const [isDeclining, setIsDeclining] = useState(false);
 
   const handleDecline = async () => {
@@ -28,10 +28,10 @@ export const RemarksModal =  ({ onDecline }: Props) => {
     setIsDeclining(true);
 
     try {
-      const response = await fetch("/api/decline_cashier", {
+      const response = await fetch("/api/decline_cashier/decline_month", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId, remarks, fullName }),
+        body: JSON.stringify({ month_id, lrn, remarks }),
       });
 
       if (!response.ok) {
@@ -39,9 +39,10 @@ export const RemarksModal =  ({ onDecline }: Props) => {
       }
 
       toast.success("Decline email sent successfully.");
-      if (onDecline && studentId) {
-        onDecline(studentId);
+      if (onDecline && month_id && lrn) {
+        onDecline(month_id, lrn);
       }
+
       close();
     } catch (error) {
       console.error("Error declining application:", error);

@@ -3,6 +3,8 @@ import { FC, } from "react";
 import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import { Button } from "@/components/ui/button";
 import { useShowMonthlyPayementModal } from "@/src/store/CASHIER/student";
+import { RemarksModal } from "./remarks_cashier/remark_modal";
+import { useDeclineStudentRemarksModal } from "@/src/store/CASHIER/applicants";
 
 interface Props {
     VerifyTodo: VerifyPayment;
@@ -14,14 +16,14 @@ interface Props {
 
 const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => {
     const { open:openPayment } = useShowMonthlyPayementModal();
-
+    const { open } = useDeclineStudentRemarksModal();
     const handleAccept = async () => {
         onAccept(VerifyTodo.month_id ?? 0, VerifyTodo.amount, VerifyTodo.dateOfPayment ?? "");
     };
 
-    const handleDecline = () => {
-        onDecline(VerifyTodo.month_id ?? 0, VerifyTodo.lrn ?? "");
-    };
+    // const handleDecline = () => {
+    //     onDecline(VerifyTodo.month_id ?? 0, VerifyTodo.lrn ?? "");
+    // };
 
 
     return (
@@ -30,7 +32,7 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => 
             <td className="px-4 py-2">{VerifyTodo.lrn}</td>
             <td className="px-4 py-2">{VerifyTodo.modeOfPayment}</td>
             <td className="px-4 py-2">{VerifyTodo.dateOfPayment}</td>
-            <td className={VerifyTodo.status === "Approved" ? "px-4 py-2 text-green-600 font-semibold" : VerifyTodo.status === "Pending " ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-yellow-600 font-semibold"}>{VerifyTodo.status}</td>
+            <td className={VerifyTodo.status === "Approved" ? "px-4 py-2 text-green-600 font-semibold" : VerifyTodo.status === "Declined " ? "px-4 py-2 text-red-600 font-semibold" : "px-4 py-2 text-yellow-600 font-semibold"}>{VerifyTodo.status}</td>
             <td className="px-4 py-2">
                 <Button 
                     className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
@@ -49,10 +51,12 @@ const VerifyTodo: FC<Props> = ({ VerifyTodo, onDecline, onAccept, loading }) => 
                 >
                     Approve
                 </Button>
+
+                <RemarksModal onDecline={onDecline} />
                 <Button
                     variant="rejectButton"
                     className=" rounded-lg sm:px-5 px-3  py-2 text-xs sm:text-sm  "
-                    onClick={handleDecline}
+                    onClick={() => open(VerifyTodo.month_id ?? 0, VerifyTodo.lrn ?? "")}
                     disabled={VerifyTodo.status === "Approved" || VerifyTodo.status === "Declined" || VerifyTodo.isActive === false || loading}
                 >
                     Decline

@@ -14,6 +14,7 @@ export type Balance = {
     dueThisMonth: number;
     totalRemainingBalance: number;
     paymentMethod: string | null;
+    hasPendingPayment?: boolean;
 }
 
 

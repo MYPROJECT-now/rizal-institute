@@ -70,9 +70,9 @@ interface Props {
               ? { ...student, applicationFormReviewStatus: "Declined" }
               : student
           )
-        );
-    };
-    
+          );
+      };
+      
   const filteredStudents = studentList.filter((student) => {
     const fullName = `${student.firstName} ${student.middleName ?? ""} ${student.lastName}`.toLowerCase();
     const matchesSearch =

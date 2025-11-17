@@ -22,6 +22,25 @@ type RemarksModalState = {
     setRemarks: (remarks) => set({ remarks }),
   }));
   
+    type RemarksStudentModalState = {
+    isOpen: boolean;
+    remarks: string;
+    month_id: number | null;
+    lrn: string;
+    open: (month_id: number, lrn: string) => void;
+    close: () => void;
+    setRemarks: (remarks: string) => void;
+    };
+
+    export const useDeclineStudentRemarksModal = create<RemarksStudentModalState>((set) => ({
+    isOpen: false,
+    remarks: "",
+    month_id: null,
+    lrn: "",
+    open: (month_id, lrn) => set({ isOpen: true, month_id, lrn, remarks: "" }),
+    close: () => set({ isOpen: false, month_id: null, lrn: "", remarks: "" }),
+    setRemarks: (remarks) => set({ remarks }),
+    }));
 
 
 type Receipts_ModalState = {

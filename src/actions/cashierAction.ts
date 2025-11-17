@@ -653,15 +653,14 @@ export const paymentToVerify = async () => {
     isActive: AcademicYearTable.isActive,
   })
   .from(MonthlyPayementTable)
-  .leftJoin(MonthsInSoaTable, eq(MonthlyPayementTable.month_id, MonthsInSoaTable.month_id))
   .leftJoin(AcademicYearTable, eq(MonthlyPayementTable.academicYear_id, AcademicYearTable.academicYear_id))
   .leftJoin(StudentInfoTable, eq(MonthlyPayementTable.student_id, StudentInfoTable.student_id))
   .where(and(
     eq(MonthlyPayementTable.academicYear_id, selectedYear),
-    eq(MonthsInSoaTable.academicYear_id, selectedYear),
 
   ));
 
+  console.log("Payment to verify:", paymentToVerify);
   return paymentToVerify;
 }
 

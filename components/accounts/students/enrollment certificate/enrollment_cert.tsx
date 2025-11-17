@@ -114,7 +114,7 @@ export default function EnrollmentCert({ studentInfo }: { studentInfo: StudentIn
 
           <View style={{ marginTop: 20, alignItems: "center" }}>
             <Text style={{ fontSize: 13 }}>
-              <Text style={styles.data}>{studentInfo?.sectionName || "________"}</Text>
+              <Text style={styles.data}>Section: {studentInfo?.sectionName || "________"}</Text>
             </Text>
           </View>
 

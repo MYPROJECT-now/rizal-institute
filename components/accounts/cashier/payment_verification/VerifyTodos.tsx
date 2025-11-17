@@ -4,7 +4,7 @@ import { VerifyPayment } from "@/src/type/CASHIER/VERIFY_PAYMENTS/verify";
 import VerifyTodo from "./VerifyTodo";
 import { Button } from "@/components/ui/button";
 import { StudentsPaymentReceipt } from "./payment_receipt/cashiers_receipt";
-import { ApprovedMonth, declinePayment } from "@/src/actions/cashierAction";
+import { ApprovedMonth } from "@/src/actions/cashierAction";
 import { toast } from "sonner";
 import { StudentsPaymentReview } from "./payment_receipt/student_payment";
 import { useCashPaymentModal } from "@/src/store/CASHIER/montly";
@@ -57,20 +57,17 @@ const VerifyTodos: FC<Props> = ({ VerifyTodos }) => {
         }
     }
 
-    const handleDecline = async (month_id: number,  lrn: string) => {
-        setLoadingId(month_id);
-        try {
-            await declinePayment(month_id, lrn);
-            setVerifyTodos((prev) => prev.map((payment) => (payment.month_id === month_id ? { ...payment, status: "Declined" } : payment)));
-            toast.success("Students Payment was Declined");
-        } catch (error) {
-            toast.error("Failed to decline payment. Please try again.");
-            console.error(error);
-        }
-        finally {
-        setLoadingId(null);
-        }
-    }
+        const handleDecline = (month_id: number) => {
+        setVerifyTodos((prev) =>
+            prev.map((student) =>
+            student.month_id === month_id
+                ? { ...student, status: "Declined" }
+                : student
+            )
+        );
+        };
+
+      
 
     return (
     <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">

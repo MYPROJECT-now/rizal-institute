@@ -21,7 +21,7 @@ const Todo: FC<Props> = ({ todo, className }) => {
             {/* <td className="px-4 py-2">{todo.amount}</td> */}
             <td className="px-4 py-2">{todo.modeOfPayment}</td>
             {/* <td className="px-4 py-2">{todo.dateOfVerification || "-"}</td> */}
-            <td className= {todo.status === "Approved" ? "text-green-600 font-semibold" : "text-yellow-600 font-semibold"}>{todo.status}</td>
+            <td className= {todo.status === "Approved" ? "text-green-600 font-semibold" : todo.status === "Declined" ? "text-red-600 font-semibold" : "text-yellow-600 font-semibold"}>{todo.status}</td>
             <td className="px-4 py-2">
                 <Button 
                 className="w-[65px] h-[35px] rounded-lg"
