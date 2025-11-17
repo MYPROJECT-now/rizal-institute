@@ -91,33 +91,20 @@ export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {
         eq(MonthsInSoaTable.academicYear_id, selectedAcademicYear)
      ));
 
-    // Determine current month ID
-    // === GET CURRENT MONTH ===
-    const currentMonthName = new Date().toLocaleString("default", { month: "long" });
-
-    const currentMonthRow = monthDue.find(row =>
-      (row.month || "").toLowerCase().includes(currentMonthName.toLowerCase())
-    );
-
-    const currentMonthId: number | undefined = currentMonthRow?.month_id;
-
-    // === ENSURE TYPE SAFETY ===
-    type MonthRow = typeof monthDue[number];
-
-    let unpaid: MonthRow[] = []; // 👈 NO MORE 'any[]'
-
-    // === COUNT UNPAID ONLY UP TO CURRENT MONTH ===
-    if (currentMonthId !== undefined) {
-      unpaid = monthDue
-        .filter((row: MonthRow) => row.month_id <= currentMonthId)
-        .filter((row: MonthRow) => (row.amountPaid ?? 0) < (row.monthlyDue ?? 0));
-    }
+    // COUNT UNPAID MONTHS
+    const unpaid = monthDue.filter(row => (row.amountPaid ?? 0) < (row.monthlyDue ?? 0));
 
     unpaidMonthCount = unpaid.length;
     unpaidMonths = unpaid.map(m => m.month);
 
+    // Get current month name (e.g., 'October')
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    // Find the SOA row for the current month
+    const currentMonthRow = monthDue.find(row =>
+      (row.month || '').toLowerCase().includes(currentMonth.toLowerCase())
+    );
 
-
+    const currentMonthId = currentMonthRow?.month_id;
     if (currentMonthRow) {
       reminderForCurrentMonth = currentMonthRow.reminder ?? false;
     }

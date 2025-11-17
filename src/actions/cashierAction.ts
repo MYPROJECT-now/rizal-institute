@@ -748,6 +748,19 @@ export const getBalanceForCash = async (lrn: string) => {
     )
     .orderBy(MonthsInSoaTable.month_id);
 
+  // ===== ADD YEARLY TOTALS =====
+  const totalDueForYear = soaRecords.reduce(
+    (sum, row) => sum + (row.monthlyDue || 0),
+    0
+  );
+
+  const totalPaidForYear = soaRecords.reduce(
+    (sum, row) => sum + (row.amountPaid || 0),
+    0
+  );
+
+  const totalRemainingForYear = Math.max(0, totalDueForYear - totalPaidForYear);
+
   const currentMonth = new Date().toLocaleString("default", { month: "long" });
   const currentMonthRow = soaRecords.find((row) => (row.month || "").toLowerCase().includes(currentMonth.toLowerCase()));
 
@@ -766,6 +779,7 @@ export const getBalanceForCash = async (lrn: string) => {
       dueThisMonth: Math.max(0, dueThisMonth),
       student_id: currentMonthRow.student_id ?? 0,
       month_id: currentMonthId, // ✅ now this is the current month’s ID
+      totalRemainingForYear,
     };
   }
 
@@ -774,6 +788,7 @@ export const getBalanceForCash = async (lrn: string) => {
     dueThisMonth: 0,
     student_id: soaRecords.length > 0 ? soaRecords[0].student_id : 0,
     month_id: 0,
+    totalRemainingForYear,
   };
 };
 

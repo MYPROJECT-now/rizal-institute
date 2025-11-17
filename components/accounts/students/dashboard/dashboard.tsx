@@ -149,7 +149,6 @@
                   <div>
                     <p>₱{studentInfo.outstandingBalance}</p>
                     <p className="text-xs">{studentInfo.unpaidMonthCount} months worth</p>
-                    <p className="text-xs">{studentInfo.unpaidMonths.join(", ")}</p>
                   </div>
                 )
 

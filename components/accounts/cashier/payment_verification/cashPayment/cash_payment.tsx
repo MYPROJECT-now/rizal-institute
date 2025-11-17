@@ -8,11 +8,14 @@ import {
 import { addCashPayment, getBalanceForCash } from "@/src/actions/cashierAction";
 import { useCashPaymentModal } from "@/src/store/CASHIER/montly";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface CashPayment {
   dueThisMonth: number;
   student_id: number | null;
   month_id: number;
+  totalRemainingForYear: number;
+
 
 }
 export const CashPayment = () => {
@@ -51,6 +54,12 @@ export const CashPayment = () => {
 
 
   const handleAddAmount = async () => {
+
+    if (Number(amount) > (balanceInfo?.totalRemainingForYear ?? 0)) {
+      toast.error("Amount is greater than total remaining for tuition fee.");
+      return;
+    }
+    
     setAmountLoading(true);
 
     await addCashPayment(Number(amount), lrn, balanceInfo?.month_id ?? 0, balanceInfo?.student_id ?? 0);
@@ -98,6 +107,18 @@ export const CashPayment = () => {
 
               {balanceInfo && (
                 <>
+                <section className="flex flex-col gap-1 ">
+                  <span className="font-bold font-merriweather text-sm text-dGreen ">
+                    Total Remaining tuition
+                  </span>
+                  <input
+                    type="text"
+                    value={balanceInfo.totalRemainingForYear}
+                    disabled
+                    className="w-full sm:w-[250px] py-2 px-2 outline-none bg-green-100 focus:ring-2 focus:ring-dGreen focus:border-dGreen  transition rounded-lg"
+                  />
+                </section>
+
                 <section className="flex flex-col gap-1 ">
                   <span className="font-bold font-merriweather text-sm text-dGreen ">
                     Due this month:

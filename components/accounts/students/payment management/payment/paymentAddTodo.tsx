@@ -36,9 +36,15 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
-  };
+const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+
+  // Allow only digits
+  const numeric = value.replace(/\D/g, "");
+
+  setAmount(numeric);
+};
+
 
   const handleMop = (e: ChangeEvent<HTMLSelectElement>) => {
     setMop(e.target.value);
@@ -65,6 +71,15 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
   };
 
   const handleAdd = async () => {
+    if((balance?.dueThisMonth !== undefined && Number(amount) < balance.dueThisMonth / 2) ){
+      toast.error("Pay atlest half the amount of the total due this month")
+      return
+    }
+
+    if(Number(amount) > (balance?.totalRemainingBalance ?? 0) ){
+      toast.error("Your payment is more than your total remaing tuition")
+      return
+    }
     try{
     setIsSubmitting(true);
 
@@ -101,7 +116,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
 
   };
   return (
-    <section className="w-full  sm:p-6 py-0 px-3  ">
+    <section className="w-full  sm:p-6 py-0 px-3 max-h-[400px] overflow-auto  ">
       <PreviewModal />
       <section className="bg-green-50 rounded-lg p-4 mb-4">
         {balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0  ? (
@@ -118,6 +133,19 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
                 )}
               </span>
             </p>
+
+            <p className="sm:text-lg text-sm font-bold text-dGreen mb-1 flex items-center gap-2"> 
+              <span>Half amount:</span>
+              <span className="font-semibold text-gray-800">
+                {balance?.dueThisMonth !== undefined ? (
+                  Math.round(balance.dueThisMonth / 2)
+                ) : (
+                  <span className="animate-pulse text-gray-400">Loading...</span>
+                )}
+              </span>
+            </p>
+
+
             <p className="sm:text-lg text-sm font-bold text-dGreen flex items-center gap-2">
               <span>Total Remaining Balance:</span>
               <span className="font-semibold text-gray-800">
@@ -148,7 +176,7 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
           <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Amount</label>
           <input
             id="amount"
-            type="number"
+            type="text"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
             onChange={handleAmount}
             value={amount}
@@ -220,9 +248,8 @@ const PaymentAddTodo: FC<Props> = ({ createTodo }) => {
           disabled={
             !amount || !mop || !POP || isSubmitting || 
             balance?.paymentMethod === "full_payment" || 
-            balance?.totalRemainingBalance === 0 ||   
-            (balance?.dueThisMonth !== undefined && Number(amount) < balance.dueThisMonth / 2)
-          }
+            balance?.totalRemainingBalance === 0           
+        }
         >
         {isSubmitting ? "Submitting..." : "Submit Payment"}
         </Button>
