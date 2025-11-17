@@ -19,19 +19,16 @@
             <Button 
             className="flex flex-row justify-start h-[40px]  sm:text-lg text-sm"
             variant="link"
-            asChild
             onClick={onClick}
             >
-                <div>
-                    <Image 
-                        src={iconSrc}    
-                        alt={label}
-                        className="mr-2"
-                        height={32}
-                        width={32}
-                    />
-                    {label}
-                </div>
+                <Image 
+                    src={iconSrc}    
+                    alt={label}
+                    className="mr-2"
+                    height={32}
+                    width={32}
+                />
+                {label}
             </Button>
         );
     };

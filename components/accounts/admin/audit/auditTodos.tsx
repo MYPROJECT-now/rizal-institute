@@ -54,6 +54,7 @@ const AuditTodos: FC<Props> = ({ auditTodos }) => {
             <option value="registrar">Registrar</option>
             <option value="teacher">Teacher</option>
             <option value="cashier">Cashier</option>
+            <option value="student">Student</option>
         </select>
 
         <Button

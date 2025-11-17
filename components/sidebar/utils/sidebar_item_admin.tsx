@@ -19,10 +19,8 @@
             <Button 
             className="flex flex-row justify-start h-[40px]  sm:text-lg text-sm "
             variant="link"
-            asChild
             onClick={onClick}
             >
-                <div>
                     <Image 
                         src={iconSrc}    
                         alt={label}
@@ -31,7 +29,6 @@
                         width={1000}
                     />
                     {label}
-                </div>
             </Button>
         );
     };

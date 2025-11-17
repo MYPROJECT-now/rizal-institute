@@ -115,6 +115,9 @@ export const getMyStudents = async (
       )
     )
     .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+    .orderBy(
+      StudentInfoTable.studentLastName,
+    );
     console.log(myStudents);
     return myStudents;
 }

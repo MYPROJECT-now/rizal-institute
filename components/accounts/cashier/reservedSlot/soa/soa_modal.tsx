@@ -218,6 +218,31 @@ const handleClose = () => {
 
 
 
+const computeGrandTotal = () => {
+  const base = Number(tuition) + Number(miscellaneous);
+  const esc = escGrantee === "Yes" ? 9000 : 0;
+
+  const acadDiscount =
+    acad === "With Honor"
+      ? Math.ceil((base - esc) * 0.20)
+      : acad === "With High Honor"
+      ? Math.ceil((base - esc) * 0.50)
+      : acad === "With Highest Honor"
+      ? Math.ceil((base - esc) * 0.75)
+      : 0;
+
+  const siblingDiscount = sibling === "Yes" ? 500 : 0;
+
+  return (
+    base -
+    esc -
+    acadDiscount -
+    siblingDiscount -
+    Number(other_discount) +
+    Number(other_fees) +
+    (pastTuition > 0 ? pastTuition : 0)
+  );
+};
 
   return(
     <>
@@ -882,14 +907,34 @@ const handleClose = () => {
               >
                 Prev
               </Button>
-              <Button
+              {/* <Button
                 variant="prevButton"
                 className="px-4 py-2 rounded-lg"
                 disabled={page === 3 || (page === 2 && Number(tuition) === 0 && Number(miscellaneous) === 0)}
                 onClick={() => setPage(page + 1)}
               >
                 Next
-              </Button>     
+              </Button>      */}
+              <Button
+                variant="prevButton"
+                className="px-4 py-2 rounded-lg"
+                disabled={page === 3}
+                onClick={() => {
+                  if (page === 2) {
+                    const grandTotal = computeGrandTotal();
+
+                    if (grandTotal < 0) {
+                      toast.error("Grand total cannot be negative. Please adjust your inputs.");
+                      return; // ❌ BLOCK page change
+                    }
+                  }
+
+                  setPage(page + 1); // ✅ Proceed normally
+                }}
+              >
+                Next
+              </Button>
+
             </article>
 
             </>

@@ -102,6 +102,11 @@ export const getAuditTrails = async () => {
   export const getAllUsers = async () => {
       await requireStaffAuth(["admin"]); // gatekeeper
 
+      const credentials = await getStaffCredentials();
+        if (!credentials) {
+        return [];
+      }
+
       const users = await db
       .select({
         clerk_uid: staffClerkUserTable.clerk_uid,
@@ -114,7 +119,9 @@ export const getAuditTrails = async () => {
       .from(staffClerkUserTable)
       .where(and(
         eq(staffClerkUserTable.isActive, true),
-        ne(staffClerkUserTable.userType, "admin") ))
+        ne(staffClerkUserTable.clerk_username, "admin"),
+        ne(staffClerkUserTable.clerk_username, credentials.clerk_username),
+      ))
       .union(
       db.select({
         clerk_uid: ClerkUserTable.clerk_uid,

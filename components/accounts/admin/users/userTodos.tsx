@@ -62,6 +62,7 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
           <option value="registrar">Registrar</option>
           <option value="teacher">Teacher</option>
           <option value="cashier">Cashier</option>
+          <option value="student">Student</option>
         </select>
 
         <Button
@@ -97,7 +98,7 @@ const UserTodos: FC<Props> = ({ userTodos }) => {
         {currentUsers.length === 0 ? (
             <tr>
             <td colSpan={7} className="p-4 text-black">
-            No action found.
+            No user found.
             </td>
         </tr>
         ) : (

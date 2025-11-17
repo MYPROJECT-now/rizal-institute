@@ -10,6 +10,7 @@ import {
 import {  getAmountPaid, getRecentGrantees, getSecAndGrade, getSF1 } from "@/src/actions/registrarAction";
 import { useReportModal } from "@/src/store/REGISTRAR/reports";
 import { exportSF1 } from "@/src/utils/sf1";
+import { exportSF5 } from "@/src/utils/sf5";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
@@ -259,6 +260,22 @@ export const Reports = () => {
                                     onClick={handleDownloadGrantees}
                                     className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
                                     disabled={grantees.length === 0}
+                                >
+                                    Download
+                                </button>
+                            </section>
+
+                            <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
+                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg">
+                                    SF5
+                                </p>
+                                <p className="text-xs px-5">
+                                    Download list of new ESC grantees this year
+                                </p>
+                                <button
+                                    onClick={exportSF5}
+                                    className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
+
                                 >
                                     Download
                                 </button>
