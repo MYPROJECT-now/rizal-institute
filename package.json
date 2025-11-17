@@ -29,7 +29,7 @@
     "db:soa3a": "tsx ./scripts/soa3.ts",
 
 
-    "db:gradea": "tsx ./scripts/grade.ts",
+    "db:grade": "tsx ./scripts/grade.ts",
     "db:prod4": "tsx ./scripts/prod4.ts"
   },
   "dependencies": {

@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {  getAmountPaid, getRecentGrantees, getSecAndGrade, getSF1 } from "@/src/actions/registrarAction";
+import {  getAmountPaid, getRecentGrantees, getSecAndGrade, getSF1, getSF5 } from "@/src/actions/registrarAction";
 import { useReportModal } from "@/src/store/REGISTRAR/reports";
 import { exportSF1 } from "@/src/utils/sf1";
 import { exportSF5 } from "@/src/utils/sf5";
@@ -192,15 +192,24 @@ export const Reports = () => {
         const sf1Data = await getSF1(Number(gradeLevel), Number(section));
         exportSF1(sf1Data);
       }else if(schoolForm === "School_Form_5"){
-        handleDownloadReceivables();
+        const sf5Data = await getSF5(Number(gradeLevel), Number(section));
+        exportSF5(sf5Data);
       }else if(schoolForm === "School_Form_6"){
         handleDownloadGrantees();
       }
   } 
 
+//   const handleTry = async () => {
+//               const sf5Data = await getSF5(Number(gradeLevel), Number(section));
+//         exportSF5(sf5Data);
+//   }
+
     const handleClose = () => {
         close();
         setShowSchoolFormOptions(false)
+        setSchoolForm("");
+        setGradeLevel("");
+        setSection("");
     }
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -236,8 +245,8 @@ export const Reports = () => {
                             </section>
 
                             <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
-                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg ">Ammounct Recievables</p>
-                                <p className="text-xs   px-5">Download ammount recievables</p>
+                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg ">Ammount Receivables</p>
+                                <p className="text-xs   px-5">Download ammount receivables this month</p>
                                 <button
                                     onClick={handleDownloadReceivables}
                                     className="text-sm bg-transparent text-dGreen font-semibold self-end underline  hover:text-green-600"
@@ -265,21 +274,7 @@ export const Reports = () => {
                                 </button>
                             </section>
 
-                            <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
-                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg">
-                                    SF5
-                                </p>
-                                <p className="text-xs px-5">
-                                    Download list of new ESC grantees this year
-                                </p>
-                                <button
-                                    onClick={exportSF5}
-                                    className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
 
-                                >
-                                    Download
-                                </button>
-                            </section>
                         </div>
                         )}
 

@@ -58,13 +58,28 @@ interface Props {
       };
 
 
-  const handleDecline = (id: number) => {
-    setLoadingId(id);
+  // const handleDecline = (id: number) => {
+  //   setLoadingId(id);
     
-    setApplicantList((prevList) => prevList.map((student) => ({ ...student, payment_status: "Declined" })));
+  //   setApplicantList((prevList) => prevList.map((student) => ({ ...student, payment_status: "Declined" })));
+  //   setLoadingId(null);
+  // };
+  
+  const handleDecline = (id: number) => {
+    // show loading for the single row
+    setLoadingId(id);
+
+    // update only the matching student in the local state
+    setApplicantList((prevList) =>
+      prevList.map((student) =>
+        student.id === id ? { ...student, payment_status: "Declined" } : student
+      )
+    );
+
+    // clear loading
     setLoadingId(null);
   };
-    
+
   const filteredStudents = studentList.filter((student) => {
     const fullName = `${student.firstName} ${student.middleName ?? ""} ${student.lastName}`.toLowerCase();
     const matchesSearch =

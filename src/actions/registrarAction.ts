@@ -376,6 +376,7 @@ export const getEnrollmentTrend = async () => {
         eq(AdmissionStatusTable.academicYear_id, selectedYear),
         eq(AcademicYearTable.academicYear_id, selectedYear),
         eq(studentTypeTable.academicYear_id, selectedYear),
+        eq(AdmissionStatusTable.admissionStatus, "Enrolled")
       ))
       .orderBy(
         sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`,
@@ -845,27 +846,67 @@ export const getEnrollmentTrend = async () => {
     return studentsGrade;
   }
 
-  export const getStudentsStatus = async () => {
-    const selectedYear = await getSelectedYear();
-    if (!selectedYear) return [];
+  // export const getStudentsStatus = async () => {
+  //   const selectedYear = await getSelectedYear();
+  //   if (!selectedYear) return [];
 
-    const results = await db
-      .select({
-        student_id: StudentGradesTable.student_id,
-        failedSubjects: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.remarks} = 'FAILED' THEN 1 END)`,
-      })
-      .from(StudentGradesTable)
-      .where(eq(StudentGradesTable.academicYear_id, selectedYear))
-      .groupBy(StudentGradesTable.student_id);
+  //   const results = await db
+  //     .select({
+  //       student_id: StudentGradesTable.student_id,
+  //       failedSubjects: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.remarks} = 'FAILED' THEN 1 END)`,
+  //     })
+  //     .from(StudentGradesTable)
+  //     .where(eq(StudentGradesTable.academicYear_id, selectedYear))
+  //     .groupBy(StudentGradesTable.student_id);
 
-    return results.map((r) => {
-      let status = "Passed";
-      if (r.failedSubjects > 0 && r.failedSubjects < 3) status = "Summer";
-      if (r.failedSubjects >= 3) status = "Retained";
+  //   console.log("Results:", results);
 
-      return { student_id: r.student_id, status };
-    });
-  };
+  //   return results.map((r) => {
+  //     let status = "Passed";
+  //     if (r.failedSubjects > 0 && r.failedSubjects < 3) status = "Summer";
+  //     if (r.failedSubjects >= 3) status = "Retained";
+
+  //     return { student_id: r.student_id, status };
+  //   });
+  // };
+export const getStudentsStatus = async () => {
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return [];
+
+  const results = await db
+    .select({
+      student_id: StudentGradesTable.student_id,
+      failedSubjects: sql<number>`
+        COUNT(CASE WHEN ${StudentGradesTable.remarks} = 'FAILED' THEN 1 END)
+      `,
+      nullGrades: sql<number>`
+        COUNT(CASE WHEN ${StudentGradesTable.finalGrade} IS NULL THEN 1 END)
+      `,
+    })
+    .from(StudentGradesTable)
+    .where(eq(StudentGradesTable.academicYear_id, selectedYear))
+    .groupBy(StudentGradesTable.student_id);
+
+  console.log("Results:", results);
+
+  return results.map((r) => {
+    // Default
+    let status = "Passed";
+
+    // If any null grades → mark as "-"
+    if (r.nullGrades > 0) {
+      status = "-";
+    } 
+    else if (r.failedSubjects > 0 && r.failedSubjects < 3) {
+      status = "Summer";
+    }
+    else if (r.failedSubjects >= 3) {
+      status = "Retained";
+    }
+
+    return { student_id: r.student_id, status };
+  });
+};
 
 //get grade per student
 export const getStudentGradesByLRN = async (lrn: string) => {
@@ -1152,5 +1193,112 @@ export const getSF1 = async (gradelevel_id: number, section_id: number) => {
   console.log("SF1:", sf1);
 
   return sf1; 
+
+}
+
+// export const getSF51 = async (gradelevel_id: number, section_id: number) => {
+//   await requireStaffAuth(["registrar"]);
+
+//   const selectedYear = await getSelectedYear();
+//   if(!selectedYear) return [];
+
+//   const sf5 = await db
+//   .select({
+//     lrn: StudentInfoTable.lrn,
+//     name: sql<string>`
+//       CONCAT(
+//         ${StudentInfoTable.studentLastName}, ',  ',
+//         ${StudentInfoTable.studentFirstName}, ' ',
+//         ${StudentInfoTable.studentMiddleName}, ' ',
+//         ${StudentInfoTable.studentSuffix}
+//       )
+//     `,
+//     gender: StudentInfoTable.studentGender,
+//     finalGrade: sql<number>`ROUND(AVG(${StudentGradesTable.finalGrade}), 0)`,
+//     promotion: studentTypeTable.promotion,
+
+//   }).from(StudentInfoTable)
+
+//   .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
+//   .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+//   .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+//   .leftJoin(SectionTable, eq(StudentPerGradeAndSection.section_id, SectionTable.section_id))
+//   .where(and(
+//     eq(SectionTable.gradeLevel_id, 1),
+//     eq(SectionTable.section_id, 1),
+//     eq(SectionTable.academicYear_id, selectedYear),
+//   ))
+//   .groupBy(
+//     StudentInfoTable.lrn,
+//     StudentInfoTable.studentLastName,
+//     StudentInfoTable.studentFirstName,
+//     StudentInfoTable.studentMiddleName,
+//     StudentInfoTable.studentSuffix,
+//     StudentInfoTable.studentGender,
+//     studentTypeTable.promotion,
+//   )
+
+//   console.log("SF5:", sf5);
+
+//   return sf5; 
+
+// }
+
+export const getSF5 = async (gradelevel_id: number, section_id: number) => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedYear = await getSelectedYear();
+  if(!selectedYear) return [];
+
+  const sf5 = await db
+  .select({
+    lrn: StudentInfoTable.lrn,
+    name: sql<string>`
+      CONCAT(
+        ${StudentInfoTable.studentLastName}, ',  ',
+        ${StudentInfoTable.studentFirstName}, ' ',
+        ${StudentInfoTable.studentMiddleName}, ' ',
+        ${StudentInfoTable.studentSuffix}
+      )
+    `,
+    gender: StudentInfoTable.studentGender,
+    finalGrade: sql<number>`ROUND(AVG(${StudentGradesTable.finalGrade}), 0)`,
+    promotion: studentTypeTable.promotion,
+    gradeLevelName: GradeLevelTable.gradeLevelName,
+    sectionName: SectionTable.sectionName,
+    schoolYear: AcademicYearTable.academicYear,
+  }).from(StudentInfoTable)
+  .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+  .leftJoin(SectionTable, eq(StudentPerGradeAndSection.section_id, SectionTable.section_id))
+  .leftJoin(GradeLevelTable, eq(SectionTable.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+  .leftJoin(guardianAndParentsTable, eq(StudentInfoTable.applicants_id, guardianAndParentsTable.applicants_id))
+  .leftJoin(AdmissionStatusTable, eq(StudentInfoTable.applicants_id, AdmissionStatusTable.applicants_id))
+  .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+  .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
+  .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+  .where(and(
+    eq(AdmissionStatusTable.academicYear_id, selectedYear),
+    eq(AdmissionStatusTable.admissionStatus, "Enrolled"),
+    eq(StudentPerGradeAndSection.gradeLevel_id, gradelevel_id),
+    eq(StudentPerGradeAndSection.section_id, section_id),
+    eq(SectionTable.academicYear_id, selectedYear),
+    eq(AcademicYearTable.academicYear_id, selectedYear),
+  ))
+  .groupBy(
+    StudentInfoTable.lrn,
+    StudentInfoTable.studentLastName,
+    StudentInfoTable.studentFirstName,
+    StudentInfoTable.studentMiddleName,
+    StudentInfoTable.studentSuffix,
+    StudentInfoTable.studentGender,
+    studentTypeTable.promotion,
+    GradeLevelTable.gradeLevelName,
+    SectionTable.sectionName,
+    AcademicYearTable.academicYear
+  )
+
+  console.log("SF5:", sf5);
+
+  return sf5; 
 
 }

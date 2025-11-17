@@ -424,109 +424,84 @@ export async function POST(request: Request) {
     await db.insert(StudentGradesTable).values(gradeEntries);
 
   
-  // --- SECTION NAME LISTS ---
-  const sectionNamesByGrade: Record<number, string[]> = {
-    1: ["Paradigm", "Cynosure", "Genesis", "Catalyst"],
-    2: ["Amiability", "Lodestar", "Camaraderie", "Harmonia"],
-    3: ["Felicity", "Mettle", "Valor", "Fortitude"],
-    4: ["Edifier", "Grandeur", "Legacy", "Ascendance"]
-  };
-
-  const sectionNameList = sectionNamesByGrade[gradeLevel_id];
-  if (!sectionNameList) throw new Error("No section names assigned for this grade level.");
-
-
-  // --- Get latest section for this grade/year ---
-  const sectionData = await db
-    .select({
-      section_id: SectionTable.section_id,
-      sectionName: SectionTable.sectionName,
-      limit: SectionTable.limit,
-    })
-    .from(SectionTable)
-    .where(
-      and(
-        eq(SectionTable.gradeLevel_id, gradeLevel_id),
-        eq(SectionTable.academicYear_id, academicYearID)
+    const sectionData = await db
+      .select({
+        section_id: SectionTable.section_id,
+        sectionName: SectionTable.sectionName,
+        limit: SectionTable.limit,
+        // gradeLevel_id: SectionTable.gradeLevel_id,
+      })
+      .from(SectionTable)
+      .where(
+        and(
+          eq(SectionTable.gradeLevel_id, gradeLevel_id),
+          eq(SectionTable.academicYear_id, academicYearID)
+        )
       )
-    )
-    .orderBy(desc(SectionTable.section_id))
-    .limit(1);
+      .orderBy(desc(SectionTable.section_id)) // get the latest section for that grade/year
+      .limit(1);
 
 
-  // --- Capacity settings ---
-  const limitCount = 25;
-  const limit = limitCount - 1;
+    let newSectionCount = 1;
+    const limitCount = 25; // capacity per section test
+    // let limitCount = 1;
+    const limit = limitCount - 1; 
+    let section_id = 1;
 
-  let section_id = 1;
+    // ROOM ASSIGNMENT LOGIC
+    const rooms = await db.select({ room_id: RoomTable.room_id }).from(RoomTable).orderBy(RoomTable.room_id);
+    const assignedRooms = await db
+      .select({ room_id: SectionTable.room_id })
+      .from(SectionTable)
+      .where(eq(SectionTable.academicYear_id, academicYearID));
 
+    const assignedRoomIds = assignedRooms.map(r => r.room_id);
+    const availableRooms = rooms.filter(r => !assignedRoomIds.includes(r.room_id));
+    const assignedRoom = availableRooms.length > 0 ? availableRooms[0] : null;
 
-  // --- ROOM LOGIC (unchanged) ---
-  const rooms = await db.select({ room_id: RoomTable.room_id })
-    .from(RoomTable)
-    .orderBy(RoomTable.room_id);
+    if (!assignedRoom) {
+      throw new Error("No available rooms left for this academic year.");
+    }
 
-  const assignedRooms = await db
-    .select({ room_id: SectionTable.room_id })
-    .from(SectionTable)
-    .where(eq(SectionTable.academicYear_id, academicYearID));
-
-  const assignedRoomIds = assignedRooms.map(r => r.room_id);
-  const availableRooms = rooms.filter(r => !assignedRoomIds.includes(r.room_id));
-  const assignedRoom = availableRooms.length > 0 ? availableRooms[0] : null;
-
-  if (!assignedRoom) throw new Error("No available rooms left for this academic year.");
-
-
-  // --- SECTION CREATION USING CUSTOM NAMES ---
-  if (sectionData.length === 0) {
-    // first section = first name in list
-    const firstName = sectionNameList[0];
-
-    const sectionData2 = await db.insert(SectionTable).values({
-      sectionName: firstName,
-      gradeLevel_id,
-      academicYear_id: academicYearID,
-      limit: limit,
-      room_id: assignedRoom.room_id,
-    }).returning({ section_id: SectionTable.section_id });
-
-    section_id = sectionData2[0].section_id;
-
-  } else {
-    const currentSection = sectionData[0];
-
-    if (currentSection.limit > 0) {
-      // still space → same section
-      await db.update(SectionTable)
-        .set({ limit: currentSection.limit - 1 })
-        .where(eq(SectionTable.section_id, currentSection.section_id));
-
-      section_id = currentSection.section_id;
-
-    } else {
-      // full → create next name in list
-      const index = sectionNameList.indexOf(currentSection.sectionName);
-      const nextIndex = index + 1;
-
-      if (nextIndex >= sectionNameList.length) {
-        throw new Error("Maximum number of sections reached for this grade level.");
-      }
-
-      const newSectionName = sectionNameList[nextIndex];
-
-      const sectionData3 = await db.insert(SectionTable).values({
-        sectionName: newSectionName,
+    if (sectionData.length === 0) {
+      // no section yet → create Section 1
+      
+      const sectionData2 = await db.insert(SectionTable).values({
+        sectionName: "Section " + newSectionCount,
         gradeLevel_id,
         academicYear_id: academicYearID,
         limit: limit,
         room_id: assignedRoom.room_id,
       }).returning({ section_id: SectionTable.section_id });
 
-      section_id = sectionData3[0].section_id;
-    }
-  }
+      section_id = sectionData2[0].section_id;
+    } else {
+      const currentSection = sectionData[0];
 
+      // check if current section still has capacity
+      if (currentSection.limit > 0) {
+        // just decrement the current section's limit
+        await db.update(SectionTable)
+          .set({ limit: currentSection.limit - 1 })
+          .where(eq(SectionTable.section_id, currentSection.section_id))
+
+        section_id = currentSection.section_id;
+      } else {
+        // full → open a new section
+        const match = currentSection.sectionName.match(/Section (\d+)/);
+        newSectionCount = match ? parseInt(match[1]) + 1 : 2;
+
+        const sectionData3 = await db.insert(SectionTable).values({
+          sectionName: "Section " + newSectionCount,
+          gradeLevel_id,
+          academicYear_id: academicYearID,
+          limit: limit,
+          room_id: assignedRoom.room_id,
+        }).returning({ section_id: SectionTable.section_id });
+
+        section_id = sectionData3[0].section_id;
+      }
+    }
 
     await db
     .insert(StudentPerGradeAndSection)

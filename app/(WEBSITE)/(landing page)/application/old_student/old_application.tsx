@@ -32,7 +32,7 @@ export const Old_Application = () => {
 
     const [mop, setMop] = useState("");
     const [reservationReceipt, setReservationReceipt] = useState<File | null>(null);
-    const [reservationAmount, setReservationAmount] = useState(0);
+    const [reservationAmount, setReservationAmount] = useState("");
         
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isBankTransferSelected, setIsBankTransferSelected] = useState(false);
@@ -109,7 +109,7 @@ const validatePage = async (): Promise<boolean> => {
             return false;
         }
 
-        if (reservationAmount < 500)
+        if (Number(reservationAmount) < 500)
         {
             newErrors.reservationAmount = "Reservation amount must be greater than 500.";
             setErrors(newErrors);
@@ -136,8 +136,12 @@ const handleMopChange = (e: ChangeEvent<HTMLSelectElement>) => {
     if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
     if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
 };
+
 const handleReservationAmount = (e: ChangeEvent<HTMLInputElement>) => {
-    setReservationAmount(Number(e.target.value));
+    const value = e.target.value;
+    if (value === "" || Number(value) >= 0) {
+        setReservationAmount(value);
+    }
 };
 
 const handleReceiptChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -181,11 +185,10 @@ const previewImage = (file: File | null) => {
             };
 
             const uploadReservationReceipt = reservationReceipt ? await uploadImage(reservationReceipt, 'reservationPayments') : "";
-            await OldStudentEnrollment(lrn, mop, uploadReservationReceipt, reservationAmount, gradeLevel, promotion);
+            await OldStudentEnrollment(lrn, mop, uploadReservationReceipt, Number(reservationAmount), gradeLevel, promotion);
 
-            
-            toast.success("application submitted successfully. Your application is now pending review.");
             router.push("/");
+            toast.success("application submitted successfully. Your application is now pending review.");
 
         } catch (error) {
             toast.error("Failed to submit reapplication. Please try again.");
@@ -477,9 +480,8 @@ const previewImage = (file: File | null) => {
                                 Amount:
                             </label>
                             <input 
-                                type="number" 
+                                type="text" 
                                 placeholder="500.00"
-                                min="500"
                                 step="0.01"
                                 value={reservationAmount || ''}
                                 className={`rounded-md px-3 h-[40px] w-full backdrop-blur-sm text-dGreen shadow-inner outline-none focus:ring-2 focus:ring-dGreen
@@ -710,24 +712,3 @@ const previewImage = (file: File | null) => {
 };
 
 
-
-//   ...(isRepeater
-//     ? [
-//         {
-//           title: (
-//             <div>
-//               <p className="sm:text-lg lg:text-2xl text-red-600 font-bold font-merriweather">
-//                 Notice for Repeaters
-//               </p>
-//             </div>
-//           ),
-//           content: (
-//             <main className="w-full flex flex-col gap-6">
-//               <p className="text-center text-red-500 font-semibold">
-//                 You are marked as a repeater. Please confirm before proceeding with enrollment.
-//               </p>
-//             </main>
-//           ),
-//         },
-//       ]
-//     : []),

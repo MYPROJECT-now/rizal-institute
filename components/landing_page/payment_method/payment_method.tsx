@@ -110,37 +110,25 @@ export const PaymentMethod = () => {
 
     // Validation per page
 const validatePage = async (): Promise<boolean> => {
-    const newErrors: { [key: string]: string } = {};
+
 
     switch (page) {
 
 
     case 2:
-    if (!mop.trim()) newErrors.lrn = "Required";
-    if (!reservationReceipt) newErrors.reservationReceipt = "Required";
+        const newErrors: { [key: string]: string } = {};
 
+        if (!mop.trim()) newErrors.mop = "Required";
+        if (!reservationReceipt) newErrors.reservationReceipt = "Required";
 
-    if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        toast.error("Please fill in all required fields.");
-        return false;
-    }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            toast.error("Please fill in all required fields.");
+            return false;
+        }
 
-    // const mopFilled = !!mop;
-    // const receiptFilled = !!reservationReceipt;
-        
-    // const anyFilled = mopFilled || receiptFilled;
-    // const allFilled = mopFilled && receiptFilled;
-        
-    // if (anyFilled && !allFilled) {
-    //     if (!mopFilled) newErrors.mop = "Required if other payment fields are filled.";
-    //     if (!receiptFilled) newErrors.reservationReceipt = "Required if other payment fields are filled.";
-        
-    //     setErrors(newErrors);
-    //     toast.error("Keep all fields blank or complete all payment details.");
-    //     return false;
-    // }
     return true;
+
 
         
     default:
@@ -257,174 +245,6 @@ const sections = [
             </div>
         ),
         content: (
-            // <main className="w-full mt-10 flex flex-col items-center justify-center">
-            //     {isLoading ? (
-            //         <div>
-            //             <Loader2 className="animate-spin text-dGreen" />
-            //         </div>
-            //     ): (
-            //         <div className="flex flex-row gap-[70px]">
-                        
-            //             <div className="rounded-lg overflow-hidden">
-            //                 <table className="w-[500px] border-black  border-collapse ">
-            //                     <thead>
-            //                         <tr className="bg-gray-100 text-center">
-            //                             <th className="p-2 border">Particulars</th>
-            //                             <th className="p-2 border">Amount</th>
-            //                         </tr>
-            //                     </thead>
-            //                     <tbody>
-            //                         <tr>
-            //                             <td className="px-2">
-            //                                 Tuition Fee
-            //                             </td>
-            //                             <td className="text-end px-2">
-            //                                 {tuitionFee}
-            //                             </td>
-            //                         </tr>
-            //                         <tr >
-            //                             <td className="px-2">
-            //                                 Miscellaneous Fee
-            //                             </td>
-            //                             <td className="text-end px-2">
-            //                                 {miscellaneous}
-            //                             </td>
-            //                         </tr>
-            //                         <tr  className="border-b-2 border-black px-2">
-            //                             <td className="px-2">
-            //                                 Downpayment
-            //                             </td>
-            //                             <td className="text-end px-2">
-            //                                 {downPayment}
-            //                             </td>
-            //                         </tr>
-            //                         <tr>
-            //                             <td>
-
-            //                             </td>
-            //                             <td className="text-end px-2">
-            //                                {tuitionFee + miscellaneous - downPayment}
-            //                             </td>
-            //                         </tr>
-            //                         {escGrant > 0 && (
-            //                             <tr className="border-b-2 border-black">
-            //                                 <td className="px-2">
-            //                                     Less: ESC Grant
-            //                                 </td>
-            //                                 <td className="text-end px-2">
-            //                                     {escGrant}
-            //                                 </td>
-            //                             </tr>
-            //                         )}
-            //                         <tr>
-            //                             <td>
-
-            //                             </td>
-            //                             <td className="text-end px-2">
-            //                                {tuitionFee + miscellaneous - escGrant}
-            //                             </td>
-            //                         </tr>
-            //                         {academic_discount_amount > 0 && (
-            //                             <tr>
-            //                                 <td className="px-2">
-            //                                     Less: Discount ({academic_discount})
-            //                                 </td>
-            //                                 <td className="text-end px-2">
-            //                                     {academic_discount_amount}
-            //                                 </td>
-            //                             </tr>
-            //                         )}
-            //                         {withSibling_amount > 0 && (
-            //                             <tr>
-            //                                 <td className="px-2">
-            //                                     Less: Discount ({withSibling === "yes" ? "WithSibling" : ""})
-            //                                 </td>
-            //                                 <td className="text-end px-2">
-            //                                     {withSibling_amount}
-            //                                 </td>
-            //                             </tr>
-            //                         )}
-            //                         {other_discount > 0 && (
-            //                             <tr>
-            //                                 <td className="px-2">
-            //                                     Less: Discount (Other discount)
-            //                                 </td>
-            //                                 <td className="text-end px-2">
-            //                                     {other_discount}
-            //                                 </td>
-            //                             </tr>
-            //                         )}
-            //                         <tr className="border-t-2 border-black ">
-            //                             <td className="text-center">
-            //                                 Total tuition fee & Miscellaneous fee
-            //                             </td>
-            //                                 <td className="text-end px-2">
-            //                                 {tuitionFee + miscellaneous - downPayment - escGrant - academic_discount_amount - withSibling_amount - other_discount}
-            //                             </td>
-            //                         </tr>
-            //                         {other_fees > 0 && (
-            //                         <tr className="border-t-2 border-black">
-            //                             <td className="text-center">
-            //                                 Other Fees:
-            //                             </td>
-            //                                 <td className="text-end px-2">
-            //                                 {other_fees}
-            //                             </td>
-            //                         </tr>    
-            //                         )}
-            //                         <tr className="border-t-2 border-black ">
-            //                             <td className="text-center">
-            //                                 Grand Total
-            //                             </td>
-            //                             <td className="text-end px-2">
-            //                                 {totalTuition}
-            //                             </td>
-            //                         </tr>
-            //                     </tbody>
-            //                 </table>
-
-            //             </div>
-
-
-            //             {monthlyDues.length > 0 ? (
-            //                 <div className="rounded-md overflow-hidden">
-            //                 <table className="w-[600px]  border border-gray-300">
-            //                 <thead className="text-center text-dGreen">
-            //                     <tr className="bg-gray-100 "><th colSpan={2} className="text-start p-2"> *INSTALLMENT payment scheme</th></tr>
-            //                     <tr className="bg-gray-100 ">
-            //                         <th className="p-2 border text-start ">DownPayment</th>
-            //                         <th className="text-start p-2">{downPayment}</th>
-            //                     </tr>
-            //                     <tr className="bg-gray-100">
-            //                         <th className="p-2 border text-start" colSpan={2}>PaymentSchedule</th>
-            //                     </tr>
-            //                 </thead>    
-            //                 <tbody className="">
-            //                     {monthlyDues.map((due, idx) => (
-            //                     <tr key={idx } className={ `${ idx % 2 === 0 ? "bg-white" : "bg-green-100"} hover:bg-green-200`}>
-            //                         <td className="p-2 border">{due.month}</td>
-            //                         <td className="p-2 border">₱{due.monthlyDues.toFixed(2)}</td>
-            //                     </tr>
-            //                     ))}
-            //                     <tr>
-            //                         <td className="p-2 border">
-            //                             Total
-            //                         </td>
-            //                         <td className="p-2 border">
-            //                             {totalTuition + downPayment}
-            //                         </td>
-            //                     </tr>
-            //                 </tbody>
-            //                 </table>
-            //                 </div>
-            //             ) : (
-            //                 <p>No monthly dues found.</p>
-            //             )}
-
-            //         </div>
-            //     )}
-
-            // </main>
         <main className="w-full mt-2 flex flex-col items-center justify-center">
             {isLoading ? (
                 <div>
@@ -868,7 +688,7 @@ const sections = [
     // };
 
 const handleNext = async () => {
-// if (!(await validatePage())) return;
+if (!(await validatePage())) return;
 
 if (page === 0) {
     if (pm === "Installments") {

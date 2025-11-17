@@ -721,7 +721,10 @@ const computeGrandTotal = () => {
                 <div className="flex sm:flex-row flex-col gap-5 bg-gray-100/50 shadow-lg border-2 rounded-lg p-4">
                 
                   <section className="flex flex-col">
-                    <span className="font-bold font-merriweather text-sm text-dGreen">ESC Grantee:</span>
+                    <div className="flex flex-row items-center gap-2">
+                      <span className="font-bold font-merriweather text-[13px] text-dGreen">ESC Grant: </span>
+                      <span className="font-bold font-merriweather text-xs text-red-600">(9000)</span>
+                    </div>
                     <select 
                       value={escGrantee}
                       disabled
@@ -734,7 +737,7 @@ const computeGrandTotal = () => {
                   </section>  
 
                   <section className="flex flex-col">
-                    <span className="font-bold font-merriweather text-sm text-dGreen">Academic Discount</span>
+                    <span className="font-bold font-merriweather text-[13px] text-dGreen">Academic Discount</span>
                     <select
                       value={acad}
                       disabled
@@ -748,7 +751,10 @@ const computeGrandTotal = () => {
                   </section>
 
                   <section className="flex flex-col">
-                    <span className="font-bold font-merriweather text-sm text-dGreen">Sibling Discount</span>
+                    <div className="flex flex-row items-center gap-2">
+                      <span className="font-bold font-merriweather text-[13px]  text-dGreen">Sibling Discount: </span>
+                      <span className="font-bold font-merriweather text-xs text-red-600">(500)</span>
+                    </div>                    
                     <select
                       value={sibling}
                       disabled
@@ -880,7 +886,7 @@ const computeGrandTotal = () => {
 
                 <section className="w-full text-center">
                   <p className="text-sm text-red-600 mb-3 font-medium">
-                    Please double-check all tuition and miscellaneous amounts before submitting.
+                    Please double-check tuition and miscellaneous fee before submitting.
                   </p>
                 </section>
 

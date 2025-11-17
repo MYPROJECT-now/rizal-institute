@@ -2,8 +2,18 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
 
+export interface SF5Student {
+  lrn: string;
+  name: string;
+  gender: string;
+  finalGrade: number | null;
+  promotion: string | null;
+  schoolYear: string | null;
+  gradeLevelName: string | null;
+  sectionName: string | null;
+}
 
-export async function exportSF5() {
+export async function exportSF5(sf5Data: SF5Student[]) {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet("School Form 1 (SF1)");
 
@@ -127,6 +137,7 @@ export async function exportSF5() {
   sheet.getCell("F5").font = { size: 14,  name: "Arial Narrow" };
 
   sheet.mergeCells("G5:H5");
+  sheet.getCell("G5").value = sf5Data[0].schoolYear;
   sheet.getCell("G5").border = {
     top: { style: "thin" },
     left: { style: "thin" },
@@ -179,6 +190,7 @@ export async function exportSF5() {
     bottom: { style: "thin" },
     right: { style: "thin" },
   };
+  sheet.getCell("J7").value = sf5Data[0].gradeLevelName;
   sheet.getCell("J7").alignment = { horizontal: "left", vertical: "middle" };
   sheet.getCell("J7").font = { size: 14,  name: "Arial Narrow" };
 
@@ -193,6 +205,7 @@ export async function exportSF5() {
     bottom: { style: "thin" },
     right: { style: "thin" },
   };
+  sheet.getCell("M7").value = sf5Data[0].sectionName;
   sheet.getCell("M7").alignment = { horizontal: "left", vertical: "middle" };
   sheet.getCell("M7").font = { size: 14,  name: "Arial Narrow" };
 
@@ -268,79 +281,6 @@ export async function exportSF5() {
   sheet.getCell("I9").alignment = { horizontal: "center", vertical: "middle", wrapText: true };
   sheet.getCell("I9  ").font = { size: 11, bold: true,  name: "Arial Narrow" };
 
-  // === SAMPLE STUDENT ROWS ===
-// ==== APPLY BORDERS FOR ROWS 10 TO 59 (COLUMNS A–Z) ====
-// for (let rowIndex = 10; rowIndex <= 59; rowIndex++) {
-  // ===== MERGE CELLS PER ROW =====
-  // === SAMPLE DATA ===
-// const sampleStudents = [
-//   {
-//     lrn: "123456789012",
-//     name: "Dela Cruz, Juan, Santos",
-//     sex: "M",
-//     birthdate: "01/15/2012",
-//     age: "13",
-//     motherTongue: "Tagalog",
-//     ip: "None",
-//     religion: "Catholic",
-//     address_street: "123 Mabini St.",
-//     address_brgy: "Barangay Uno",
-//     address_city: "Calamba",
-//     address_province: "Laguna",
-//     father: "Dela Cruz, Jose, Ramirez",
-//     mother: "Ramirez, Maria, Lopez",
-//     guardian_name: "",
-//     guardian_rel: "",
-//     contact: "09123456789",
-//     remarks: ""
-//   },
-//   {
-//     lrn: "109876543210",
-//     name: "Santos, Maria, Dizon",
-//     sex: "F",
-//     birthdate: "03/05/2013",
-//     age: "12",
-//     motherTongue: "Tagalog",
-//     ip: "None",
-//     religion: "Christian",
-//     address_street: "456 Rizal St.",
-//     address_brgy: "Barangay Dos",
-//     address_city: "Calamba",
-//     address_province: "Laguna",
-//     father: "Santos, Mark, Dizon",
-//     mother: "Dizon, Ana, Flores",
-//     guardian_name: "",
-//     guardian_rel: "",
-//     contact: "09987654321",
-//     remarks: ""
-//   }
-// ];
-
-
-//   sheet.getRow(rowIndex).height = 60;
-
-
-//   sheet.mergeCells(`C${rowIndex}:F${rowIndex}`);
-//   sheet.mergeCells(`N${rowIndex}:O${rowIndex}`);
-//   sheet.mergeCells(`P${rowIndex}:Q${rowIndex}`);
-//   sheet.mergeCells(`X${rowIndex}:Z${rowIndex}`);
-
-//   // ===== APPLY BORDERS FOR A–Z =====
-//   const row = sheet.getRow(rowIndex);
-//   for (let colIndex = 1; colIndex <= 26; colIndex++) {
-//     const cell = row.getCell(colIndex);
-//     cell.border = {
-//       top: { style: "thin" },
-//       left: { style: "thin" },
-//       bottom: { style: "thin" },
-//       right: { style: "thin" },
-//     };
-//     cell.value = cell.value ?? "";
-//     cell.font= { size: 16,  name: "Arial Narrow" };  
-//     cell.alignment = {  wrapText: true };
-//   }
-// }
-// THIN borders for all rows first
 for (let rowIndex = 12; rowIndex <= 61; rowIndex++) {
   
   sheet.mergeCells(`C${rowIndex}:E${rowIndex}`);
@@ -379,6 +319,40 @@ applyThickBorderToRow(60);
 applyThickBorderToRow(61);
 
 
+const maleStudents = sf5Data.filter((s: SF5Student) => s.gender === "Male");
+const femaleStudents = sf5Data.filter((s: SF5Student) => s.gender === "Female");
+
+// Sort alphabetically (optional but recommended)
+maleStudents.sort((a, b) => a.name.localeCompare(b.name));
+femaleStudents.sort((a, b) => a.name.localeCompare(b.name));
+
+// --- Fill MALE rows (12–33)
+let maleRow = 12;
+maleStudents.forEach((stud: SF5Student) => {
+  if (maleRow > 33) return; // stop when limit reached
+
+  sheet.getCell(`B${maleRow}`).value = stud.lrn;
+  sheet.getCell(`C${maleRow}`).value = stud.name;
+  sheet.getCell(`F${maleRow}`).value = stud.finalGrade ? Number(stud.finalGrade).toFixed(2) : "";
+  sheet.getCell(`G${maleRow}`).value = stud.promotion || "";
+  sheet.getCell(`I${maleRow}`).value = ""; // Learning areas not met (optional)
+
+  maleRow++;
+});
+
+// --- Fill FEMALE rows (35–59)
+let femaleRow = 35;
+femaleStudents.forEach((stud: SF5Student) => {
+  if (femaleRow > 59) return;
+
+  sheet.getCell(`B${femaleRow}`).value = stud.lrn;
+  sheet.getCell(`C${femaleRow}`).value = stud.name;
+  sheet.getCell(`F${femaleRow}`).value = stud.finalGrade ? Number(stud.finalGrade).toFixed(2) : "";
+  sheet.getCell(`G${femaleRow}`).value = stud.promotion || "";
+  sheet.getCell(`I${femaleRow}`).value = "";
+
+  femaleRow++;
+});
 
 
   // === EXPORT ===
