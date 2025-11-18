@@ -24,7 +24,7 @@ import {
   StudentGradesTable,
   additionalInformationTable,
 } from "../db/schema";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq,  } from "drizzle-orm";
 import nodemailer from "nodemailer";
 import { ReservationFee, StudentUpdateData } from "../type/reApplication/re_applicationType";
 import { getAcademicYearID } from "./utils/academicYear";
@@ -347,13 +347,51 @@ export const verifyEmail = async (email: string) => {
   return { success: true };
 };
 
+// export const verifyLrn = async (lrn: string) => {
+
+//   const isTransferred = await db
+//   .select({status: AdmissionStatusTable.admissionStatus})
+//   .from(AdmissionStatusTable)
+//   .leftJoin(applicantsInformationTable, eq(AdmissionStatusTable.applicants_id, applicantsInformationTable.applicants_id))
+//   .where(eq(applicantsInformationTable.lrn, lrn))
+//   .orderBy(desc(AdmissionStatusTable.admission_id))
+//   .limit(1);
+
+//   const existing = await db.select().from(StudentInfoTable).where(eq(StudentInfoTable.lrn, lrn)).limit(1);
+//   if (existing.length > 0) {
+//     throw new Error("You have already enrolled.");
+//   }
+// };
+
 export const verifyLrn = async (lrn: string) => {
-  const existing = await db.select().from(StudentInfoTable).where(eq(StudentInfoTable.lrn, lrn)).limit(1);
+  // Get the latest admission status
+  const isTransferred = await db
+    .select({ status: AdmissionStatusTable.admissionStatus })
+    .from(AdmissionStatusTable)
+    .leftJoin(
+      applicantsInformationTable,
+      eq(AdmissionStatusTable.applicants_id, applicantsInformationTable.applicants_id)
+    )
+    .where(eq(applicantsInformationTable.lrn, lrn))
+    .orderBy(desc(AdmissionStatusTable.admission_id))
+    .limit(1);
+
+  // If last status is Transferred_Out → skip validation
+  if (isTransferred.length > 0 && isTransferred[0].status === "Transferred_Out") {
+    return; // Skip LRN validation completely
+  }
+
+  // Otherwise continue the validation
+  const existing = await db
+    .select()
+    .from(StudentInfoTable)
+    .where(eq(StudentInfoTable.lrn, lrn))
+    .limit(1);
+
   if (existing.length > 0) {
     throw new Error("You have already enrolled.");
   }
 };
-
 
 
 export const getStatusByTrackingId = async (trackingId: string) => {
@@ -1301,13 +1339,41 @@ await sendReservationEmail(email, trackingId);
   }
 };
 
+
+export const checkDropout = async (lrn: string) => {
+  const checkIsDropped = await db
+    .select({admissionStatus: AdmissionStatusTable.admissionStatus})
+    .from(AdmissionStatusTable)
+    .leftJoin( applicantsInformationTable, eq(AdmissionStatusTable.applicants_id, applicantsInformationTable.applicants_id))
+    .where(eq(applicantsInformationTable.lrn, lrn))
+    .orderBy(desc(AdmissionStatusTable.admission_id))
+    .limit(1);
+
+  return checkIsDropped.length > 0 && checkIsDropped[0].admissionStatus === "Dropped_Out";
+}
+
+
 export const checkGrades = async (lrn: string) => {
-  const acad_id = await getAcademicYearID();
-  if (!acad_id) return false;
+  // 1. Get the student's most recent academic year
+  const latestAcad = await db
+    .select({
+      academicYear_id: StudentGradesTable.academicYear_id,
+    })
+    .from(StudentGradesTable)
+    .leftJoin(
+      StudentInfoTable,
+      eq(StudentGradesTable.student_id, StudentInfoTable.student_id)
+    )
+    .where(eq(StudentInfoTable.lrn, lrn))
+    .orderBy(desc(StudentGradesTable.academicYear_id))
+    .limit(1);
 
-  const prevAcad = acad_id - 1;
+  if (latestAcad.length === 0) return false;
 
-  const gradeCheck = await db
+  const recentYear = latestAcad[0].academicYear_id;
+
+  // 2. Get ALL grades for that academic year
+  const allGrades = await db
     .select({
       finalGrade: StudentGradesTable.finalGrade,
     })
@@ -1319,17 +1385,62 @@ export const checkGrades = async (lrn: string) => {
     .where(
       and(
         eq(StudentInfoTable.lrn, lrn),
-        eq(StudentGradesTable.academicYear_id, prevAcad)
+        eq(StudentGradesTable.academicYear_id, recentYear)
       )
     );
 
-  // If no grades → treat as incomplete
-  if (gradeCheck.length === 0) return false;
+  if (allGrades.length === 0) return false;
 
   // Check if any finalGrade is null
-  const hasMissing = gradeCheck.some((g) => g.finalGrade === null);
+  const hasMissing = allGrades.some(g => g.finalGrade === null);
 
-  return !hasMissing; // true = all good, false = missing grades
+  return !hasMissing;
+};
+
+
+export const checkGraduate = async (lrn: string) => {
+
+
+  const checkGrad = await db
+    .select({
+      promotion: studentTypeTable.promotion,
+      gradeToEnroll: studentTypeTable.gradeToEnroll,
+    })
+    .from(studentTypeTable)
+    .leftJoin(
+      applicantsInformationTable,
+      eq(studentTypeTable.applicants_id, applicantsInformationTable.applicants_id)
+    )
+    .where(eq(applicantsInformationTable.lrn, lrn))
+    .orderBy(desc(studentTypeTable.studentType_id))
+    .limit(1);
+
+  const latest = checkGrad[0];
+  if (!latest) return false;
+
+  // Check if gradeToEnroll is 10 and promotion is "Promoted"
+  return latest.gradeToEnroll === "10" && latest.promotion === "PROMOTED";
+};
+
+export const checkIsTransferred = async (lrn: string) => {
+
+
+  const checkIsTransfer = await db
+    .select({
+      admisionStatus: AdmissionStatusTable.admissionStatus
+    })
+    .from(AdmissionStatusTable)
+    .leftJoin(
+      applicantsInformationTable,
+      eq(AdmissionStatusTable.applicants_id, applicantsInformationTable.applicants_id)
+    )
+    .where(eq(applicantsInformationTable.lrn, lrn))
+    .orderBy(desc(AdmissionStatusTable.admission_id))
+    .limit(1);
+  const latest = checkIsTransfer[0];
+  if (!latest) return false;
+
+  return latest.admisionStatus === "Transferred_Out";
 };
 
 
@@ -1408,12 +1519,17 @@ export const oldStudentEnrollment = async (lrn: string) => {
   const getGrade = await db
   .select({
     gradeToEnroll: studentTypeTable.gradeToEnroll,
-    promotion: studentTypeTable.promotion
+    promotion: studentTypeTable.promotion,
+    admissionStatus: AdmissionStatusTable.admissionStatus
   })
   .from(applicantsInformationTable)
+  .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
   .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
   .where(eq(applicantsInformationTable.lrn, lrn))
-  .orderBy(desc(studentTypeTable.studentType_id)) 
+  .orderBy(
+    desc(studentTypeTable.studentType_id),
+    desc(AdmissionStatusTable.admission_id)  
+) 
   .limit(1);
 
   return getGrade[0];

@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { checkGrades, checkLRN } from "@/src/actions/landingPage";
+import { checkDropout, checkGrades, checkGraduate, checkIsTransferred, checkLRN } from "@/src/actions/landingPage";
 
 export const CheckLrn = () => {
   const { isOpen, close } = useApplicationModal();
@@ -41,10 +41,10 @@ export const CheckLrn = () => {
 
     try {
 
-      const allGradesSubmitted = await checkGrades(lrn);
+      const checkGraduated = await checkGraduate(lrn);
 
-      if (!allGradesSubmitted) {
-        toast.error("Some grades are not yet submitted. Try again later.");
+      if (checkGraduated) {
+        toast.success("It looks like you've already graduated. Great job!");
         return;
       }
 
@@ -58,6 +58,48 @@ export const CheckLrn = () => {
       setLoading(false);
     }
 
+    try {
+
+      const checkTransfer = await checkIsTransferred(lrn);
+
+      if (checkTransfer) {
+        toast.error("You already transferred out. Please enroll as new student instead.");
+        return;
+      }
+
+      // Continue your process here...
+
+    } catch (err) {
+      const error = err as Error;
+      console.error("❌ Unexpected Error:", error);
+      toast.error("An error occurred. Try again.");
+    } finally {
+      setLoading(false);
+    }
+
+    try {
+      const isDropped = await checkDropout(lrn);
+
+      // const allGradesSubmitted = await checkGrades(lrn);
+
+      // Only check grades if NOT dropped
+      if (!isDropped) {
+        const allGradesSubmitted = await checkGrades(lrn);
+
+        if (!allGradesSubmitted) {
+          toast.error("Some grades are not yet submitted. Try again later.");
+          return; // stop this process only
+        }
+      }
+      // Continue your process here...
+
+    } catch (err) {
+      const error = err as Error;
+      console.error("❌ Unexpected Error:", error);
+      toast.error("An error occurred. Try again.");
+    } finally {
+      setLoading(false);
+    }
 
     try {
       const exists = await checkLRN(lrn);

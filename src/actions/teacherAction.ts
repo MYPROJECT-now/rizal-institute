@@ -94,6 +94,8 @@ export const getMyStudents = async (
     subject_id: number | null
 ) => {
     if (!gradeLevel_id || !subject_id) return [];
+    const selectedYear = await getSelectedYear();
+    if (!selectedYear) return [];
 
     const myStudents = await db
     .select({
@@ -108,13 +110,12 @@ export const getMyStudents = async (
         remarks: StudentGradesTable.remarks
     })
     .from(StudentInfoTable)
-    .where(
-      and(
-        eq(StudentGradesTable.gradeLevel_id, gradeLevel_id),
-        eq(StudentGradesTable.subject_id, subject_id)
-      )
-    )
     .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+    .where(and(
+        eq(StudentGradesTable.gradeLevel_id, gradeLevel_id),
+        eq(StudentGradesTable.subject_id, subject_id),
+        eq(StudentGradesTable.academicYear_id, selectedYear)
+      ))
     .orderBy(
       StudentInfoTable.studentLastName,
     );

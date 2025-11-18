@@ -49,36 +49,64 @@ export const TeacherAssignmentPage = () => {
     return <div className="p-5 text-center text-gray-500">No assignments yet</div>;
   }
 
-  return (
-    <div className="p-5 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {Object.entries(groupedLoads).map(([teacher, subjects]) => (
-        <Card key={teacher} className="shadow-md hover:shadow-lg transition">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl capitalize font-semibold font-oswald text-dGreen">
+return (
+  <div className="p-5 grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+    {Object.entries(groupedLoads).map(([teacher, subjects]) => {
+      
+      // group by grade
+      const groupedByGrade = subjects.reduce((acc: Record<string, string[]>, item) => {
+        const grade = item.gradeLevelName || "No Grade";
+        const subject = item.subjectName || "—";
+        if (!acc[grade]) acc[grade] = [];
+        acc[grade].push(subject);
+        return acc;
+      }, {});
+
+      const sortedGrades = Object.keys(groupedByGrade).sort((a, b) => {
+        const na = parseInt(a.replace(/\D/g, "")) || 0;
+        const nb = parseInt(b.replace(/\D/g, "")) || 0;
+        return na - nb;
+      });
+
+      return (
+        <Card key={teacher} className="rounded-2xl border shadow-sm hover:shadow-md transition bg-white">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-center text-2xl font-bold text-dGreen">
               {teacher}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            {subjects.length === 0 ||
-            subjects.every((s) => !s.gradeLevelName && !s.subjectName) ? (
-              <p className="text-center text-gray-500 italic">No assigned yet</p>
-            ) : (
-              subjects.map((subject, idx) => (
-                <div key={idx} className="flex flex-row justify-center text-md">
-                  <p className="text-green-900 w-[90px]">
-                    <span className="font-bold">Grade:</span>{" "}
-                    {subject.gradeLevelName || "—"}
+
+          <CardContent className="space-y-4">
+
+            <div className="grid gap-4">
+              {sortedGrades.map((grade) => (
+                <div
+                  key={grade}
+                  className="p-4 rounded-xl bg-green-50 border border-green-200"
+                >
+                  <p className="font-semibold text-green-800 mb-2">
+                    Grade {grade}
                   </p>
-                  <p className="text-green-900">
-                    <span className="font-bold">Subject:</span>{" "}
-                    {subject.subjectName || "—"}
-                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {groupedByGrade[grade].map((subj, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 rounded-full bg-white border text-sm shadow-sm"
+                      >
+                        {subj}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              ))
-            )}
+              ))}
+            </div>
+
           </CardContent>
         </Card>
-      ))}
-    </div>
-  );
+      );
+    })}
+  </div>
+);
+
 };

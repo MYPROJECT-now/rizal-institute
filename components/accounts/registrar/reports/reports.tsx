@@ -11,6 +11,7 @@ import {  getAmountPaid, getRecentGrantees, getSecAndGrade, getSF1, getSF5 } fro
 import { useReportModal } from "@/src/store/REGISTRAR/reports";
 import { exportSF1 } from "@/src/utils/sf1";
 import { exportSF5 } from "@/src/utils/sf5";
+// import { exportSF6 } from "@/src/utils/sf6";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
@@ -274,6 +275,20 @@ export const Reports = () => {
                                 </button>
                             </section>
 
+                            <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
+                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg">
+                                    sf6
+                                </p>
+                                <p className="text-xs px-5">
+                                    sf6
+                                </p>
+                                <button
+                                    // onClick={exportSF6}
+                                    className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
+                                >
+                                    Download
+                                </button>
+                            </section>
 
                         </div>
                         )}

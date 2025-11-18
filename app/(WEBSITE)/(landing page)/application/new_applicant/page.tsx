@@ -1261,12 +1261,23 @@ const sections = [
                                     name="student type"
                                     onChange={(e) => setStudentType(e.target.value)}
                                     value={studentType}
+                                    disabled={!gradeLevel}
                                     className={`rounded-sm px-1 w-full sm:w-[190px] lg:w-[300px] py-[6px] outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition
                                     ${errors.studentType ? 'border border-red-600 bg-red-100' : 'bg-green-100'} 
                                     ${studentType === '' ? 'text-gray-500' : 'text-black'}`}>
                                         <option value="" >Select Option</option>
-                                        <option value="Incoming G7">Incoming G7</option>
-                                        <option value="Transferee">Transferee</option>
+                                        {/* <option value="Incoming G7">Incoming G7</option>
+                                        <option value="Transferee">Transferee</option> */}
+                                        {gradeLevel === "7" && (
+                                            <option value="Incoming G7">Incoming G7</option>
+                                        )}
+                                        {/* Always show Transferee when grade 8–10 */}
+                                        {(gradeLevel === "7" || 
+                                            gradeLevel === "8" || 
+                                            gradeLevel === "9" || 
+                                            gradeLevel === "10") && (
+                                                <option value="Transferee">Transferee</option>
+                                        )}
                                         {/* <option value="Old Student">Old Student</option> */}
                                 </select>
                             </div>

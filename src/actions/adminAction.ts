@@ -298,6 +298,10 @@ export const assignSubjectsToTeacher = async ({
 
 // edit component on assigning
 export const getAssignedGradeAndSubjects = async (selectedTeacher: number) => {
+
+  const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+
   const getAssigned = await db
   .select({
     gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
@@ -308,7 +312,10 @@ export const getAssignedGradeAndSubjects = async (selectedTeacher: number) => {
   .from(TeacherAssignmentTable)
   .leftJoin(GradeLevelTable, eq(GradeLevelTable.gradeLevel_id, TeacherAssignmentTable.gradeLevel_id))
   .leftJoin(SubjectTable, eq(SubjectTable.subject_id, TeacherAssignmentTable.subject_id))
-  .where(eq(TeacherAssignmentTable.clerk_uid, selectedTeacher))
+  .where(and(
+    eq(TeacherAssignmentTable.clerk_uid, selectedTeacher),
+    eq(TeacherAssignmentTable.academicYear_id, selectedYear)
+  ))
 
   console.log(getAssigned);
   return getAssigned;
@@ -318,13 +325,17 @@ export const getGradesWithUnassignedSubjects = async () => {
   // get all grade levels
   const allGrades = await db.select().from(GradeLevelTable);
 
+  const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+
   // get all grade-subject assignments
   const assignments = await db
     .select({
       gradeLevel_id: TeacherAssignmentTable.gradeLevel_id,
       subject_id: TeacherAssignmentTable.subject_id,
     })
-    .from(TeacherAssignmentTable);
+    .from(TeacherAssignmentTable)
+    .where(eq(TeacherAssignmentTable.academicYear_id, selectedYear));
 
   // build a map of assigned subjects by grade
   const assignedMap = assignments.reduce((acc, row) => {
@@ -349,9 +360,11 @@ export const getGradesWithUnassignedSubjects = async () => {
 };
 
 
-
 export const getUnassignedSubjectsByGrade = async (gradeLevelId: number) => {
-  return await db
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return [];
+
+  const unassignedSubjects = await db
     .select({
       subject_id: SubjectTable.subject_id,
       subjectName: SubjectTable.subjectName,
@@ -360,21 +373,29 @@ export const getUnassignedSubjectsByGrade = async (gradeLevelId: number) => {
     .leftJoin(
       TeacherAssignmentTable,
       and(
+        eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id),
         eq(TeacherAssignmentTable.gradeLevel_id, gradeLevelId),
-        eq(TeacherAssignmentTable.subject_id, SubjectTable.subject_id)
+        eq(TeacherAssignmentTable.academicYear_id, selectedYear)
       )
     )
     .where(
       and(
         eq(SubjectTable.isActive, true),
-        isNull(TeacherAssignmentTable.assignment_id)
+        isNull(TeacherAssignmentTable.assignment_id) // means "NOT assigned"
       )
     );
+    
+  console.log(unassignedSubjects)
+  return unassignedSubjects
+
 };
+
 
 export const updateAssigned = async (selectedTeacher: number, unassignedGradeLevelId: number, unassignedSubjectId: number, gradeLevelId: number, subjectId: number,  teacherName: string) => {
   await requireStaffAuth(["admin"]); 
 
+  const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
 
   await db
   .update(TeacherAssignmentTable)
@@ -386,6 +407,7 @@ export const updateAssigned = async (selectedTeacher: number, unassignedGradeLev
     eq(TeacherAssignmentTable.clerk_uid, selectedTeacher),
     eq(TeacherAssignmentTable.gradeLevel_id, gradeLevelId),
     eq(TeacherAssignmentTable.subject_id, subjectId),
+    eq(TeacherAssignmentTable.academicYear_id, selectedYear)
   ))
 
   const credentials = await getStaffCredentials();

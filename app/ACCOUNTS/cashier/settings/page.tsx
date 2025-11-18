@@ -42,6 +42,12 @@ const CashierPassword = () => {
       return;
     }
 
+    if (newPassword === currentPassword) {
+      toast.error("New password cannot be the same as the old password.");
+      setLoading(false);
+      return;
+    }
+    
     if (newPassword !== confirmPassword) {
       toast.error("New password and confirm password do not match.");
       setLoading(false);

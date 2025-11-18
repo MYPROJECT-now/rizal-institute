@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import dns from "dns/promises";
+import { db } from "@/src/db/drizzle";
+import { applicantsInformationTable } from "@/src/db/schema";
+import { eq } from "drizzle-orm";
 
 export const runtime = "nodejs";
 
@@ -12,6 +15,13 @@ export async function POST(req: Request) {
     if (!email || !email.includes("@")) {
       return NextResponse.json({ valid: false, message: "Invalid email format." });
     }
+  
+    const existing = await db.select().from(applicantsInformationTable).where(eq(applicantsInformationTable.email, email)).limit(1);
+      if (existing.length > 0) {
+        // throw new Error("This email is already in use. Please use another email.");
+        return NextResponse.json({ valid: false, message: "This email is already in use. Please use another email." });
+    }
+
 
     const domain = email.split("@")[1];
 

@@ -61,9 +61,23 @@ export const Old_Application = () => {
 
                     const gradeLevel = await oldStudentEnrollment(lrn);
 
-                    setPromotion(gradeLevel.promotion || "");
-                    const nextGrade = gradeLevel.promotion === "PROMOTED" ? String(Number(gradeLevel.gradeToEnroll) + 1) : gradeLevel.gradeToEnroll || "";
-                    setGradeLevel(nextGrade);
+                    setPromotion(gradeLevel.promotion || gradeLevel.admissionStatus || "");
+                    // const nextGrade = gradeLevel.promotion === "PROMOTED" ? String(Number(gradeLevel.gradeToEnroll) + 1) : gradeLevel.gradeToEnroll || "";
+                    // setGradeLevel(nextGrade);
+                    let finalGradeLevel = "";
+
+                    if (gradeLevel.admissionStatus === "Dropped_Out") {
+                        // ⭐ If DROPPED → use existing gradeToEnroll (raw data)
+                        finalGradeLevel = gradeLevel.gradeToEnroll || "";
+                    } else {
+                        // ⭐ If NOT dropped → compute normally
+                        finalGradeLevel =
+                            gradeLevel.promotion === "PROMOTED"
+                                ? String(Number(gradeLevel.gradeToEnroll) + 1)
+                                : gradeLevel.gradeToEnroll || "";
+                    }
+
+                    setGradeLevel(finalGradeLevel);
 
                     setPromotionLoader(false);
                 } catch (error) {
@@ -223,6 +237,19 @@ const previewImage = (file: File | null) => {
                         <Skeleton className="w-full h-[200px]" />
                     </div>
                 ) : (
+                promotion === "Dropped_Out" ? (
+                    <div className="flex flex-col gap-3 border border-gray-600 bg-gray-100 shadow-md rounded-lg p-6">
+                        <p className="text-lg sm:text-xl lg:text-2xl text-gray-800 font-bold font-merriweather">
+                            Academic Notice
+                        </p>
+                        <p className="text-sm sm:text-base lg:text-lg text-gray-800">
+                            Your enrollment status for the previous school year is marked as 
+                            <span className="font-semibold"> Dropped</span>.  
+                            You may proceed with re-enrollment, but you will be enrolled in the same grade level you last attended.
+                            Please contact the Registrars Office if you wish to confirm or update your academic status.
+                        </p>
+                    </div>
+                ):
                 promotion === "PROMOTED" ? (
                     <div className="flex flex-col gap-3 border border-dGreen bg-green-50 shadow-lg rounded-lg p-6">
                     <p className="text-lg sm:text-xl lg:text-2xl text-dGreen font-bold font-merriweather">
