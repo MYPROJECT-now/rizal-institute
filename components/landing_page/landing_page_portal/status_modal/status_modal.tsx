@@ -129,7 +129,7 @@ export const StatusModal = () => {
           )}
 
           {statusData && (
-          <section className="w-full flex-row flex justify-center gap-[80px]  py-4">
+          <section className="w-full sm:flex-colsm:flex-row flex justify-center sm:gap-[80px] gap-[40px]  py-4">
             <div className="flex flex-col gap-6 text-center">
               <header className="text-2xl text-dGreen font-oswald font-bold">
                 Application Form:
@@ -231,8 +231,8 @@ export const StatusModal = () => {
               Kindly wait for registrar to confirm your enrollment
             </p>
           ) :  
-          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus !== "Pending" && statusData?.paymentStatus !== "Declined" ? (
-            <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg px-[80px] py-3">
+          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus === "Approved" && statusData?.paymentStatus === "Approved" ? (
+            <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg sm:px-[80px] px-[40px] py-3">
               <p className="text-[15px] font-bold text-dGreen">
                 Proceed to select your payment method
               </p>    

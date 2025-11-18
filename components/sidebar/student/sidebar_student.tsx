@@ -73,7 +73,10 @@ export const Sidebar_student = ({ className, onClose }: Props) => {
                     <SidebarAcad 
                         label="COE"
                         iconSrc="/student_logo.png"
-                        onClick={coeOpen} 
+                            onClick={() => {
+                            coeOpen();
+                            onClose?.();   // <-- this closes the sidebar
+                        }} 
                     />
 
                     <AcademicYearModal />

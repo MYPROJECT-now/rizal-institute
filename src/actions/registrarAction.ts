@@ -1,6 +1,6 @@
   "use server"
 
-  import { desc, eq, or, and,  } from "drizzle-orm";
+  import { desc, eq, or, and, ne,  } from "drizzle-orm";
   import { db } from "../db/drizzle";
   import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, SectionTable, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
@@ -376,7 +376,8 @@ export const getEnrollmentTrend = async () => {
         eq(AdmissionStatusTable.academicYear_id, selectedYear),
         eq(AcademicYearTable.academicYear_id, selectedYear),
         eq(studentTypeTable.academicYear_id, selectedYear),
-        eq(AdmissionStatusTable.admissionStatus, "Enrolled")
+        ne(AdmissionStatusTable.admissionStatus, "Pending")
+
       ))
       .orderBy(
         sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`,
@@ -385,6 +386,7 @@ export const getEnrollmentTrend = async () => {
     console.log("Fetched Enrollees:", allStudent);
     return allStudent;
   };
+
 
 // get info for all enrolled students
   export const getEnrolledStudentsInfo = async (lrn: string) => {

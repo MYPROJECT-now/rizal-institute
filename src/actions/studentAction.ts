@@ -1,7 +1,7 @@
 // app/actions/getStudentData.ts
 "use server";
 
-import { and, desc, eq, like, sql } from "drizzle-orm";
+import { and, desc, eq, like, or, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable, guardianAndParentsTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
@@ -459,7 +459,11 @@ export const addPayment = async (
       .where(and(
         eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id), 
         eq(AdmissionStatusTable.applicants_id, applicantId),
-        eq(AdmissionStatusTable.admissionStatus, "Enrolled")
+        or(
+          eq(AdmissionStatusTable.admissionStatus, "Enrolled"),
+          eq(AdmissionStatusTable.admissionStatus, "Transferred_Out"),
+          eq(AdmissionStatusTable.admissionStatus, "Dropped_Out")
+        )
       ))
 
     return academicYear;
