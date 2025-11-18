@@ -238,6 +238,23 @@ export const getTeachers = async () => {
     return teachers;
 } 
 
+export const getAcadYear = async () => {
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return null;
+
+  const acadStatus = await db
+    .select({
+      isActive: AcademicYearTable.isActive,
+    })
+    .from(AcademicYearTable)
+    .where(eq(AcademicYearTable.academicYear_id, selectedYear))
+    .limit(1);
+
+  console.log(acadStatus);
+  return acadStatus[0] ?? null;
+};
+
+
 
   type Assignment = {
     gradeLevel_id: number;
@@ -878,7 +895,9 @@ export const getData = async (selectedTeacher: number) => {
   .leftJoin(SubjectTable, eq(SubjectTable.subject_id, TeacherAssignmentTable.subject_id))
   .where(and(
     eq(TeacherAssignmentTable.clerk_uid, selectedTeacher),
-    eq(TeacherAssignmentTable.academicYear_id, selectedYear)
+    eq(TeacherAssignmentTable.academicYear_id, selectedYear),
+    eq(SectionTable.academicYear_id, selectedYear)
+
   ))
 
   return getData;
@@ -1012,6 +1031,8 @@ export const deleteSchedule = async (schedule_id: number, clerk_uid: number) => 
 // announcement
 export const getAnnouncement = async () => {
   await requireStaffAuth(["admin"]); // gatekeeper
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
 
   const get_announcement = await db
   .select({
@@ -1023,7 +1044,7 @@ export const getAnnouncement = async () => {
   })
   .from(AnnouncementTable)
   .orderBy(desc(AnnouncementTable.announcement_id))
-  .where(eq(AnnouncementTable.academicYear_id, await getAcademicYearID()))
+  .where(eq(AnnouncementTable.academicYear_id, selectedYear))
   return get_announcement;
 }
 

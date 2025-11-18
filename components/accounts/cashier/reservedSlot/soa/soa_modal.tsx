@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useShowDocumentModal, useShowGradeModal, useUploadSoaModal } from "@/src/store/CASHIER/reserved";
 import { Button } from "@/components/ui/button";
-import { addBreakDown, addGrant, checkSoa, getESC, getGranted, getInfo, getRemainingBalance, isLrnExist, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
+import { addBreakDown, addGrant, checkSoa, getAcadYear, getESC, getGranted, getInfo, getRemainingBalance, isLrnExist, prevDiscounts, searchSibling } from "@/src/actions/cashierAction";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Document_Review } from "./document/document_review";
@@ -65,6 +65,16 @@ export const UploadSoaModal = () => {
   const [pastTuition, setPastTuition] = useState<number>(0);
   const {open: openGrade} = useShowGradeModal();
   const [addTuition , setAddTuition] = useState(false);
+  const [isActive, setIsActive] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const fetchYear = async () => {
+      const res = await getAcadYear();
+      setIsActive(res?.isActive ?? false); // DEFAULT to false
+    };
+    fetchYear();
+  }, []);
+
 
   const handleOpenGrade = () => {
     openGrade(lrn);
@@ -302,7 +312,7 @@ const computeGrandTotal = () => {
                   variant="confirmButton"
                   className="px-5 py-2 rounded-lg"
                   onClick={handleGetInfoByLrn}
-                  disabled={lrnLoading}
+                  disabled={lrnLoading || isActive === false || isActive === null}
                 >
                   Submit
                 </Button>

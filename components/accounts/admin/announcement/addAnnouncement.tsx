@@ -7,11 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useAddAnnouncement } from "@/src/store/ADMIN/announcement";
 import { usePreviewModal } from "@/src/store/preview";
 import { PreviewModal } from "@/components/landing_page/landing_page_portal/preview/preview_modal";
-import { addAnnouncement } from "@/src/actions/adminAction";
+import { addAnnouncement, getAcadYear } from "@/src/actions/adminAction";
 import { toast } from "sonner";
 
 
@@ -22,6 +22,15 @@ export const AddAnnouncement_Modal = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
+    const [isActive, setIsActive] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -168,6 +177,7 @@ export const AddAnnouncement_Modal = () => {
             <Button 
               onClick={handleSubmit} 
               variant="confirmButton"
+              disabled={!title  || isActive === false || isActive === null}
               className=" rounded-lg lg:px-5 sm:px-3 px-2  lg:py-2 py-1 text-xs sm:text-sm  sm:w-auto w-full "  
             >
               Post Announcement

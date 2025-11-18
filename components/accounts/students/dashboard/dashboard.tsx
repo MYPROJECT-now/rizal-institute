@@ -4,7 +4,7 @@
   import { Card, CardContent } from "@/components/ui/card";
   import { BadgeCheck, School } from "lucide-react";
   import { useEffect, useState } from "react";
-  import { getInfoForDashboard, sendReminder } from "@/src/actions/studentAction";
+  import { getInfoForDashboard, getReminder, sendReminder } from "@/src/actions/studentAction";
   import { Skeleton } from "@/components/ui/skeleton"
 
   export const StudentDashboard = () => {
@@ -22,6 +22,22 @@
 
       fetchData();
     }, []);
+
+
+    useEffect(() => {
+      if (!loading) {
+        const checkReminder = async () => {
+          try {
+            await getReminder();
+          } catch (err) {
+            console.error("Document Reminder Error:", err);
+          }
+        };
+
+        checkReminder();
+      }
+    }, [loading]);
+
 
     useEffect(() => {
       if (!loading && data) {

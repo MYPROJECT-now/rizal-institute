@@ -3,7 +3,7 @@
 
 import { and, desc, eq, like, or, sql } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable, guardianAndParentsTable } from "../db/schema";
+import { StudentInfoTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, AdmissionStatusTable, ClerkUserTable, GradeLevelTable, StudentGradesTable, downPaymentTable, ReceiptInfoTable, studentTypeTable, SectionTable, StudentPerGradeAndSection, SubjectTable, AnnouncementTable, AnnouncementReadStatusTable, RoomTable, applicantsInformationTable, guardianAndParentsTable, documentsTable, educationalBackgroundTable } from "../db/schema";
 import { getApplicantID, getStudentClerkID, getStudentId } from './utils/studentID';
 import nodemailer from "nodemailer";
 
@@ -25,6 +25,249 @@ export interface StudentInfo {
   unpaidMonthCount: number;
   unpaidMonths: string[];
 }
+
+// export const getReminder = async () => {
+
+
+//   const applicantId = await getApplicantID();
+//   if (!applicantId) return null;
+//   console.log("Applicant ID:", applicantId);
+
+//   const selectedAcademicYear = await getSelectedAcademicYear();
+//   if (!selectedAcademicYear) {
+//     console.warn("❌ No academic year selected");
+//     return null;
+//   }
+
+//   const acadYear = await db
+//   .select({ academicYearStart: AcademicYearTable.academicYearStart })
+//   .from(AcademicYearTable)
+//   .where(eq(AcademicYearTable.academicYear_id, selectedAcademicYear));
+
+
+//   const reminder = await db
+//     .select({
+//       notifReminder: documentsTable.notifReminder,
+//       hasBirth: documentsTable.hasBirth,
+//       hasReportCard: documentsTable.hasReportCard,
+//       hasGoodMoral: documentsTable.hasGoodMoral,
+//       hasIdPic: documentsTable.hasIdPic,
+//       hasExitForm: documentsTable.hasExitForm,
+//       hasForm137: documentsTable.hasForm137,
+//       hasITR: documentsTable.hasTIR,
+//       hasEscCertificate: documentsTable.hasEscCertificate,
+//       gradeLevel: educationalBackgroundTable.gradeLevel,
+//       studentType: educationalBackgroundTable.studentType,
+//       email: applicantsInformationTable.email
+//     })
+//     .from(documentsTable)
+//     .leftJoin(educationalBackgroundTable, eq(documentsTable.applicants_id, educationalBackgroundTable.applicants_id))
+//     .leftJoin(applicantsInformationTable, eq(documentsTable.applicants_id, applicantsInformationTable.applicants_id))
+//     .where (and(
+//       eq(documentsTable.applicants_id, applicantId),
+//       eq(applicantsInformationTable.applicants_id, applicantId),
+//     ))
+
+//     const transporter = nodemailer.createTransport({
+//       service: 'Gmail',
+//       auth: {
+//         user: process.env.EMAIL_USER!,
+//         pass: process.env.EMAIL_PASS!,
+//       },
+//     });
+
+//     const mailContent = `
+//       Dear Student,
+
+//       DOcument reminder
+
+//       Rizal Institute - Canlubang Registrar Office
+//     `;
+
+//     await transporter.sendMail({
+//       from: process.env.EMAIL_USER,
+//       to: email,
+//       subject: `DOcument Reminder`,
+//       text: mailContent,
+//     });
+
+// }
+
+export const getReminder = async () => {
+  const applicantId = await getApplicantID();
+  if (!applicantId) return null;
+
+  const selectedAcademicYear = await getSelectedAcademicYear();
+  if (!selectedAcademicYear) return null;
+
+  // 1. GET ACADEMIC YEAR START DATE
+  const acadYear = await db
+    .select({ academicYearStart: AcademicYearTable.academicYearStart })
+    .from(AcademicYearTable)
+    .where(eq(AcademicYearTable.academicYear_id, selectedAcademicYear));
+
+  const acadStart = acadYear?.[0]?.academicYearStart;
+  if (!acadStart) return null;
+
+  // 2. CHECK IF 2 MONTHS PASSED
+  const twoMonthsAfter = new Date(acadStart);
+  twoMonthsAfter.setMonth(twoMonthsAfter.getMonth() + 2);
+
+  const today = new Date();
+
+  // If not yet 2 months passed → STOP
+  if (today < twoMonthsAfter) {
+    console.log("⛔ Not yet 2 months after academic year start. Skipping reminder.");
+    return null;
+  }
+
+  // 3. FETCH STUDENT DOCUMENT STATUSES
+  const reminder = await db
+    .select({
+      notifReminder: documentsTable.notifReminder,
+      hasBirth: documentsTable.hasBirth,
+      hasReportCard: documentsTable.hasReportCard,
+      hasGoodMoral: documentsTable.hasGoodMoral,
+      hasIdPic: documentsTable.hasIdPic,
+      hasExitForm: documentsTable.hasExitForm,
+      hasForm137: documentsTable.hasForm137,
+      hasITR: documentsTable.hasTIR,
+      hasEscCertificate: documentsTable.hasEscCertificate,
+
+      studentType: educationalBackgroundTable.studentType,
+      email: applicantsInformationTable.email,
+      schoolType: educationalBackgroundTable.schoolType,
+    })
+    .from(documentsTable)
+    .leftJoin(
+      educationalBackgroundTable,
+      eq(documentsTable.applicants_id, educationalBackgroundTable.applicants_id)
+    )
+    .leftJoin(
+      applicantsInformationTable,
+      eq(documentsTable.applicants_id, applicantsInformationTable.applicants_id)
+    )
+    .where(
+      and(
+        eq(documentsTable.applicants_id, applicantId),
+        eq(applicantsInformationTable.applicants_id, applicantId)
+      )
+    );
+
+  const data = reminder?.[0];
+  if (!data) return null;
+
+  if (data.notifReminder === true) {
+    console.log("🔕 Reminder already sent previously. Skipping...");
+    return null;
+  }
+
+  const {
+    email,
+    studentType,
+    schoolType,
+
+    hasBirth,
+    hasReportCard,
+    hasGoodMoral,
+    hasIdPic,
+    hasForm137,
+    hasITR,
+    hasExitForm,
+    hasEscCertificate,
+  } = data;
+
+  // ⭐ EARLY RETURN: if ALL required documents are completed
+  const allDocsComplete =
+    hasBirth &&
+    hasReportCard &&
+    hasGoodMoral &&
+    hasIdPic &&
+    hasForm137 &&
+    (schoolType !== "Private" || hasExitForm) &&
+    (studentType !== "Incoming G7" || hasITR) &&
+    (studentType !== "Transferee_ESC" || hasEscCertificate);
+
+  if (allDocsComplete) {
+    console.log("🎉 All required documents submitted. Skipping reminder.");
+    return null;
+  }
+
+  // 4. BUILD REQUIRED DOCUMENTS LIST
+  const missingDocs: string[] = [];
+
+  // Required for ALL
+  if (!hasBirth) missingDocs.push("PSA Birth Certificate");
+  if (!hasReportCard) missingDocs.push("Report Card");
+  if (!hasGoodMoral) missingDocs.push("Good Moral Certificate");
+  if (!hasIdPic) missingDocs.push("2x2 ID Picture");
+  if (!hasForm137) missingDocs.push("Form 137");
+
+  // Private school → Exit form
+  if (schoolType === "Private" && !hasExitForm)
+    missingDocs.push("CACPRISAA Student Exit Clearance");
+
+  // Incoming Grade 7 → Parent ITR
+  if (studentType === "Incoming G7" && !hasITR)
+    missingDocs.push("Parent's Income Tax Return");
+
+  // Transferee & ESC grantee → ESC Cert
+  if (studentType === "Transferee_ESC" && !hasEscCertificate)
+    missingDocs.push("ESC Certificate");
+
+  if (missingDocs.length === 0) {
+    console.log("🎉 No missing documents. No email sent.");
+    return;
+  }
+
+  // 5. EMAIL CONTENT
+  const mailContent = `
+    Good day!
+
+    This is a reminder that you still need to submit the following physical copy of documents at the school:
+
+    ${missingDocs.map((doc) => `• ${doc}`).join("\n")}
+
+    Please submit them as soon as possible.
+
+    Rizal Institute - Canlubang
+    Registrar's Office
+`;
+
+  // 6. SEND EMAIL
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  if (!email) {
+    console.log("⛔ No email found. Cannot send reminder.");
+    return;
+  }
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Document Submission Reminder",
+    text: mailContent,
+  });
+
+  console.log("📩 Email sent to: " + email);
+
+// 7. UPDATE notifReminder = true
+await db
+  .update(documentsTable)
+  .set({ notifReminder: true })
+  .where(eq(documentsTable.applicants_id, applicantId));
+
+console.log("🔔 notifReminder updated to TRUE");
+
+};
+
+
 
 
 export const getInfoForDashboard = async () : Promise<StudentInfo | null> => {

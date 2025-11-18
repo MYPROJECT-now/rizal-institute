@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { assignSubjectsToTeacher, getTeachers } from "@/src/actions/adminAction";
+import { assignSubjectsToTeacher, getAcadYear, getTeachers } from "@/src/actions/adminAction";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useDeleteAssignModal, useEditAssignModal } from "@/src/store/ADMIN/assign";
@@ -47,6 +47,16 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [isLoading2, setIsLoading2] = useState(false);
+  const [isActive, setIsActive] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const fetchYear = async () => {
+      const res = await getAcadYear();
+      setIsActive(res?.isActive ?? false); // DEFAULT to false
+    };
+    fetchYear();
+  }, []);
+  
   useEffect(() => {
     setLoading(true);
     const fetchTeachers = async () => {
@@ -200,7 +210,7 @@ export const GradeSubjectMap = ({ grades, subjects, existingAssignments }: Props
           onClick={handleSubmit} 
           variant="confirmButton"
           className="my-6 sm:px-10 sm:py-5 px-7 py-3 rounded-xl"
-          disabled={isLoading || !selectedTeacher || selectedPairs.length === 0}
+          disabled={isLoading || !selectedTeacher || selectedPairs.length === 0 ||  isActive === false || isActive === null}
         >
           {isLoading ? "Assigning..." : "Assign"}
         </Button>

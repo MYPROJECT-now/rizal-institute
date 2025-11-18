@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { usescheduleModal } from "@/src/store/ADMIN/addSchedule";
-import { AddSchedule, checkSchedule, getAvailableAssignments, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
+import { AddSchedule, checkSchedule, getAcadYear, getAvailableAssignments, getSubjects, getTeachersName, gradeAndSection } from "@/src/actions/adminAction";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -40,6 +40,16 @@ export const Add_Schedule = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loader, setLoader] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isActive, setIsActive] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
+
 
   const toggleDay = (day: string) => {
     setSelectedDays((prev) =>
@@ -380,7 +390,7 @@ export const Add_Schedule = () => {
               variant="confirmButton"
               className="sm:p-5 p-2 mt-2  rounded-lg"
               onClick={submitSchedule}
-              disabled={isSubmitting || !selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedSubject || !selectedDays.length || !startTime || !endTime}
+              disabled={isSubmitting || !selectedTeacher || !selectedGradeLevel || !selectedSection || !selectedSubject || !selectedDays.length || !startTime || !endTime || isActive === false || isActive === null}
             >
               Add Schedule
             </Button>

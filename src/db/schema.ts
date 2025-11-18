@@ -75,6 +75,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     hasTIR: boolean('hasTIR').default(false),
     escCert: varchar('escCert', { length:300 }),
     hasEscCertificate: boolean('hasEscCertificate').default(false),
+    notifReminder: boolean('notifReminder').default(false),
   })
 
   export const additionalInformationTable = pgTable("additionalInformationTable", {

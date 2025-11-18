@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton";
-import {   deleteAssigned, getAssignedGradeAndSubjects, getTeachers, } from "@/src/actions/adminAction";
+import {   deleteAssigned, getAcadYear, getAssignedGradeAndSubjects, getTeachers, } from "@/src/actions/adminAction";
 import { useDeleteAssignModal } from "@/src/store/ADMIN/assign";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -22,6 +22,16 @@ export const DeleteAssign = () => {
     const [loadingGS, setLoadingGS] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [deletThis, setDeleteThis] = useState(false);
+    const [isActive, setIsActive] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
+
 
     useEffect(() => {
     const fetchTeachers = async () => {
@@ -146,7 +156,7 @@ export const DeleteAssign = () => {
                     variant={"rejectButton"}
                     className="px-4 py-2 rounded-lg"
                     onClick={handleDelete}
-                    disabled={!selectedTeacher || !selectedGradeLevel || !selectedSubject || !isConfirmed || deletThis}
+                    disabled={!selectedTeacher || !selectedGradeLevel || !selectedSubject || !isConfirmed || deletThis || isActive === false || isActive === null}
                     >
                         Submit
                     </Button>

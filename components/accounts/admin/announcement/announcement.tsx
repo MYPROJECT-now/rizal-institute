@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAddAnnouncement, useAnnouncement, useEditAnnouncement } from "@/src/store/ADMIN/announcement";
-import { deleteAnnouncement, getAnnouncement } from "@/src/actions/adminAction";
+import { deleteAnnouncement, getAcadYear, getAnnouncement } from "@/src/actions/adminAction";
 import { Button } from "@/components/ui/button";
 import { Announcement_Modal } from "./announcemet_modal";
 import { AddAnnouncement_Modal } from "./addAnnouncement";
@@ -39,6 +39,15 @@ export const AnnouncementPage = () => {
   const { open } = useAnnouncement();
   const { open: openAdd } = useAddAnnouncement();
   const { open: openEdit } = useEditAnnouncement();
+    const [isActive, setIsActive] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -194,6 +203,7 @@ export const AnnouncementPage = () => {
                             })
                           }
                           variant="confirmButton"
+                          disabled={ isActive === false || isActive === null}
                           className="rounded-lg lg:px-5 sm:px-3 px-2 lg:py-2 py-1 text-xs sm:text-sm"
                         >
                           Edit
@@ -201,7 +211,7 @@ export const AnnouncementPage = () => {
 
                         <Button
                           onClick={() => handleDelete(a.announcement_id)}
-                          disabled={deleting === a.announcement_id}                          
+                          disabled={deleting === a.announcement_id || isActive === false || isActive === null}                          
                           variant="rejectButton"
                           className="rounded-lg lg:px-5 sm:px-3 px-2 lg:py-2 py-1 text-xs sm:text-sm sm:w-auto w-full"
                         >

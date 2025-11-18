@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useEditScheduleModal,  } from "@/src/store/ADMIN/addSchedule";
-import { getData, getDaySched, getTeachersName, updateSchedule } from "@/src/actions/adminAction";
+import { getAcadYear, getData, getDaySched, getTeachersName, updateSchedule } from "@/src/actions/adminAction";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -49,6 +49,16 @@ export const Edit_Schedule = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadsgs, setLoadsgs] = useState(false);
   // const [daySelected, setDaySelected] = useState(false);
+
+    const [isActive, setIsActive] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
 
 
   useEffect(() => {
@@ -205,12 +215,25 @@ export const Edit_Schedule = () => {
               }}
               className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             >
-              <option value="">-- Select Day --</option>
+              {/* <option value="">-- Select Day --</option>
               {day.map((d) => (
                 <option key={d.schedule_id} value={d.dayOfWeek}>
                   {d.dayOfWeek}
                 </option>
-              ))}
+              ))} */}
+              {day.length === 0 ? (
+                <option value="">No Schedule yet</option>
+              ) : (
+                <>
+                  <option value="">-- Select Day --</option>
+                  {day.map((d) => (
+                    <option key={d.schedule_id} value={d.dayOfWeek}>
+                      {d.dayOfWeek}
+                    </option>
+                  ))}
+                </>
+              )}
+
             </select>
           </section>
 
@@ -241,6 +264,7 @@ export const Edit_Schedule = () => {
           <Button
             variant="confirmButton"
             className="sm:p-5 p-2 mt-2  rounded-lg"
+            disabled={!selectedTeacher || teacherSchedules.length === 0 || !selectedDay|| isActive === false || isActive === null}
             onClick={handleEdit}
           >
             Edit Schedule

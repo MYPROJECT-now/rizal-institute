@@ -791,6 +791,22 @@ export const getBalanceForCash = async (lrn: string) => {
   };
 };
 
+export const getAcadYear = async () => {
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return null;
+
+  const acadStatus = await db
+    .select({
+      isActive: AcademicYearTable.isActive,
+    })
+    .from(AcademicYearTable)
+    .where(eq(AcademicYearTable.academicYear_id, selectedYear))
+    .limit(1);
+
+  console.log(acadStatus);
+  return acadStatus[0] ?? null;
+};
+
 
 export const addCashPayment = async (amount: number, lrn: string, month_id: number, student_id: number) => {
   await requireStaffAuth(["cashier"]);

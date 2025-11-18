@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useDeleteScheduleModal,  } from "@/src/store/ADMIN/addSchedule";
-import { deleteSchedule, getData, getDaySched, getTeachersName, } from "@/src/actions/adminAction";
+import { deleteSchedule, getAcadYear, getData, getDaySched, getTeachersName, } from "@/src/actions/adminAction";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -48,7 +48,15 @@ export const Delete_Schedule = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadsgs, setLoadsgs] = useState(false);
   // const [daySelected, setDaySelected] = useState(false);
+    const [isActive, setIsActive] = useState<boolean | null>(null);
 
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -191,12 +199,24 @@ export const Delete_Schedule = () => {
               }}
               className="border-2 border-gray-300 rounded px-3 py-1 w-full focus:ring-1 focus:ring-dGreen focus:border-dGreen outline-none transition"
             >
-              <option value="">-- Select Day --</option>
+              {/* <option value="">-- Select Day --</option>
               {day.map((d) => (
                 <option key={d.schedule_id} value={d.dayOfWeek}>
                   {d.dayOfWeek}
                 </option>
-              ))}
+              ))} */}
+            {day.length === 0 ? (
+                <option value="">No Schedule yet</option>
+              ) : (
+                <>
+                  <option value="">-- Select Day --</option>
+                  {day.map((d) => (
+                    <option key={d.schedule_id} value={d.dayOfWeek}>
+                      {d.dayOfWeek}
+                    </option>
+                  ))}
+                </>
+              )}
             </select>
           </section>
 
@@ -237,7 +257,7 @@ export const Delete_Schedule = () => {
             variant="rejectButton"
             className="sm:p-5 p-2 mt-2  rounded-lg"
             onClick={handleDelete}
-            disabled={!confirmDelete || !sched_id}
+            disabled={!confirmDelete || !sched_id || isActive === false || isActive === null}
           >
             Delete Schedule
           </Button>

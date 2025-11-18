@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton";
-import {   getAssignedGradeAndSubjects, getGradesWithUnassignedSubjects, getTeachers, getUnassignedSubjectsByGrade, updateAssigned } from "@/src/actions/adminAction";
+import {   getAcadYear, getAssignedGradeAndSubjects, getGradesWithUnassignedSubjects, getTeachers, getUnassignedSubjectsByGrade, updateAssigned } from "@/src/actions/adminAction";
 import { useEditAssignModal } from "@/src/store/ADMIN/assign";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -27,6 +27,17 @@ export const EditAssign = () => {
     const [loadingGS, setLoadingGS] = useState(false);
     const [loadingS, setLoadingS] = useState(false);
     const [submit, setSubmit] = useState(false);
+    const [isActive, setIsActive] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const fetchYear = async () => {
+        const res = await getAcadYear();
+        setIsActive(res?.isActive ?? false); // DEFAULT to false
+        };
+        fetchYear();
+    }, []);
+
+
 
     useEffect(() => {
         setLoadingTeacher(true);
@@ -209,7 +220,7 @@ export const EditAssign = () => {
                     variant={"confirmButton"}
                     className="px-4 py-2 rounded-lg"
                     onClick={handleUpdate}
-                    disabled={!selectedTeacher || !selectedGradeLevel && !selectedSubject || !selectedUnassignedGrade || !selectedUnassignedSubject || submit}
+                    disabled={!selectedTeacher || !selectedGradeLevel && !selectedSubject || !selectedUnassignedGrade || !selectedUnassignedSubject || submit || isActive === false || isActive === null}
                     >
                         Submit
                     </Button>

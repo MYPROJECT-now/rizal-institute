@@ -5,9 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { addCashPayment, getBalanceForCash } from "@/src/actions/cashierAction";
+import { addCashPayment, getAcadYear, getBalanceForCash } from "@/src/actions/cashierAction";
 import { useCashPaymentModal } from "@/src/store/CASHIER/montly";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface CashPayment {
@@ -25,6 +25,15 @@ export const CashPayment = () => {
   const [amount, setAmount] = useState("");
   const [amountLoading, setAmountLoading] = useState(false);
   const [balanceInfo, setBalanceInfo] = useState< CashPayment | null>(null);
+  const [isActive, setIsActive] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const fetchYear = async () => {
+      const res = await getAcadYear();
+      setIsActive(res?.isActive ?? false); // DEFAULT to false
+    };
+    fetchYear();
+  }, []);
 
   const handleClose = () => {
     setLrn("");
@@ -95,7 +104,7 @@ export const CashPayment = () => {
                     variant="confirmButton"
                     className="px-5 py-2 rounded-lg"
                     onClick={handleLRN}
-                    disabled={lrnLoading || lrn === ""}
+                    disabled={lrnLoading || lrn === ""|| isActive === false || isActive === null}
                   >
                     {lrnLoading ? "Submitting..." : "Submit"}
                   
@@ -150,7 +159,7 @@ export const CashPayment = () => {
                     variant="confirmButton"
                     className="px-5 py-2 rounded-lg mt-5"
                     onClick={handleAddAmount}
-                    disabled={amountLoading || amount === "" || balanceInfo.dueThisMonth === 0}
+                    disabled={amountLoading || amount === "" || balanceInfo.dueThisMonth === 0 }// disable while loading}
                   >
                     {amountLoading ? "Submitting..." : "Submit"}
                   
