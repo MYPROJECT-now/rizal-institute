@@ -1320,16 +1320,23 @@ export const getSF6 = async () => {
     schoolYear: AcademicYearTable.academicYear,
     gender: StudentInfoTable.studentGender,
   }).from(studentTypeTable)
-  .leftJoin(studentTypeTable, eq(StudentInfoTable.applicants_id, studentTypeTable.applicants_id))
+  .leftJoin(StudentInfoTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
   .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
   .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
   .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
   .leftJoin(AcademicYearTable, eq(studentTypeTable.academicYear_id, AcademicYearTable.academicYear_id))
   .where(and(
-    eq(SectionTable.academicYear_id, selectedYear),
+    eq(StudentPerGradeAndSection.academicYear_id, selectedYear),
     eq(AcademicYearTable.academicYear_id, selectedYear),
+    eq(studentTypeTable.academicYear_id, selectedYear),
   ))
-
+  .groupBy(
+    studentTypeTable.studentType_id,
+    studentTypeTable.promotion,
+    GradeLevelTable.gradeLevelName,
+    AcademicYearTable.academicYear,
+    StudentInfoTable.studentGender
+  )
   console.log("SF6:", sf6);
 
   return sf6; 

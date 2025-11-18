@@ -200,10 +200,10 @@ export const Reports = () => {
       }
   } 
 
-//   const handleTry = async () => {
-//               const sf5Data = await getSF5(Number(gradeLevel), Number(section));
-//         exportSF5(sf5Data);
-//   }
+  const handleTry = async () => {
+        // const sf6Data = await getSF6();
+        // exportSF6(sf6Data);
+  }
 
     const handleClose = () => {
         close();
@@ -283,7 +283,7 @@ export const Reports = () => {
                                     sf6
                                 </p>
                                 <button
-                                    // onClick={exportSF6}
+                                    onClick={handleTry}
                                     className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
                                 >
                                     Download

@@ -2,7 +2,7 @@
 
 import { and, asc, desc, eq, ilike, sql, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, educationalBackgroundTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable, SubjectTable,  } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable, SubjectTable,  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -1578,7 +1578,7 @@ export const getRemainingBalance = async (lrn: string) => {
       lastName: applicantsInformationTable.applicantsLastName,
       firstName: applicantsInformationTable.applicantsFirstName,
       middleName: applicantsInformationTable.applicantsMiddleName,
-      gradeLevel: educationalBackgroundTable.gradeLevel,
+      gradeLevel: studentTypeTable.gradeToEnroll,
       payment_amount: fullPaymentTable.payment_amount,
       payment_receipt: fullPaymentTable.payment_receipt,
       payment_status: fullPaymentTable.paymentStatus,
@@ -1587,7 +1587,7 @@ export const getRemainingBalance = async (lrn: string) => {
       // soaMonthId: MonthsInSoaTable.month_id, // ✅ just select a nullable column
     })
     .from(applicantsInformationTable)
-    .leftJoin(educationalBackgroundTable, eq(applicantsInformationTable.applicants_id, educationalBackgroundTable.applicants_id))
+    .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
     .leftJoin(downPaymentTable, eq(applicantsInformationTable.applicants_id, downPaymentTable.applicants_id))
     .leftJoin(fullPaymentTable, eq(applicantsInformationTable.applicants_id, fullPaymentTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
@@ -1597,6 +1597,7 @@ export const getRemainingBalance = async (lrn: string) => {
       eq(fullPaymentTable.academicYear_id, selectedYear),
       eq(AdmissionStatusTable.academicYear_id, selectedYear),
       eq(downPaymentTable.academicYear_id, selectedYear),
+      eq(studentTypeTable.academicYear_id, selectedYear),
     ))
 
     console.log("Fetched full payment:", allEnrollees);

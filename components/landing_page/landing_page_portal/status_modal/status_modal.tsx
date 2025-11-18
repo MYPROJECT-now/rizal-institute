@@ -231,7 +231,7 @@ export const StatusModal = () => {
               Kindly wait for registrar to confirm your enrollment
             </p>
           ) :  
-          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus === "Approved" && statusData?.paymentStatus === "Approved" ? (
+          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus !== "Declined" && statusData?.paymentStatus !== "Pending" && statusData?.applicationFormReviewStatus === "Reserved"  && statusData?.reservationPaymentStatus === "Reserved"  ? (
             <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg sm:px-[80px] px-[40px] py-3">
               <p className="text-[15px] font-bold text-dGreen">
                 Proceed to select your payment method

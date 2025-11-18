@@ -380,7 +380,16 @@ export const verifyLrn = async (lrn: string) => {
   if (isTransferred.length > 0 && isTransferred[0].status === "Transferred_Out") {
     return; // Skip LRN validation completely
   }
+    const existing2 = await db
+    .select()
+    .from(applicantsInformationTable)
+    .where(eq(applicantsInformationTable.lrn, lrn))
+    .limit(1);
 
+  if (existing2.length > 0) {
+    throw new Error("You are already in the system.");
+  }
+  
   // Otherwise continue the validation
   const existing = await db
     .select()
@@ -391,6 +400,9 @@ export const verifyLrn = async (lrn: string) => {
   if (existing.length > 0) {
     throw new Error("You have already enrolled.");
   }
+
+
+
 };
 
 
