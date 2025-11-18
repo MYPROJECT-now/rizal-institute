@@ -1305,40 +1305,201 @@ export const getSF5 = async (gradelevel_id: number, section_id: number) => {
 
 }
 
+
 export const getSF6 = async () => {
   await requireStaffAuth(["registrar"]);
 
   const selectedYear = await getSelectedYear();
-  if(!selectedYear) return [];
+  if (!selectedYear) return {};
+
+  // --- Fetch data ---
+  const sf6 = await db
+    .select({
+      gradeLevelName: GradeLevelTable.gradeLevelName,
+      gender: StudentInfoTable.studentGender,
+      promotion: studentTypeTable.promotion,
+      student_id: StudentInfoTable.student_id,
+      finalGrade: sql<number>`ROUND(AVG(${StudentGradesTable.finalGrade}), 0)`,
+    })
+    .from(studentTypeTable)
+    .leftJoin(StudentInfoTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
+    .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+    .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(AcademicYearTable, eq(studentTypeTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .leftJoin(StudentGradesTable, eq(StudentGradesTable.student_id, StudentInfoTable.student_id))
+    .where(
+      and(
+        eq(StudentPerGradeAndSection.academicYear_id, selectedYear),
+        eq(AcademicYearTable.academicYear_id, selectedYear),
+        eq(studentTypeTable.academicYear_id, selectedYear)
+      )
+    )
+    .groupBy(
+      GradeLevelTable.gradeLevelName,
+      StudentInfoTable.studentGender,
+      studentTypeTable.promotion,
+      StudentInfoTable.student_id
+    );
+
+  // --- Helper for grade ranges ---
+  const gradeRanges = ["Below 75", "75-79", "80-84", "85-89", "90-100"];
+  function getGradeRange(grade: number | null) {
+    if (grade === null || grade === undefined) return "Unknown";
+    if (grade < 75) return "Below 75";
+    if (grade <= 79) return "75-79";
+    if (grade <= 84) return "80-84";
+    if (grade <= 89) return "85-89";
+    if (grade <= 100) return "90-100";
+    return "Unknown";
+  }
+
+  // --- Group data ---
+  const grouped: Record<
+    string,
+    {
+      male: Record<string, number>;
+      female: Record<string, number>;
+      total: Record<string, number>;
+      maleGrades: Record<string, number>;
+      femaleGrades: Record<string, number>;
+      totalGrades: Record<string, number>;
+    }
+  > = {};
+
+  sf6.forEach(row => {
+    const grade = row.gradeLevelName ?? "Unknown Grade";
+    const gender = row.gender ?? "Unknown";
+    const promotion = row.promotion ?? "Unknown";
+    const numericGrade = row.finalGrade ?? null;
+    const gradeRange = getGradeRange(numericGrade);
+
+    if (!grouped[grade]) {
+      grouped[grade] = {
+        male: { PROMOTED: 0, SUMMER: 0, RETAINED: 0 },
+        female: { PROMOTED: 0, SUMMER: 0, RETAINED: 0 },
+        total: { PROMOTED: 0, SUMMER: 0, RETAINED: 0 },
+        maleGrades: gradeRanges.reduce((acc, r) => ({ ...acc, [r]: 0 }), {}),
+        femaleGrades: gradeRanges.reduce((acc, r) => ({ ...acc, [r]: 0 }), {}),
+        totalGrades: gradeRanges.reduce((acc, r) => ({ ...acc, [r]: 0 }), {}),
+      };
+    }
+
+    // Promotion counts
+    if (gender === "Male") grouped[grade].male[promotion] = (grouped[grade].male[promotion] || 0) + 1;
+    if (gender === "Female") grouped[grade].female[promotion] = (grouped[grade].female[promotion] || 0) + 1;
+    grouped[grade].total[promotion] = (grouped[grade].total[promotion] || 0) + 1;
+
+    // Grade range counts
+    if (gender === "Male") grouped[grade].maleGrades[gradeRange] = (grouped[grade].maleGrades[gradeRange] || 0) + 1;
+    if (gender === "Female") grouped[grade].femaleGrades[gradeRange] = (grouped[grade].femaleGrades[gradeRange] || 0) + 1;
+    grouped[grade].totalGrades[gradeRange] = (grouped[grade].totalGrades[gradeRange] || 0) + 1;
+  });
+
+  console.log("SF6 grouped:", grouped);
+  return grouped;
+};
+
+
+
+export const getSF611 = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return {};
 
   const sf6 = await db
-  .select({
-    studentType_id: studentTypeTable.studentType_id,
-    finalGrade: sql<number>`ROUND(AVG(${StudentGradesTable.finalGrade}), 0)`,
-    promotion: studentTypeTable.promotion,
-    gradeLevelName: GradeLevelTable.gradeLevelName,
-    schoolYear: AcademicYearTable.academicYear,
-    gender: StudentInfoTable.studentGender,
-  }).from(studentTypeTable)
-  .leftJoin(StudentInfoTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
-  .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
-  .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
-  .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
-  .leftJoin(AcademicYearTable, eq(studentTypeTable.academicYear_id, AcademicYearTable.academicYear_id))
-  .where(and(
-    eq(StudentPerGradeAndSection.academicYear_id, selectedYear),
-    eq(AcademicYearTable.academicYear_id, selectedYear),
-    eq(studentTypeTable.academicYear_id, selectedYear),
-  ))
-  .groupBy(
-    studentTypeTable.studentType_id,
-    studentTypeTable.promotion,
-    GradeLevelTable.gradeLevelName,
-    AcademicYearTable.academicYear,
-    StudentInfoTable.studentGender
-  )
-  console.log("SF6:", sf6);
+    .select({
+      gradeLevelName: GradeLevelTable.gradeLevelName,
+      gender: StudentInfoTable.studentGender,
+      promotion: studentTypeTable.promotion,
+      student_id: StudentInfoTable.student_id,
+    })
+    .from(studentTypeTable)
+    .leftJoin(StudentInfoTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
+    .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+    .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(AcademicYearTable, eq(studentTypeTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(
+      and(
+        eq(StudentPerGradeAndSection.academicYear_id, selectedYear),
+        eq(AcademicYearTable.academicYear_id, selectedYear),
+        eq(studentTypeTable.academicYear_id, selectedYear)
+      )
+    );
 
-  return sf6; 
+  const grouped: Record<
+    string,
+    {
+      male: Record<string, number>;
+      female: Record<string, number>;
+      total: Record<string, number>;
+    }
+  > = {};
 
-}
+  sf6.forEach(row => {
+    // Use defaults if null
+    const grade = row.gradeLevelName ?? "Unknown Grade";
+    const gender = row.gender ?? "Unknown";
+    const promotion = row.promotion ?? "Unknown";
+
+    if (!grouped[grade]) {
+      grouped[grade] = {
+        male: { PROMOTED: 0, SUMMER: 0, RETAINED: 0 },
+        female: { PROMOTED: 0, SUMMER: 0, RETAINED: 0 },
+        total: { PROMOTED: 0, SUMMER: 0, RETAINED: 0 },
+      };
+    }
+
+    if (gender === "Male") grouped[grade].male[promotion] = (grouped[grade].male[promotion] || 0) + 1;
+    if (gender === "Female") grouped[grade].female[promotion] = (grouped[grade].female[promotion] || 0) + 1;
+
+    grouped[grade].total[promotion] = (grouped[grade].total[promotion] || 0) + 1;
+  });
+
+  console.log("SF6:", grouped);
+  return grouped;
+};
+
+
+export const getSF61 = async () => {
+  await requireStaffAuth(["registrar"]);
+
+  const selectedYear = await getSelectedYear();
+  if (!selectedYear) return [];
+
+  const sf6 = await db
+    .select({
+      gradeLevelName: GradeLevelTable.gradeLevelName,
+      gender: StudentInfoTable.studentGender,
+      promotion: studentTypeTable.promotion,
+
+      // Grade ranges
+      below74: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.finalGrade} <= 74 THEN 1 END)`,
+      g75_79: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.finalGrade} BETWEEN 75 AND 79 THEN 1 END)`,
+      g80_84: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.finalGrade} BETWEEN 80 AND 84 THEN 1 END)`,
+      g85_89: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.finalGrade} BETWEEN 85 AND 89 THEN 1 END)`,
+      g90_100: sql<number>`COUNT(CASE WHEN ${StudentGradesTable.finalGrade} BETWEEN 90 AND 100 THEN 1 END)`,
+      total: sql<number>`COUNT(*)`
+    })
+    .from(studentTypeTable)
+    .leftJoin(StudentInfoTable, eq(studentTypeTable.applicants_id, StudentInfoTable.applicants_id))
+    .leftJoin(StudentGradesTable, eq(StudentInfoTable.student_id, StudentGradesTable.student_id))
+    .leftJoin(StudentPerGradeAndSection, eq(StudentInfoTable.student_id, StudentPerGradeAndSection.student_id))
+    .leftJoin(GradeLevelTable, eq(StudentPerGradeAndSection.gradeLevel_id, GradeLevelTable.gradeLevel_id))
+    .leftJoin(AcademicYearTable, eq(studentTypeTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(
+      and(
+        eq(StudentPerGradeAndSection.academicYear_id, selectedYear),
+        eq(AcademicYearTable.academicYear_id, selectedYear),
+        eq(studentTypeTable.academicYear_id, selectedYear)
+      )
+    )
+    .groupBy(
+      GradeLevelTable.gradeLevelName,
+      StudentInfoTable.studentGender,
+      studentTypeTable.promotion
+    );
+
+    console.log("SF6:", sf6);
+  return sf6;
+};

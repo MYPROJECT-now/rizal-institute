@@ -1435,6 +1435,42 @@ export const checkGraduate = async (lrn: string) => {
   return latest.gradeToEnroll === "10" && latest.promotion === "PROMOTED";
 };
 
+
+export const isStudentInActiveYear = async (lrn: string) => {
+  // Get the currently active academic year
+  const acadYearActive = await db
+    .select({
+      academicYear_id: AcademicYearTable.academicYear_id,
+    })
+    .from(AcademicYearTable)
+    .where(eq(AcademicYearTable.isActive, true))
+    .limit(1);
+
+  if (!acadYearActive.length) return false; // no active year set
+
+  // Check if the student has an admission record for the active year
+  const studentInActiveYear = await db
+    .select({
+      admissionStatus: AdmissionStatusTable.admissionStatus
+    })
+    .from(AdmissionStatusTable)
+    .leftJoin(
+      applicantsInformationTable,
+      eq(AdmissionStatusTable.applicants_id, applicantsInformationTable.applicants_id)
+    )
+    .where(
+      and(
+        eq(applicantsInformationTable.lrn, lrn),
+        eq(AdmissionStatusTable.academicYear_id, acadYearActive[0].academicYear_id)
+      )
+    )
+    .limit(1);
+
+  // Return true if there is a record, false if none
+  return studentInActiveYear.length > 0;
+};
+
+
 export const checkIsTransferred = async (lrn: string) => {
 
 

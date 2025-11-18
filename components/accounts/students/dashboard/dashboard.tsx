@@ -44,7 +44,7 @@
         // condition: only trigger if balance is not 0
         if (
           !data.reminderForCurrentMonth && 
-          data.outstandingBalance > 0
+          (data.outstandingBalance > 0 || data.paymentMethod === "full_payment")
         ) {
           // call your API
           const handleTrigger = async () => {
@@ -152,14 +152,14 @@
             <span className={studentInfo?.paymentMethod === "full_payment"  ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : studentInfo?.outstandingBalance === 0 ? "text-lg sm:text-2xl font-bold text-white bg-dGreen sm:px-6 px-2 py-3 rounded-lg shadow-md" : "text-lg sm:text-2xl  font-bold text-white bg-red-600 px-6 py-3 rounded-lg shadow-md"}>
               {studentInfo?.paymentMethod === "full_payment" || studentInfo?.outstandingBalance === 0 ? (
                 <div>
-                  <p className="sm:text-xl text-sm">Fully Paid</p>
+                  <p className="sm:text-xl text-sm">No Outstanding Balance</p>
                 </div>
               ) : (
                 loading || !studentInfo ? (
                   <Skeleton className="h-8 w-[120px] rounded-lg" />
                 ) : studentInfo.paymentMethod === "full_payment" || studentInfo.outstandingBalance === 0 ? (
                   <div>
-                    <p className="sm:text-xl text-sm">Fully Paid</p>
+                    <p className="sm:text-xl text-sm">No Outstanding Balance</p>
                   </div>
                 ) : (
                   <div>

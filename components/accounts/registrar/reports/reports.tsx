@@ -7,11 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {  getAmountPaid, getRecentGrantees, getSecAndGrade, getSF1, getSF5 } from "@/src/actions/registrarAction";
+import {  getAmountPaid, getRecentGrantees, getSecAndGrade, getSF1, getSF5, getSF6 } from "@/src/actions/registrarAction";
 import { useReportModal } from "@/src/store/REGISTRAR/reports";
 import { exportSF1 } from "@/src/utils/sf1";
 import { exportSF5 } from "@/src/utils/sf5";
-// import { exportSF6 } from "@/src/utils/sf6";
+import { exportSF6 } from "@/src/utils/sf6";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
@@ -83,6 +83,19 @@ export const Reports = () => {
         };
         fetchGrantees();
     }, []);
+
+  useEffect(() => {
+    const fetchSF6 = async () => {
+      try {
+        const result = await getSF6();
+        console.log("SF6 result:", result);
+      } catch (err) {
+        console.error("Error fetching SF6:", err);
+      }
+    };
+
+    fetchSF6();
+  }, []); // empty dependency = runs once on mount
 
 
     const handleGradeLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -200,10 +213,11 @@ export const Reports = () => {
       }
   } 
 
-  const handleTry = async () => {
-        // const sf6Data = await getSF6();
-        // exportSF6(sf6Data);
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleTry = async () => {
+            const sf6Data = await getSF6();
+            exportSF6(sf6Data);
+    }
 
     const handleClose = () => {
         close();

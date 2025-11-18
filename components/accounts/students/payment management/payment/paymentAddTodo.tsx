@@ -126,7 +126,7 @@ const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
     <section className="w-full  sm:p-6 py-0 px-3 max-h-[400px] overflow-auto  ">
       <PreviewModal />
       <section className="bg-green-50 rounded-lg p-4 mb-4">
-        {balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0  ? (
+        {balance?.paymentMethod === "full_payment" || balance?.totalRemainingBalance === 0  ? (
           <div>
             <p className="text-green-600 font-bold">Fully Paid</p>
           </div>
@@ -187,7 +187,7 @@ const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
             onChange={handleAmount}
             value={amount}
-            disabled={balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0}
+            disabled={balance?.paymentMethod === "full_payment" || balance?.totalRemainingBalance === 0}
             placeholder="Enter amount to pay"
           />
         </div>
@@ -199,7 +199,7 @@ const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
             onChange={handleMop}
             value={mop}
-            disabled={balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0}
+            disabled={balance?.paymentMethod === "full_payment" || balance?.totalRemainingBalance === 0}
 
           >
             <option value="">Select payment method</option>
@@ -240,7 +240,7 @@ const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
               onChange={handlePOP}
               name="document"
               id="pop"
-              disabled={balance?.paymentMethod === "full_payment" || balance?.dueThisMonth === 0}
+              disabled={balance?.paymentMethod === "full_payment" || balance?.totalRemainingBalance === 0}
               className="border bg-gray-100 rounded-lg px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-dGreen transition"
             />
           )}

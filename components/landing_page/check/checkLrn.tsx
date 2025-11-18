@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { checkDropout, checkGrades, checkGraduate, checkIsTransferred, checkLRN } from "@/src/actions/landingPage";
+import { checkDropout, checkGrades, checkGraduate, checkIsTransferred, checkLRN, isStudentInActiveYear } from "@/src/actions/landingPage";
 
 export const CheckLrn = () => {
   const { isOpen, close } = useApplicationModal();
@@ -45,6 +45,26 @@ export const CheckLrn = () => {
 
       if (checkGraduated) {
         toast.success("It looks like you've already graduated. Great job!");
+        return;
+      }
+
+      // Continue your process here...
+
+    } catch (err) {
+      const error = err as Error;
+      console.error("❌ Unexpected Error:", error);
+      toast.error("An error occurred. Try again.");
+    } finally {
+      setLoading(false);
+    }
+
+    
+    try {
+
+      const checkExist = await isStudentInActiveYear(lrn);
+
+      if (checkExist) {
+        toast.error("You are already enrolled. Wait for the new academic year to start!");
         return;
       }
 
