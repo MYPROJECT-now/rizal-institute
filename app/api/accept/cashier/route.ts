@@ -122,6 +122,7 @@ export async function POST(request: Request) {
 
     // ✅ Only send email if cashier confirmed the reservation
     if (applicationFormReviewStatus === "Reserved") {
+      //back later
       await sendReservationEmail(email);
       return NextResponse.json({
         message: "Reservation Payment was approved and confirmation email sent successfully.",

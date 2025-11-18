@@ -1540,6 +1540,7 @@ export const getRemainingBalance = async (lrn: string) => {
   const lastName = getEmailInfo[0].lastName;
   const trackingId = getEmailInfo[0]?.trackingId ?? "";
 
+  //bring back later
   await sendAdmissionEmail(email, firstName, lastName, trackingId );
 
 

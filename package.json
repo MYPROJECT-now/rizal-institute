@@ -13,15 +13,19 @@
     "db:push": "npx drizzle-kit push",
     "db:acad": "tsx ./scripts/acadYear.ts",
     "db:staff": "tsx ./scripts/staff.ts",
+
+
     "db:proda": "tsx ./scripts/prod.ts",
     "db:methoda": "tsx ./scripts/payment_method.ts",
     "db:montha": "tsx ./scripts/month.ts",
     "db:soaa": "tsx ./scripts/soa.ts",
+
     "db:prod2a": "tsx ./scripts/prod2.ts",
     "db:prod2.1a": "tsx ./scripts/prod2.1.ts",
     "db:method2a": "tsx ./scripts/payment_method2.ts",
     "db:month2a": "tsx ./scripts/month2.ts",
     "db:soa2a": "tsx ./scripts/soa2.ts",
+
     "db:prod3a": "tsx ./scripts/prod3.ts",
     "db:prod3.1a": "tsx ./scripts/prod3.1.ts",
     "db:method3a": "tsx ./scripts/payment_method3.ts",
@@ -29,7 +33,8 @@
     "db:soa3a": "tsx ./scripts/soa3.ts",
 
 
-    "db:grade": "tsx ./scripts/grade.ts",
+    "db:gradea": "tsx ./scripts/grade.ts",
+    
     "db:prod4": "tsx ./scripts/prod4.ts"
   },
   "dependencies": {

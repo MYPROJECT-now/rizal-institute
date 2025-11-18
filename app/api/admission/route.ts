@@ -548,6 +548,7 @@ export async function POST(request: Request) {
     });
 
     // Send Email
+    // brin back later
     if(studenType !== "Old Student"){
       await sendAdmissionEmail(email, firstName, lastName, lrn, randomPassword);
     } else {

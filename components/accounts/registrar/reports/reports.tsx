@@ -184,7 +184,7 @@ export const Reports = () => {
 
         // Trigger download
         XLSX.writeFile(wb, "Receivables.xlsx");
-        };
+    };
 
   const handleDownloadGrantees = () => {
     const data = grantees.map((g) => ({
@@ -260,6 +260,21 @@ export const Reports = () => {
                             </section>
 
                             <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
+                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg">
+                                    school form 6
+                                </p>
+                                <p className="text-xs px-5">
+                                    school form 6
+                                </p>
+                                <button
+                                    onClick={handleTry}
+                                    className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
+                                >
+                                    Download
+                                </button>
+                            </section>
+
+                            <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
                                 <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg ">Ammount Receivables</p>
                                 <p className="text-xs   px-5">Download ammount receivables this month</p>
                                 <button
@@ -289,20 +304,7 @@ export const Reports = () => {
                                 </button>
                             </section>
 
-                            <section className="shadow-md border-2 border-gray-100 rounded-lg p-3 flex flex-col gap-3">
-                                <p className="text-sm text-dGreen font-bold border-l-4 border-dGreen pl-2 rounded-lg">
-                                    sf6
-                                </p>
-                                <p className="text-xs px-5">
-                                    sf6
-                                </p>
-                                <button
-                                    onClick={handleTry}
-                                    className="text-sm bg-transparent text-dGreen font-semibold self-end underline hover:text-green-600"
-                                >
-                                    Download
-                                </button>
-                            </section>
+
 
                         </div>
                         )}

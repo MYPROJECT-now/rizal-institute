@@ -69,6 +69,7 @@ export async function POST(request: Request) {
 
     // const SINumber = await generateSINumber();
     await Promise.all([
+      //bring back later
       sendReservationEmail(email),
       db.update(AdmissionStatusTable)
         .set({
