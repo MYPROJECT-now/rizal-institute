@@ -15,12 +15,12 @@ import { useRouter } from "next/navigation";
 
 interface StatusData {
   applicationFormReviewStatus: string;
-  reservationPaymentStatus: string;
   hasPaidReservation?: string | null;
   hasTemptMonthly?: number | null;
   admissionStatus?: string | null;
   confirmationStatus?: string | null;
   paymentStatus?: string | null;
+  status?: string | null;
 
 }
 
@@ -30,6 +30,7 @@ interface RemarksData{
   regDate: string | null;
   cashierDate: string | null;
 }
+
 
 export const StatusModal = () => {
   const { isOpen, close } = useShowStatusModal();
@@ -74,32 +75,23 @@ export const StatusModal = () => {
         return "text-yellow-600";
       case "reserved":
         return "text-blue-600";
+      case "done":
+        return "text-blue-600";
       default:
         return "text-gray-600";
     }
   };
 
+  const handlePaymentMethod = () => {
+    close();
+    router.push(`/payment_section?trackingId=${trackingId}`);
+  };
+
   const handleReApply = () => {
     close();
     router.push(`/reApplications?trackingId=${trackingId}`);
-  };
-
-  const handlePayReservation = () => {
-    close();
-    router.push(`/payment?trackingId=${trackingId}`);
-  };
-
-  const handlePaymentMethod = () => {
-    close();
-    router.push(`/payment_method?trackingId=${trackingId}`);
-  };
+  };  
   
-
-  const handleRePayTuition = () => {
-    close();
-    router.push(`/full_tuition?trackingId=${trackingId}`);
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="flex flex-col items-center lg:w-[600px] sm:w-[500px]  w-[300px] rounded-t-lg">
@@ -145,14 +137,14 @@ export const StatusModal = () => {
 
             <div className="flex flex-col gap-6 text-center">
               <header className="text-2xl text-dGreen font-oswald font-bold">
-                Reservation Payment:
+                Fee Assessment:
               </header>
               <p
                 className={`text-xl font-bold ${getStatusColor(
-                  statusData.reservationPaymentStatus
+                  statusData.hasTemptMonthly !== null ? "Done" : "Pending"
                 )}`}
               >
-                {statusData.reservationPaymentStatus === "Reserved" ? "Approved" : statusData.reservationPaymentStatus}                    
+                {statusData.hasTemptMonthly !== null ? "Done" : "Pending"}         
               </p>
             </div>
           </section>
@@ -184,24 +176,8 @@ export const StatusModal = () => {
             )}
           </section>
 
-          {!statusData?.hasTemptMonthly && statusData?.applicationFormReviewStatus === "Reserved" && statusData?.reservationPaymentStatus === "Reserved" && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-            <p className=" mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
-              Kindly wait for the cashier to finish calculating your tuition. An email will be sent to you about your tuition.
-            </p>            
-            </div>
-          )}
 
-          {statusData?.admissionStatus === "Enrolled" && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className=" mx-   text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
-                You have successfully enrolled!
-              </p>            
-            </div>
-          )}
-
-          {statusData?.applicationFormReviewStatus === "Declined" ||
-          statusData?.reservationPaymentStatus === "Declined" ? (
+          {statusData?.applicationFormReviewStatus === "Declined"  ? (
             <Button
               variant="mainButton"
               className="h-[50px] w-[200px] rounded-xl"
@@ -209,32 +185,21 @@ export const StatusModal = () => {
             >
               Re-Apply
             </Button>
-          ) : 
-          statusData?.applicationFormReviewStatus !== "Declined" &&
-          statusData?.reservationPaymentStatus === "Pending" &&
-          !statusData?.hasPaidReservation ? (
-            <Button
-              variant="mainButton"
-              className="h-[50px] w-[200px] rounded-xl"
-              onClick={handlePayReservation}
-            >
-              Pay Reservation
-            </Button>
-          ) : (
-          statusData?.paymentStatus === "Pending" ? (
-            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
-              Wait for the cashier to verify your payment
-            </p>
-          ) :  
-          statusData?.confirmationStatus === "Aprroved" || statusData?.confirmationStatus === "Approved" ? (
-            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
-              Kindly wait for registrar to confirm your enrollment
-            </p>
-          ) :  
-          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus !== "Declined" && statusData?.paymentStatus !== "Pending" && statusData?.applicationFormReviewStatus === "Reserved"  && statusData?.reservationPaymentStatus === "Reserved"  ? (
+          ) :  (
+          // statusData?.paymentStatus === "Pending" ? (
+          //   <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+          //     Wait for the cashier to verify your payment
+          //   </p>
+          // ) :  
+          // statusData?.confirmationStatus === "Aprroved" || statusData?.confirmationStatus === "Approved" ? (
+          //   <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+          //     Kindly wait for registrar to confirm your enrollment
+          //   </p>
+          // ) :  
+          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus !== "Declined" && statusData?.paymentStatus !== "Pending" && statusData?.applicationFormReviewStatus === "Reserved"  && statusData?.status !== "Pending"  ? (
             <div className="flex flex-col items-center gap-4 border-2 rounded-xl bg-gray-100/40 shadow-lg sm:px-[80px] px-[40px] py-3">
               <p className="text-[15px] font-bold text-dGreen">
-                Proceed to select your payment method
+                Proceed to Payment Section
               </p>    
 
               <Button
@@ -242,20 +207,34 @@ export const StatusModal = () => {
                 className="h-[50px] w-[200px] rounded-xl"
                 onClick={handlePaymentMethod}
               >
-                Continue to Payment Options
+                Continue to Payment Section
               </Button>
             </div>
           ) :
-
-          statusData?.paymentStatus === "Declined" ? (
-            <Button
-              variant="mainButton"
-              className="h-[50px] w-[200px] rounded-xl"
-              onClick={handleRePayTuition}
-            >
-              Tuition Fee Re-Payment
-            </Button>
+          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending" && statusData?.paymentStatus !== "Declined" && statusData?.paymentStatus !== "Pending" && statusData?.applicationFormReviewStatus === "Reserved"  && statusData?.status === "Pending"  ? (
+            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+              Wait for the cashier to verify your payment
+            </p>
           ) :
+          statusData?.hasTemptMonthly && statusData?.admissionStatus === "Pending"  && statusData?.paymentStatus !== "Pending" && statusData?.applicationFormReviewStatus === "Reserved"  && statusData?.status === "Approved"  && statusData?.confirmationStatus === "Pending" ? (
+            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+              Wait for the registrar to confirm your enrollment
+            </p>
+          ) :
+           statusData?.applicationFormReviewStatus === "Reserved"  && statusData?.status === "Approved"  && statusData?.confirmationStatus === "Approved" && statusData?.admissionStatus === "Enrolled" ? (
+            <p className="w-full mx-10 text-green-700 bg-gray-300/20 border-2 shadow-lg rounded-xl p-5 font-semibold text-center">
+              Congratulations you are now enrolled!!
+            </p>
+          ) :
+          // statusData?.paymentStatus === "Declined" ? (
+          //   <Button
+          //     variant="mainButton"
+          //     className="h-[50px] w-[200px] rounded-xl"
+          //     onClick={handleRePayTuition}
+          //   >
+          //     Tuition Fee Re-Payment
+          //   </Button>
+          // ) :
             <Button
               variant="mainButton"
               className="sm:py-5 sm:px-[70px] py-4   px-10 rounded-xl"
@@ -265,6 +244,7 @@ export const StatusModal = () => {
               {loading ? "Submitting..." : "Submit"}
             </Button>
           )}
+
 
         </main>
       </DialogContent>

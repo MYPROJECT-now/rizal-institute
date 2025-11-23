@@ -7,9 +7,9 @@ export interface SF1Row {
   gender:  string;
   studentBirthDate: string;
   age: number;
-  motherTounge: string;
+  motherTounge: string | null;
   ip: string | null;
-  religion: string;
+  religion: string | null;
 
   house_no_purok: string;
   barangay: string;

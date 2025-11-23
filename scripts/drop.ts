@@ -102,6 +102,10 @@ const dropAllTables = async () => {
     await db.execute(sql`DROP TABLE IF EXISTS "GradeLevelTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "SubjectTable" CASCADE`);
     await db.execute(sql`DROP TABLE IF EXISTS "ReceiptInfoTable" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "enrollmentPayment" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "EmailVerification" CASCADE`);
+    await db.execute(sql`DROP TABLE IF EXISTS "TuitionComp" CASCADE`);
+
 
     console.log("✅ All tables dropped successfully");
   } catch (error) {

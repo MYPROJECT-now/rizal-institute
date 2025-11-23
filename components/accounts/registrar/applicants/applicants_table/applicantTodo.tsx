@@ -23,15 +23,15 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
   const isThisRowLoading = loadingId === applicant.id; // only this row shows "Accepting..."
 
   // Determine the display status based on both fields
-  const getDisplayStatus = () => {
-    if (applicant.applicationFormReviewStatus === "Reserved" && applicant.reservationPaymentStatus === "Pending") {
-      return "Ongoing";
-    } else if (applicant.applicationFormReviewStatus === "Reserved" && applicant.reservationPaymentStatus === "Reserved") {
-      return "Reserved";
-    } else {
-      return applicant.applicationFormReviewStatus;
-    }
-  };
+  // const getDisplayStatus = () => {
+  //   if (applicant.applicationFormReviewStatus === "Reserved" && applicant.reservationPaymentStatus === "Pending") {
+  //     return "Ongoing";
+  //   } else if (applicant.applicationFormReviewStatus === "Reserved" && applicant.reservationPaymentStatus === "Reserved") {
+  //     return "Reserved";
+  //   } else {
+  //     return applicant.applicationFormReviewStatus;
+  //   }
+  // };
 
 
   return (
@@ -40,7 +40,7 @@ const Applicant: FC<Props> = ({ applicant, onAccept, onDecline, className, loadi
       <td className="px-4 py-2">{applicant.lastName} {applicant.firstName} {applicant.middleName}</td>
       <td className="px-[55px] py-2">{applicant.gradeLevel}</td>
 
-      <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : applicant.applicationFormReviewStatus === "Pending" ? "px-4 py-2 text-yellow-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{getDisplayStatus()}</td>
+      <td className={applicant.applicationFormReviewStatus === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : applicant.applicationFormReviewStatus === "Pending" ? "px-4 py-2 text-yellow-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{applicant.applicationFormReviewStatus}</td>
       {/* <td className="px-4 py-2 text-green-700 font-semibold">{applicant.dateApprovedByRegistrar?.toString() || "-"}</td>   */}
       <td className="px-2  py-2">
         <Button 

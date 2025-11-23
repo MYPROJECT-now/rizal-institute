@@ -9,14 +9,14 @@ const db = drizzle(sqlClient);
 
 const updateSOA = async () => {
   const mockMonthlyPayment = [
-    { month_id: 1, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 675 },
-    { month_id: 2, SINumber: "122222", dateOfPayment: "2022-10-06", amountPaid: 675 },
-    { month_id: 3, SINumber: "515111", dateOfPayment: "2022-11-06", amountPaid: 675 },
-    { month_id: 4, SINumber: "151112", dateOfPayment: "2022-12-06", amountPaid: 675 },
-    { month_id: 5, SINumber: "516515", dateOfPayment: "2023-01-06", amountPaid: 675 },
-    { month_id: 6, SINumber: "513215", dateOfPayment: "2023-02-06", amountPaid: 675 },
-    { month_id: 7, SINumber: "516515", dateOfPayment: "2023-03-06", amountPaid: 675 },
-    { month_id: 8, SINumber: "461589", dateOfPayment: "2023-04-06", amountPaid: 675 },
+    { month_id: 1, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 450 },
+    { month_id: 2, SINumber: "122222", dateOfPayment: "2022-10-06", amountPaid: 450 },
+    { month_id: 3, SINumber: "515111", dateOfPayment: "2022-11-06", amountPaid: 450 },
+    { month_id: 4, SINumber: "151112", dateOfPayment: "2022-12-06", amountPaid: 450 },
+    { month_id: 5, SINumber: "516515", dateOfPayment: "2023-01-06", amountPaid: 450 },
+    { month_id: 6, SINumber: "513215", dateOfPayment: "2023-02-06", amountPaid: 450 },
+    { month_id: 7, SINumber: "516515", dateOfPayment: "2023-03-06", amountPaid: 450 },
+    { month_id: 8, SINumber: "461589", dateOfPayment: "2023-04-06", amountPaid: 450 },
 
     // student 2
     { month_id: 9, SINumber: "462389", dateOfPayment: "2022-09-06", amountPaid: 938 },
@@ -28,9 +28,9 @@ const updateSOA = async () => {
     { month_id:15, SINumber: "983251", dateOfPayment: "2023-03-06", amountPaid: 937 },
     { month_id:16, SINumber: "458912", dateOfPayment: "2023-04-06", amountPaid: 937 },
 
-    { month_id: 17, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 3000 },
-    { month_id: 25, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 7500 },
-    { month_id: 33, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 1500 },
+    // { month_id: 17, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 3000 },
+    // { month_id: 25, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 7500 },
+    // { month_id: 33, SINumber: "111111", dateOfPayment: "2022-09-06", amountPaid: 1500 },
 
     // student 6
     { month_id:41, SINumber: "649871", dateOfPayment: "2022-09-06", amountPaid: 1575 },
@@ -167,10 +167,10 @@ const updateSOA = async () => {
     { month_id: 146, siNumber: "151146", dateOfPayment: "2022-10-06", amountPaid: 2063 },
     { month_id: 147, siNumber: "151147", dateOfPayment: "2022-11-06", amountPaid: 2063 },
     { month_id: 148, siNumber: "151148", dateOfPayment: "2022-12-06", amountPaid: 2063 },
-    { month_id: 149, siNumber: "151149", dateOfPayment: "2023-01-06", amountPaid: 2063 },
-    { month_id: 150, siNumber: "151150", dateOfPayment: "2023-02-06", amountPaid: 2063 },
-    { month_id: 151, siNumber: "151151", dateOfPayment: "2023-03-06", amountPaid: 2063 },
-    { month_id: 152, siNumber: "151152", dateOfPayment: "2023-04-06", amountPaid: 2063 },
+    { month_id: 149, siNumber: "151149", dateOfPayment: "2023-01-06", amountPaid: 2062 },
+    { month_id: 150, siNumber: "151150", dateOfPayment: "2023-02-06", amountPaid: 2062 },
+    { month_id: 151, siNumber: "151151", dateOfPayment: "2023-03-06", amountPaid: 2062 },
+    { month_id: 152, siNumber: "151152", dateOfPayment: "2023-04-06", amountPaid: 2062 },
 
     // student 20
     { month_id: 153, siNumber: "151153", dateOfPayment: "2022-09-06", amountPaid: 469 },
@@ -179,8 +179,8 @@ const updateSOA = async () => {
     { month_id: 156, siNumber: "151156", dateOfPayment: "2022-12-06", amountPaid: 469 },
     { month_id: 157, siNumber: "151157", dateOfPayment: "2023-01-06", amountPaid: 469 },
     { month_id: 158, siNumber: "151158", dateOfPayment: "2023-02-06", amountPaid: 469 },
-    { month_id: 159, siNumber: "151159", dateOfPayment: "2023-03-06", amountPaid: 469 },
-    { month_id: 160, siNumber: "151160", dateOfPayment: "2023-04-06", amountPaid: 469 },
+    { month_id: 159, siNumber: "151159", dateOfPayment: "2023-03-06", amountPaid: 468 },
+    { month_id: 160, siNumber: "151160", dateOfPayment: "2023-04-06", amountPaid: 468 },
   ];
 
   for (const month of mockMonthlyPayment) {

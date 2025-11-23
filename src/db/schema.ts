@@ -1,91 +1,8 @@
-import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, varchar, date, boolean, timestamp } from "drizzle-orm/pg-core";
 
   // applicants information
-  export const applicantsInformationTable = pgTable("applicantsInformationTable", {
-    applicants_id: serial("applicants_id").primaryKey(),
-    applicantsLastName: varchar('applicantsLastName', { length:100 }).notNull(),
-    applicantsFirstName: varchar('applicantsFirstName',{ length: 100 }).notNull(),
-    applicantsMiddleName: varchar('applicantsMiddleName', { length:100 }),
-    applicantsSuffix: varchar('applicantsSuffix', { length:100 }),
-    dateOfBirth: date('dateOfBirth' ).notNull(),
-    religion: varchar('religion', { length:100 }).notNull(),
-    ip: varchar('ip', { length:100 }),
-    house_no_purok: varchar('house_no_purok', { length:100 }).notNull(),
-    barangay: varchar('barangay', { length:100 }).notNull(),
-    city: varchar('city', { length:100 }).notNull(),
-    province: varchar('province', { length:100 }).notNull(),
-    motherTounge: varchar('motherTounge', { length:100 }).notNull(),
-    age: integer('age').notNull(),
-    gender: varchar('gender', { length:100 }).notNull(),
-    mobileNumber: varchar('mobileNumber', { length:12 }).notNull(),
-    email: varchar('email', { length:100 }).notNull(),
-    lrn: varchar('lrn', { length:100 }).notNull().unique(),
-  });
 
-  export const guardianAndParentsTable = pgTable("guardianAndParentsTable", {
-    guardians_id: serial("guardians_id").primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
-    guardiansLastName: varchar('guardiansLastName', { length:100 }).notNull(),
-    guardiansFirstName: varchar('guardiansFirstName',{ length: 100 }).notNull(),
-    guardiansMiddleName: varchar('guardiansMiddleName', { length:100 }),
-    guardiansSuffix: varchar('guardiansSuffix', { length:100 }),
-    emergencyContact: varchar('mobileNumber', { length:12 }).notNull(),
-    emergencyEmail: varchar('email', { length:100 }),
-    relationship: varchar('relationship', { length:100 }).notNull(),
-  })
 
-  export const educationalBackgroundTable = pgTable("educationalBackgroundTable" , {
-    educationalBackground_id: serial("educationalBackground_id").primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
-    gradeLevel: varchar('gradeLevel', { length:100 }).notNull(),
-    studentType: varchar('studentType', { length:100 }).notNull(),
-    schoolYear: varchar('schoolYear', { length: 100 }).notNull(),
-    schoolType: varchar('schoolType', { length:100 }).notNull(),
-    prevSchool: varchar('prevSchool', { length:250 }).notNull(),
-    schoolAddress: varchar('schoolAddress', { length:250 }).notNull(),
-
-  })
-
-  export const studentTypeTable = pgTable("studentTypeTable", {
-    studentType_id: serial("studentType_id").primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
-    studentType: varchar('studentType', { length:100 }).notNull(),
-    gradeToEnroll: varchar('gradeToEnroll', { length:100 }).notNull(),
-    promotion: varchar('promotion', { length:100 }),
-    student_case: varchar('student_case', { length:100 }),
-  })
-
-  export const documentsTable = pgTable("documentsTable", {
-    document_id: serial('document_id').primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
-    birthCert: varchar('birthCert', { length:300 }),
-    hasBirth: boolean('hasBirth').default(false),
-    reportCard: varchar('reportCard', { length:300 }),
-    hasReportCard: boolean('hasReportCard').default(false),
-    goodMoral: varchar('goodMoral', { length:300 }),
-    hasGoodMoral: boolean('hasGoodMoral').default(false),
-    idPic: varchar('idPic', { length:300 }),
-    hasIdPic: boolean('hasIdPic').default(false),
-    studentExitForm: varchar('studentExitForm', { length:300 }),
-    hasExitForm: boolean('hasExitForm').default(false),
-    form137: varchar('form137', { length:300 }),
-    hasForm137: boolean('hasForm137').default(false),
-    itr: varchar('itr', { length:300 }),
-    hasTIR: boolean('hasTIR').default(false),
-    escCert: varchar('escCert', { length:300 }),
-    hasEscCertificate: boolean('hasEscCertificate').default(false),
-    notifReminder: boolean('notifReminder').default(false),
-  })
-
-  export const additionalInformationTable = pgTable("additionalInformationTable", {
-    additionalInformation_id: serial('additionalInformation_id').primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
-    AttainmentUponGraduation: varchar('AttainmentUponGraduation', { length:100 }),
-    HasEnrolledSibling: varchar('HasEnrolledSibling', { length:100 }),
-    siblingName: varchar('siblingName', { length:100 }),
-    escGrantee: varchar('escGrantee', { length:100 }),
-  })
 
   export const reservationFeeTable = pgTable("reservationFeeTable" ,{
     reservation_id: serial('reservation_id').primaryKey(),
@@ -102,32 +19,6 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
 
 
 
-//application status
-  export const applicationStatusTable = pgTable("applicationStatusTable", {
-    application_status_id: serial('application_status_id').primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
-    trackingId: varchar('trackingId', { length:100 }).notNull(),
-    applicationFormReviewStatus: varchar('applicationFormReviewStatus', { length:100 }).notNull(),
-    reservationPaymentStatus: varchar('reservationPaymentStatus', { length:100 }).notNull(),
-    dateOfApplication: date('dateOfApplication').notNull(),
-    dateApprovedByRegistrar: date('dateApprovedByRegistrar'),
-    dateApprovedByCashier: date('dateApprovedByCashier'),
-  })
-
-  export const AdmissionStatusTable = pgTable("AdmissionStatusTable", {
-    admission_id: serial('admission_id').primaryKey(),
-    applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
-    academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
-    confirmationStatus: varchar('confirmationStatus', { length:100 }),
-    dateOfConfirmation: date('dateOfConfirmation'),
-    admissionStatus: varchar('admissionStatus', { length:100 }).notNull(),
-    dateOfAdmission: date('dateOfAdmission').notNull(),
-    dateAdmitted: date('dateAdmitted'),
-    dateDropped: date('dateDropped'),
-    dateTransferred: date('dateTransferred'),
-    isActive: boolean('isActive').notNull().default(false),
-  })
 
   export const Registrar_remaks_table = pgTable("Registrar_remaks_table", {
     reg_remarks_id: serial('reg_remarks_id').primaryKey(),
@@ -159,9 +50,9 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
     studentFirstName: varchar('studentFirstName', { length:100 }).notNull(),
     studentMiddleName: varchar('studentMiddleName', { length:100 }),
     studentSuffix: varchar('studentSuffix', { length:100 }),
-    religion: varchar('religion', { length:100 }).notNull(),
+    religion: varchar('religion', { length:100 }),
     ip: varchar('ip', { length:100 }),
-    motherTounge: varchar('motherTounge', { length:100 }).notNull(),
+    motherTounge: varchar('motherTounge', { length:100 }),
     house_no_purok: varchar('house_no_purok', { length:100 }).notNull(),
     barangay: varchar('barangay', { length:100 }).notNull(),
     city: varchar('city', { length:100 }).notNull(),
@@ -231,7 +122,7 @@ import { integer, pgTable, serial, varchar, date, boolean } from "drizzle-orm/pg
   export const downPaymentTable = pgTable("downPaymentTable", {
     donw_id: serial('donw_id').primaryKey(),
     applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
-    temp_down_id: integer('temp_down_id').references(() => tempdownPaymentTable.temp_down_id).notNull(),
+    // temp_down_id: integer('temp_down_id').references(() => tempdownPaymentTable.temp_down_id).notNull(),
     academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
     amount: integer('amount').notNull(),
     downPaymentDate: varchar('downPaymentDate', { length:100 }).notNull(),
@@ -463,3 +354,148 @@ export const ReceiptInfoTable = pgTable("ReceiptInfoTable", {
   isActive: boolean("isActive").notNull().default(true),
 });
 
+
+//revisions
+export const TuitionComp = pgTable("TuitionComp", {
+  tuition_id: serial("tuition_id").primaryKey(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  gradelevel: varchar("gradelevel", { length: 100 }).notNull(),
+  tuitionBase: integer("tuitionBase").notNull(),
+  miscellaneous: integer("miscellaneous").notNull(),  
+});
+
+export const applicantsInformationTable = pgTable("applicantsInformationTable", {
+  applicants_id: serial("applicants_id").primaryKey(),
+  applicantsLastName: varchar('applicantsLastName', { length:100 }).notNull(),
+  applicantsFirstName: varchar('applicantsFirstName',{ length: 100 }).notNull(),
+  applicantsMiddleName: varchar('applicantsMiddleName', { length:100 }),
+  applicantsSuffix: varchar('applicantsSuffix', { length:100 }),
+  dateOfBirth: date('dateOfBirth' ).notNull(),
+  religion: varchar('religion', { length:100 }),
+  ip: varchar('ip', { length:100 }),
+  house_no_purok: varchar('house_no_purok', { length:100 }).notNull(),
+  barangay: varchar('barangay', { length:100 }).notNull(),
+  city: varchar('city', { length:100 }).notNull(),
+  province: varchar('province', { length:100 }).notNull(),
+  motherTounge: varchar('motherTounge', { length:100 }),
+  age: integer('age').notNull(),
+  gender: varchar('gender', { length:100 }).notNull(),
+  mobileNumber: varchar('mobileNumber', { length:12 }).notNull(),
+  email: varchar('email', { length:100 }).notNull(),
+  lrn: varchar('lrn', { length:100 }).notNull().unique(),
+});
+
+export const guardianAndParentsTable = pgTable("guardianAndParentsTable", {
+  guardians_id: serial("guardians_id").primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+  guardiansLastName: varchar('guardiansLastName', { length:100 }).notNull(),
+  guardiansFirstName: varchar('guardiansFirstName',{ length: 100 }).notNull(),
+  guardiansMiddleName: varchar('guardiansMiddleName', { length:100 }),
+  guardiansSuffix: varchar('guardiansSuffix', { length:100 }),
+  emergencyContact: varchar('mobileNumber', { length:12 }).notNull(),
+  emergencyEmail: varchar('email', { length:100 }),
+  relationship: varchar('relationship', { length:100 }).notNull(),
+})
+
+export const educationalBackgroundTable = pgTable("educationalBackgroundTable" , {
+  educationalBackground_id: serial("educationalBackground_id").primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+  gradeLevel: varchar('gradeLevel', { length:100 }).notNull(),
+  studentType: varchar('studentType', { length:100 }).notNull(),
+  schoolYear: varchar('schoolYear', { length: 100 }).notNull(),
+  schoolType: varchar('schoolType', { length:100 }).notNull(),
+  prevSchool: varchar('prevSchool', { length:250 }).notNull(),
+  schoolAddress: varchar('schoolAddress', { length:250 }).notNull(),
+
+})
+
+export const studentTypeTable = pgTable("studentTypeTable", {
+  studentType_id: serial("studentType_id").primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  studentType: varchar('studentType', { length:100 }).notNull(),
+  gradeToEnroll: varchar('gradeToEnroll', { length:100 }).notNull(),
+  promotion: varchar('promotion', { length:100 }),
+  student_case: varchar('student_case', { length:100 }),
+})
+
+export const documentsTable = pgTable("documentsTable", {
+  document_id: serial('document_id').primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+  birthCert: varchar('birthCert', { length:300 }),
+  hasBirth: boolean('hasBirth').default(false),
+  reportCard: varchar('reportCard', { length:300 }),
+  hasReportCard: boolean('hasReportCard').default(false),
+  goodMoral: varchar('goodMoral', { length:300 }),
+  hasGoodMoral: boolean('hasGoodMoral').default(false),
+  idPic: varchar('idPic', { length:300 }),
+  hasIdPic: boolean('hasIdPic').default(false),
+  studentExitForm: varchar('studentExitForm', { length:300 }),
+  hasExitForm: boolean('hasExitForm').default(false),
+  form137: varchar('form137', { length:300 }),
+  hasForm137: boolean('hasForm137').default(false),
+  itr: varchar('itr', { length:300 }),
+  hasTIR: boolean('hasTIR').default(false),
+  escCert: varchar('escCert', { length:300 }),
+  hasEscCertificate: boolean('hasEscCertificate').default(false),
+  notifReminder: boolean('notifReminder').default(false),
+})
+
+export const additionalInformationTable = pgTable("additionalInformationTable", {
+  additionalInformation_id: serial('additionalInformation_id').primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull().unique(),
+  AttainmentUponGraduation: varchar('AttainmentUponGraduation', { length:100 }),
+  HasEnrolledSibling: varchar('HasEnrolledSibling', { length:100 }),
+  siblingName: varchar('siblingName', { length:100 }),
+  escGrantee: varchar('escGrantee', { length:100 }),
+})
+
+
+export const EmailVerification = pgTable("EmailVerification", {
+  emailVerification_id: serial("emailVerification_id").primaryKey(),
+  email: varchar('email', { length:100 }).notNull(),
+  code: integer('code').notNull(),
+  dateSent: timestamp("dateSent", { withTimezone: true }).notNull(),
+  isActive: boolean('isActive').notNull().default(true),
+})
+
+
+//application status
+export const applicationStatusTable = pgTable("applicationStatusTable", {
+  application_status_id: serial('application_status_id').primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  trackingId: varchar('trackingId', { length:100 }).notNull(),
+  applicationFormReviewStatus: varchar('applicationFormReviewStatus', { length:100 }).notNull(),
+  reservationPaymentStatus: varchar('reservationPaymentStatus', { length:100 }).notNull(),
+  dateOfApplication: date('dateOfApplication').notNull(),
+  dateApprovedByRegistrar: date('dateApprovedByRegistrar'),
+  dateApprovedByCashier: date('dateApprovedByCashier'),
+})
+
+export const AdmissionStatusTable = pgTable("AdmissionStatusTable", {
+  admission_id: serial('admission_id').primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id).notNull(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  confirmationStatus: varchar('confirmationStatus', { length:100 }),
+  dateOfConfirmation: date('dateOfConfirmation'),
+  admissionStatus: varchar('admissionStatus', { length:100 }).notNull(),
+  dateOfAdmission: date('dateOfAdmission').notNull(),
+  dateAdmitted: date('dateAdmitted'),
+  dateDropped: date('dateDropped'),
+  dateTransferred: date('dateTransferred'),
+  isActive: boolean('isActive').notNull().default(false),
+})
+
+
+export const enrollmentPayment = pgTable("enrollmentPayment", {
+  enrollmentPayment_id: serial('enrollmentPayment_id').primaryKey(),
+  applicants_id: integer('applicants_id').references(() => applicantsInformationTable.applicants_id, { onDelete: "cascade" }).notNull(),
+  academicYear_id: integer("academicYear_id").references(() => AcademicYearTable.academicYear_id, { onDelete: 'cascade' }).notNull(),
+  amount: integer('amount').notNull(),
+  paymentMethod: varchar('paymentMethod', { length:100 }).notNull(),
+  modeOfPayment: varchar('modeOfPayment', { length:100 }).notNull(),
+  reciept: varchar('reciept', { length: 500 }).notNull(),
+  reference_number: varchar('reference_number', { length:100 }).notNull(),
+  status: varchar('status', { length:100 }).notNull(),
+})

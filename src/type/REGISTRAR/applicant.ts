@@ -30,8 +30,8 @@
     dateOfBirth: string;
     age: number;
     gender: string;
-    religion: string;
-    motherTounge: string;
+    religion: string | null;
+    motherTounge: string | null;
     ip: string | null;
     house_no_purok: string;
     barangay: string;

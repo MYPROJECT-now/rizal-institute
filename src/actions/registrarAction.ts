@@ -2,7 +2,7 @@
 
   import { desc, eq, or, and, ne,  } from "drizzle-orm";
   import { db } from "../db/drizzle";
-  import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, SectionTable, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
+  import { AcademicYearTable, additionalInformationTable, AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, auditTrailsTable, BreakDownTable, documentsTable, educationalBackgroundTable, enrollmentPayment, ESCGranteeTable, GradeLevelTable, guardianAndParentsTable, MonthsInSoaTable, Registrar_remaks_table, SectionTable, staffClerkUserTable, StudentGradesTable, StudentInfoTable, StudentPerGradeAndSection, studentTypeTable, SubjectTable } from "../db/schema";
   import { sql } from "drizzle-orm";
   import { requireStaffAuth } from "./utils/staffAuth";
   import { auth } from "@clerk/nextjs/server";
@@ -800,7 +800,7 @@ export const getEnrollmentTrend = async () => {
       middleName: applicantsInformationTable.applicantsMiddleName,
       gradeLevel: studentTypeTable.gradeToEnroll,
       applicationStatus: applicationStatusTable.applicationFormReviewStatus,
-      reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
+      status: enrollmentPayment.status,
       admissionStatus: AdmissionStatusTable.admissionStatus,
       confirmationStatus: AdmissionStatusTable.confirmationStatus,
       isActive: AcademicYearTable.isActive,
@@ -811,9 +811,10 @@ export const getEnrollmentTrend = async () => {
     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
     .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
     .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .leftJoin(enrollmentPayment, eq(applicantsInformationTable.applicants_id, enrollmentPayment.applicants_id))
     .where(and(
-      eq(applicationStatusTable.reservationPaymentStatus, "Reserved"),
       eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
+      eq(enrollmentPayment.status, "Approved"),
       eq(AdmissionStatusTable.academicYear_id, selectedYear),
       eq(applicationStatusTable.academicYear_id, selectedYear),
       eq(studentTypeTable.academicYear_id, selectedYear),

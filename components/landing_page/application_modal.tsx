@@ -79,7 +79,7 @@ import { Skeleton } from "../ui/skeleton";
             Select from the category
           </p>
           <div className="flex flex-col mx-10 w-full">
-            <Link href="/application/new_applicant">
+            <Link href="/new_application">
               <Button
                 variant="CButton"
                 className="w-full sm:py-5 py-4  sm:text-base text-sm rounded-lg mt-2"

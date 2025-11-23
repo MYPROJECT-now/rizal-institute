@@ -1,4 +1,4 @@
-import { ReservedSlotPage } from "@/components/accounts/cashier/reservedSlot/reservedSlotTable/reservedSlotPage";
+import { ApplicantsPage } from "@/components/accounts/cashier/reservedSlot/applicatsTable/applicantsPage";
 const RegistrarsEnrolleesTable = () => {
     return(
         <div className="h-full flex flex-col  rounded-t-lg  lg:px-5 px-0 ">
@@ -6,7 +6,7 @@ const RegistrarsEnrolleesTable = () => {
                 <header className="  rounded-t-lg bg-lGreen font-bold font-merriweather  tracking-[1px]  text-white sm:pl-5 pl-2 sm:py-5 py-4 text-sm sm:text-lg lg:text-xl lg:border-0 border-x-2 border-t-2 border-white">
                    RESERVED STUDENTS
                 </header>
-                  <ReservedSlotPage />
+                  <ApplicantsPage />
             </section>
         </div>
     );

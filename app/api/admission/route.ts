@@ -73,13 +73,13 @@ async function getApplicantInfo
     dateOfBirth: Date;
     age: number;
     gender: string;
-    religion: string;
+    religion: string | null;
     ip: string | null;
     house_no_purok: string;
     barangay: string;
     city: string;
     province: string;
-    motherTounge: string;
+    motherTounge: string | null;
     studenType: string | null;
   }> {
 
@@ -170,42 +170,77 @@ async function sendAdmissionEmail(
       user: process.env.EMAIL_USER!,
       pass: process.env.EMAIL_PASS!,
     },
-  });
+  })
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Congratulations on Your Successful Admission to Rizal Institute - Canlubang',
-    text: `
-    Dear ${firstName} ${lastName},
+    subject: "Successful Admission – Rizal Institute Canlubang",
+    html: `
+      <div style="font-family: Arial, sans-serif; background:#f4f4f4; padding: 30px;">
+        <div style="max-width: 500px; margin: auto; background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
 
-    We are pleased to inform you that your admission to Rizal Institute - Canlubang has been successfully confirmed.
+          <div style="text-align:center; margin-bottom: 20px;">
+            <img src="cid:schoollogo" alt="School Logo" style="width: 80px; height:auto; margin-bottom:10px;" />
+            <h2 style="color:#1a4d2e; margin:0; font-size:22px;">Admission Confirmed</h2>
+          </div>
 
-    Congratulations on this achievement! We are thrilled to welcome you to our community.
+          <p style="font-size:15px; color:#333;">
+            Dear <strong>${firstName} ${lastName}</strong>,
+            <br><br>
+            Congratulations! Your <strong>admission to Rizal Institute - Canlubang</strong> has been
+            <strong>successfully confirmed</strong>.
+          </p>
 
-    To access our online portal, please use the following credentials:
-    Username: RIZAL-${lrn}
-    Temporary Password: ${password}
+          <p style="font-size:14px; color:#555;">
+            We are thrilled to welcome you to our community. Below are your initial login credentials for the online student portal:
+          </p>
 
-    Please note that this is a temporary password and we strongly advise you to change it as soon as possible for security reasons.
+          <div style="background:#f7f7f7; padding: 15px; border-radius:8px; margin: 20px 0; font-size:14px; color:#333; border:1px solid #e0e0e0;">
+            <p style="margin:5px 0;"><strong>Username:</strong> RIZAL-${lrn}</p>
+            <p style="margin:5px 0;"><strong>Temporary Password:</strong> ${password}</p>
+          </div>
 
-    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
+          <p style="font-size:14px; color:#555;">
+            Please note that this is a temporary password — you must change it immediately after logging in for security purposes.
+          </p>
 
-    Next Steps:
+          <h3 style="font-size:16px; color:#1a4d2e; margin-top:25px;">Next Steps</h3>
+          <ul style="font-size:14px; color:#555; padding-left:18px; line-height:1.5;">
+            <li>Log in to the portal using your credentials.</li>
+            <li>Change your password as soon as possible.</li>
+            <li>Explore the online portal for important student information.</li>
+            <li>Contact the registrar if you have any questions.</li>
+          </ul>
 
-    - Change your password as soon as possible.
-    - Explore our online portal to access important information and resources.
-    - Contact our office for any further inquiries.
+          <div style="text-align:center; margin: 25px 0;">
+            <span style="display:inline-block; padding: 12px 20px; background:#1a4d2e; color:white; border-radius:8px; font-size:16px;">
+              Welcome to Rizal Institute - Canlubang!
+            </span>
+          </div>
 
-    Thank you for choosing Rizal Institute - Canlubang. We look forward to seeing you soon!
+          <hr style="margin:25px 0; border:0; border-top:1px solid #e0e0e0;">
 
-    Best regards,
-    Rizal Institute - Canlubang Registrar Office
+          <p style="font-size:12px; color:#777; text-align:center;">
+            This is an automated message. Please do not reply.<br/>
+            Rizal Institute - Canlubang © 2025
+          </p>
+
+        </div>
+      </div>
     `,
+    attachments: [
+      {
+        filename: "logo.png",
+        path: process.cwd() + "/public/logo.png",
+        cid: "schoollogo",
+      },
+    ],
   };
 
-  await transporter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions);
 }
+
 
 async function sendAdmissionEmailOldStudent(
   email: string,
@@ -213,7 +248,7 @@ async function sendAdmissionEmailOldStudent(
   lastName: string
 ) {
   const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: "Gmail",
     auth: {
       user: process.env.EMAIL_USER!,
       pass: process.env.EMAIL_PASS!,
@@ -223,25 +258,68 @@ async function sendAdmissionEmailOldStudent(
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Welcome Back to Rizal Institute - Canlubang!',
-    text: `
-    Dear ${firstName} ${lastName},
+    subject: "Welcome Back to Rizal Institute - Canlubang!",
+    html: `
+      <div style="font-family: Arial, sans-serif; background:#f4f4f4; padding: 30px;">
+        <div style="max-width: 500px; margin: auto; background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
 
-    We are pleased to inform you that your admission to Rizal Institute - Canlubang has been successfully confirmed.
+          <div style="text-align:center; margin-bottom: 20px;">
+            <img src="cid:schoollogo" alt="School Logo" style="width: 80px; height:auto; margin-bottom:10px;" />
+            <h2 style="color:#1a4d2e; margin:0; font-size:22px;">Admission Confirmed</h2>
+          </div>
 
-    Welcome back! We are delighted to have you continue your academic journey with us this school year.
+          <p style="font-size:15px; color:#333;">
+            Dear <strong>${firstName} ${lastName}</strong>,
+            <br><br>
+            Welcome back! Your admission for the upcoming school year at 
+            <strong>Rizal Institute - Canlubang</strong> has been successfully confirmed.
+          </p>
 
-    As a returning student, you may continue using your existing account to access our online portal for updates, schedules, and other important announcements.
+          <p style="font-size:14px; color:#555;">
+            As a returning student, your existing online portal account remains active.  
+            You may continue using your current credentials to access:
+          </p>
 
-    Thank you for your continued trust in Rizal Institute - Canlubang. We look forward to another successful year together!
+          <ul style="font-size:14px; color:#555; padding-left:18px; line-height:1.5;">
+            <li>Announcements</li>
+            <li>Class schedules</li>
+            <li>Grades and academic updates</li>
+            <li>Student resources and school reminders</li>
+          </ul>
 
-    Best regards,
-    Rizal Institute - Canlubang Registrar Office
+          <p style="font-size:14px; color:#555;">
+            We are delighted to have you continue your academic journey with us.  
+            Thank you for your continued trust in Rizal Institute - Canlubang.
+          </p>
+
+          <div style="text-align:center; margin: 25px 0;">
+            <span style="display:inline-block; padding: 12px 20px; background:#1a4d2e; color:white; border-radius:8px; font-size:16px;">
+              Welcome Back, Student of RIC!
+            </span>
+          </div>
+
+          <hr style="margin:25px 0; border:0; border-top:1px solid #e0e0e0;">
+
+          <p style="font-size:12px; color:#777; text-align:center;">
+            This is an automated message. Please do not reply.<br/>
+            Rizal Institute - Canlubang © 2025
+          </p>
+
+        </div>
+      </div>
     `,
+    attachments: [
+      {
+        filename: "logo.png",
+        path: process.cwd() + "/public/logo.png",
+        cid: "schoollogo",
+      },
+    ],
   };
 
   await transporter.sendMail(mailOptions);
 }
+
 
 
 
@@ -332,13 +410,13 @@ export async function POST(request: Request) {
       studentGender: gender,
       studentBirthDate: dateOfBirth.toISOString().split('T')[0],
       studentAge: age,
-      religion,
+      religion: religion ?? undefined,
       ip: ip ?? undefined,
       house_no_purok,
       barangay,
       city,
       province,
-      motherTounge,
+      motherTounge: motherTounge ?? undefined,
 
     }).returning({ id: StudentInfoTable.student_id });
 

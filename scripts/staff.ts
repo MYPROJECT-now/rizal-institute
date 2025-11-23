@@ -79,7 +79,8 @@ const staffAccounts = [
 
 const createStaffAccounts = async () => {
   try {
-    const academicYearID = await getAcademicYearID();
+    // const academicYearID = await getAcademicYearID();
+    const academicYearID = 1;
 
     for (const account of staffAccounts) {
       const { username, password, email, role } = account;

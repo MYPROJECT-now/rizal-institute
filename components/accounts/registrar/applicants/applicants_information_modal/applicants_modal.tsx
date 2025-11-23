@@ -122,14 +122,14 @@ const showDocument = (src: string | null, title: string) => {
                 <section className="flex flex-col">
                   <p className="text-green-900 font-semibold text-xs font-sans pl-1">Religion:</p>
                   <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.religion}
+                    {applicant.religion || "-"}
                   </p>
                 </section>
 
                 <section className="flex flex-col">
                   <p className="text-green-900 font-semibold text-xs font-sans pl-1">Mother Tounge:</p>
                   <p className="w-full text-dGreen text-sm font-semibold font-sans bg-green-100 p-2 rounded-lg">
-                    {applicant.motherTounge}
+                    {applicant.motherTounge || "-"}
                   </p>
                 </section>
 

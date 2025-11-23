@@ -2,7 +2,7 @@
 
 import { and, asc, desc, eq, ilike, sql, } from "drizzle-orm";
 import { db } from "../db/drizzle";
-import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable, SubjectTable,  } from "../db/schema";
+import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable, SubjectTable, TuitionComp, enrollmentPayment,  } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "./utils/staffAuth";
 import { getAcademicYearID, getSelectedAcademicYear } from "./utils/academicYear";
@@ -926,6 +926,61 @@ export const getItsPayment = async (selectedID: number) => {
   return allEnrollees ;
   };
 
+  export const get_reserved_students = async () => {
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+
+    const allEnrollees = await db.select({
+      id: applicantsInformationTable.applicants_id,
+      lrn: applicantsInformationTable.lrn,
+      lastName: applicantsInformationTable.applicantsLastName,
+      firstName: applicantsInformationTable.applicantsFirstName,
+      middleName: applicantsInformationTable.applicantsMiddleName,
+      gradeLevel: studentTypeTable.gradeToEnroll,
+      status: enrollmentPayment.status,
+      paymentMethod:enrollmentPayment.paymentMethod,
+      isActive: AcademicYearTable.isActive,
+    })
+    .from(applicantsInformationTable)
+    .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
+    // .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))    
+    .leftJoin(enrollmentPayment, eq(applicantsInformationTable.applicants_id, enrollmentPayment.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(AcademicYearTable, eq(AdmissionStatusTable.academicYear_id, AcademicYearTable.academicYear_id))
+    .where(and(
+      eq(studentTypeTable.academicYear_id, selectedYear),
+      eq(AdmissionStatusTable.academicYear_id, selectedYear),
+      eq(enrollmentPayment.academicYear_id, selectedYear),
+      // eq(applicationStatusTable.academicYear_id, selectedYear),
+      eq(AcademicYearTable.academicYear_id, selectedYear),
+    ))
+  
+    console.log("Fetched Enrollees:", allEnrollees);
+    
+  return allEnrollees ;
+  };
+
+
+  export const getPaymentInfo = async (lrn:string) => {
+    const paymentInfo = await db
+    .select({
+      fullName: sql<string>`
+        ${applicantsInformationTable.applicantsFirstName} || ' ' ||
+        ${applicantsInformationTable.applicantsLastName}
+      `.as("fullName"),
+      amount: enrollmentPayment.amount,
+      modeOfPayment: enrollmentPayment.modeOfPayment,
+      reciept: enrollmentPayment.reciept,
+      reference_number: enrollmentPayment.reference_number,
+      status: enrollmentPayment.status
+    }).from(applicantsInformationTable)
+    .leftJoin(enrollmentPayment, eq(applicantsInformationTable.applicants_id, enrollmentPayment.applicants_id))
+    .where(eq(applicantsInformationTable.lrn, lrn))
+
+    return paymentInfo;
+  }
+
 export const getReceiptsCondition = async () => {
   const [info] = await db.select({
     id: ReceiptInfoTable.school_id,
@@ -1007,6 +1062,41 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     return allEnrollees;
   };
 
+    export const get_student_to_assess = async () => {
+
+    const selectedYear = await getSelectedYear();
+    if(!selectedYear) return [];
+    
+    const allEnrollees = await db.select({
+      id: applicationStatusTable.application_status_id,
+      lrn: applicantsInformationTable.lrn,
+      lastName: applicantsInformationTable.applicantsLastName,
+      firstName: applicantsInformationTable.applicantsFirstName,
+      middleName: applicantsInformationTable.applicantsMiddleName,
+      gradeLevel: studentTypeTable.gradeToEnroll,
+      admissionStatus: AdmissionStatusTable.admissionStatus,
+      breakDown_id: BreakDownTable.breakDown_id,
+
+    })
+    .from(applicantsInformationTable)
+    .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
+    .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
+    .leftJoin(AdmissionStatusTable, eq(applicantsInformationTable.applicants_id, AdmissionStatusTable.applicants_id))
+    .leftJoin(BreakDownTable, and(eq(applicantsInformationTable.applicants_id, BreakDownTable.applicants_id), eq(BreakDownTable.academicYear_id, selectedYear)))
+    .where(and(
+      eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"), 
+      eq(studentTypeTable.academicYear_id, selectedYear),
+      eq(AdmissionStatusTable.academicYear_id, selectedYear),
+      eq(applicationStatusTable.academicYear_id, selectedYear),
+
+    ))
+    .orderBy(sql`CAST(${studentTypeTable.gradeToEnroll} AS INTEGER) ASC`)
+
+    console.log("Fetched Enrollees:", allEnrollees);
+    
+    return allEnrollees;
+  };
+
 // get discount details for reserved slots
   // export const getDiscountClass = async (lrn: string) => {
   //   const discountClass = await db
@@ -1067,6 +1157,8 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
 
     return checkLRN;
   }
+
+
   export const getInfo = async (lrn: string) => {
     await requireStaffAuth(["cashier"]); // gatekeeper
 
@@ -1083,8 +1175,8 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
       gradeLevel: studentTypeTable.gradeToEnroll,
       student_case: studentTypeTable.student_case,
 
-      dateOfPayment: reservationFeeTable.dateOfPayment,
-      amount: reservationFeeTable.reservationAmount,
+      // dateOfPayment: reservationFeeTable.dateOfPayment,
+      // amount: reservationFeeTable.reservationAmount,
 
       AttainmentUponGraduation: additionalInformationTable.AttainmentUponGraduation,
       reportCard: documentsTable.reportCard,
@@ -1096,13 +1188,11 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
     })
     .from(applicantsInformationTable)
     .leftJoin(studentTypeTable, eq(applicantsInformationTable.applicants_id, studentTypeTable.applicants_id))
-    .leftJoin(reservationFeeTable, eq(applicantsInformationTable.applicants_id, reservationFeeTable.applicants_id))
     .leftJoin(additionalInformationTable, eq(applicantsInformationTable.applicants_id, additionalInformationTable.applicants_id))
     .leftJoin(documentsTable, eq(applicantsInformationTable.applicants_id, documentsTable.applicants_id))
     .leftJoin(BreakDownTable, eq(applicantsInformationTable.applicants_id, BreakDownTable.applicants_id))
     .where(and( 
       eq(studentTypeTable.academicYear_id, selectedYear),
-      eq(reservationFeeTable.academicYear_id, selectedYear),
       eq(applicantsInformationTable.lrn, lrn )
     ))
     .limit(1);
@@ -1112,7 +1202,19 @@ export const addInfoONReceipt = async (schoolName: string, address: string, tin:
 
   }
 
+export const getTuition = async (gradelevel: string) => {
+  const tuition = await db
+  .select({
+    tuitionBase: TuitionComp.tuitionBase,
+    miscellaneous: TuitionComp.miscellaneous,
+  }).from(TuitionComp)
+  .where(eq(TuitionComp.gradelevel, gradelevel))
+  .orderBy(desc(TuitionComp.academicYear_id))
+  .limit(1);
 
+  console.log("Fetched data:", tuition);
+  return tuition[0] ?? null; // return the first row
+}
   export const getGranted = async () => {
     const selectedYear = await getSelectedYear();
     if(!selectedYear) return 1;
@@ -1309,14 +1411,7 @@ export const getRemainingBalance = async (lrn: string) => {
     console.warn("❌ This student has already been issued with their tuition fees.");
     return {message: "This student has already been issued with their tuition fees."};
   }
-  // let esc = 10;
 
-  // const escValue = await db
-  //   .select({
-  //     grantAvailable: grantAvailable.grantAvailable,
-  //   })
-  //   .from(grantAvailable)
-  //   .where(eq(grantAvailable.academicYear_id, currentYear));
 
   let grant = 0;
   if (escGrantee === "Yes") {
@@ -1327,17 +1422,19 @@ export const getRemainingBalance = async (lrn: string) => {
 
   // --- Step 1: base tuition
   const base = tuition + miscellaneous - grant;
+  const base2 = tuition + miscellaneous;
+
   console.log("Step 1 – Base (tuition + misc - grant):", base);
 
 
   // --- Step 2: academic discount
   let acadDiscount = 0;
   if (acad === "With Honor") {
-    acadDiscount = Math.ceil(base * 0.20);
+    acadDiscount = Math.ceil(base2 * 0.20);
   } else if (acad === "With High Honor") {
-    acadDiscount = Math.ceil(base * 0.50);
+    acadDiscount = Math.ceil(base2 * 0.50);
   } else if (acad === "With Highest Honor") {
-    acadDiscount = Math.ceil(base * 0.75);
+    acadDiscount = Math.ceil(base2 * 0.75);
   }
   console.log("Step 2 – Academic Discount:", acadDiscount);
 
@@ -1372,13 +1469,7 @@ export const getRemainingBalance = async (lrn: string) => {
   const months: string[] = [];
   const current =  new Date(startDate);
 
-  // while(current <= endDate) {
-  //   const monthName = current.toLocaleString("default", { month: "long" });
-  //   const year = current.getFullYear();
-  //   months.push(`${monthName} ${year}`);
 
-  //   current.setMonth(current.getMonth() + 1);
-  // }
   while (current <= endDate) {
     const monthName = current.toLocaleString("default", { month: "long" });
     const year = current.getFullYear();
@@ -1393,37 +1484,12 @@ export const getRemainingBalance = async (lrn: string) => {
 
 
 
-  const getDOwnPayment = await db
-    .select({
-      reservationAmount: reservationFeeTable.reservationAmount,
-      dateOfPayment: reservationFeeTable.dateOfPayment,
-      SINumber: reservationFeeTable.SINumber,
-      mop: reservationFeeTable.mop
-  })
-  .from(reservationFeeTable)
-  .where(eq(reservationFeeTable.applicants_id, getLrn[0].id));
-
-  await db
-  .insert(tempdownPaymentTable)
-  .values({
-    amount: getDOwnPayment[0].reservationAmount,
-    applicants_id: getLrn[0].id,
-    downPaymentDate: getDOwnPayment[0].dateOfPayment,
-    academicYear_id: currentYear ?? 0,
-    SINumber: getDOwnPayment[0].SINumber,
-    paymentMethod: getDOwnPayment[0].mop
-  });
-  
-  let totalFee = 0;
-  totalFee = finalPayable - getDOwnPayment[0].reservationAmount;
-  console.log("Total Fee less down payment:", totalFee);
-
   const totalMonths = months.length;
   // const monthlyDues = totalFee / totalMonths;
 
   // --- distribute evenly with integers ---
-  const baseDue = Math.floor(totalFee / totalMonths);
-  const remainder = totalFee % totalMonths;
+  const baseDue = Math.floor(finalPayable / totalMonths);
+  const remainder = finalPayable % totalMonths;
 
   const monthRows =  months.map((m, index) => ({
     applicants_id: getLrn[0].id,
@@ -1446,19 +1512,12 @@ export const getRemainingBalance = async (lrn: string) => {
       withSibling_amount: siblingDiscount,
       other_fees: other_fees,
       other_discount: other_discount,
-      totalTuitionFee: totalFee,
+      totalTuitionFee: finalPayable,
       escGrant: grant,
       remainingTuitionFee: pastTuition,
   });
 
-  // if (escValue[0].grantAvailable > 0) {
-  //   await db
-  //   .update(grantAvailable)
-  //   .set({
-  //     grantAvailable: escValue[0].grantAvailable - 1,
-  //   })
-  //   .where(eq(grantAvailable.academicYear_id, currentYear));
-  // }
+
 
   await db
   .insert(TempMonthsInSoaTable)
@@ -1473,53 +1532,155 @@ export const getRemainingBalance = async (lrn: string) => {
       academicYear_id: currentYear ?? 0,
     });
   }
-  async function sendAdmissionEmail(
-    email: string,  
-    firstName: string,
-    lastName: string,
-    trackingId: string,
-    ) {
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: process.env.EMAIL_USER!,
-        pass: process.env.EMAIL_PASS!,
-      },
-    });
+async function sendAdmissionEmail(
+  email: string,
+  firstName: string,
+  lastName: string,
+  trackingId: string,
+) {
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASS!,
+    },
+  });
+
+  const htmlContent = `
+  <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
+    <div style="max-width:650px; margin:0 auto; background:white; padding:25px; border-radius:8px;">
+
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom:20px;">
+        <img src="cid:schoollogo" alt="School Logo" style="width:120px; margin-bottom:10px;" />
+        <h2 style="margin:0; color:#333;">Rizal Institute - Canlubang</h2>
+        <p style="margin:0; color:#777;">Fee Assessment</p>
+      </div>
+
+      <!-- Greeting -->
+      <p>Dear <strong>${firstName} ${lastName}</strong>,</p>
+
+      <p>Below is your official fee assessment for this academic year.</p>
+
+      <!-- Fee Breakdown -->
+      <h3 style="color:#0a3ea1;">Breakdown of Fees</h3>
+      <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">Tuition Fee</td>
+          <td style="padding:8px; border:1px solid #ddd;">₱${tuition.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">Miscellaneous</td>
+          <td style="padding:8px; border:1px solid #ddd;">₱${miscellaneous.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">Academic Discount (${acad})</td>
+          <td style="padding:8px; border:1px solid #ddd;">- ₱${acadDiscount.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">Sibling Discount</td>
+          <td style="padding:8px; border:1px solid #ddd;">- ₱${siblingDiscount.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">Other Discount</td>
+          <td style="padding:8px; border:1px solid #ddd;">- ₱${other_discount.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">Other Fees</td>
+          <td style="padding:8px; border:1px solid #ddd;">₱${other_fees.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">ESC Grant</td>
+          <td style="padding:8px; border:1px solid #ddd;">- ₱${grant.toFixed(2)}</td>
+        </tr>
+
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd; font-weight:bold;">Total Payable</td>
+          <td style="padding:8px; border:1px solid #ddd; font-weight:bold; color:#0a3ea1;">
+            ₱${finalPayable.toFixed(2)}
+          </td>
+        </tr>
+      </table>
+
+      <!-- Monthly Dues -->
+      <h3 style="margin-top:30px; color:#0a3ea1;">Monthly Installment Schedule</h3>
+      <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+        ${monthRows
+          .map(
+            (m) => `
+          <tr>
+            <td style="padding:8px; border:1px solid #ddd;">${m.temp_month}</td>
+            <td style="padding:8px; border:1px solid #ddd;">₱${m.temp_monthlyDue.toFixed(2)}</td>
+          </tr>`
+          )
+          .join("")}
+      </table>
+
+      <!-- Final Notes -->
+      <div style="
+        background:#eef5ff;
+        border:1px solid #c7dafc;
+        padding:16px;
+        border-radius:10px;
+        margin:25px 0;
+      ">
+        <p style="margin:0;">
+          You may choose to:
+        </p>
+        <ul>
+          <li><strong>Pay in full</strong></li>
+          <li>
+            <strong>Pay via installment</strong> (Minimum downpayment: 
+            <strong style="color:#0a3ea1;">₱500</strong>)
+          </li>
+        </ul>
+        <p style="margin:0;">You may pay any amount above the ₱500 minimum depending on your preference.</p>
+      </div>
+
+      <p>To proceed, visit our website and enter your tracking ID:</p>
+
+      <div style="
+        background:#fff3cd;
+        padding:12px;
+        border-radius:8px;
+        text-align:center;
+        border:1px solid #ffeeba;
+        margin-bottom:20px;
+      ">
+        <p style="margin:0; font-size:14px;">Tracking ID</p>
+        <p style="font-size:24px; font-weight:bold; letter-spacing:2px; color:#b25e00;">
+          ${trackingId}
+        </p>
+      </div>
+
+      <p>Please wait for confirmation after you submit your payment. Once verified, you will receive a confirmation of reservation of slot following an email from us about your admission..</p>
+
+      <!-- Footer -->
+      <div style="text-align:center; margin-top:30px; padding-top:15px; border-top:1px solid #ddd; color:#777; font-size:12px;">
+        <p style="margin:0;">This is an automated email. Please do not reply.</p>
+        <p style="margin:0;">Rizal Institute - Canlubang © ${new Date().getFullYear()}</p>
+      </div>
+
+    </div>
+  </div>
+  `;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Confirmation of Payment Method at Rizal Institute - Canlubang',
-    text: `
-    Dear ${firstName} ${lastName},
+    subject: "Fee Assessment - Rizal Institute Canlubang",
+    html: htmlContent,
+    attachments: [
+      {
+        filename: "logo.png",
+        path: process.cwd() + "/public/logo.png",
+        cid: "schoollogo",
+      },
+    ],
+  };
 
-    Your total remaining tuition fee comes to amounting: ₱${totalFee.toFixed(2)}.
-    Your downpayment of: ₱${getDOwnPayment[0].reservationAmount.toFixed(2)} was already reduced from your tuition fee to pay.
-
-    tracking ID: ${trackingId}
-
-    You may choose to pay either in full or in installments.
-
-    Next Steps:
-
-    Visit our website and enter your tracking ID: ${trackingId}.
-
-    Select your preferred payment option: full payment or installment plan.
-
-    If you opt to pay in full, please provide your payment receipt.
-
-    Wait for confirmation from the Registrar's Office. Once verified, you will receive a confirmation email along with your portal credentials.
-
-    If you have any questions or concerns, please do not hesitate to contact our office. We are more than happy to assist you.
-
-    Best regards,
-    Rizal Institute - Canlubang Registrar Office
-    `,
-    };
-
-    await transporter.sendMail(mailOptions);
-  }
+  await transporter.sendMail(mailOptions);
+}
 
   const getEmailInfo = await db
   .select({
@@ -1566,6 +1727,8 @@ export const getRemainingBalance = async (lrn: string) => {
   return { message: "Tuition Fee Added Successfully" };
 }
   
+
+
 
 
 // get who paid full payment upon payment method selection

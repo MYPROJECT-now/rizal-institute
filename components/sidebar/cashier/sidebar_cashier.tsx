@@ -58,16 +58,16 @@ export const Sidebar_cashier = ({ className, onClose }: Props) => {
                         onClick={onClose}
                     />
 
-                    <SidebarItem 
+                    {/* <SidebarItem 
                         label="Full Payment" 
                         href="/ACCOUNTS/cashier/full"
                         iconSrc="/full.png" 
                         onClick={onClose}
-                    />
+                    /> */}
                     
                     <SidebarItem 
                         label="Applicants" 
-                        href="/ACCOUNTS/cashier/applicants"
+                        href="/ACCOUNTS/cashier/APPLICANT"
                         iconSrc="/board.png"
                         onClick={onClose} 
                     />

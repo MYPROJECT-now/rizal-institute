@@ -377,10 +377,6 @@ import { DiscountWarningModal } from "./reminder";
                 toast.error("Invalid email. Please enter a valid email.");
                 return false;
             }
-
-
-
-
         return true;
 
         case 2: // Academic Info

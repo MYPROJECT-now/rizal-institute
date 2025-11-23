@@ -1,0 +1,90 @@
+"use client";
+
+import { FC } from "react";
+import { RemarksModal } from "@/components/accounts/cashier/applicants/remarks_cashier/remark_modal";
+import { Tableapplicant_Type } from "@/src/type/CASHIER/APPLICANTS/applicansts";
+import { useDeclineRemarksModal, useShowReceiptsModal, useShowReservationPayementModal } from "@/src/store/CASHIER/applicants";
+import { Button } from "@/components/ui/button";
+
+interface Props {
+  applicants: Tableapplicant_Type;
+  onDecline: (id: number) => void;
+  className?: string;
+  loading?: boolean;
+  activeReceipt?: { id: number; isActive: boolean } | null; // ✅ new prop
+
+}
+
+const Student: FC<Props> = ({ applicants, onDecline, className, loading, activeReceipt  }) => {
+  const { open } = useDeclineRemarksModal();
+  const { open: openEnrollees } = useShowReservationPayementModal();
+  const { open: openReceipt  } = useShowReceiptsModal();
+
+    // // Determine the display status based on both fields
+    // const getDisplayStatus = () => {
+    //   if (applicants.reservationPaymentStatus === "Reserved" && applicants.applicationFormReviewStatus === "Pending") {
+    //     return "Ongoing";
+    //   } else if (applicants.applicationFormReviewStatus === "Reserved" && applicants.reservationPaymentStatus === "Reserved") {
+    //     return "Reserved";
+    //   } else {
+    //     return applicants.reservationPaymentStatus;
+    //   }
+    // };
+  
+
+  return (
+    <tr className={`border-b hover:bg-green-200 transition duration-200 ${className || ""}`}>
+      <td className="px-4 py-2">{applicants.lrn}</td>
+      <td className="px-4 py-2">{applicants.lastName} {applicants.firstName} {applicants.middleName}</td>
+      <td className="px-[55px] py-2">{applicants.gradeLevel}</td>
+      <td className={applicants.status === "Declined" ? "px-4 py-2 text-red-600 font-semibold" : applicants.status === "Pending" ? "px-4 py-2 text-yellow-600 font-semibold" : "px-4 py-2 text-green-600 font-semibold "}>{ applicants.status}</td>
+      {/* <td className="px-4 py-2">
+        <Button 
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
+          variant={"confirmButton"}
+          onClick={() => openEnrollees(applicants.lrn)}
+          >
+            View
+        </Button>
+      </td> */}
+      <td className=" flex flex-row gap-1 items-center justify-center py-2 px-2">
+        {!activeReceipt || !activeReceipt?.isActive  ? (
+          <Button
+            onClick={openReceipt}
+            className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
+            variant={"acceptButton"}
+            disabled={loading || applicants.isActive === false}
+
+          >
+            Accept
+          </Button>        
+        ): ( 
+          <Button
+            onClick={() => openEnrollees(applicants.lrn)}
+            className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
+            variant={"acceptButton"}
+            disabled={applicants.status !== "Pending" || loading || applicants.isActive === false}
+          >
+            {loading ? "Accepting..." : "Accept"}
+          </Button>
+        )}
+
+
+        
+        {/* Decline button only opens the modal */}
+        <RemarksModal onDecline={onDecline} />
+        <Button
+          onClick={() => open(applicants.id, `${applicants.lastName} ${applicants.firstName} ${applicants.middleName}`)}
+          variant={"rejectButton"}
+          className=" rounded-lg lg:px-5 px-3   lg:py-2 py-1 text-xs sm:text-sm  "
+          disabled={applicants.status !== "Pending" || applicants.isActive === false }
+          >
+          Decline
+        </Button>
+      </td>
+     
+    </tr>
+  );
+};
+
+export default Student;

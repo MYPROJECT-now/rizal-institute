@@ -25,63 +25,93 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
     const [isSaving, setIsSaving] = useState(false);
 
     // Calculate balances
-    const calculatedRows: SOAWithBalance[] = [];
-    let prevEffectiveDue = 0;
-    for (const soa of SOATodoItems) {
-        const monthlyDue = soa.monthlyDue || 0;
-        const amountPaid = soa.amountPaid || 0;
-        const currentBalance = monthlyDue - amountPaid;
-        const effectiveDue = prevEffectiveDue + currentBalance;
-        calculatedRows.push({ ...soa, currentBalance, effectiveDue });
-        prevEffectiveDue = effectiveDue;
-    }
+    // const calculatedRows: SOAWithBalance[] = [];
+    // let prevEffectiveDue = 0;
+    // for (const soa of SOATodoItems) {
+    //     const monthlyDue = soa.monthlyDue || 0;
+    //     const amountPaid = soa.amountPaid || 0;
+    //     const currentBalance = monthlyDue - amountPaid;
+    //     const effectiveDue = prevEffectiveDue + currentBalance;
+    //     calculatedRows.push({ ...soa, currentBalance, effectiveDue });
+    //     prevEffectiveDue = effectiveDue;
+    // }
+// Calculate balances
+const calculatedRows: SOAWithBalance[] = [];
 
-    // Function to calculate total amount due for current month
+const downpayment = SOATodos[0]?.amount || 0;
+
+// Total monthly dues
+const initialTotalDue = SOATodoItems.reduce(
+    (sum, item) => sum + (item.monthlyDue || 0),
+    0
+);
+
+// Starting effectiveDue now includes DOWNPAYMENT subtraction
+let prevEffectiveDue = initialTotalDue - downpayment;
+
+for (const soa of SOATodoItems) {
+    const monthlyDue = soa.monthlyDue || 0;
+    const amountPaid = soa.amountPaid || 0;
+    const currentBalance = monthlyDue - amountPaid;
+
+    const effectiveDue = prevEffectiveDue;
+
+    calculatedRows.push({ ...soa, currentBalance, effectiveDue });
+
+    prevEffectiveDue = effectiveDue - amountPaid; // Continue subtracting payments
+}
+
+
+    
     // const calculateTotalAmountDue = () => {
     //     const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
-    //     const currentMonthIndex = calculatedRows.findIndex(row => 
+
+    //     // Find the current month index
+    //     const currentMonthIndex = calculatedRows.findIndex(row =>
     //         (row.month ?? '').toLowerCase().includes(currentMonth)
     //     );
-        
+
     //     if (currentMonthIndex === -1) return 0;
-        
-    //     const totalMonthlyDue = calculatedRows
+
+    //     // Total due up to current month
+    //     const totalDueSoFar = calculatedRows
     //         .slice(0, currentMonthIndex + 1)
     //         .reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
-        
-    //     const totalAmountPaid = calculatedRows
+
+    //     // Total paid up to current month
+    //     const totalPaidSoFar = calculatedRows
     //         .slice(0, currentMonthIndex + 1)
     //         .reduce((sum, row) => sum + (row.amountPaid || 0), 0);
-        
-    //     return Math.max(0, totalMonthlyDue - totalAmountPaid);
+
+    //     // Remaining balance for current month and past months
+    //     const remainingBalance = totalDueSoFar - totalPaidSoFar;
+
+    //     // Ensure we never return negative, unless you want to show credit
+    //     return Math.max(0, remainingBalance);
     // };
-    
-    const calculateTotalAmountDue = () => {
-        const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
+const calculateTotalAmountDue = () => {
+    const downpayment = SOATodos[0]?.amount || 0;
 
-        // Find the current month index
-        const currentMonthIndex = calculatedRows.findIndex(row =>
-            (row.month ?? '').toLowerCase().includes(currentMonth)
-        );
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
 
-        if (currentMonthIndex === -1) return 0;
+    const currentMonthIndex = calculatedRows.findIndex(row =>
+        (row.month ?? '').toLowerCase().includes(currentMonth)
+    );
 
-        // Total due up to current month
-        const totalDueSoFar = calculatedRows
-            .slice(0, currentMonthIndex + 1)
-            .reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
+    if (currentMonthIndex === -1) return 0;
 
-        // Total paid up to current month
-        const totalPaidSoFar = calculatedRows
-            .slice(0, currentMonthIndex + 1)
-            .reduce((sum, row) => sum + (row.amountPaid || 0), 0);
+    const totalDueSoFar = calculatedRows
+        .slice(0, currentMonthIndex + 1)
+        .reduce((sum, row) => sum + (row.monthlyDue || 0), 0);
 
-        // Remaining balance for current month and past months
-        const remainingBalance = totalDueSoFar - totalPaidSoFar;
+    const totalPaidSoFar = calculatedRows
+        .slice(0, currentMonthIndex + 1)
+        .reduce((sum, row) => sum + (row.amountPaid || 0), 0);
 
-        // Ensure we never return negative, unless you want to show credit
-        return Math.max(0, remainingBalance);
-    };
+    const remainingBalance = totalDueSoFar - totalPaidSoFar - downpayment;
+
+    return Math.max(0, remainingBalance);
+};
 
     // Debug logging
     useEffect(() => {
@@ -89,16 +119,7 @@ const SoaTodos: FC<Props> = ({ SOATodos }) => {
         console.log("SOATodoItems:", SOATodoItems);
     }, [SOATodos, SOATodoItems]);
 
-    // Handle empty data
-    // if (!SOATodos || SOATodos.length === 0 || SOATodos[0]?.paymentMethod === "full_payment") {
-    //     return (
-    //         <main className="py-7 px-7 my-10 shadow-lg mx-auto rounded-lg">
-    //             <div className="text-center text-dGreen font-bold text-xl">
-    //                 <p> Student is fully paid.</p>
-    //             </div>
-    //         </main>
-    //     );
-    // }
+
     if (!SOATodoItems || SOATodoItems.length === 0) {
         return (
             <main className="p-3">

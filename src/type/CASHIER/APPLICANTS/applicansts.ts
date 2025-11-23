@@ -5,9 +5,8 @@ export type Tableapplicant_Type = {
     lastName: string;
     middleName: string | null;
     gradeLevel: string | null;
-    reservationPaymentStatus: string | null;
-    applicationFormReviewStatus: string | null;
-    reservationReceipt: string | null;
+    status: string | null;
+    paymentMethod: string | null;
     isActive: boolean | null;
   };
 

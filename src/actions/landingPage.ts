@@ -23,6 +23,7 @@ import {
   studentTypeTable,
   StudentGradesTable,
   additionalInformationTable,
+  enrollmentPayment,
 } from "../db/schema";
 import { and, asc, desc, eq,  } from "drizzle-orm";
 import nodemailer from "nodemailer";
@@ -80,27 +81,7 @@ async function sendEmail(to: string, trackingId: string, hasReservationReceipt: 
     `;
   }
 
-  // Add document reminder regardless of payment status
-  // if (!hasDocuments) {
-  //   additionalContent += `
-    
-  //   REMINDER: Required Documents
-  //   Please submit the following documents in person at our registrar's office:
-  //   - PSA Birth Certificate
-  //   - Report Card
-  //   - Good Moral Certificate
-  //   - 2x2 ID Picture
-  //   - form 137
 
-  //   Additionally, 
-  //   please submit the following documents if from private school:
-  //   - CACPRISAA Student Exit Clearance
-
-  //   please submit the following documents if you are incoming Grade 7 student:
-  //   - Income Tax Return
-
-  //   `;
-  // }
 
   const closingContent = `
     REMINDER: Required Documents
@@ -412,8 +393,6 @@ export const getStatusByTrackingId = async (trackingId: string) => {
   try {
     const result = await db
       .select({
-        applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
-        reservationPaymentStatus: applicationStatusTable.reservationPaymentStatus,
         regRemarks: Registrar_remaks_table.reg_remarks,
         cashierRemarks: Cashier_remaks_table.cashier_remarks,
         regDate: Registrar_remaks_table.dateOfRemarks,
@@ -421,10 +400,11 @@ export const getStatusByTrackingId = async (trackingId: string) => {
         resolved_reg_remarks: Registrar_remaks_table.resolved_reg_remarks,
         resolved_cashier_remarks: Cashier_remaks_table.resolved_cashier_remarks,
         confirmationStatus: AdmissionStatusTable.confirmationStatus,
+        applicationFormReviewStatus: applicationStatusTable.applicationFormReviewStatus,
         admissionStatus: AdmissionStatusTable.admissionStatus,
-        hasPaidReservation: reservationFeeTable.reservationReceipt, // NULL if no payment
         hasTemptMonthly: TempMonthsInSoaTable.temp_month_id,
         paymentStatus: fullPaymentTable.paymentStatus,
+        status: enrollmentPayment.status
 
 
       })
@@ -432,27 +412,22 @@ export const getStatusByTrackingId = async (trackingId: string) => {
       .leftJoin(Registrar_remaks_table,eq(applicationStatusTable.applicants_id, Registrar_remaks_table.applicants_id))
       .leftJoin(Cashier_remaks_table,eq(applicationStatusTable.applicants_id, Cashier_remaks_table.applicants_id))
       .leftJoin(AdmissionStatusTable,eq(applicationStatusTable.applicants_id, AdmissionStatusTable.applicants_id))
-      .leftJoin(reservationFeeTable,eq(applicationStatusTable.applicants_id, reservationFeeTable.applicants_id))
       .leftJoin(TempMonthsInSoaTable,eq(applicationStatusTable.applicants_id, TempMonthsInSoaTable.applicants_id))
       .leftJoin(fullPaymentTable,eq(applicationStatusTable.applicants_id, fullPaymentTable.applicants_id))
+      .leftJoin(enrollmentPayment, and(eq(applicationStatusTable.applicants_id, enrollmentPayment.applicants_id), eq(enrollmentPayment.academicYear_id, academicYearID)))
       .where(and(
         eq(applicationStatusTable.trackingId, trackingId),
         eq(applicationStatusTable.academicYear_id, academicYearID),
         eq(AdmissionStatusTable.academicYear_id, academicYearID),
-        eq(reservationFeeTable.academicYear_id, academicYearID),
 
 
       ))
       .limit(1);
 
     console.log(result);
-    if (result.length > 0) {
-      console.log("Reservation ID:", result[0].hasPaidReservation);
-      return result[0];
-    } else {
-      console.log("No status found for tracking ID:", trackingId);
-      return null; 
-    }
+    if (result.length === 0) return null;
+
+    return result[0]; 
   } catch (error) {
     console.error("Failed to get status:", error);
     throw new Error("Failed to fetch application status");
@@ -735,18 +710,26 @@ export const getPaymentMethodData = async (trackingId: string) => {
 }
 
 
-export const installments = async (trackingId: string, pm: string, DownPayment: number, monthlyDues: { month: string; monthlyDues: number }[] ) => {
+export const installments = async (
+  trackingId: string, 
+  pm: string, 
+  reciept: string,
+  mop: string,
+  DownPayment: number, 
+  monthlyDues: { month: string; monthlyDues: number }[] ,
+  scannedRef:string
+) => {
   const getApplicantsID = await db
     .select({ applicants_id: applicationStatusTable.applicants_id })
     .from(applicationStatusTable)
     .where(eq(applicationStatusTable.trackingId, trackingId))
     .limit(1);
 
-  const getTemptDetails = await db
-    .select({ temp_down_id: tempdownPaymentTable.temp_down_id, SINumber: tempdownPaymentTable.SINumber, paymentMethod: tempdownPaymentTable.paymentMethod })
-    .from(tempdownPaymentTable)
-    .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
-    .limit(1);
+  // const getTemptDetails = await db
+  //   .select({ temp_down_id: tempdownPaymentTable.temp_down_id, SINumber: tempdownPaymentTable.SINumber, paymentMethod: tempdownPaymentTable.paymentMethod })
+  //   .from(tempdownPaymentTable)
+  //   .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
+  //   .limit(1);
 
   const tempMonthID = await db
     .select({ temp_month_id: TempMonthsInSoaTable.temp_month_id })
@@ -757,22 +740,15 @@ export const installments = async (trackingId: string, pm: string, DownPayment: 
   .insert(downPaymentTable)
   .values({
     applicants_id: getApplicantsID[0].applicants_id,
-    temp_down_id: getTemptDetails[0].temp_down_id,
+    // temp_down_id: getTemptDetails[0].temp_down_id,
     amount: DownPayment,
     paymentMethod: pm,
     academicYear_id: await getAcademicYearID(),
     downPaymentDate: new Date().toISOString().slice(0, 10),
-    SINumber: getTemptDetails[0].SINumber,
+    // SINumber: getTemptDetails[0].SINumber,
   })
   .returning({ donw_id: downPaymentTable.donw_id });
   
-  await db
-  .update(AdmissionStatusTable)
-  .set({
-    confirmationStatus: "Aprroved",
-    dateOfConfirmation: new Date().toISOString().slice(0, 10),
-  })
-  .where(eq(AdmissionStatusTable.applicants_id, getApplicantsID[0].applicants_id));
 
   const downId =  downPayment[0].donw_id;
   for (const due of monthlyDues) {
@@ -787,22 +763,35 @@ export const installments = async (trackingId: string, pm: string, DownPayment: 
       monthlyDue: due.monthlyDues,
     });
   }
+
+  await db
+  .insert(enrollmentPayment)
+  .values({
+    applicants_id: getApplicantsID[0].applicants_id,
+    academicYear_id: await getAcademicYearID(),
+    amount: DownPayment,
+    paymentMethod: pm,
+    modeOfPayment: mop,
+    status: "Pending",
+    reciept,
+    reference_number: scannedRef
+  })
   return { success: true, message: "Payment method updated successfully" }
 }
 
 
-export const full_payment = async (trackingId: string, pm: string, DownPayment: number, totalTuition: number, mop: string, uploadReservationReceipt: string, monthlyDues: { month: string; monthlyDues: number }[] ) => {
+export const full_payment = async (trackingId: string, pm: string, DownPayment: number, totalTuition: number, mop: string, uploadReservationReceipt: string, monthlyDues: { month: string; monthlyDues: number }[], scannedRef: string ) => {
   const getApplicantsID = await db
     .select({ applicants_id: applicationStatusTable.applicants_id })
     .from(applicationStatusTable)
     .where(eq(applicationStatusTable.trackingId, trackingId))
     .limit(1);
 
-  const getTemptDetails = await db
-    .select({ temp_down_id: tempdownPaymentTable.temp_down_id, SINumber: tempdownPaymentTable.SINumber,})
-    .from(tempdownPaymentTable)
-    .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
-    .limit(1);
+  // const getTemptDetails = await db
+  //   .select({ temp_down_id: tempdownPaymentTable.temp_down_id, SINumber: tempdownPaymentTable.SINumber,})
+  //   .from(tempdownPaymentTable)
+  //   .where(eq(tempdownPaymentTable.applicants_id, getApplicantsID[0].applicants_id))
+  //   .limit(1);
 
   const tempMonthID = await db
     .select({ temp_month_id: TempMonthsInSoaTable.temp_month_id })
@@ -813,12 +802,12 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
   .insert(downPaymentTable)
   .values({
     applicants_id: getApplicantsID[0].applicants_id,
-    temp_down_id: getTemptDetails[0].temp_down_id,
-    amount: DownPayment,
+    // temp_down_id: getTemptDetails[0].temp_down_id,
+    amount: totalTuition,
     paymentMethod: pm,
     academicYear_id: await getAcademicYearID(),
     downPaymentDate: new Date().toISOString().slice(0, 10),
-    SINumber: getTemptDetails[0].SINumber,
+    // SINumber: getTemptDetails[0].SINumber,
   })
   .returning({ donw_id: downPaymentTable.donw_id });
 
@@ -834,19 +823,32 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
       month: due.month,
       monthlyDue: due.monthlyDues,
     });
+
+
   }
 
-
   await db
-  .insert(fullPaymentTable)
+  .insert(enrollmentPayment)
   .values({
     applicants_id: getApplicantsID[0].applicants_id,
-    payment_amount: totalTuition,
-    payment_receipt: uploadReservationReceipt,
-    paymentMethod: mop,
-    paymentStatus: "Pending",
     academicYear_id: await getAcademicYearID(),
+    amount: totalTuition,
+    paymentMethod: pm,
+    modeOfPayment: mop,
+    status: "Pending",
+    reciept: uploadReservationReceipt,
+    reference_number: scannedRef
   })
+  // await db
+  // .insert(fullPaymentTable)
+  // .values({
+  //   applicants_id: getApplicantsID[0].applicants_id,
+  //   payment_amount: totalTuition,
+  //   payment_receipt: uploadReservationReceipt,
+  //   paymentMethod: mop,
+  //   paymentStatus: "Pending",
+  //   academicYear_id: await getAcademicYearID(),
+  // })
 
   return { success: true, message: "Payment method updated successfully" }
   

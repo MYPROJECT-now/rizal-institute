@@ -3,7 +3,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 
-import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, grantAvailable, ReceiptInfoTable, RoomTable, SubjectTable } from "../src/db/schema";
+import { AcademicYearTable, EnrollmentStatusTable, GradeLevelTable, grantAvailable, ReceiptInfoTable, RoomTable, SubjectTable, TuitionComp } from "../src/db/schema";
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient);
@@ -12,9 +12,9 @@ const insertAcademicYear = async () => {
 
     const AcademicYear = [
     {
-      academicYear: "2022-2023",
-      academicYearStart: new Date("2022-09-01").toISOString(), //yyyy-mm-dd
-      academicYearEnd: new Date("2023-04-30").toISOString(),
+      academicYear: "2024-2025",
+      academicYearStart: new Date("2024-09-01").toISOString(), //yyyy-mm-dd
+      academicYearEnd: new Date("2025-04-30").toISOString(),
       isActive: true,
     },
 
@@ -116,7 +116,36 @@ const insertAcademicYear = async () => {
       },
     ]
     const result7 = await db.insert(RoomTable).values(room).returning();
-    console.log("Data inserted successfully", {result, result2, result3, result4, result5, result6, result7});
+
+    const tuition = [
+      {
+      gradelevel: "7",
+      tuitionBase: 15000,
+      miscellaneous: 6000,
+      academicYear_id: acadId
+      },
+      {
+      gradelevel: "8",
+      tuitionBase: 15000,
+      miscellaneous: 6000,
+      academicYear_id: acadId
+      },
+      {
+      gradelevel: "9",
+      tuitionBase: 16500,
+      miscellaneous: 7000,
+      academicYear_id: acadId
+      },
+      {
+      gradelevel: "10",
+      tuitionBase: 18000,
+      miscellaneous: 7500,
+      academicYear_id: acadId
+      },
+    ]
+    const result8 = await db.insert(TuitionComp).values(tuition).returning();
+
+    console.log("Data inserted successfully", {result, result2, result3, result4, result5, result6, result7, result8});
 
   
 };

@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState } from "react";
-import { UploadSoaModal } from "../soa/soa_modal";
+// import { UploadSoaModal } from "../soa/soa_modal";
 import { reservedSlotType } from "@/src/type/CASHIER/RESERVED/reserved";
 import Applicant from "./ReservedTodo";
 import { useUploadSoaModal } from "@/src/store/CASHIER/reserved";
@@ -47,7 +47,7 @@ interface Props {
   return (
   <div className=" flex-1 lg:min-h-0 text-xs sm:text-sm  sm:px-8 px-3 sm:py-6 py-4 sm:pt-6 text-center">
     {/* <DiscountClass /> */}
-    <UploadSoaModal />
+    {/* <UploadSoaModal /> */}
 
     <section className="flex  flex-col sm:flex-row  items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 mb-4">
       <label className="text-green-900 font-bold text-sm  sm:text-lg">Filter By:</label>
