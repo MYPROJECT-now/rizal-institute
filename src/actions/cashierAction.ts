@@ -1552,7 +1552,6 @@ async function sendAdmissionEmail(
 
       <!-- Header -->
       <div style="text-align:center; margin-bottom:20px;">
-        <img src="cid:schoollogo" alt="School Logo" style="width:120px; margin-bottom:10px;" />
         <h2 style="margin:0; color:#333;">Rizal Institute - Canlubang</h2>
         <p style="margin:0; color:#777;">Fee Assessment</p>
       </div>
@@ -1670,13 +1669,7 @@ async function sendAdmissionEmail(
     to: email,
     subject: "Fee Assessment - Rizal Institute Canlubang",
     html: htmlContent,
-    attachments: [
-      {
-        filename: "logo.png",
-        path: process.cwd() + "/public/logo.png",
-        cid: "schoollogo",
-      },
-    ],
+
   };
 
   await transporter.sendMail(mailOptions);

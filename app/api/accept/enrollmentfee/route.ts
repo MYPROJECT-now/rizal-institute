@@ -58,7 +58,6 @@ async function sendReservationEmail(email: string, name: string) {
         <div style="max-width: 500px; margin: auto; background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
 
           <div style="text-align:center; margin-bottom: 20px;">
-              <img src="cid:schoollogo" alt="School Logo" style="width: 80px; height:auto; margin-bottom:10px;" />
               <h2 style="color:#1a4d2e; margin:0; font-size:22px;">Reserved Slot Confirmed</h2>
           </div>
 
@@ -95,13 +94,13 @@ async function sendReservationEmail(email: string, name: string) {
         </div>
       </div>
     `,
-    attachments: [
-      {
-        filename: "logo.png",
-        path: process.cwd() + "/public/logo.png",
-        cid: "schoollogo",
-      },
-    ],
+    // attachments: [
+    //   {
+    //     filename: "logo.png",
+    //     path: process.cwd() + "/public/logo.png",
+    //     cid: "schoollogo",
+    //   },
+    // ],
   };
 
   return transporter.sendMail(mailOptions);
