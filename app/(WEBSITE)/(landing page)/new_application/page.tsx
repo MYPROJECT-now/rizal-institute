@@ -1059,8 +1059,8 @@ const sections = [
                             </h2>
 
                             <ul className="list-disc list-inside text-sm text-dGreen space-y-3 pl-10">
-                            {gradeToEnroll === "7" && studentType === "Incoming G7" && <li>ESC Voucher</li>}
-                            <li>Sibling Discount</li>
+                            {gradeToEnroll === "7" && studentType === "Incoming G7" && <li>ESC Voucher (-9000)</li>}
+                            <li>Sibling Discount (-500)</li>
                             <li>
                                 Academic Discount —  
                                 <span className="block ml-4 mt-1 text-xs text-green-800">
