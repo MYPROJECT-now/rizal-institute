@@ -1,6 +1,6 @@
 "use server"
 
-import { and, asc, desc, eq, ilike, sql, } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, isNull, sql, } from "drizzle-orm";
 import { db } from "../db/drizzle";
 import { AdmissionStatusTable, applicantsInformationTable, applicationStatusTable, reservationFeeTable, StudentInfoTable, downPaymentTable, MonthsInSoaTable, MonthlyPayementTable, AcademicYearTable, StudentGradesTable, GradeLevelTable, additionalInformationTable, auditTrailsTable, fullPaymentTable, tempdownPaymentTable, grantAvailable, BreakDownTable, TempMonthsInSoaTable, staffClerkUserTable, ReceiptInfoTable, studentTypeTable, documentsTable, ESCGranteeTable, SubjectTable, TuitionComp, enrollmentPayment,  } from "../db/schema";
 import { revalidatePath } from "next/cache";
@@ -14,18 +14,47 @@ import { generateSINumber } from "./utils/SI_Number_counter";
 
 // dashboard
 
+// export const getPendingApplicantsCount = async (selectedYear: number) => {
+//   const allEnrollees = await db.select({
+//     id: applicantsInformationTable.applicants_id,
+//   })
+//     .from(applicantsInformationTable)
+//     .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
+//     .where(and(
+//       eq(applicationStatusTable.reservationPaymentStatus, "Pending"),
+//       eq(applicationStatusTable.academicYear_id, selectedYear),
+// ));
+//   return allEnrollees.length;
+// };
 export const getPendingApplicantsCount = async (selectedYear: number) => {
-  const allEnrollees = await db.select({
-    id: applicantsInformationTable.applicants_id,
-  })
+  const pendingReserved = await db
+    .select({
+      id: applicantsInformationTable.applicants_id,
+    })
     .from(applicantsInformationTable)
-    .leftJoin(applicationStatusTable, eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id))
-    .where(and(
-      eq(applicationStatusTable.reservationPaymentStatus, "Pending"),
-      eq(applicationStatusTable.academicYear_id, selectedYear),
-));
-  return allEnrollees.length;
+    .leftJoin(
+      applicationStatusTable,
+      eq(applicantsInformationTable.applicants_id, applicationStatusTable.applicants_id)
+    )
+    .leftJoin(
+      BreakDownTable,
+      and(
+        eq(applicantsInformationTable.applicants_id, BreakDownTable.applicants_id),
+        eq(BreakDownTable.academicYear_id, selectedYear)
+      )
+    )
+    .where(
+      and(
+        eq(applicationStatusTable.academicYear_id, selectedYear),
+        eq(applicationStatusTable.applicationFormReviewStatus, "Reserved"),
+        // PENDING means: no breakdown yet
+        isNull(BreakDownTable.breakDown_id)
+      )
+    );
+
+  return pendingReserved.length;
 };
+
 
 export const getReservedSlotCount = async (selectedYear: number) => {
 
@@ -44,12 +73,12 @@ export const getReservedSlotCount = async (selectedYear: number) => {
 export const getPendingFullPaymentsCount = async (selectedYear: number) => {
 
   const payments = await db.select({
-    fullpayment_id: fullPaymentTable.payment_id,
+    enrollmentPayment_id: enrollmentPayment.enrollmentPayment_id,
   })
-    .from(fullPaymentTable)
+    .from(enrollmentPayment)
     .where(and(
-      eq(fullPaymentTable.academicYear_id, selectedYear), 
-      eq(fullPaymentTable.paymentStatus, 'Pending'),
+      eq(enrollmentPayment.academicYear_id, selectedYear), 
+      eq(enrollmentPayment.status, 'Pending'),
     ))
   return payments.length;
 };

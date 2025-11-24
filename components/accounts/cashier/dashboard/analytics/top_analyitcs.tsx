@@ -31,7 +31,7 @@ export const Top_analytics = async () => {
                 </div>
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold xl:text-[15px] lg:text-[12px]">
-                       Pending Reservation Fee
+                       Pending Assessment Fees
                     </p>
                     <p className="font-bold text-2xl">
                         {pendingApplicants}
@@ -123,7 +123,7 @@ export const Top_analytics = async () => {
                 </div>
                 <div className="flex flex-col text-center font-sans">
                     <p className="font-bold xl:text-[15px] lg:text-[12px]">
-                        Pending Full Payment
+                        Pending Enrollment Fee
                     </p>
                     <p className="font-bold text-2xl">
                         {pendingFullPayments}
