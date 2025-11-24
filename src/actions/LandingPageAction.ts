@@ -172,7 +172,6 @@ export const addNewApplicants = async (
         <div style="max-width:650px; margin:0 auto; background:white; padding:25px; border-radius:8px;">
             
             <div style="text-align:center; margin-bottom:20px;">
-            <img src="cid:schoollogo" alt="Rizal Institute Logo" style="width:120px; margin-bottom:10px;" />
             <h2 style="margin:0; color:#333;">Rizal Institute - Canlubang</h2>
             <p style="margin:0; color:#777;">Application Confirmation</p>
             </div>
@@ -219,13 +218,6 @@ export const addNewApplicants = async (
         subject: "Application for Enrollment - Rizal Institute Canlubang",
         text: `${baseEmailContent}\n\n${closingContent}`,
         html: htmlContent,
-        attachments: [
-        {
-            filename: "logo.png",
-            path: process.cwd() + "/public/logo.png",
-            cid: "schoollogo",
-        },
-        ],
     };
 
     await transporter.sendMail(mailOptions);
