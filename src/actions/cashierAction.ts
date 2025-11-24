@@ -973,7 +973,8 @@ export const getItsPayment = async (selectedID: number) => {
       modeOfPayment: enrollmentPayment.modeOfPayment,
       reciept: enrollmentPayment.reciept,
       reference_number: enrollmentPayment.reference_number,
-      status: enrollmentPayment.status
+      status: enrollmentPayment.status,
+      paymentMethod: enrollmentPayment.paymentMethod
     }).from(applicantsInformationTable)
     .leftJoin(enrollmentPayment, eq(applicantsInformationTable.applicants_id, enrollmentPayment.applicants_id))
     .where(eq(applicantsInformationTable.lrn, lrn))

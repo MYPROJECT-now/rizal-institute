@@ -20,6 +20,7 @@ export interface PaymentInfo {
   reciept: string | null;
   reference_number: string | null;
   status: string | null;
+  paymentMethod: string | null;
 }
 
 export const Cashier_ReservationReview = () => {
@@ -70,6 +71,8 @@ useEffect(() => {
       body: JSON.stringify({
         lrn: selectedLRN,
         name: info.fullName,
+        pm: info.paymentMethod,
+        amount: info.amount,
       }),
     });
 

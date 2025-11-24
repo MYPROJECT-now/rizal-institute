@@ -5,8 +5,7 @@ import {
   applicantsInformationTable, 
   auditTrailsTable,
   downPaymentTable,
-  enrollmentPayment,
-  MonthsInSoaTable, 
+  enrollmentPayment, 
 
 } from '@/src/db/schema';
 
@@ -47,67 +46,11 @@ async function getStudentID(lrn: number): Promise<number | null> {
   return result.length > 0 ? result[0].applicants_id : null;
 }
 
-type InstallmentMonth = {
-  month: string;
-  monthlyDue: number;
-};
-
 
 // Email sender
-async function sendReservationEmail(
-  email: string,
-  name: string,
-  pm: string,
-  amount: number,
-  installmentMonths: InstallmentMonth[] = []
-) {
-  // ======================
-  // BUILD PAYMENT MESSAGE
-  // ======================
-
-  let paymentMessage = "";
-
-  if (pm === "full_payment") {
-    // ------- FULL PAYMENT --------
-    paymentMessage = `
-      <p style="font-size:14px; color:#555; line-height:1.5;">
-        You have successfully paid the <strong>full tuition amount of ₱${amount}</strong>.
-        Your payment has been fully verified.
-      </p>
-    `;
-
-  } else if (pm === "Installments") {
-    // ------- INSTALLMENTS --------
-    let monthsList = installmentMonths
-      .map(m => `<li><strong>${m.month}</strong>: ₱${m.monthlyDue}</li>`)
-      .join("");
-
-    paymentMessage = `
-      <p style="font-size:14px; color:#555; line-height:1.5;">
-        You are enrolled under the <strong>Installment Payment Plan</strong>.<br/>
-        Below are your monthly dues:
-      </p>
-
-      <ul style="font-size:14px; color:#555; padding-left:20px; line-height:1.5;">
-        ${monthsList}
-      </ul>
-    `;
-  } else {
-    // ------- FALLBACK --------
-    paymentMessage = `
-      <p style="font-size:14px; color:#555;">
-        Your payment method is recorded as: <strong>${pm}</strong>.
-      </p>
-    `;
-  }
-
-
-  // ======================
-  // SEND EMAIL
-  // ======================
-
+async function sendReservationEmail(email: string, name: string) {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: process.env.Email_USER,
     to: email,
     subject: "Confirmation of Reserved Slot – Rizal Institute Canlubang",
     html: `
@@ -118,18 +61,16 @@ async function sendReservationEmail(
               <h2 style="color:#1a4d2e; margin:0; font-size:22px;">Reserved Slot Confirmed</h2>
           </div>
 
-          <p style="font-size:15px; color:#333; line-height:1.5;">
+          <p style="font-size:15px; color:#333;">
             Dear <strong>${name}</strong>,
             <br><br>
             We are pleased to inform you that your payment has been 
             <strong>successfully verified</strong>.
           </p>
 
-          ${paymentMessage}
-
-          <p style="font-size:14px; color:#555; margin-top:20px; line-height:1.5;">
-            Your <strong>slot is now officially secured</strong>.<br/>
-            Our registrar will now review and admit your application.  
+          <p style="font-size:14px; color:#555;">
+            Your <strong>slot is now officially secured</strong>.  
+            Our registrar will review and admit your application next.  
             Once admitted, you will receive another email containing your 
             <strong>student credentials and next steps</strong>.
           </p>
@@ -140,7 +81,7 @@ async function sendReservationEmail(
             </span>
           </div>
 
-          <p style="font-size:14px; color:#555; line-height:1.5;">
+          <p style="font-size:14px; color:#555;">
             If you have any questions or concerns, feel free to contact our office.
           </p>
 
@@ -150,23 +91,25 @@ async function sendReservationEmail(
             This is an automated message. Please do not reply.<br/>
             Rizal Institute - Canlubang © 2025
           </p>
-
         </div>
       </div>
     `,
+    // attachments: [
+    //   {
+    //     filename: "logo.png",
+    //     path: process.cwd() + "/public/logo.png",
+    //     cid: "schoollogo",
+    //   },
+    // ],
   };
 
   return transporter.sendMail(mailOptions);
 }
 
 
-
 export async function POST(request: Request) {
   try {
-  const { lrn, name, pm, amount } = await request.json();
-  let installmentMonths: InstallmentMonth[] = [];
-
-
+    const { lrn, name } = await request.json();
 
     if (!lrn) {
       return NextResponse.json({ error: "Missing student ID" }, { status: 400 });
@@ -184,16 +127,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Student not found." }, { status: 404 });
     }
 
-    if (pm === "Installments") {
-      installmentMonths = await db
-        .select({
-          month: MonthsInSoaTable.month,
-          monthlyDue: MonthsInSoaTable.monthlyDue
-        })
-        .from(MonthsInSoaTable)
-        .where(eq(MonthsInSoaTable.applicants_id, applicants_id));
-    }
-    
     // Run DB updates
     const [email, ] = await Promise.all([
       getStudentEmail(lrn),
@@ -231,7 +164,7 @@ export async function POST(request: Request) {
     }
 
 
-await sendReservationEmail(email, name, pm, amount, installmentMonths);
+    await sendReservationEmail(email, name);
 
 
     return NextResponse.json({
