@@ -78,7 +78,7 @@ async function sendReservationEmail(
 
   } else if (pm === "Installments") {
     // ------- INSTALLMENTS --------
-    let monthsList = installmentMonths
+    const monthsList = installmentMonths
       .map(m => `<li><strong>${m.month}</strong>: ₱${m.monthlyDue}</li>`)
       .join("");
 
