@@ -78,8 +78,8 @@ interface Props {
       fullName.includes(searchQuery.toLowerCase()) ||
       student.lrn.includes(searchQuery);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
- 
-    return matchesSearch && matchesGrade ;
+    const matchesStatus = filterStatus === "" || student.status === filterStatus;
+    return matchesSearch && matchesGrade && matchesStatus;
   });
 
     // 🧮 Pagination logic
@@ -125,9 +125,8 @@ interface Props {
       >
         <option value="">Status</option>
         <option value="Pending">Pending</option>
-        <option value="Ongoing">Ongoing</option>
         <option value="Declined">Declined</option>
-        <option value="Reserved">Reserved</option>
+        <option value="Approved">Approved</option>
       </select>
 
       <Button

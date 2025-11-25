@@ -77,30 +77,7 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
       fullName.includes(searchQuery.toLowerCase()) ||
       student.lrn.includes(searchQuery);
     const matchesGrade = filterGrade === "" || student.gradeLevel === filterGrade;
-    const matchesStatus =
-      filterStatus === "" ||
-      (
-        filterStatus === "Pending" &&
-        student.applicationFormReviewStatus === "Pending"
-      ) ||
-      (
-        filterStatus === "Declined" &&
-        student.applicationFormReviewStatus === "Declined"
-      ) ||
-      (
-        filterStatus === "Reserved" &&
-        student.applicationFormReviewStatus === "Reserved" &&
-        student.reservationPaymentStatus === "Reserved"
-      ) ||
-      (
-        filterStatus === "Ongoing" &&
-        (
-          (student.applicationFormReviewStatus === "Reserved" &&
-          student.reservationPaymentStatus === "Pending") ||
-          (student.applicationFormReviewStatus === "Pending" &&
-          student.reservationPaymentStatus === "Reserved")
-        )
-      );
+    const matchesStatus = filterStatus === "" || student.applicationFormReviewStatus === filterStatus;
 
 
   return matchesSearch && matchesGrade && matchesStatus;
@@ -148,7 +125,6 @@ import { Enrollees_info_Modal } from "../applicants_information_modal/applicants
       >
         <option value="">Status</option>
         <option value="Pending">Pending</option>
-        <option value="Ongoing">Ongoing</option>
         <option value="Declined">Declined</option>
         <option value="Reserved">Reserved</option>
       </select>
