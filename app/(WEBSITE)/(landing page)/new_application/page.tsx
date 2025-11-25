@@ -1687,7 +1687,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
                             </div>
                             )}
                         </div>
@@ -1734,7 +1734,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
                             </div>
                             )}
                         </div>
@@ -1781,7 +1781,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
 
                             </div>
                             )}
@@ -1841,7 +1841,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
 
                             </div>
                             )}
@@ -1889,7 +1889,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
 
                             </div>
                             )}
@@ -1937,7 +1937,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
 
                             </div>
                             )}
@@ -1987,7 +1987,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
 
                             </div>
                             )}
@@ -2035,7 +2035,7 @@ const sections = [
                                     name="document"
                                     className="rounded-sm px-1 w-full sm:w-[200px] lg:w-[320px] py-[6px] bg-green-100 outline-none focus:ring-2 focus:ring-dGreen focus:border-dGreen transition"
                                 />
-                                <span className="text-xs text-gray-500 mt-1">Upload any image. No size limit.</span>
+                                <span className="text-xs text-gray-500 mt-1"> Upload an image (.png, .jpeg, .jpg, etc.). The file size must not exceed 25MB.</span>
 
                             </div>
                             )}
