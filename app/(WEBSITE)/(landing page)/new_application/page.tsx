@@ -67,14 +67,14 @@ const ApplicationPage = () => {
     const [escGrantee, setEscGrantee] = useState("");
 
 
-    const [birthCert, setBirthCert] =  useState<File | null>(null);
-    const [reportCard, setReportCard] = useState<File | null>(null);
-    const [goodMoral, setGoodMoral] = useState<File | null>(null);
-    const [idPic, setIdPic] = useState<File | null>(null);
-    const [studentExitForm, setStudentExitForm] = useState<File | null>(null);
-    const [form137, setForm137] = useState<File | null>(null);
-    const [itr, setITR] = useState<File | null>(null);
-    const [escCert, setEscCert] = useState<File | null>(null);
+        const [birthCert, setBirthCert] =  useState<File | null>(null);
+        const [reportCard, setReportCard] = useState<File | null>(null);
+        const [goodMoral, setGoodMoral] = useState<File | null>(null);
+        const [idPic, setIdPic] = useState<File | null>(null);
+        const [studentExitForm, setStudentExitForm] = useState<File | null>(null);
+        const [form137, setForm137] = useState<File | null>(null);
+        const [itr, setITR] = useState<File | null>(null);
+        const [escCert, setEscCert] = useState<File | null>(null);
     const { open: openPreview } = usePreviewModal();
     const birthCertRef = useRef<HTMLInputElement>(null);
     const reportCardRef = useRef<HTMLInputElement>(null);
@@ -519,6 +519,53 @@ const ApplicationPage = () => {
                 return false;
             }
         return true;
+    case 7: // Document Uploads
+
+        const maxSize = 25 * 1024 * 1024; // 25MB
+        const imageTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+        const filesToCheck = [
+            { file: birthCert, name: "Birth Certificate" },
+            { file: idPic, name: "ID Picture" },
+            { file: itr, name: "Income Tax Return" },
+            { file: reportCard, name: "Report Card" },
+            { file: form137, name: "Form 137" },
+            { file: goodMoral, name: "Good Moral" },
+            { file: studentExitForm, name: "CAPRISSA / Student Exit Form" },
+            { file: escCert, name: "ESC Certificate" },
+        ];
+
+        // 🔎 Check if required ones are missing
+        for (const item of filesToCheck) {
+            if (!item.file) {
+                newErrors[item.name] = "Required";
+            }
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            toast.error("Please upload all required documents.");
+            return false;
+        }
+
+        // 🖼 Validate file type + size
+        for (const item of filesToCheck) {
+            if (item.file) {
+                // ❌ Not an image
+                if (!imageTypes.includes(item.file.type)) {
+                    toast.error(`${item.name} must be an image (.jpg, .png, .jpeg, .webp).`);
+                    return false;
+                }
+
+                // ❌ Too big
+                if (item.file.size > maxSize) {
+                    toast.error(`${item.name} must not exceed 25MB.`);
+                    return false;
+                }
+            }
+        }
+
+        return true;
 
         default:
         return true;
@@ -587,12 +634,24 @@ const ApplicationPage = () => {
         setAge(age.toString());
     };
 
-    const handleBirthCertChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-        setBirthCert(file);
-        }
-    };
+    // const handleBirthCertChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //     const file = e.target.files?.[0];
+    //     if (file) {
+    //     setBirthCert(file);
+    //     }
+    // };
+
+    const handleBirthCertChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+
+    if (!validateImage(file, "Birth Certificate")) {
+        e.target.value = "";
+        return;
+    }
+
+    setBirthCert(file);
+};
+
     const handleReportCardChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -638,7 +697,27 @@ const ApplicationPage = () => {
         setEscCert(file);
         }
     }
-        
+  
+    
+    const validateImage = (file: File | null, label: string) => {
+        if (!file) return false;
+
+        const maxSize = 25 * 1024 * 1024;
+        const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+        if (!allowed.includes(file.type)) {
+            toast.error(`${label} must be an image only (.jpg, .jpeg, .png, .webp).`);
+            return false;
+        }
+
+        if (file.size > maxSize) {
+            toast.error(`${label} must not exceed 25MB.`);
+            return false;
+        }
+
+        return true;
+    };
+
 
     const previewImage = (file: File | null) => {
     if (!file) return;

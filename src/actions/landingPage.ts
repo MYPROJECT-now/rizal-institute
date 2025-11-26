@@ -855,6 +855,17 @@ export const full_payment = async (trackingId: string, pm: string, DownPayment: 
 }
 
 
+export const doubleEntry = async (ref: string) => {
+  const getReciept = await db
+  .select({
+    reference_number: enrollmentPayment.reference_number,
+  }).from (enrollmentPayment)
+  .where(eq(enrollmentPayment.reference_number, ref))
+
+  console.log(getReciept);
+  return getReciept.length > 0 ? true : false;
+
+}
 
 export const updateStudentData = async (lrn: string, updatedData: StudentUpdateData) => {
   try {

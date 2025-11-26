@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { full_payment, getPaymentMethodData, installments } from "@/src/actions/landingPage";
+import { doubleEntry, full_payment, getPaymentMethodData, installments } from "@/src/actions/landingPage";
 import { usePreviewModal } from "@/src/store/preview";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -823,7 +823,8 @@ const sections = [
                             <button
                                 type="button"
                                 onClick={() => {
-                                setReservationReceipt(null);
+                                setReservationReceipt(null)
+                                setScannedRef("");
                                 if (gcashReceiptRef.current) gcashReceiptRef.current.value = "";
                                 if (bankTransferReceiptRef.current) bankTransferReceiptRef.current.value = "";
                                 }}
@@ -978,12 +979,21 @@ if (page === 1 && pm === "Installments") {
     return;
 }
 
+if (page === 2){
+    const double_entry = await doubleEntry(scannedRef);
+    if (double_entry) {
+        toast.error("This receipt has already been used.");
+        return;
+    }
+}   
+
 
 // After TotalTuition (page 2) → jump to Payment Section (page 3)
 if (page === 2 && pm === "full_payment") {
     setPage(3);
     return;
 }
+
 
 // From Payment Section (page 3) → Confirmation (page 4)
 if (page === 3) {
@@ -996,6 +1006,8 @@ if (!(await validatePage())) return;
 if (page < sections.length - 1) {
     setPage(page + 1);
 }
+
+
 };
 
 
